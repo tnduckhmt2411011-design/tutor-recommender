@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+env/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/
+
+# Node / Frontend
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+frontend/dist/
+
+# Môi trường & bí mật
+.env
+.env.*
+!.env.example
+
+# IDE & Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Hệ điều hành
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Lưu ý: Không bỏ qua các tệp sơ đồ và tài liệu trong docs/ (*.drawio, *.png, *.docx)
+!docs/**/*.drawio
+!docs/**/*.png
+!docs/**/*.docx

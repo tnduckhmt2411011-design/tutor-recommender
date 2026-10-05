@@ -1,0 +1,4 @@
+# Lưu ý: Chưa ghim phiên bản, ghim phiên bản ở Sprint 1 khi cài thật
+fastapi
+uvicorn[standard]
+pydantic
