@@ -1,4 +1,4 @@
-# Tài liệu đồ án tốt nghiệp
+# Tài liệu đồ án
 
 Thư mục chứa toàn bộ tài liệu nghiên cứu, thiết kế hệ thống và quy trình quản trị dự án.
 
