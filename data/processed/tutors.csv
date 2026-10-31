@@ -1,0 +1,17 @@
+tutor_id,subjects,districts,hourly_fee_vnd,years_experience,teaching_mode,availability,avg_rating,data_source
+GS-T06,"Toán, Lý, Hóa","Bình Thạnh, Gò Vấp, Phú Nhuận, Tân Bình, Tân Phú",400000,20,in_person,"T2-tối, T4-tối, T6-tối",,public_collected
+GS-T07,"Anh Văn, Anh Văn GT","Bình Chánh, Nhà Bè, Quận 7, Quận 8",190000,6,in_person,"T3-tối, T5-tối, T7-sáng",,public_collected
+GS006,"Lý, Hóa",,190000,5,online,"T2-tối, T3-tối, T4-tối, T5-tối",4.6,simulated
+GS020,"Lý, Hóa",,240000,5,online,"T2-tối, T3-tối, T4-tối, T5-tối",4.6,simulated
+GS-G01,Toán,Bình Thạnh,180000,6,both,"T2-tối, T4-tối, T7-sáng",5.0,simulated
+GS-G02,Toán,Bình Thạnh,300000,3,both,"T2-tối, T4-tối, T7-sáng",3.0,simulated
+GS-G03,Tiếng Anh,Gò Vấp,200000,4,online,"T3-sáng, T5-sáng",4.5,simulated
+GS-G04,Văn,"Quận 1, Quận 3",170000,7,in_person,"T2-chiều, T5-chiều",4.3,simulated
+GS-G05,Sinh,"Thủ Đức, Quận 9",190000,4,both,"T3-tối, T6-tối",4.0,simulated
+GS-G06,Hóa,"Quận 10, Quận 11",210000,8,in_person,"T4-sáng, T7-sáng",4.7,simulated
+GS-G07,Tin học,"Bình Thạnh, Thủ Đức",220000,5,online,"T2-tối, T4-tối, T6-tối",4.4,simulated
+GS-G08,Tiếng Nhật,"Phú Nhuận, Tân Bình",260000,6,both,"T3-chiều, T5-chiều",4.8,simulated
+GS-G09,Toán,Quận 7,350000,2,in_person,"T2-tối, T4-tối",3.5,simulated
+GS-G10,Toán,Quận 7,130000,12,in_person,"T2-tối, T4-tối",4.9,simulated
+GS-G11,Anh Văn,"Quận 2, Bình Thạnh",200000,5,in_person,"T3-sáng, T6-sáng",4.5,simulated
+GS-G12,Anh Văn,"Quận 2, Thủ Đức",200000,5,in_person,"T3-sáng, T6-sáng",4.5,simulated
