@@ -29,6 +29,8 @@ Mỗi kịch bản được định nghĩa dưới dạng một đối tượng 
 }
 ```
 
+`expected_top3` và `expected_raw` của 14 kịch bản KB01–KB14 trong `scenarios.json` được **khóa bất biến** kể từ khi nhóm chốt: không chỉnh sửa để làm khớp với kết quả hệ thống.
+
 ## 2. Quy tắc bắt buộc khi đánh giá thực nghiệm
 
 - **Chốt trước khi chạy:** Danh sách `expected_top3` và lý do kỳ vọng phải được các thành viên nhóm thảo luận, phân tích dữ liệu và **chốt cố định TRƯỚC KHI chạy hệ thống**.
