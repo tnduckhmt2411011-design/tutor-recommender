@@ -9,7 +9,7 @@ Tài liệu quy định các nguyên tắc giao tiếp, lịch trình nghi thứ
 
 ## 1. Kênh liên lạc và trao đổi
 
-- **Kênh liên lạc chính thức của nhóm:** `[Chờ nhóm điền]` *(ví dụ: Zalo nhóm / Discord / Telegram)*.
+- **Kênh liên lạc chính thức của nhóm:** `Zalo và Discord.
 - **Kênh lưu trữ mã nguồn và tài liệu:** GitHub Repository `https://github.com/tnduckhmt2411011-design/tutor-recommender`.
 - **Thời gian phản hồi:** Thành viên phản hồi tin nhắn công việc trong vòng tối đa 6–12 giờ vào các ngày trong tuần (trừ trường hợp khẩn cấp có thông báo trước).
 
