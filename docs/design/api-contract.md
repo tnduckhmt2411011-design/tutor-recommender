@@ -44,6 +44,8 @@ Tài liệu này đặc tả chi tiết giao diện RESTful API cho hệ thống
 
 ## 3. Cấu trúc Response Body (Thành công - HTTP 200)
 
+Các giá trị điểm trong ví dụ dưới đây được làm tròn tối đa 3 chữ số thập phân.
+
 ```json
 {
   "status": "success",
@@ -53,7 +55,7 @@ Tài liệu này đặc tả chi tiết giao diện RESTful API cho hệ thống
     {
       "rank": 1,
       "tutor_id": "GS001",
-      "total_score": 0.75,
+      "total_score": 0.754,
       "criteria_scores": {
         "fee": 0.70,
         "district": 1.00,
