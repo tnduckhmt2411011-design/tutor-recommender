@@ -1,1 +1,276 @@
-[]
+[
+  {
+    "id": "KB01",
+    "request": {
+      "subject": "Toán",
+      "learning_mode": "in_person",
+      "preferred_district": "Bình Thạnh",
+      "max_budget_vnd": 200000,
+      "priorities": {
+        "fee": "medium",
+        "district": "medium",
+        "experience": "medium",
+        "rating": "medium",
+        "availability": "medium"
+      }
+    },
+    "expected_top3": ["GS-G01", "GS-G10", "GS-T06"],
+    "expected_raw": "1. GS-G01 (0,938) 2. GS-G10 (0,745) 3. GS-T06 (0,625)",
+    "lý do": "Ba tiêu chí đang áp dụng là Học phí, Khu vực, Kinh nghiệm, với ngưỡng tối thiểu 2 nên GS-T06 đủ điều kiện xếp hạng. Gia sư này vào Top-3 nhờ khu vực và kinh nghiệm là số liệu thu thập thật, nhưng học phí ước tính (400.000) vượt xa ngân sách nên bị kéo xuống hạng 3.",
+    "ghi chú": ""
+  },
+  {
+    "id": "KB02",
+    "request": {
+      "subject": "Anh Văn",
+      "learning_mode": "in_person",
+      "preferred_district": "Quận 2",
+      "max_budget_vnd": 220000,
+      "priorities": {
+        "fee": "medium",
+        "district": "medium",
+        "experience": "medium",
+        "rating": "medium",
+        "availability": "medium"
+      }
+    },
+    "expected_top3": ["GS-G11", "GS-G12", "GS-T07"],
+    "expected_raw": "1–2. GS-G11 = GS-G12 (0,881, đồng hạng) 3. GS-T07 (0,5625)",
+    "lý do": "Với ba tiêu chí đang áp dụng và ngưỡng 2, GS-T07 đủ dữ liệu để xếp hạng. Gia sư này có mặt trong Top-3 nhờ mức học phí ước tính (190.000, vừa đủ ngân sách) và kinh nghiệm thật, chứ không phải nhờ khu vực vì khu vực không khớp Quận 2.",
+    "ghi chú": "Đồng hạng 1–2 giữa GS-G11 và GS-G12; cấu trúc expected_top3 chỉ lưu danh sách mã nên không biểu diễn được đồng hạng."
+  },
+  {
+    "id": "KB03",
+    "request": {
+      "subject": "Anh Văn",
+      "learning_mode": "in_person",
+      "preferred_district": "Thủ Đức",
+      "max_budget_vnd": 220000,
+      "priorities": {
+        "fee": "medium",
+        "district": "medium",
+        "experience": "medium",
+        "rating": "medium",
+        "availability": "medium"
+      }
+    },
+    "expected_top3": ["GS-G12", "GS-G11", "GS-T07"],
+    "expected_raw": "1. GS-G12 (0,881) 2. GS-G11 (0,631) 3. GS-T07 (0,5625)",
+    "lý do": "Kịch bản này ghép đôi với KB02 để kiểm chứng cặp GS-G11/GS-G12 chỉ khác nhau ở khu vực. GS-T07 vẫn góp mặt trong Top-3 nhờ phần ước tính và kinh nghiệm thật; khu vực Thủ Đức cũng không khớp gia sư này.",
+    "ghi chú": ""
+  },
+  {
+    "id": "KB04",
+    "request": {
+      "subject": "Lý",
+      "learning_mode": "online",
+      "max_budget_vnd": 200000,
+      "time_slots": ["T2-tối", "T4-tối"],
+      "priorities": {
+        "fee": "medium",
+        "district": "medium",
+        "experience": "medium",
+        "rating": "medium",
+        "availability": "medium"
+      }
+    },
+    "expected_top3": ["GS006", "GS020"],
+    "expected_raw": "1. GS006 (0,848) 2. GS020 (0,715)",
+    "lý do": "Kịch bản này không liên quan đến GS-T06 hay GS-T07. Kết quả dùng để kiểm chứng cặp GS006/GS020, hai gia sư chỉ khác nhau ở học phí.",
+    "ghi chú": "CẦN NHÓM XÁC NHẬN: Bảng 5.1 ghi 'Lý, Hóa' (hai môn) trong khi phạm vi đề tài là mỗi lần tìm một môn; bản nháp tạm chọn 'Lý'. Top-3 kỳ vọng chỉ có 2 gia sư."
+  },
+  {
+    "id": "KB05",
+    "request": {
+      "subject": "Tiếng Trung",
+      "learning_mode": "any",
+      "priorities": {
+        "fee": "medium",
+        "district": "medium",
+        "experience": "medium",
+        "rating": "medium",
+        "availability": "medium"
+      }
+    },
+    "expected_top3": [],
+    "expected_raw": "(không có)",
+    "lý do": "Đây là ca minh họa tình huống không ai thỏa điều kiện bắt buộc, không liên quan đến quy tắc ngưỡng hay phần dữ liệu ước tính.",
+    "ghi chú": "Kỳ vọng rỗng: không có gia sư nào thỏa điều kiện bắt buộc."
+  },
+  {
+    "id": "KB06",
+    "request": {
+      "subject": "Văn",
+      "learning_mode": "in_person",
+      "preferred_district": "Quận 1",
+      "max_budget_vnd": 180000,
+      "priorities": {
+        "fee": "medium",
+        "district": "medium",
+        "experience": "medium",
+        "rating": "medium",
+        "availability": "medium"
+      }
+    },
+    "expected_top3": ["GS-G04"],
+    "expected_raw": "1. GS-G04 (0,934)",
+    "lý do": "Chỉ có 1 ứng viên vì đây là môn hiếm trong bộ dữ liệu giả lập, nơi nhóm ưu tiên phủ nhiều môn hơn là nhiều gia sư cho mỗi môn; không liên quan đến GS-T06 hay GS-T07.",
+    "ghi chú": "Chỉ có 1 kỳ vọng."
+  },
+  {
+    "id": "KB07",
+    "request": {
+      "subject": "Sinh",
+      "learning_mode": "any",
+      "preferred_district": "Thủ Đức",
+      "max_budget_vnd": 200000,
+      "priorities": {
+        "fee": "medium",
+        "district": "medium",
+        "experience": "medium",
+        "rating": "medium",
+        "availability": "medium"
+      }
+    },
+    "expected_top3": ["GS-G05"],
+    "expected_raw": "1. GS-G05 (0,825)",
+    "lý do": "Cũng chỉ có 1 ứng viên do Sinh là môn hiếm trong bộ dữ liệu, cùng lý do đã nêu ở KB06.",
+    "ghi chú": "Chỉ có 1 kỳ vọng."
+  },
+  {
+    "id": "KB08",
+    "request": {
+      "subject": "Tin học",
+      "learning_mode": "online",
+      "max_budget_vnd": 250000,
+      "time_slots": ["T2-tối", "T6-tối"],
+      "priorities": {
+        "fee": "medium",
+        "district": "medium",
+        "experience": "medium",
+        "rating": "medium",
+        "availability": "medium"
+      }
+    },
+    "expected_top3": ["GS-G07"],
+    "expected_raw": "1. GS-G07 (0,876)",
+    "lý do": "Tương tự, Tin học chỉ có 1 gia sư giả lập nên kịch bản này cũng chỉ có 1 ứng viên.",
+    "ghi chú": "Chỉ có 1 kỳ vọng."
+  },
+  {
+    "id": "KB09",
+    "request": {
+      "subject": "Tiếng Nhật",
+      "learning_mode": "any",
+      "preferred_district": "Phú Nhuận",
+      "max_budget_vnd": 280000,
+      "priorities": {
+        "fee": "medium",
+        "district": "medium",
+        "experience": "medium",
+        "rating": "medium",
+        "availability": "medium"
+      }
+    },
+    "expected_top3": ["GS-G08"],
+    "expected_raw": "1. GS-G08 (0,928)",
+    "lý do": "Tiếng Nhật là môn hiếm khác trong bộ dữ liệu nên kịch bản này chỉ có 1 ứng viên duy nhất.",
+    "ghi chú": "CẦN NHÓM XÁC NHẬN: Bảng 5.1 ghi hình thức 'Cả hai', không thuộc ba giá trị của Bảng 3.4 (Trực tiếp / Trực tuyến / Không yêu cầu); bản nháp tạm dùng 'any'. Chỉ có 1 kỳ vọng."
+  },
+  {
+    "id": "KB10",
+    "request": {
+      "subject": "Toán",
+      "learning_mode": "in_person",
+      "preferred_district": "Quận 7",
+      "priorities": {
+        "fee": "medium",
+        "district": "medium",
+        "experience": "high",
+        "rating": "medium",
+        "availability": "medium"
+      }
+    },
+    "expected_top3": ["GS-G10", "GS-G01", "GS-G09"],
+    "expected_raw": "1. GS-G10 (0,994) 2. GS-G01 (0,607) 3. GS-G09 (0,593)",
+    "lý do": "Học phí không áp dụng ở kịch bản này nên chỉ còn hai tiêu chí đang tính (Khu vực, Kinh nghiệm), đủ để GS-T06 đạt ngưỡng. Điểm của GS-T06 (0,571) thấp hơn GS-G09 nên rơi xuống hạng 4, ngoài Top-3, một kết quả hợp lý vì gia sư này không khớp khu vực Quận 7.",
+    "ghi chú": "Mức ưu tiên: Kinh nghiệm = Cao, bốn tiêu chí còn lại = Trung bình."
+  },
+  {
+    "id": "KB11",
+    "request": {
+      "subject": "Hóa",
+      "learning_mode": "in_person",
+      "preferred_district": "Quận 10",
+      "max_budget_vnd": 220000,
+      "priorities": {
+        "fee": "medium",
+        "district": "medium",
+        "experience": "medium",
+        "rating": "medium",
+        "availability": "medium"
+      }
+    },
+    "expected_top3": ["GS-G06", "GS-T06"],
+    "expected_raw": "1. GS-G06 (0,985) 2. GS-T06 (0,375)",
+    "lý do": "GS-T06 đạt ngưỡng dữ liệu cần thiết ở đây. Môn Hóa chỉ có hai gia sư trong toàn bộ tập dữ liệu (GS-T06 và GS-G06), nên GS-T06 góp mặt đơn giản vì là một trong hai ứng viên duy nhất, dù điểm khá thấp: khu vực không khớp và học phí ước tính cao đều kéo điểm xuống, không phải lợi thế của gia sư này.",
+    "ghi chú": "Chỉ có 2 kỳ vọng."
+  },
+  {
+    "id": "KB12",
+    "request": {
+      "subject": "Anh Văn",
+      "learning_mode": "in_person",
+      "preferred_district": "Bình Chánh",
+      "max_budget_vnd": 200000,
+      "priorities": {
+        "fee": "medium",
+        "district": "medium",
+        "experience": "medium",
+        "rating": "medium",
+        "availability": "medium"
+      }
+    },
+    "expected_top3": ["GS-T07", "GS-G11", "GS-G12"],
+    "expected_raw": "1. GS-T07 (0,8125) 2–3. GS-G11 = GS-G12 (0,631, đồng hạng)",
+    "lý do": "GS-T07 dễ dàng đạt ngưỡng dữ liệu và xếp hạng 1 ở kịch bản này, chủ yếu nhờ khu vực khớp đúng dữ liệu thu thập thật (Bình Chánh) và kinh nghiệm thật; phần ước tính (học phí) chỉ không cản trở chứ không phải yếu tố quyết định. Đây là kết quả dựa trên dữ liệu thật, không phải điểm ảo do thiếu dữ liệu.",
+    "ghi chú": "Đồng hạng 2–3 giữa GS-G11 và GS-G12; cấu trúc expected_top3 chỉ lưu danh sách mã nên không biểu diễn được đồng hạng."
+  },
+  {
+    "id": "KB13",
+    "request": {
+      "subject": "Toán",
+      "learning_mode": "any",
+      "max_budget_vnd": 150000,
+      "priorities": {
+        "fee": "medium",
+        "district": "medium",
+        "experience": "medium",
+        "rating": "medium",
+        "availability": "medium"
+      }
+    },
+    "expected_top3": ["GS-G10", "GS-G01", "GS-T06"],
+    "expected_raw": "1. GS-G10 (0,993) 2. GS-G01 (0,783) 3. GS-T06 (0,50)",
+    "lý do": "Khu vực không áp dụng ở kịch bản này nên chỉ còn Học phí và Kinh nghiệm được tính, đủ để GS-T06 đạt ngưỡng. Học phí ước tính (400.000) vượt xa ngân sách 150.000 nên kéo điểm về 0,50, một mức thấp phản ánh đúng thực chất; GS-T06 vào Top-3 chủ yếu nhờ kinh nghiệm cao.",
+    "ghi chú": ""
+  },
+  {
+    "id": "KB14",
+    "request": {
+      "subject": "Anh Văn",
+      "learning_mode": "online",
+      "priorities": {
+        "fee": "medium",
+        "district": "medium",
+        "experience": "medium",
+        "rating": "medium",
+        "availability": "medium"
+      }
+    },
+    "expected_top3": ["GS-G03"],
+    "expected_raw": "1. GS-G03 (0,70)",
+    "lý do": "Chỉ có 1 ứng viên vì đây là kịch bản cố ý giữ lại để minh họa; GS-T06 và GS-T07 không tham gia vì cả hai đều dạy Trực tiếp, không qua được lọc hình thức Trực tuyến.",
+    "ghi chú": "CẦN NHÓM XÁC NHẬN: Phụ lục A ghi môn của GS-G03 là 'Tiếng Anh' trong khi KB14 yêu cầu 'Anh Văn'; so khớp chuỗi hiện tại không tìm thấy ứng viên. Không tự sửa dữ liệu hay kỳ vọng."
+  }
+]
