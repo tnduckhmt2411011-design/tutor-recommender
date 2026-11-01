@@ -2,13 +2,13 @@
 
 Giao diện web dành cho người học để nhập các tiêu chí tìm kiếm và xem kết quả gia sư được gợi ý.
 
-> **Trạng thái hiện tại:** Chưa scaffold; tạo bằng `npm create vite` ở Sprint 1.
+> **Trạng thái hiện tại:** Đã scaffold bằng Vite + React (JavaScript/JSX) ở Sprint 1; chưa có màn hình nghiệp vụ.
 
 ## 1. Công nghệ dự kiến
 
 - **Framework/Build tool:** ReactJS (Vite)
-- **Ngôn ngữ:** TypeScript / JavaScript
-- **Thư viện giao diện & biểu đồ:** TailwindCSS, Recharts (hoặc Chart.js) phục vụ biểu đồ đóng góp tiêu chí
+- **Ngôn ngữ:** JavaScript (JSX) - theo tên tệp `SearchPage.jsx`, `api.js` trong product backlog
+- **Thư viện giao diện & biểu đồ:** TailwindCSS, Recharts (hoặc Chart.js) phục vụ biểu đồ đóng góp tiêu chí - **chưa cài ở Sprint 1**
 
 ## 2. Các màn hình chính (theo Mục 3.8 và 4.5 của đề cương)
 
@@ -35,3 +35,19 @@ src/
 ├── services/     # Tầng gọi API kết nối đến Backend FastAPI
 └── types/        # Định nghĩa kiểu dữ liệu (Tutor, SearchRequest, RecommendationResult)
 ```
+
+> Ghi chú Sprint 1: đã tạo `src/components/`, `src/pages/`, `src/services/` (có `.gitkeep`); `src/types/` chưa tạo vì dự án dùng JavaScript.
+
+## 4. Cài đặt và chạy
+
+Yêu cầu Node.js 20.19+ (đã kiểm tra với Node 24.19.0) và npm. Đứng tại thư mục `frontend/`:
+
+```powershell
+npm install
+npm run build
+npm run dev
+```
+
+- `npm run build` đóng gói production vào `frontend/dist/` (đã nằm trong `.gitignore`).
+- `npm run dev` mở dev server tại địa chỉ mặc định `http://localhost:5173`.
+- `npm run lint` dùng `oxlint` đi kèm template Vite; chưa đấu nối vào CI ở Sprint 1.
