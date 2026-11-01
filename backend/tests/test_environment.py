@@ -15,3 +15,10 @@ def test_core_dependencies_are_importable() -> None:
     """FastAPI và Pydantic phải import được sau khi cài requirements."""
     assert fastapi.__version__
     assert pydantic.VERSION
+
+
+def test_app_package_is_importable() -> None:
+    """Gói app phải import được khi chạy pytest từ thư mục backend."""
+    import app
+
+    assert app.__name__ == "app"
