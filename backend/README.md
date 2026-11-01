@@ -30,4 +30,19 @@ backend/
 
 ## 3. Cài đặt và chạy
 
-Sẽ cập nhật ở Sprint 1 khi bắt đầu thiết lập môi trường ảo và cài đặt thư viện thật.
+Yêu cầu: Python 3.12 (đã kiểm tra với Python 3.12.7) và đã đứng tại thư mục `backend/`.
+
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt -r requirements-dev.txt
+```
+
+Kiểm tra chất lượng mã nguồn và chạy kiểm thử:
+
+```powershell
+.\.venv\Scripts\ruff.exe check .
+.\.venv\Scripts\python.exe -m pytest -q
+```
+
+Ở Sprint 1, các module kiểm thử nghiệp vụ trong `tests/unit/`, `tests/api/` và `tests/scenarios/` vẫn ở trạng thái `pytest.skip`; chỉ có `tests/test_environment.py` kiểm tra phiên bản Python và khả năng import thư viện. Các bài kiểm thử nghiệp vụ sẽ được triển khai từ Sprint 2.
