@@ -39,3 +39,12 @@ Mỗi kịch bản được định nghĩa dưới dạng một đối tượng 
   1. Ghi nhận chi tiết độ lệch vào biên bản/báo cáo thực nghiệm (mục 5.2).
   2. Điều tra nguyên nhân: do phân tích chủ quan ban đầu chưa tính hết tương tác đa tiêu chí, hay do trọng số / hàm điểm chưa phản ánh đúng mong muốn thực tế.
   3. Báo cáo trung thực trong khóa luận tốt nghiệp.
+
+## 3. Quy ước chấm khớp Top-3
+
+Các quy ước dưới đây dùng khi đối chiếu kết quả hệ thống với Bảng 5.1; chúng không sửa `expected_top3`, `expected_raw`, lý do hay yêu cầu của bất kỳ kịch bản nào.
+
+- **Số trùng:** là số gia sư chung của Top-3 hệ thống và Top-3 kỳ vọng. Khi Top-3 kỳ vọng có ít hơn 3 gia sư (`m < 3`), báo dạng `x/m` theo số gia sư kỳ vọng (ví dụ KB06: `1/1`).
+- **KB05:** được tính đạt khi hệ thống trả thông báo không có gia sư thỏa điều kiện bắt buộc (`no_match`).
+- **Đồng hạng trong kỳ vọng:** các gia sư đồng hạng trong Top-3 kỳ vọng (KB02, KB12) được xem là hoán đổi được.
+- **Đồng điểm trong kết quả hệ thống:** hệ thống xếp đồng điểm theo `tutor_id` tăng dần.
