@@ -64,7 +64,19 @@ Chương 1 đến Chương 3 đã có trong đề cương đã nộp, nên Bản
 
 Backend gồm các module tách rời tầng API: nạp dữ liệu (`repository.py`), lọc điều kiện bắt buộc (`filters.py`), kiểm tra ngưỡng dữ liệu tối thiểu (`eligibility.py`), năm hàm điểm thành phần theo Bảng 3.6 (`criteria.py`), quy đổi trọng số (`weights.py`) và xếp hạng Weighted Scoring, đồng điểm thì xếp theo mã gia sư (`ranker.py`). Endpoint `POST /api/recommend` kiểm tra đầu vào bằng Pydantic, trả ba loại kết quả `success`, `no_match`, `zero_weight`; dữ liệu sai trả mã `422`.
 
-Giao diện có hai màn hình. Ở `CN01`, người học chọn môn học, hình thức học, khu vực (tự khóa khi chọn học trực tuyến), ngân sách, khung giờ rảnh trên lưới 7 ngày × 3 buổi và mức ưu tiên cho năm tiêu chí; có nút nạp nhanh 14 kịch bản của Bảng 5.1. Ở `CN02`, mỗi gia sư hiện thành một thẻ gồm hạng, mã, điểm tổng $S$, điểm thành phần, thanh xếp chồng thể hiện đóng góp của từng tiêu chí, lý do gợi ý và ghi chú dữ liệu; thẻ gắn nhãn `"Hồ sơ thực tế"` cho `GS-T06`, `GS-T07` và `"Hồ sơ đối chứng"` cho các hồ sơ còn lại. Ở `CN03`, người học đổi mức ưu tiên ngay trên màn hình kết quả; giao diện gọi lại API, hiển thị thời gian phản hồi và số bậc tăng hoặc giảm của từng gia sư.
+Giao diện có hai màn hình. Ở `CN01`, người học chọn môn học, hình thức học, khu vực (tự khóa khi chọn học trực tuyến), ngân sách, khung giờ rảnh trên lưới 7 ngày × 3 buổi và mức ưu tiên cho năm tiêu chí; có nút nạp nhanh 14 kịch bản của Bảng 5.1. Ở `CN02`, mỗi gia sư hiện thành một thẻ gồm hạng, mã, điểm tổng $S$, điểm thành phần, thanh xếp chồng thể hiện đóng góp của từng tiêu chí, lý do gợi ý và ghi chú dữ liệu; thẻ gắn nhãn `"Hồ sơ thực tế"` cho `GS-T06`, `GS-T07` và `"Hồ sơ đối chứng"` cho các hồ sơ còn lại. Ở `CN03`, người học đổi mức ưu tiên ngay trên màn hình kết quả; giao diện gọi lại API, hiển thị thời gian phản hồi và số bậc tăng hoặc giảm của từng gia sư. Hình 1 đến Hình 4 minh họa giao diện thực tế của hệ thống.
+
+![Hình 1 - Giao diện nhập nhu cầu học tập và nạp nhanh 14 kịch bản thực nghiệm (CN01)](../assets/midterm/hinh-1-cn01-nhap-nhu-cau.png)
+**Hình 1 - Giao diện nhập nhu cầu học tập và nạp nhanh 14 kịch bản thực nghiệm (CN01)**
+
+![Hình 2 - Giao diện danh sách gợi ý Top-3, biểu đồ thanh xếp chồng và lời giải thích ở kịch bản KB01 (CN02)](../assets/midterm/hinh-2-cn02-ket-qua-top3.png)
+**Hình 2 - Giao diện danh sách gợi ý Top-3, biểu đồ thanh xếp chồng và lời giải thích ở kịch bản KB01 (CN02)**
+
+![Hình 3 - Điều chỉnh mức ưu tiên trực tiếp trên màn hình kết quả và biến động thứ hạng (CN03)](../assets/midterm/hinh-3-cn03-dieu-chinh-uu-tien.png)
+**Hình 3 - Điều chỉnh mức ưu tiên trực tiếp trên màn hình kết quả và biến động thứ hạng (CN03)**
+
+![Hình 4 - Tài liệu OpenAPI (Swagger UI) của endpoint POST /api/recommend trên FastAPI](../assets/midterm/hinh-4-swagger-api-recommend.png)
+**Hình 4 - Tài liệu OpenAPI (Swagger UI) của endpoint POST /api/recommend trên FastAPI**
 
 Các lệnh chạy kiểm thử và khởi động hệ thống:
 
@@ -92,6 +104,9 @@ npm run dev
 
 **Bảng 3 - Kết quả kiểm thử**
 *(Các dòng ghi "Biên bản" lấy từ `docs/scrum/sprints/`, chưa chạy lại cho báo cáo này)*
+
+![Hình 5 - Kết quả chạy bộ 190 bài kiểm thử tự động (pytest) và đối chiếu 14 kịch bản thực nghiệm](../assets/midterm/hinh-5-pytest-190-passed.png)
+**Hình 5 - Kết quả chạy bộ 190 bài kiểm thử tự động (pytest) và đối chiếu 14 kịch bản thực nghiệm**
 
 ### 3.3. Kết quả 14 kịch bản (Bảng 5.1 của đề cương)
 
