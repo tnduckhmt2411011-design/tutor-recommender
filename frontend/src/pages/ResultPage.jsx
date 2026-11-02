@@ -1,5 +1,10 @@
 import TutorCard from '../components/TutorCard'
 import {
+  CRITERIA_LIST,
+  DEFAULT_PRIORITIES,
+  PRIORITY_OPTIONS,
+} from '../services/api'
+import {
   formatCurrencyVnd,
   formatTeachingMode,
   getTutorProfile,
@@ -9,6 +14,11 @@ function ResultPage({
   recommendationResult,
   searchContext,
   onBackToSearch,
+  onUpdatePriorities,
+  isUpdatingPriorities = false,
+  latencyMs = null,
+  apiError = '',
+  rankDeltas = {},
 }) {
   if (!recommendationResult) {
     return null
@@ -24,41 +34,77 @@ function ResultPage({
     insufficient_data_candidates: insufficientDataCandidates = [],
   } = recommendationResult
 
-  const priorities = searchContext?.priorities || {}
+  const priorities = searchContext?.priorities || DEFAULT_PRIORITIES
   const subject = searchContext?.subject || 'Chưa chọn'
   const learningMode = searchContext?.learningMode || 'in_person'
   const preferredDistrict = searchContext?.preferredDistrict || ''
-  const maxBudgetVnd = searchContext?.maxBudgetVnd || ''
+  const maxBudgetVnd = searchContext?.maxBudgetVnd ?? ''
   const timeSlots = searchContext?.timeSlots || []
   const topK = searchContext?.topK || 3
+  const scenarioMeta = searchContext?.scenarioMeta || null
+
+  const isOnlineMode = learningMode === 'online'
+
+  const handleCriterionPriorityClick = (criterionKey, nextLevel) => {
+    if (!onUpdatePriorities) return
+    const nextPriorities = {
+      ...priorities,
+      [criterionKey]: nextLevel,
+    }
+    onUpdatePriorities(nextPriorities)
+  }
+
+  const handleQuickPreset = (presetPriorities) => {
+    if (!onUpdatePriorities) return
+    onUpdatePriorities(presetPriorities)
+  }
 
   return (
     <section className="result-page" aria-live="polite">
       <header className="result-page-header">
         <div>
           <span className="badge">
-            CN02 — Danh sách Top-{topK} gia sư & Giải thích đa tiêu chí
+            CN02 & CN03 — Kết quả xếp hạng Top-{topK} & Điều chỉnh ưu tiên tức thì
           </span>
           <h2>Kết quả gợi ý gia sư phù hợp</h2>
           <p className="subtitle">
             Xếp hạng theo tổng điểm có trọng số <var>S(g)</var> giảm dần (phá hòa
-            theo mã hồ sơ <var>tutor_id</var> tăng dần).
+            theo mã hồ sơ <var>tutor_id</var> tăng dần). Thay đổi mức ưu tiên bên
+            dưới để cập nhật lại thứ hạng ngay lập tức.
           </p>
         </div>
 
-        {onBackToSearch && (
-          <button
-            type="button"
-            className="btn-secondary"
-            onClick={onBackToSearch}
-          >
-            ← Chỉnh sửa điều kiện tìm kiếm (CN01)
-          </button>
-        )}
+        <div className="result-header-actions">
+          {latencyMs !== null && (
+            <span
+              className={`latency-badge ${latencyMs < 1000 ? 'latency-fast' : 'latency-slow'}`}
+              title="Thời gian phản hồi toàn trình từ lúc gửi request đến khi nhận kết quả"
+            >
+              ⚡ Phản hồi API: {latencyMs.toFixed(1).replace('.', ',')} ms (
+              {latencyMs < 1000 ? '< 1 giây' : '≥ 1 giây'})
+            </span>
+          )}
+
+          {onBackToSearch && (
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={onBackToSearch}
+            >
+              ← Chỉnh sửa điều kiện tìm kiếm (CN01)
+            </button>
+          )}
+        </div>
       </header>
 
       <div className="query-summary-banner">
         <div className="query-summary-items">
+          {scenarioMeta && (
+            <span className="summary-chip scenario-active-chip">
+              <strong>Kịch bản:</strong> {scenarioMeta.id} (Kỳ vọng Bảng 5.1:{' '}
+              {scenarioMeta.expected_raw})
+            </span>
+          )}
           <span className="summary-chip">
             <strong>Môn học:</strong> {subject}
           </span>
@@ -67,7 +113,7 @@ function ResultPage({
           </span>
           <span className="summary-chip">
             <strong>Khu vực:</strong>{' '}
-            {learningMode === 'online'
+            {isOnlineMode
               ? 'Không áp dụng (Online)'
               : preferredDistrict || 'Không giới hạn'}
           </span>
@@ -98,20 +144,182 @@ function ResultPage({
         </div>
       </div>
 
+      {onUpdatePriorities && (
+        <section
+          className="cn03-priority-panel"
+          aria-label="CN03 — Điều chỉnh nhanh mức ưu tiên tiêu chí"
+        >
+          <div className="cn03-panel-header">
+            <div>
+              <div className="cn03-title-row">
+                <span className="cn03-tag">CN03 — Tương tác trực tiếp</span>
+                <h3>Điều chỉnh mức ưu tiên & Cập nhật thứ hạng tức thì</h3>
+                {isUpdatingPriorities && (
+                  <span className="updating-pill" role="status">
+                    Đang tính lại điểm...
+                  </span>
+                )}
+              </div>
+              <p className="field-hint">
+                Bấm chọn mức ưu tiên mới cho bất kỳ tiêu chí nào để tự động gọi
+                lại <code>POST /api/recommend</code> và quan sát sự thay đổi thứ
+                hạng cùng thanh điểm xếp chồng ngay trên trang.
+              </p>
+            </div>
+
+            <div className="cn03-preset-actions">
+              <button
+                type="button"
+                className="btn-mini"
+                disabled={isUpdatingPriorities}
+                onClick={() => handleQuickPreset({ ...DEFAULT_PRIORITIES })}
+              >
+                Mặc định (Tất cả w=2)
+              </button>
+              <button
+                type="button"
+                className="btn-mini"
+                disabled={isUpdatingPriorities}
+                onClick={() =>
+                  handleQuickPreset({
+                    fee: 'high',
+                    district: 'low',
+                    experience: 'low',
+                    rating: 'low',
+                    availability: 'low',
+                  })
+                }
+              >
+                Ưu tiên Học phí (w=3)
+              </button>
+              <button
+                type="button"
+                className="btn-mini"
+                disabled={isUpdatingPriorities}
+                onClick={() =>
+                  handleQuickPreset({
+                    fee: 'low',
+                    district: 'low',
+                    experience: 'high',
+                    rating: 'high',
+                    availability: 'low',
+                  })
+                }
+              >
+                Ưu tiên Kinh nghiệm & Đánh giá
+              </button>
+              <button
+                type="button"
+                className="btn-mini btn-mini-warn"
+                disabled={isUpdatingPriorities}
+                onClick={() =>
+                  handleQuickPreset({
+                    fee: 'none',
+                    district: 'none',
+                    experience: 'none',
+                    rating: 'none',
+                    availability: 'none',
+                  })
+                }
+              >
+                Thử ∑w_i = 0 (zero_weight)
+              </button>
+            </div>
+          </div>
+
+          <div className="cn03-grid">
+            {CRITERIA_LIST.map((criterion) => {
+              const isCriterionInactive =
+                (criterion.key === 'district' &&
+                  (isOnlineMode || !String(preferredDistrict).trim())) ||
+                (criterion.key === 'fee' && !String(maxBudgetVnd).trim()) ||
+                (criterion.key === 'availability' && timeSlots.length === 0)
+
+              const currentLevel = priorities[criterion.key] || 'medium'
+
+              return (
+                <div
+                  key={criterion.key}
+                  className={`cn03-criterion-box ${isCriterionInactive ? 'inactive' : ''}`}
+                >
+                  <div className="cn03-criterion-head">
+                    <span className="cn03-criterion-label">
+                      {criterion.label}
+                    </span>
+                    {isCriterionInactive && (
+                      <span className="cn03-inactive-note">
+                        Không áp dụng ở truy vấn này
+                      </span>
+                    )}
+                  </div>
+
+                  <div
+                    className="cn03-btn-group"
+                    role="group"
+                    aria-label={`Đổi nhanh mức ưu tiên ${criterion.label}`}
+                  >
+                    {PRIORITY_OPTIONS.map((opt) => {
+                      const isActive = currentLevel === opt.value
+                      return (
+                        <button
+                          key={opt.value}
+                          type="button"
+                          disabled={isUpdatingPriorities}
+                          className={`cn03-btn ${isActive ? 'active' : ''}`}
+                          onClick={() =>
+                            handleCriterionPriorityClick(
+                              criterion.key,
+                              opt.value
+                            )
+                          }
+                        >
+                          <span>{opt.label}</span>
+                          <small>w={opt.weight}</small>
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </section>
+      )}
+
+      {apiError && (
+        <div className="alert alert-error" role="alert">
+          <strong>Lỗi khi cập nhật kết quả từ máy chủ:</strong> {apiError}
+        </div>
+      )}
+
       {status === 'success' && results.length > 0 && (
         <div className="tutor-card-list">
-          {results.map((item) => (
-            <TutorCard
-              key={item.tutor_id}
-              item={item}
-              priorities={priorities}
-            />
-          ))}
+          {results.map((item) => {
+            const delta = rankDeltas[item.tutor_id]
+            return (
+              <div key={item.tutor_id} className="tutor-card-wrapper">
+                {delta !== undefined && delta !== 0 && (
+                  <div
+                    className={`rank-delta-banner ${delta > 0 ? 'delta-up' : 'delta-down'}`}
+                  >
+                    {delta > 0
+                      ? `↑ Tăng ${delta} bậc sau khi điều chỉnh mức ưu tiên (CN03)`
+                      : `↓ Giảm ${Math.abs(delta)} bậc sau khi điều chỉnh mức ưu tiên (CN03)`}
+                  </div>
+                )}
+                <TutorCard item={item} priorities={priorities} />
+              </div>
+            )
+          })}
         </div>
       )}
 
       {status === 'no_match' && (
-        <div className="friendly-state-card state-no-match" role="region" aria-label="Không tìm thấy gia sư phù hợp">
+        <div
+          className="friendly-state-card state-no-match"
+          role="region"
+          aria-label="Không tìm thấy gia sư phù hợp"
+        >
           <div className="state-icon" aria-hidden="true">
             🔍
           </div>
@@ -166,14 +374,18 @@ function ResultPage({
       )}
 
       {status === 'zero_weight' && (
-        <div className="friendly-state-card state-zero-weight" role="region" aria-label="Tổng trọng số bằng 0">
+        <div
+          className="friendly-state-card state-zero-weight"
+          role="region"
+          aria-label="Tổng trọng số bằng 0"
+        >
           <div className="state-icon" aria-hidden="true">
             ⚖️
           </div>
           <h3>Chưa thể xếp hạng do tổng trọng số bằng 0 (∑w_i = 0)</h3>
           <p className="state-message">
             {message ||
-              'Tất cả các tiêu chí đang áp dụng đều ở mức "Không quan tâm" (w = 0). Vui lòng đặt ít nhất một tiêu chí ở mức Thấp, Trung bình hoặc Cao để hệ thống tính điểm xếp hạng.'}
+              'Tất cả các tiêu chí đang áp dụng đều ở mức "Không quan tâm" (w = 0). Vui lòng đặt ít nhất một tiêu chí ở mức Thấp, Trung bình hoặc Cao ngay trên bảng CN03 phía trên để hệ thống tính điểm xếp hạng.'}
           </p>
 
           {unrankedCandidates.length > 0 && (
