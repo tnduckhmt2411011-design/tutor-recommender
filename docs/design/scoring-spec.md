@@ -111,3 +111,10 @@ Tài liệu này trích dẫn nguyên văn công thức và quy tắc tính đi�
 3. **Tiêu chí có mức “Không quan tâm” ($w = 0$):** Không được tính.
 4. **Tổng trọng số của các tiêu chí đang áp dụng bằng 0 ($\sum w_i = 0$):** Không thể xếp hạng; hệ thống hiển thị danh sách gia sư thỏa điều kiện bắt buộc kèm thông báo cho người học chọn ít nhất một tiêu chí ưu tiên.
 5. **Gia sư chưa có điểm đánh giá:** Dùng giá trị trung tính 0,5 và ghi chú *“chưa có đánh giá”* trên giao diện.
+
+## 7. Quyết định triển khai bổ sung (không thuộc phần trích dẫn đề cương)
+
+Các quyết định dưới đây theo Đức báo là đã được GVHD và nhóm thống nhất (ngày: 2026-11-01; hình thức: tin nhắn Zalo). Chúng bổ sung cách hiểu để cài đặt, không thay đổi công thức hay bảng ngưỡng ở mục 3 và mục 4.
+
+1. Hàng n = 5 của bảng ngưỡng giữ nguyên trong đề cương nhưng không bao giờ được kích hoạt: tiêu chí Đánh giá không tính vào n nên n tối đa là 4 (Học phí, Khu vực, Kinh nghiệm, Lịch rảnh).
+2. Khi n = 0 (chỉ tiêu chí Đánh giá có trọng số lớn hơn 0), ngưỡng tối thiểu là 0: không loại gia sư nào vì thiếu dữ liệu. Trường hợp này khác với tổng trọng số bằng 0 ở mục 6.4, nơi không thể xếp hạng.
