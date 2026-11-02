@@ -3,7 +3,7 @@
 
 # Kế hoạch Sprint 2 (Sprint 2 Planning)
 
-- **Thời gian thực hiện:** 02/11/2026 – 02/11/2026 *(theo tham số Sprint 2 do Đức cung cấp)*
+- **Thời gian thực hiện:** Hạn: 2026-11-06 (theo Milestone Sprint 2); ngày bắt đầu: [Chờ nhóm điền]
 - **Mục tiêu Sprint (Sprint Goal):** Lõi chấm điểm — cài đặt module repository nạp dữ liệu, bộ lọc điều kiện bắt buộc, 5 hàm chuẩn hóa điểm theo Bảng 3.6, module quy đổi trọng số và 100% unit test cho các thành phần này.
 - **Giả định công suất nhóm:** 10 Story Points *(10 Must)*.
 
