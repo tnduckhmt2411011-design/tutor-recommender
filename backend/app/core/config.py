@@ -9,3 +9,23 @@ Mục tương ứng trong đề cương:
 - Mục 3.6. Thiết kế thuật toán (Cơ sở của các tham số)
 - Bảng 3.5. Quy đổi mức ưu tiên sang trọng số
 """
+
+from pathlib import Path
+
+# Tham số thuật toán theo Mục 3.6 và Bảng 3.6.
+DELTA = 0.5
+E_MAX = 8
+RATING_DEFAULT = 0.5
+
+# Quy đổi mức ưu tiên sang trọng số theo Bảng 3.5.
+PRIORITY_WEIGHTS = {"none": 0, "low": 1, "medium": 2, "high": 3}
+DEFAULT_PRIORITY = "medium"
+
+# Tên khóa của 5 tiêu chí ưu tiên dùng thống nhất trong toàn bộ hệ thống.
+CRITERIA_KEYS = ("fee", "district", "experience", "rating", "availability")
+
+# Đường dẫn dữ liệu tính từ vị trí tệp này để không phụ thuộc thư mục chạy.
+REPO_ROOT = Path(__file__).resolve().parents[3]
+DATA_DIR = REPO_ROOT / "data" / "processed"
+TUTORS_JSON_PATH = DATA_DIR / "tutors.json"
+TUTORS_CSV_PATH = DATA_DIR / "tutors.csv"

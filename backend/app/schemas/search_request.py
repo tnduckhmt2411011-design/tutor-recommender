@@ -10,3 +10,30 @@ Mục tương ứng trong đề cương:
 - Bảng 3.4. Cấu trúc bản ghi nhu cầu của người học
 - Bảng 3.5. Quy đổi mức ưu tiên sang trọng số
 """
+
+from typing import Literal
+
+from pydantic import BaseModel, ConfigDict, Field
+
+from app.core.config import CRITERIA_KEYS, DEFAULT_PRIORITY
+
+LearningMode = Literal["in_person", "online", "any"]
+PriorityLevel = Literal["none", "low", "medium", "high"]
+
+
+def default_priorities() -> dict[str, PriorityLevel]:
+    """Mặc định mọi tiêu chí ở mức trung bình theo Bảng 3.5."""
+    return {key: DEFAULT_PRIORITY for key in CRITERIA_KEYS}
+
+
+class SearchRequest(BaseModel):
+    """Nhu cầu tìm gia sư của người học theo Bảng 3.4."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    subject: str
+    learning_mode: LearningMode
+    preferred_district: str | None = None
+    max_budget_vnd: int | None = None
+    time_slots: list[str] | None = None
+    priorities: dict[str, PriorityLevel] = Field(default_factory=default_priorities)
