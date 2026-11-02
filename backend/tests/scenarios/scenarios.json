@@ -77,7 +77,7 @@
     "expected_top3": ["GS006", "GS020"],
     "expected_raw": "1. GS006 (0,848) 2. GS020 (0,715)",
     "lý do": "Kịch bản này không liên quan đến GS-T06 hay GS-T07. Kết quả dùng để kiểm chứng cặp GS006/GS020, hai gia sư chỉ khác nhau ở học phí.",
-    "ghi chú": "CẦN NHÓM XÁC NHẬN: Bảng 5.1 ghi 'Lý, Hóa' (hai môn) trong khi phạm vi đề tài là mỗi lần tìm một môn; bản nháp tạm chọn 'Lý'. Top-3 kỳ vọng chỉ có 2 gia sư."
+    "ghi chú": "Theo Đức báo, nhóm đã chốt: dùng môn Lý (mỗi lần tìm một môn). Với hình thức Trực tuyến chỉ GS006 và GS020 qua lọc nên kết quả không đổi dù hiểu là Lý, Hóa hay cả hai môn. Top-3 kỳ vọng chỉ có 2 gia sư."
   },
   {
     "id": "KB05",
@@ -175,7 +175,7 @@
     "expected_top3": ["GS-G08"],
     "expected_raw": "1. GS-G08 (0,928)",
     "lý do": "Tiếng Nhật là môn hiếm khác trong bộ dữ liệu nên kịch bản này chỉ có 1 ứng viên duy nhất.",
-    "ghi chú": "CẦN NHÓM XÁC NHẬN: Bảng 5.1 ghi hình thức 'Cả hai', không thuộc ba giá trị của Bảng 3.4 (Trực tiếp / Trực tuyến / Không yêu cầu); bản nháp tạm dùng 'any'. Chỉ có 1 kỳ vọng."
+    "ghi chú": "Theo Đức báo, nhóm đã chốt: “Cả hai” được hiểu là không giới hạn hình thức, giá trị any. Chỉ có 1 kỳ vọng."
   },
   {
     "id": "KB10",
@@ -271,6 +271,6 @@
     "expected_top3": ["GS-G03"],
     "expected_raw": "1. GS-G03 (0,70)",
     "lý do": "Chỉ có 1 ứng viên vì đây là kịch bản cố ý giữ lại để minh họa; GS-T06 và GS-T07 không tham gia vì cả hai đều dạy Trực tiếp, không qua được lọc hình thức Trực tuyến.",
-    "ghi chú": "CẦN NHÓM XÁC NHẬN: Phụ lục A ghi môn của GS-G03 là 'Tiếng Anh' trong khi KB14 yêu cầu 'Anh Văn'; so khớp chuỗi hiện tại không tìm thấy ứng viên. Không tự sửa dữ liệu hay kỳ vọng."
+    "ghi chú": "Theo Đức báo, nhóm đã chốt: nhãn môn của GS-G03 được sửa từ “Tiếng Anh” thành “Anh Văn” trong dữ liệu (xem data/README.md, mục Ghi chú hiệu chỉnh dữ liệu). Sau khi sửa, KB14 có ứng viên GS-G03. Top-3 kỳ vọng giữ nguyên."
   }
 ]
