@@ -144,6 +144,16 @@ Ví dụ cho `CN03`: với `KB01`, khi đưa ưu tiên học phí và đánh gi�
 
 ---
 
+### 3.4. Bản chất thuật toán và cơ chế đo độ tương đồng theo chỉ dẫn của GVHD
+
+Theo chỉ dẫn chuyên môn trực tiếp từ GVHD, bản chất bài toán khuyến nghị gia sư trong đồ án là quá trình ghép nối đặc trưng giữa hai tác nhân: người học (hoặc phụ huynh đại diện) và gia sư. Trong đó, mô hình tổng hợp điểm có trọng số (Weighted Scoring) mà nhóm triển khai thực chất là một **hàm đo độ tương đồng đa thuộc tính có trọng số (Weighted Attribute-based Similarity Metric)**:
+
+$$S(g) = Sim(L, T) = \frac{\sum_{i=1}^n w_i \cdot s_i(L_i, T_i)}{\sum_{i=1}^n w_i}$$
+
+trong đó mỗi hàm thành phần $s_i(L_i, T_i) \in [0, 1]$ biểu diễn mức độ tương đồng cục bộ trên từng thuộc tính (mức độ phù hợp học phí, độ khớp khu vực, số năm kinh nghiệm, điểm đánh giá và tỷ lệ trùng khớp lịch rảnh). Trên cơ sở đó, hệ thống tìm kiếm tập hợp $K$ ứng viên có độ tương đồng gần nhất (Nearest Neighbors) so với vector nhu cầu của người học để xuất ra danh sách Top-$k$ gợi ý kèm phân rã điểm thành phần cho người học lựa chọn, thay vì chỉ gán ghép cứng 1:1.
+
+---
+
 ## 4. Khó khăn và việc tồn đọng
 
 | Vấn đề | Tình trạng | Hướng xử lý |
@@ -152,8 +162,21 @@ Ví dụ cho `CN03`: với `KB01`, khi đưa ưu tiên học phí và đánh gi�
 | Nhãn nguồn dữ liệu của `GS-T06` và `GS-T07` | Học phí và lịch rảnh của hai hồ sơ là ước tính, nhưng trường `data_source` vẫn ghi `public_collected` theo Phụ lục A. Nhóm chưa quyết định đổi nhãn | Xin ý kiến Cô (mục 6, câu 2); chốt trước khi viết Phụ lục A |
 | Top-3 kỳ vọng do nhóm tự xác định; dữ liệu nhỏ | Là hạn chế đã nêu ở Mục 5.3 của đề cương; chưa có đánh giá từ người dùng thật | Ghi rõ ở Mục 5.3; không chỉnh kỳ vọng để khớp kết quả |
 | Biên bản Scrum chưa đầy đủ | Biên bản review Sprint 2 đến 5 mới có dữ kiện lấy từ repo; ngày họp, thành phần tham dự và kết luận còn để trống | Điền khi họp tổng kết Sprint 6 |
+| Mở rộng tổ hợp Môn – Cấp lớp – Mục tiêu học tập | Tiếp thu chỉ dẫn của Cô về tổ hợp nhu cầu và ma trận tương thích năng lực gia sư; đã hoàn thiện thiết kế kỹ thuật (Mục 4.2) | Xin ý kiến Cô (mục 6, câu 5) về áp dụng cơ chế Gợi ý trọng số thích ứng hoặc thêm tiêu chí $s_6$ trong Sprint 6 |
 
 **Bảng 5 - Vấn đề tồn đọng và hướng xử lý**
+
+---
+
+### 4.2. Đề xuất mở rộng mô hình: Tổ hợp Cấp lớp và Mục tiêu học tập theo chỉ dẫn của GVHD
+
+Tiếp thu chỉ dẫn từ GVHD, nhóm nhận thấy nhu cầu thực tế của người học không chỉ dừng lại ở tên môn học đơn thuần (ví dụ: môn Toán), mà là một **tổ hợp 3 chiều: $\text{Nhu cầu} = (\text{Môn học}, \text{Cấp lớp / Level}, \text{Mục tiêu học tập})$**. Cùng một môn học, hai người học khác nhau sẽ có mục tiêu và kỳ vọng hoàn toàn khác biệt:
+- **Học sinh A (Toán lớp 8):** Mục tiêu đạt 10 điểm cuối kỳ hoặc luyện thi chuyên/học sinh giỏi $\rightarrow$ Hệ thống ưu tiên ghép với gia sư có trình độ chuyên môn cao (giảng viên, thạc sĩ, thủ khoa), nhiều năm kinh nghiệm và đánh giá xuất sắc, chấp nhận mức học phí cao.
+- **Học sinh B (Toán lớp 9):** Mục tiêu vừa đủ điểm đậu tốt nghiệp hoặc lấy lại kiến thức căn bản $\rightarrow$ Hệ thống ưu tiên gợi ý gia sư là sinh viên khá/giỏi, trẻ trung, nhiệt tình, kiên nhẫn, học phí vừa phải và ở gần nhà để có thể kèm cặp sát sao (thậm chí giảng viên dạy chuyên sâu học thuật sẽ không phù hợp với học sinh mất gốc).
+
+**Đề xuất giải pháp kỹ thuật cho Sprint 6:** Để hiện thực hóa ý tưởng trên mà không làm phá vỡ 14 kịch bản và 190 tests đã nghiệm thu, nhóm đề xuất hai phương án:
+1. *Phương án 1 (Gợi ý trọng số thích ứng - Adaptive Weight Mapping, khuyến nghị):* Mục tiêu học tập sẽ đóng vai trò tự động gợi ý bộ trọng số khởi tạo $w_i$ (ví dụ: mục tiêu Điểm 10 tự động đẩy trọng số Kinh nghiệm và Đánh giá lên mức Cao $w=3$; mục tiêu Vừa đủ đậu đẩy trọng số Học phí lên mức Cao), sau đó người học vẫn có thể tinh chỉnh tiếp trên thanh CN03.
+2. *Phương án 2 (Tiêu chí thành phần thứ 6 - Goal Compatibility):* Xây dựng thêm hàm $s_6$ đo độ tương thích trực tiếp giữa Mục tiêu người học và Phân hạng gia sư.
 
 ---
 
@@ -182,6 +205,7 @@ Ba story Could Have (chuyển sang SQLite, lưu lịch sử tìm kiếm, xuất 
 2. Nhãn nguồn của `GS-T06` và `GS-T07`: giữ `public_collected` như Phụ lục A hay thêm nhãn `estimated` cho phần học phí và lịch rảnh.
 3. Cách trình bày `KB04` trong Bảng 5.1 của báo cáo cuối kỳ: nhóm dự định giữ cột kỳ vọng như đề cương, ghi điểm hệ thống ở cột kết quả và thêm chú thích về nguyên nhân chênh lệch.
 4. Thời điểm nhóm gửi bản thảo Chương 5 và Chương 6 để Cô góp ý trước khi nộp.
+5. Về ý tưởng "Tổ hợp Môn – Cấp lớp – Mục tiêu học tập" mà Cô vừa chỉ dẫn cho nhóm: Nhóm đề xuất phương án áp dụng cơ chế Gợi ý trọng số thích ứng (Adaptive Weight Mapping) trong Sprint 6 để vừa hiện thực hóa chỉ dẫn của Cô vừa giữ nguyên vẹn 190 test case hiện có, hay Cô muốn nhóm bổ sung thêm một tiêu chí điểm thành phần thứ 6 ($s_6$) vào công thức tổng hợp?
 
 ---
 
