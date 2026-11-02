@@ -17,7 +17,7 @@ function TutorCard({ item, priorities }) {
   const districtsText =
     profile?.districts?.length > 0
       ? profile.districts.join(', ')
-      : 'Trực tuyến (không giới hạn quận/huyện)'
+      : 'Trực tuyến (không giới hạn khu vực)'
 
   const feeText = profile
     ? formatCurrencyVnd(profile.hourly_fee_vnd)
@@ -29,10 +29,12 @@ function TutorCard({ item, priorities }) {
       ? `${profile.years_experience} năm kinh nghiệm`
       : 'Chưa cập nhật'
 
-  const ratingText =
+  const hasRating =
     profile?.avg_rating !== null && profile?.avg_rating !== undefined
-      ? `${Number(profile.avg_rating).toFixed(1).replace('.', ',')} / 5,0 ★`
-      : 'Chưa có đánh giá (điểm trung tính 0,50)'
+
+  const ratingText = hasRating
+    ? `${Number(profile.avg_rating).toFixed(1).replace('.', ',')} / 5,0`
+    : 'Chưa có đánh giá (điểm trung tính 0,50)'
 
   const teachingModeText = profile
     ? formatTeachingMode(profile.teaching_mode)
@@ -45,10 +47,10 @@ function TutorCard({ item, priorities }) {
     <article className="tutor-card" aria-label={`Hạng ${item.rank} - ${item.tutor_id}`}>
       <div className="tutor-card-header">
         <div className="tutor-rank-group">
-          <span className={`rank-medal rank-${item.rank <= 3 ? item.rank : 'other'}`}>
-            Hạng #{item.rank}
-          </span>
-          <div>
+          <div className={`rank-mark rank-${item.rank <= 3 ? item.rank : 'other'}`}>
+            <span className="rank-num">#{item.rank}</span>
+          </div>
+          <div className="tutor-identity">
             <div className="tutor-title-line">
               <h3 className="tutor-name">
                 {item.full_name || `Gia sư ${item.tutor_id}`}
@@ -56,52 +58,66 @@ function TutorCard({ item, priorities }) {
               <code className="tutor-id-code">{item.tutor_id}</code>
               {profile && (
                 <span
-                  className={`source-badge ${isRealData ? 'source-real' : 'source-sim'}`}
+                  className={`source-tag ${isRealData ? 'source-real' : 'source-sim'}`}
                 >
-                  {isRealData ? 'Hồ sơ thực tế' : 'Hồ sơ đối chứng'}
+                  {isRealData ? 'Dữ liệu thực tế' : 'Dữ liệu đối chứng'}
                 </span>
               )}
             </div>
-            <p className="tutor-Quick-meta">
-              <strong>Môn dạy:</strong> {subjectsText} •{' '}
-              <strong>Hình thức:</strong> {teachingModeText}
+            <p className="tutor-meta-line">
+              <span className="meta-item">
+                <span className="meta-key">Môn dạy:</span> {subjectsText}
+              </span>
+              <span className="meta-sep">·</span>
+              <span className="meta-item">
+                <span className="meta-key">Hình thức:</span> {teachingModeText}
+              </span>
             </p>
           </div>
         </div>
 
         <div className="tutor-total-score-box">
-          <span className="total-score-label">Điểm phù hợp S(g)</span>
+          <span className="total-score-label">Điểm tổng hợp S(g)</span>
           <strong className="total-score-value">
             {formatScoreVi(item.total_score, 3)}
           </strong>
           <span className="total-score-percent">
-            Mức độ khớp {(Number(item.total_score) * 100).toFixed(1).replace('.', ',')}%
+            Độ khớp {(Number(item.total_score) * 100).toFixed(1).replace('.', ',')}%
           </span>
         </div>
       </div>
 
       <div className="tutor-attributes-grid">
         <div className="attr-item">
-          <span className="attr-label">Học phí tham khảo</span>
+          <span className="attr-label">Học phí</span>
           <strong className="attr-value">{feeText}</strong>
         </div>
         <div className="attr-item">
-          <span className="attr-label">Kinh nghiệm giảng dạy</span>
+          <span className="attr-label">Kinh nghiệm</span>
           <strong className="attr-value">{experienceText}</strong>
         </div>
         <div className="attr-item">
-          <span className="attr-label">Điểm đánh giá trung bình</span>
-          <strong className="attr-value">{ratingText}</strong>
+          <span className="attr-label">Đánh giá</span>
+          <strong className="attr-value attr-rating">
+            {hasRating && (
+              <span className="rating-star-icon" aria-hidden="true">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
+              </span>
+            )}
+            {ratingText}
+          </strong>
         </div>
         <div className="attr-item">
-          <span className="attr-label">Khu vực nhận dạy</span>
+          <span className="attr-label">Khu vực dạy</span>
           <strong className="attr-value">{districtsText}</strong>
         </div>
       </div>
 
       {availabilityList.length > 0 && (
         <div className="tutor-availability-row">
-          <span className="attr-label">Khung giờ rảnh của gia sư:</span>
+          <span className="attr-label">Lịch rảnh:</span>
           <div className="slot-badge-list">
             {availabilityList.map((slot) => (
               <span key={slot} className="slot-mini-badge">
@@ -121,12 +137,12 @@ function TutorCard({ item, priorities }) {
 
       <div className="tutor-explanation-box">
         <p className="explanation-reason">
-          <strong>Lý do gợi ý:</strong> {item.reason}
+          <strong className="reason-label">Lý do gợi ý:</strong> {item.reason}
         </p>
 
         {Array.isArray(item.notes) && item.notes.length > 0 && (
           <div className="explanation-notes">
-            <span className="notes-label">Ghi chú dữ liệu:</span>
+            <span className="notes-label">Ghi chú:</span>
             {item.notes.map((note) => (
               <span key={note} className="note-pill">
                 {note}

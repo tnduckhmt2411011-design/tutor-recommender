@@ -61,27 +61,29 @@ function ResultPage({
 
   return (
     <section className="result-page" aria-live="polite">
-      <header className="result-page-header">
+      <header className="page-header result-page-header">
         <div>
-          <span className="badge">
-            CN02 & CN03 — Kết quả xếp hạng Top-{topK} & Điều chỉnh ưu tiên tức thì
-          </span>
-          <h2>Kết quả gợi ý gia sư phù hợp</h2>
+          <div className="academic-label">
+            Mô-đun CN02 & CN03 · Kết quả xếp hạng Top-{topK} & Điều chỉnh ưu tiên
+          </div>
+          <h1>Kết quả Gợi ý Gia sư Phù hợp</h1>
           <p className="subtitle">
-            Xếp hạng theo tổng điểm có trọng số <var>S(g)</var> giảm dần (phá hòa
-            theo mã hồ sơ <var>tutor_id</var> tăng dần). Thay đổi mức ưu tiên bên
-            dưới để cập nhật lại thứ hạng ngay lập tức.
+            Xếp hạng theo tổng điểm có trọng số <var>S(g)</var> giảm dần (phá hòa theo mã hồ sơ <var>tutor_id</var>).
+            Sử dụng bảng điều khiển CN03 bên trái để cập nhật lại thứ hạng ngay lập tức.
           </p>
         </div>
 
-        <div className="result-header-actions">
+        <div className="header-actions">
           {latencyMs !== null && (
             <span
-              className={`latency-badge ${latencyMs < 1000 ? 'latency-fast' : 'latency-slow'}`}
-              title="Thời gian phản hồi toàn trình từ lúc gửi request đến khi nhận kết quả"
+              className={`latency-indicator ${latencyMs < 1000 ? 'latency-good' : 'latency-warn'}`}
+              title="Thời gian phản hồi toàn trình API"
             >
-              ⚡ Phản hồi API: {latencyMs.toFixed(1).replace('.', ',')} ms (
-              {latencyMs < 1000 ? '< 1 giây' : '≥ 1 giây'})
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+              <span>{latencyMs.toFixed(1).replace('.', ',')} ms</span>
             </span>
           )}
 
@@ -91,335 +93,343 @@ function ResultPage({
               className="btn-secondary"
               onClick={onBackToSearch}
             >
-              ← Chỉnh sửa điều kiện tìm kiếm (CN01)
+              ← Điều chỉnh điều kiện tìm kiếm (CN01)
             </button>
           )}
         </div>
       </header>
 
-      <div className="query-summary-banner">
-        <div className="query-summary-items">
+      {/* KPI & Summary Strip */}
+      <div className="workbench-kpi-strip">
+        <div className="kpi-chips">
           {scenarioMeta && (
-            <span className="summary-chip scenario-active-chip">
-              <strong>Kịch bản:</strong> {scenarioMeta.id} (Kỳ vọng Bảng 5.1:{' '}
-              {scenarioMeta.expected_raw})
-            </span>
+            <div className="kpi-chip kpi-scenario">
+              <span className="kpi-label">Kịch bản:</span>
+              <strong className="kpi-val">{scenarioMeta.id}</strong>
+              <span className="kpi-note">(Kỳ vọng: {scenarioMeta.expected_raw})</span>
+            </div>
           )}
-          <span className="summary-chip">
-            <strong>Môn học:</strong> {subject}
-          </span>
-          <span className="summary-chip">
-            <strong>Hình thức:</strong> {formatTeachingMode(learningMode)}
-          </span>
-          <span className="summary-chip">
-            <strong>Khu vực:</strong>{' '}
-            {isOnlineMode
-              ? 'Không áp dụng (Online)'
-              : preferredDistrict || 'Không giới hạn'}
-          </span>
-          <span className="summary-chip">
-            <strong>Ngân sách tối đa:</strong>{' '}
-            {String(maxBudgetVnd).trim() !== ''
-              ? formatCurrencyVnd(Number(maxBudgetVnd))
-              : 'Không giới hạn'}
-          </span>
-          <span className="summary-chip">
-            <strong>Khung giờ:</strong>{' '}
-            {timeSlots.length > 0 ? timeSlots.join(', ') : 'Không giới hạn'}
-          </span>
+          <div className="kpi-chip">
+            <span className="kpi-label">Môn:</span>
+            <strong className="kpi-val">{subject}</strong>
+          </div>
+          <div className="kpi-chip">
+            <span className="kpi-label">Hình thức:</span>
+            <span className="kpi-val">{formatTeachingMode(learningMode)}</span>
+          </div>
+          <div className="kpi-chip">
+            <span className="kpi-label">Khu vực:</span>
+            <span className="kpi-val">
+              {isOnlineMode
+                ? 'Không áp dụng (Online)'
+                : preferredDistrict || 'Không giới hạn'}
+            </span>
+          </div>
+          <div className="kpi-chip">
+            <span className="kpi-label">Ngân sách:</span>
+            <span className="kpi-val">
+              {String(maxBudgetVnd).trim() !== ''
+                ? formatCurrencyVnd(Number(maxBudgetVnd))
+                : 'Không giới hạn'}
+            </span>
+          </div>
+          <div className="kpi-chip">
+            <span className="kpi-label">Lịch:</span>
+            <span className="kpi-val">
+              {timeSlots.length > 0 ? timeSlots.join(', ') : 'Không giới hạn'}
+            </span>
+          </div>
         </div>
 
-        <div className="candidate-funnel">
-          <span>
-            Kho dữ liệu: <strong>{totalCandidates}</strong> hồ sơ
+        <div className="kpi-funnel">
+          <span className="funnel-step">
+            Kho: <strong>{totalCandidates}</strong> hồ sơ
           </span>
-          <span className="funnel-arrow">→</span>
-          <span>
-            Qua lọc bắt buộc: <strong>{qualifiedCandidates}</strong> ứng viên
+          <span className="funnel-sep">→</span>
+          <span className="funnel-step">
+            Hợp lệ: <strong>{qualifiedCandidates}</strong> ứng viên
           </span>
-          <span className="funnel-arrow">→</span>
-          <span>
-            Hiển thị Top-{topK}: <strong>{results.length}</strong> gia sư
+          <span className="funnel-sep">→</span>
+          <span className="funnel-step">
+            Top-{topK}: <strong>{results.length}</strong> gợi ý
           </span>
         </div>
       </div>
 
-      {onUpdatePriorities && (
-        <section
-          className="cn03-priority-panel"
-          aria-label="CN03 — Điều chỉnh nhanh mức ưu tiên tiêu chí"
-        >
-          <div className="cn03-panel-header">
-            <div>
-              <div className="cn03-title-row">
-                <span className="cn03-tag">CN03 — Tương tác trực tiếp</span>
-                <h3>Điều chỉnh mức ưu tiên & Cập nhật thứ hạng tức thì</h3>
-                {isUpdatingPriorities && (
-                  <span className="updating-pill" role="status">
-                    Đang tính lại điểm...
-                  </span>
-                )}
+      {apiError && (
+        <div className="alert alert-error" role="alert">
+          <strong>Lỗi máy chủ:</strong> {apiError}
+        </div>
+      )}
+
+      {/* 2-Column Workbench Layout: Left = CN03 Interactive Rail, Right = Ranked Results */}
+      <div className="result-workbench-layout">
+        {onUpdatePriorities && (
+          <aside
+            className="cn03-rail panel"
+            aria-label="CN03 - Điều chỉnh nhanh mức ưu tiên tiêu chí"
+          >
+            <div className="cn03-rail-head">
+              <div>
+                <span className="academic-label">Mô-đun CN03 · Tương tác</span>
+                <h3 className="rail-title">Điều chỉnh mức ưu tiên</h3>
               </div>
-              <p className="field-hint">
-                Bấm chọn mức ưu tiên mới cho bất kỳ tiêu chí nào để tự động gọi
-                lại <code>POST /api/recommend</code> và quan sát sự thay đổi thứ
-                hạng cùng thanh điểm xếp chồng ngay trên trang.
-              </p>
+              {isUpdatingPriorities && (
+                <span className="updating-status" role="status">
+                  Đang tính lại...
+                </span>
+              )}
             </div>
+            <p className="rail-desc">
+              Thay đổi mức ưu tiên cho bất kỳ tiêu chí nào để gọi lại API và cập nhật thứ hạng tức thì.
+            </p>
 
-            <div className="cn03-preset-actions">
-              <button
-                type="button"
-                className="btn-mini"
-                disabled={isUpdatingPriorities}
-                onClick={() => handleQuickPreset({ ...DEFAULT_PRIORITIES })}
-              >
-                Mặc định (Tất cả w=2)
-              </button>
-              <button
-                type="button"
-                className="btn-mini"
-                disabled={isUpdatingPriorities}
-                onClick={() =>
-                  handleQuickPreset({
-                    fee: 'high',
-                    district: 'low',
-                    experience: 'low',
-                    rating: 'low',
-                    availability: 'low',
-                  })
-                }
-              >
-                Ưu tiên Học phí (w=3)
-              </button>
-              <button
-                type="button"
-                className="btn-mini"
-                disabled={isUpdatingPriorities}
-                onClick={() =>
-                  handleQuickPreset({
-                    fee: 'low',
-                    district: 'low',
-                    experience: 'high',
-                    rating: 'high',
-                    availability: 'low',
-                  })
-                }
-              >
-                Ưu tiên Kinh nghiệm & Đánh giá
-              </button>
-              <button
-                type="button"
-                className="btn-mini btn-mini-warn"
-                disabled={isUpdatingPriorities}
-                onClick={() =>
-                  handleQuickPreset({
-                    fee: 'none',
-                    district: 'none',
-                    experience: 'none',
-                    rating: 'none',
-                    availability: 'none',
-                  })
-                }
-              >
-                Thử ∑w_i = 0 (zero_weight)
-              </button>
-            </div>
-          </div>
-
-          <div className="cn03-grid">
-            {CRITERIA_LIST.map((criterion) => {
-              const isCriterionInactive =
-                (criterion.key === 'district' &&
-                  (isOnlineMode || !String(preferredDistrict).trim())) ||
-                (criterion.key === 'fee' && !String(maxBudgetVnd).trim()) ||
-                (criterion.key === 'availability' && timeSlots.length === 0)
-
-              const currentLevel = priorities[criterion.key] || 'medium'
-
-              return (
-                <div
-                  key={criterion.key}
-                  className={`cn03-criterion-box ${isCriterionInactive ? 'inactive' : ''}`}
+            <div className="cn03-presets-list">
+              <span className="presets-label">Nạp nhanh trọng số:</span>
+              <div className="presets-buttons">
+                <button
+                  type="button"
+                  className="preset-pill"
+                  disabled={isUpdatingPriorities}
+                  onClick={() => handleQuickPreset({ ...DEFAULT_PRIORITIES })}
                 >
-                  <div className="cn03-criterion-head">
-                    <span className="cn03-criterion-label">
-                      {criterion.label}
-                    </span>
-                    {isCriterionInactive && (
-                      <span className="cn03-inactive-note">
-                        Không áp dụng ở truy vấn này
-                      </span>
-                    )}
-                  </div>
+                  Mặc định (w=2)
+                </button>
+                <button
+                  type="button"
+                  className="preset-pill"
+                  disabled={isUpdatingPriorities}
+                  onClick={() =>
+                    handleQuickPreset({
+                      fee: 'high',
+                      district: 'low',
+                      experience: 'low',
+                      rating: 'low',
+                      availability: 'low',
+                    })
+                  }
+                >
+                  Ưu tiên Học phí
+                </button>
+                <button
+                  type="button"
+                  className="preset-pill"
+                  disabled={isUpdatingPriorities}
+                  onClick={() =>
+                    handleQuickPreset({
+                      fee: 'low',
+                      district: 'low',
+                      experience: 'high',
+                      rating: 'high',
+                      availability: 'low',
+                    })
+                  }
+                >
+                  Ưu tiên KN & Đánh giá
+                </button>
+                <button
+                  type="button"
+                  className="preset-pill preset-pill-warn"
+                  disabled={isUpdatingPriorities}
+                  onClick={() =>
+                    handleQuickPreset({
+                      fee: 'none',
+                      district: 'none',
+                      experience: 'none',
+                      rating: 'none',
+                      availability: 'none',
+                    })
+                  }
+                >
+                  Thử ∑w_i = 0
+                </button>
+              </div>
+            </div>
 
+            <div className="cn03-controls-stack">
+              {CRITERIA_LIST.map((criterion) => {
+                const isCriterionInactive =
+                  (criterion.key === 'district' &&
+                    (isOnlineMode || !String(preferredDistrict).trim())) ||
+                  (criterion.key === 'fee' && !String(maxBudgetVnd).trim()) ||
+                  (criterion.key === 'availability' && timeSlots.length === 0)
+
+                const currentLevel = priorities[criterion.key] || 'medium'
+
+                return (
                   <div
-                    className="cn03-btn-group"
-                    role="group"
-                    aria-label={`Đổi nhanh mức ưu tiên ${criterion.label}`}
+                    key={criterion.key}
+                    className={`cn03-item ${isCriterionInactive ? 'item-inactive' : ''}`}
                   >
-                    {PRIORITY_OPTIONS.map((opt) => {
-                      const isActive = currentLevel === opt.value
+                    <div className="cn03-item-head">
+                      <span className="cn03-item-name">{criterion.label}</span>
+                      {isCriterionInactive && (
+                        <span className="item-inactive-tag">Không áp dụng</span>
+                      )}
+                    </div>
+
+                    <div
+                      className="cn03-btn-segmented"
+                      role="group"
+                      aria-label={`Mức ưu tiên ${criterion.label}`}
+                    >
+                      {PRIORITY_OPTIONS.map((opt) => {
+                        const isActive = currentLevel === opt.value
+                        return (
+                          <button
+                            key={opt.value}
+                            type="button"
+                            disabled={isUpdatingPriorities}
+                            className={`cn03-step-btn ${isActive ? 'active' : ''}`}
+                            onClick={() =>
+                              handleCriterionPriorityClick(
+                                criterion.key,
+                                opt.value
+                              )
+                            }
+                          >
+                            <span className="step-label">{opt.label}</span>
+                            <span className="step-w">w={opt.weight}</span>
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </aside>
+        )}
+
+        <main className="results-main">
+          {status === 'success' && results.length > 0 && (
+            <div className="tutor-cards-list">
+              {results.map((item) => {
+                const delta = rankDeltas[item.tutor_id]
+                return (
+                  <div key={item.tutor_id} className="tutor-card-container">
+                    {delta !== undefined && delta !== 0 && (
+                      <div
+                        className={`rank-delta-indicator ${delta > 0 ? 'delta-up' : 'delta-down'}`}
+                      >
+                        {delta > 0
+                          ? `↑ Tăng ${delta} bậc sau khi điều chỉnh mức ưu tiên (CN03)`
+                          : `↓ Giảm ${Math.abs(delta)} bậc sau khi điều chỉnh mức ưu tiên (CN03)`}
+                      </div>
+                    )}
+                    <TutorCard item={item} priorities={priorities} />
+                  </div>
+                )
+              })}
+            </div>
+          )}
+
+          {status === 'no_match' && (
+            <div
+              className="friendly-state-card state-no-match"
+              role="region"
+              aria-label="Không tìm thấy gia sư phù hợp"
+            >
+              <div className="state-icon" aria-hidden="true">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="M21 21l-4.35-4.35" />
+                </svg>
+              </div>
+              <h3>Không tìm thấy gia sư thỏa mãn điều kiện</h3>
+              <p className="state-message">
+                {message ||
+                  'Không có gia sư nào trong cơ sở dữ liệu đáp ứng đồng thời các điều kiện lọc bắt buộc hoặc ngưỡng dữ liệu tối thiểu.'}
+              </p>
+
+              {insufficientDataCandidates.length > 0 && (
+                <div className="candidate-fallback-box">
+                  <h4>
+                    Ứng viên qua lọc bắt buộc nhưng chưa đủ ngưỡng dữ liệu tối thiểu ({insufficientDataCandidates.length}):
+                  </h4>
+                  <div className="fallback-candidate-grid">
+                    {insufficientDataCandidates.map((id) => {
+                      const prof = getTutorProfile(id)
                       return (
-                        <button
-                          key={opt.value}
-                          type="button"
-                          disabled={isUpdatingPriorities}
-                          className={`cn03-btn ${isActive ? 'active' : ''}`}
-                          onClick={() =>
-                            handleCriterionPriorityClick(
-                              criterion.key,
-                              opt.value
-                            )
-                          }
-                        >
-                          <span>{opt.label}</span>
-                          <small>w={opt.weight}</small>
-                        </button>
+                        <div key={id} className="fallback-candidate-item">
+                          <code>{id}</code>
+                          {prof && (
+                            <span className="fallback-meta">
+                              {prof.subjects.join(', ')} · {formatCurrencyVnd(prof.hourly_fee_vnd)}
+                            </span>
+                          )}
+                        </div>
                       )
                     })}
                   </div>
                 </div>
-              )
-            })}
-          </div>
-        </section>
-      )}
+              )}
 
-      {apiError && (
-        <div className="alert alert-error" role="alert">
-          <strong>Lỗi khi cập nhật kết quả từ máy chủ:</strong> {apiError}
-        </div>
-      )}
-
-      {status === 'success' && results.length > 0 && (
-        <div className="tutor-card-list">
-          {results.map((item) => {
-            const delta = rankDeltas[item.tutor_id]
-            return (
-              <div key={item.tutor_id} className="tutor-card-wrapper">
-                {delta !== undefined && delta !== 0 && (
-                  <div
-                    className={`rank-delta-banner ${delta > 0 ? 'delta-up' : 'delta-down'}`}
+              <div className="state-suggestions">
+                <p>
+                  <strong>Gợi ý điều chỉnh:</strong> Mở rộng khung giờ rảnh, chọn hình thức <em>Không yêu cầu (Cả hai)</em> hoặc môn học khác.
+                </p>
+                {onBackToSearch && (
+                  <button
+                    type="button"
+                    className="btn-primary"
+                    onClick={onBackToSearch}
                   >
-                    {delta > 0
-                      ? `↑ Tăng ${delta} bậc sau khi điều chỉnh mức ưu tiên (CN03)`
-                      : `↓ Giảm ${Math.abs(delta)} bậc sau khi điều chỉnh mức ưu tiên (CN03)`}
-                  </div>
+                    Quay lại điều chỉnh điều kiện tìm kiếm
+                  </button>
                 )}
-                <TutorCard item={item} priorities={priorities} />
-              </div>
-            )
-          })}
-        </div>
-      )}
-
-      {status === 'no_match' && (
-        <div
-          className="friendly-state-card state-no-match"
-          role="region"
-          aria-label="Không tìm thấy gia sư phù hợp"
-        >
-          <div className="state-icon" aria-hidden="true">
-            🔍
-          </div>
-          <h3>Không tìm thấy gia sư thỏa mãn điều kiện</h3>
-          <p className="state-message">
-            {message ||
-              'Không có gia sư nào trong kho dữ liệu đáp ứng đồng thời các điều kiện lọc bắt buộc hoặc ngưỡng dữ liệu tối thiểu.'}
-          </p>
-
-          {insufficientDataCandidates.length > 0 && (
-            <div className="candidate-fallback-box">
-              <h4>
-                Ứng viên qua lọc bắt buộc nhưng chưa đủ ngưỡng dữ liệu tối thiểu
-                ({insufficientDataCandidates.length}):
-              </h4>
-              <div className="fallback-candidate-grid">
-                {insufficientDataCandidates.map((id) => {
-                  const prof = getTutorProfile(id)
-                  return (
-                    <div key={id} className="fallback-candidate-item">
-                      <strong>{id}</strong>
-                      {prof && (
-                        <span>
-                          {prof.subjects.join(', ')} •{' '}
-                          {formatCurrencyVnd(prof.hourly_fee_vnd)}
-                        </span>
-                      )}
-                    </div>
-                  )
-                })}
               </div>
             </div>
           )}
 
-          <div className="state-suggestions">
-            <p>
-              <strong>Gợi ý điều chỉnh:</strong> Thử mở rộng khung giờ rảnh,
-              chọn hình thức <em>Không yêu cầu (Cả hai)</em> hoặc chọn môn học
-              khác để tìm thêm ứng viên.
-            </p>
-            {onBackToSearch && (
-              <button
-                type="button"
-                className="btn-primary"
-                onClick={onBackToSearch}
-              >
-                Quay lại điều chỉnh tiêu chí tìm kiếm
-              </button>
-            )}
-          </div>
-        </div>
-      )}
-
-      {status === 'zero_weight' && (
-        <div
-          className="friendly-state-card state-zero-weight"
-          role="region"
-          aria-label="Tổng trọng số bằng 0"
-        >
-          <div className="state-icon" aria-hidden="true">
-            ⚖️
-          </div>
-          <h3>Chưa thể xếp hạng do tổng trọng số bằng 0 (∑w_i = 0)</h3>
-          <p className="state-message">
-            {message ||
-              'Tất cả các tiêu chí đang áp dụng đều ở mức "Không quan tâm" (w = 0). Vui lòng đặt ít nhất một tiêu chí ở mức Thấp, Trung bình hoặc Cao ngay trên bảng CN03 phía trên để hệ thống tính điểm xếp hạng.'}
-          </p>
-
-          {unrankedCandidates.length > 0 && (
-            <div className="candidate-fallback-box">
-              <h4>
-                Danh sách {unrankedCandidates.length} gia sư đã vượt qua bước lọc
-                điều kiện bắt buộc (chưa xếp hạng):
-              </h4>
-              <div className="fallback-candidate-grid">
-                {unrankedCandidates.map((id) => {
-                  const prof = getTutorProfile(id)
-                  return (
-                    <div key={id} className="fallback-candidate-item">
-                      <div className="fallback-item-head">
-                        <code>{id}</code>
-                        {prof && (
-                          <span>{formatTeachingMode(prof.teaching_mode)}</span>
-                        )}
-                      </div>
-                      {prof && (
-                        <p className="fallback-item-meta">
-                          Môn: {prof.subjects.join(', ')} • Học phí:{' '}
-                          {formatCurrencyVnd(prof.hourly_fee_vnd)} • KN:{' '}
-                          {prof.years_experience} năm
-                        </p>
-                      )}
-                    </div>
-                  )
-                })}
+          {status === 'zero_weight' && (
+            <div
+              className="friendly-state-card state-zero-weight"
+              role="region"
+              aria-label="Tổng trọng số bằng 0"
+            >
+              <div className="state-icon" aria-hidden="true">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M12 3v18M6 8l6-5 6 5M6 8l-3 7h6l-3-7zm12 0l-3 7h6l-3-7z" />
+                </svg>
               </div>
+              <h3>Chưa thể xếp hạng do tổng trọng số bằng 0 (∑w_i = 0)</h3>
+              <p className="state-message">
+                {message ||
+                  'Tất cả các tiêu chí đang áp dụng đều ở mức "Không quan tâm" (w = 0). Vui lòng đặt ít nhất một tiêu chí ở mức Thấp, Trung bình hoặc Cao trên thanh điều khiển CN03 bên trái.'}
+              </p>
+
+              {unrankedCandidates.length > 0 && (
+                <div className="candidate-fallback-box">
+                  <h4>
+                    Danh sách {unrankedCandidates.length} gia sư đã vượt qua bước lọc bắt buộc (chưa xếp hạng):
+                  </h4>
+                  <div className="fallback-candidate-grid">
+                    {unrankedCandidates.map((id) => {
+                      const prof = getTutorProfile(id)
+                      return (
+                        <div key={id} className="fallback-candidate-item">
+                          <div className="fallback-item-head">
+                            <code>{id}</code>
+                            {prof && (
+                              <span>{formatTeachingMode(prof.teaching_mode)}</span>
+                            )}
+                          </div>
+                          {prof && (
+                            <p className="fallback-item-meta">
+                              Môn: {prof.subjects.join(', ')} · Học phí: {formatCurrencyVnd(prof.hourly_fee_vnd)} · KN: {prof.years_experience} năm
+                            </p>
+                          )}
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
           )}
-        </div>
-      )}
+        </main>
+      </div>
     </section>
   )
 }

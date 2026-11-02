@@ -121,35 +121,28 @@ function SearchPage({
   return (
     <div className="search-page">
       <header className="page-header">
-        <span className="badge">CN01 — Thiết lập nhu cầu & Trọng số ưu tiên</span>
-        <h1>Hệ thống khuyến nghị gia sư đa tiêu chí</h1>
+        <div className="academic-label">Mô-đun CN01 · Thiết lập nhu cầu & Trọng số ưu tiên</div>
+        <h1>Tìm kiếm & Khuyến nghị Gia sư Đa tiêu chí</h1>
         <p className="subtitle">
-          Nhập điều kiện học tập và điều chỉnh mức độ ưu tiên cho 5 tiêu chí để
+          Nhập điều kiện học tập và thiết lập trọng số ưu tiên cho 5 tiêu chí để
           xếp hạng Top-k gia sư theo mô hình Weighted Scoring.
         </p>
       </header>
 
       <section
-        className="scenario-preset-card"
+        className="scenario-strip-panel"
         aria-label="Nạp nhanh 14 kịch bản thực nghiệm Bảng 5.1"
       >
-        <div className="scenario-preset-header">
-          <div>
-            <h2>Nạp nhanh 14 kịch bản thực nghiệm (Bảng 5.1 — KB01 đến KB14)</h2>
-            <p className="field-hint">
-              Chọn một kịch bản để tự động điền thông số truy vấn và chạy đối
-              chiếu trực tiếp với kết quả kỳ vọng trong đề cương.
-            </p>
-          </div>
+        <div className="scenario-strip-header">
+          <span className="strip-title">Kịch bản thực nghiệm (Bảng 5.1 · KB01 - KB14):</span>
           {scenarioMeta && (
-            <span className="scenario-selected-badge">
-              Đang chọn: <strong>{scenarioMeta.id}</strong> — Kỳ vọng:{' '}
-              {scenarioMeta.expected_raw}
+            <span className="scenario-active-indicator">
+              Đang chọn: <strong>{scenarioMeta.id}</strong> (Kỳ vọng: {scenarioMeta.expected_raw})
             </span>
           )}
         </div>
 
-        <div className="scenario-chip-list">
+        <div className="scenario-chip-scroller">
           {SCENARIOS_CATALOG.map((sc) => {
             const isSelected = scenarioMeta?.id === sc.id
             return (
@@ -157,15 +150,15 @@ function SearchPage({
                 key={sc.id}
                 type="button"
                 disabled={isLoading}
-                title={sc.title}
+                title={`${sc.title} - Kỳ vọng: ${sc.expected_raw}`}
                 className={`scenario-chip ${isSelected ? 'active' : ''}`}
                 onClick={() => {
                   setValidationError('')
                   onApplyScenario(sc)
                 }}
               >
-                <strong>{sc.id}</strong>
-                <span>{sc.request.subject}</span>
+                <span className="sc-id">{sc.id}</span>
+                <span className="sc-subj">{sc.request.subject}</span>
               </button>
             )
           })}
@@ -173,280 +166,280 @@ function SearchPage({
       </section>
 
       <form className="search-form" onSubmit={handleSubmit} noValidate>
-        <section className="form-card">
-          <div className="card-header">
-            <h2>1. Thông tin nhu cầu học tập (Bảng 3.4)</h2>
-            <button
-              type="button"
-              className="btn-secondary"
-              onClick={handleResetDefaults}
-            >
-              Đặt lại mẫu mặc định
-            </button>
-          </div>
-
-          <div className="form-grid">
-            <div className="form-field">
-              <label htmlFor="subject-select">
-                Môn học <span className="required">*</span>
-              </label>
-              <select
-                id="subject-select"
-                value={subject}
-                onChange={(e) =>
-                  updateField({ subject: e.target.value, scenarioMeta: null })
-                }
-                required
+        <div className="workbench-columns">
+          {/* Cột 1: Thông tin nhu cầu học tập & Lịch rảnh */}
+          <section className="panel col-main">
+            <div className="panel-header">
+              <h2>1. Thông tin nhu cầu học tập (Bảng 3.4)</h2>
+              <button
+                type="button"
+                className="btn-secondary"
+                onClick={handleResetDefaults}
               >
-                {SUBJECT_OPTIONS.map((subj) => (
-                  <option key={subj} value={subj}>
-                    {subj}
-                  </option>
-                ))}
-              </select>
-              <span className="field-hint">
-                Điều kiện lọc bắt buộc: gia sư phải nhận dạy môn này.
-              </span>
+                Đặt lại mặc định
+              </button>
             </div>
 
-            <div className="form-field">
-              <label htmlFor="learning-mode-select">
-                Hình thức học <span className="required">*</span>
-              </label>
-              <select
-                id="learning-mode-select"
-                value={learningMode}
-                onChange={(e) => handleLearningModeChange(e.target.value)}
-              >
-                {LEARNING_MODE_OPTIONS.map((mode) => (
-                  <option key={mode.value} value={mode.value}>
-                    {mode.label}
-                  </option>
-                ))}
-              </select>
-              <span className="field-hint">
-                Khi chọn Trực tuyến, tiêu chí Khu vực sẽ tự động không áp dụng.
-              </span>
-            </div>
-
-            {!isOnlineMode ? (
+            <div className="form-fields-grid">
               <div className="form-field">
-                <label htmlFor="district-select">Khu vực mong muốn</label>
+                <label htmlFor="subject-select">
+                  Môn học <span className="required">*</span>
+                </label>
                 <select
-                  id="district-select"
-                  value={preferredDistrict}
+                  id="subject-select"
+                  value={subject}
                   onChange={(e) =>
-                    updateField({
-                      preferredDistrict: e.target.value,
-                      scenarioMeta: null,
-                    })
+                    updateField({ subject: e.target.value, scenarioMeta: null })
                   }
+                  required
                 >
-                  <option value="">-- Không giới hạn khu vực --</option>
-                  {DISTRICT_OPTIONS.map((dist) => (
-                    <option key={dist} value={dist}>
-                      {dist}
+                  {SUBJECT_OPTIONS.map((subj) => (
+                    <option key={subj} value={subj}>
+                      {subj}
                     </option>
                   ))}
                 </select>
                 <span className="field-hint">
-                  Dùng để chấm điểm mức độ khớp khu vực dạy trực tiếp.
+                  Điều kiện lọc bắt buộc: gia sư phải nhận dạy môn này.
                 </span>
               </div>
-            ) : (
-              <div className="form-field disabled-field">
-                <label htmlFor="district-disabled">Khu vực mong muốn</label>
+
+              <div className="form-field">
+                <label htmlFor="learning-mode-select">
+                  Hình thức học <span className="required">*</span>
+                </label>
+                <select
+                  id="learning-mode-select"
+                  value={learningMode}
+                  onChange={(e) => handleLearningModeChange(e.target.value)}
+                >
+                  {LEARNING_MODE_OPTIONS.map((mode) => (
+                    <option key={mode.value} value={mode.value}>
+                      {mode.label}
+                    </option>
+                  ))}
+                </select>
+                <span className="field-hint">
+                  Khi học Trực tuyến, tiêu chí Khu vực tự động không áp dụng.
+                </span>
+              </div>
+
+              {!isOnlineMode ? (
+                <div className="form-field">
+                  <label htmlFor="district-select">Khu vực mong muốn</label>
+                  <select
+                    id="district-select"
+                    value={preferredDistrict}
+                    onChange={(e) =>
+                      updateField({
+                        preferredDistrict: e.target.value,
+                        scenarioMeta: null,
+                      })
+                    }
+                  >
+                    <option value="">-- Không giới hạn khu vực --</option>
+                    {DISTRICT_OPTIONS.map((dist) => (
+                      <option key={dist} value={dist}>
+                        {dist}
+                      </option>
+                    ))}
+                  </select>
+                  <span className="field-hint">
+                    Dùng để tính điểm khớp vị trí dạy trực tiếp.
+                  </span>
+                </div>
+              ) : (
+                <div className="form-field disabled-field">
+                  <label htmlFor="district-disabled">Khu vực mong muốn</label>
+                  <input
+                    id="district-disabled"
+                    type="text"
+                    value="Không áp dụng khi học Trực tuyến (Online)"
+                    disabled
+                    readOnly
+                  />
+                  <span className="field-hint">
+                    Tiêu chí khu vực được loại khỏi công thức tổng hợp điểm.
+                  </span>
+                </div>
+              )}
+
+              <div className="form-field">
+                <label htmlFor="budget-input">
+                  Ngân sách tối đa / giờ (VNĐ)
+                </label>
                 <input
-                  id="district-disabled"
-                  type="text"
-                  value="Không áp dụng khi học Trực tuyến (Online)"
-                  disabled
-                  readOnly
+                  id="budget-input"
+                  type="number"
+                  min="0"
+                  step="10000"
+                  placeholder="Ví dụ: 200000 (để trống nếu không giới hạn)"
+                  value={maxBudgetVnd}
+                  onChange={(e) =>
+                    updateField({
+                      maxBudgetVnd: e.target.value,
+                      scenarioMeta: null,
+                    })
+                  }
                 />
                 <span className="field-hint">
-                  Tiêu chí khu vực được loại khỏi công thức tổng hợp điểm.
+                  Học phí trong ngân sách đạt điểm 1,00; vượt quá 1,5 lần nhận 0 điểm.
                 </span>
               </div>
-            )}
 
-            <div className="form-field">
-              <label htmlFor="budget-input">
-                Ngân sách tối đa / giờ (VNĐ)
-              </label>
-              <input
-                id="budget-input"
-                type="number"
-                min="0"
-                step="10000"
-                placeholder="Để trống nếu không giới hạn (ví dụ: 200000)"
-                value={maxBudgetVnd}
-                onChange={(e) =>
-                  updateField({
-                    maxBudgetVnd: e.target.value,
-                    scenarioMeta: null,
-                  })
-                }
-              />
-              <span className="field-hint">
-                Học phí trong ngân sách đạt điểm tối đa 1,00; vượt quá 1,5 lần
-                ngân sách nhận 0 điểm.
-              </span>
-            </div>
-
-            <div className="form-field">
-              <label htmlFor="topk-select">Số lượng gợi ý (Top-k)</label>
-              <select
-                id="topk-select"
-                value={topK}
-                onChange={(e) =>
-                  updateField({ topK: Number(e.target.value) })
-                }
-              >
-                {[1, 2, 3, 5, 10].map((k) => (
-                  <option key={k} value={k}>
-                    Top {k} gia sư
-                  </option>
-                ))}
-              </select>
-              <span className="field-hint">
-                Mặc định lấy Top 3 gia sư có điểm tổng hợp cao nhất.
-              </span>
-            </div>
-          </div>
-
-          <div className="schedule-section">
-            <div className="schedule-header">
-              <div>
-                <h3>Khung thời gian rảnh trong tuần</h3>
-                <p className="field-hint">
-                  Đã chọn:{' '}
-                  <strong>
-                    {timeSlots.length > 0
-                      ? timeSlots.join(', ')
-                      : 'Chưa chọn (không lọc theo lịch rảnh)'}
-                  </strong>
-                </p>
-              </div>
-              {timeSlots.length > 0 && (
-                <button
-                  type="button"
-                  className="btn-text"
-                  onClick={() =>
-                    updateField({ timeSlots: [], scenarioMeta: null })
+              <div className="form-field">
+                <label htmlFor="topk-select">Số lượng gợi ý (Top-k)</label>
+                <select
+                  id="topk-select"
+                  value={topK}
+                  onChange={(e) =>
+                    updateField({ topK: Number(e.target.value) })
                   }
                 >
-                  Bỏ chọn tất cả khung giờ
-                </button>
-              )}
-            </div>
-
-            <div className="schedule-grid-wrapper">
-              <table className="schedule-table">
-                <thead>
-                  <tr>
-                    <th>Buổi / Thứ</th>
-                    {DAYS_OF_WEEK.map((day) => (
-                      <th key={day.code}>{day.label}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {SESSIONS_OF_DAY.map((session) => (
-                    <tr key={session.code}>
-                      <td className="session-label">{session.label}</td>
-                      {DAYS_OF_WEEK.map((day) => {
-                        const slotKey = `${day.code}-${session.code}`
-                        const isSelected = timeSlots.includes(slotKey)
-                        return (
-                          <td key={slotKey}>
-                            <button
-                              type="button"
-                              className={`slot-chip ${isSelected ? 'selected' : ''}`}
-                              onClick={() => handleToggleTimeSlot(slotKey)}
-                              aria-pressed={isSelected}
-                            >
-                              {slotKey}
-                            </button>
-                          </td>
-                        )
-                      })}
-                    </tr>
+                  {[1, 2, 3, 5, 10].map((k) => (
+                    <option key={k} value={k}>
+                      Top {k} gia sư
+                    </option>
                   ))}
-                </tbody>
-              </table>
+                </select>
+                <span className="field-hint">
+                  Mặc định gợi ý Top 3 gia sư có điểm tổng hợp cao nhất.
+                </span>
+              </div>
             </div>
-          </div>
-        </section>
 
-        <section className="form-card">
-          <div className="card-header">
-            <div>
-              <h2>2. Mức độ ưu tiên cho 5 tiêu chí (Bảng 3.5)</h2>
-              <p className="field-hint">
-                Quy đổi trọng số: Không quan tâm (w = 0), Thấp (w = 1), Trung
-                bình (w = 2, mặc định), Cao (w = 3).
-              </p>
+            <div className="schedule-section">
+              <div className="schedule-header">
+                <div>
+                  <h3>Khung thời gian rảnh trong tuần</h3>
+                  <p className="field-hint">
+                    Đã chọn:{' '}
+                    <strong>
+                      {timeSlots.length > 0
+                        ? timeSlots.join(', ')
+                        : 'Chưa chọn (không tính tiêu chí lịch rảnh)'}
+                    </strong>
+                  </p>
+                </div>
+                {timeSlots.length > 0 && (
+                  <button
+                    type="button"
+                    className="btn-text"
+                    onClick={() =>
+                      updateField({ timeSlots: [], scenarioMeta: null })
+                    }
+                  >
+                    Bỏ chọn tất cả
+                  </button>
+                )}
+              </div>
+
+              <div className="schedule-table-wrap">
+                <table className="schedule-table">
+                  <thead>
+                    <tr>
+                      <th>Buổi</th>
+                      {DAYS_OF_WEEK.map((day) => (
+                        <th key={day.code}>{day.label}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {SESSIONS_OF_DAY.map((session) => (
+                      <tr key={session.code}>
+                        <td className="session-name">{session.label}</td>
+                        {DAYS_OF_WEEK.map((day) => {
+                          const slotKey = `${day.code}-${session.code}`
+                          const isSelected = timeSlots.includes(slotKey)
+                          return (
+                            <td key={slotKey}>
+                              <button
+                                type="button"
+                                className={`slot-button ${isSelected ? 'selected' : ''}`}
+                                onClick={() => handleToggleTimeSlot(slotKey)}
+                                aria-pressed={isSelected}
+                              >
+                                {slotKey}
+                              </button>
+                            </td>
+                          )
+                        })}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
+          </section>
 
-          <div className="criteria-list">
-            {CRITERIA_LIST.map((criterion) => {
-              const isCriterionDisabled =
-                (criterion.key === 'district' &&
-                  (isOnlineMode || !String(preferredDistrict).trim())) ||
-                (criterion.key === 'fee' && !String(maxBudgetVnd).trim()) ||
-                (criterion.key === 'availability' && timeSlots.length === 0)
+          {/* Cột 2: Mức độ ưu tiên 5 tiêu chí */}
+          <section className="panel col-side">
+            <div className="panel-header">
+              <div>
+                <h2>2. Mức độ ưu tiên cho 5 tiêu chí (Bảng 3.5)</h2>
+                <p className="field-hint">
+                  Trọng số: Không quan tâm (w = 0), Thấp (w = 1), Trung bình (w = 2, mặc định), Cao (w = 3).
+                </p>
+              </div>
+            </div>
 
-              const currentLevel = priorities[criterion.key] || 'medium'
+            <div className="criteria-stack">
+              {CRITERIA_LIST.map((criterion) => {
+                const isCriterionDisabled =
+                  (criterion.key === 'district' &&
+                    (isOnlineMode || !String(preferredDistrict).trim())) ||
+                  (criterion.key === 'fee' && !String(maxBudgetVnd).trim()) ||
+                  (criterion.key === 'availability' && timeSlots.length === 0)
 
-              return (
-                <div
-                  key={criterion.key}
-                  className={`criterion-row ${isCriterionDisabled ? 'inactive' : ''}`}
-                >
-                  <div className="criterion-info">
-                    <div className="criterion-title-row">
-                      <span className="criterion-name">{criterion.label}</span>
+                const currentLevel = priorities[criterion.key] || 'medium'
+
+                return (
+                  <div
+                    key={criterion.key}
+                    className={`criterion-card ${isCriterionDisabled ? 'disabled' : ''}`}
+                  >
+                    <div className="criterion-header">
+                      <strong className="criterion-title">{criterion.label}</strong>
                       {isCriterionDisabled && (
-                        <span className="inactive-pill">
-                          Tự động bỏ qua do chưa nhập điều kiện tương ứng
+                        <span className="inactive-badge">
+                          Tự động bỏ qua
                         </span>
                       )}
                     </div>
                     <p className="criterion-desc">{criterion.description}</p>
-                  </div>
 
-                  <div
-                    className="priority-group"
-                    role="group"
-                    aria-label={`Mức ưu tiên ${criterion.label}`}
-                  >
-                    {PRIORITY_OPTIONS.map((option) => {
-                      const isActive = currentLevel === option.value
-                      return (
-                        <button
-                          key={option.value}
-                          type="button"
-                          className={`priority-btn ${isActive ? 'active' : ''}`}
-                          onClick={() =>
-                            handlePriorityChange(criterion.key, option.value)
-                          }
-                        >
-                          <span>{option.label}</span>
-                          <small>w={option.weight}</small>
-                        </button>
-                      )
-                    })}
+                    <div
+                      className="priority-segmented-control"
+                      role="group"
+                      aria-label={`Mức ưu tiên ${criterion.label}`}
+                    >
+                      {PRIORITY_OPTIONS.map((opt) => {
+                        const isActive = currentLevel === opt.value
+                        return (
+                          <button
+                            key={opt.value}
+                            type="button"
+                            className={`seg-btn ${isActive ? 'active' : ''}`}
+                            onClick={() =>
+                              handlePriorityChange(criterion.key, opt.value)
+                            }
+                          >
+                            <span className="seg-label">{opt.label}</span>
+                            <span className="seg-weight">w={opt.weight}</span>
+                          </button>
+                        )
+                      })}
+                    </div>
                   </div>
-                </div>
-              )
-            })}
-          </div>
-        </section>
+                )
+              })}
+            </div>
+          </section>
+        </div>
 
         {validationError && (
           <div className="alert alert-error" role="alert">
-            <strong>Lỗi kiểm tra biểu mẫu:</strong> {validationError}
+            <strong>Lỗi kiểm tra dữ liệu:</strong> {validationError}
           </div>
         )}
 
@@ -457,7 +450,7 @@ function SearchPage({
         )}
 
         <div className="submit-bar">
-          <button type="submit" className="btn-primary" disabled={isLoading}>
+          <button type="submit" className="btn-primary btn-large" disabled={isLoading}>
             {isLoading
               ? 'Đang tính điểm & xếp hạng...'
               : 'Tìm gia sư phù hợp →'}
