@@ -8,3 +8,19 @@ Mục tương ứng trong đề cương:
 - Mục 3.6. Thiết kế thuật toán (Bước 4 và Các trường hợp đặc biệt)
 - Mục 4.4. Xây dựng API gợi ý
 """
+
+from pydantic import BaseModel, ConfigDict
+
+
+class RankedTutor(BaseModel):
+    """Thông tin một gia sư đã xếp hạng trong danh sách gợi ý Top-k."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    rank: int
+    tutor_id: str
+    total_score: float
+    criteria_scores: dict[str, float | None]
+    contributions: dict[str, float | None]
+    reason: str
+    notes: list[str]
