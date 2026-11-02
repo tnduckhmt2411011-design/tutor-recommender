@@ -111,6 +111,7 @@ Các giá trị điểm trong các ví dụ dưới đây được hiển thị 
   ]
 }
 ```
+Mã gia sư trong các ví dụ (GS001, GS002) chỉ để minh họa; mã thật theo data/processed/tutors.json.
 
 ---
 
