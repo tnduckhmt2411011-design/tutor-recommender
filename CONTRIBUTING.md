@@ -26,6 +26,6 @@ Tài liệu này quy định quy trình làm việc trên repository cho các th
 ## 3. Quy trình Pull Request và Review
 
 - Mỗi PR phải được liên kết với ít nhất một Issue liên quan.
-- Mỗi PR bắt buộc phải được ít nhất một thành viên khác trong nhóm xem xét (review) và phê duyệt trước khi merge.
+- Người phụ trách GitHub (Trần Nguyễn Đức) kiểm tra và merge PR; thay đổi về công thức, API contract và dữ liệu cần Product Owner xác nhận trước khi merge, ghi lại trong PR.
 - Phương thức hợp nhất: Chỉ sử dụng **Squash and merge** để giữ lịch sử commit trên nhánh `main` gọn gàng.
 - Nhánh tính năng sẽ tự động được xóa sau khi merge thành công.
