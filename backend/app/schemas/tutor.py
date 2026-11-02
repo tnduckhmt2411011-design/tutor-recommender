@@ -25,8 +25,8 @@ class TutorProfile(BaseModel):
     tutor_id: str
     subjects: list[str]
     districts: list[str]
-    hourly_fee_vnd: int
-    years_experience: float
+    hourly_fee_vnd: int | None = None
+    years_experience: float | None = None
     teaching_mode: TeachingMode
     availability: list[str]
     avg_rating: float | None
