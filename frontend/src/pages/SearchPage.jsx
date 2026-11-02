@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import ResultPage from './ResultPage'
+import { SCENARIOS_CATALOG } from '../data/scenariosCatalog'
 import {
   CRITERIA_LIST,
   DAYS_OF_WEEK,
@@ -9,67 +9,87 @@ import {
   PRIORITY_OPTIONS,
   SESSIONS_OF_DAY,
   SUBJECT_OPTIONS,
-  buildRecommendationPayload,
-  fetchRecommendations,
 } from '../services/api'
 
-function SearchPage() {
-  const [subject, setSubject] = useState('Toán')
-  const [learningMode, setLearningMode] = useState('in_person')
-  const [preferredDistrict, setPreferredDistrict] = useState('Bình Thạnh')
-  const [maxBudgetVnd, setMaxBudgetVnd] = useState('200000')
-  const [timeSlots, setTimeSlots] = useState(['T2-tối', 'T4-tối'])
-  const [priorities, setPriorities] = useState({ ...DEFAULT_PRIORITIES })
-  const [topK, setTopK] = useState(3)
-
+function SearchPage({
+  searchForm,
+  onChangeSearchForm,
+  onSubmitSearch,
+  onApplyScenario,
+  isLoading = false,
+  apiError = '',
+}) {
   const [validationError, setValidationError] = useState('')
-  const [apiError, setApiError] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [recommendationResult, setRecommendationResult] = useState(null)
+
+  const {
+    subject,
+    learningMode,
+    preferredDistrict,
+    maxBudgetVnd,
+    timeSlots,
+    priorities,
+    topK,
+    scenarioMeta,
+  } = searchForm
 
   const isOnlineMode = learningMode === 'online'
 
+  const updateField = (patch) => {
+    setValidationError('')
+    onChangeSearchForm({
+      ...searchForm,
+      ...patch,
+    })
+  }
+
   const handleLearningModeChange = (nextMode) => {
-    setLearningMode(nextMode)
-    if (nextMode === 'online') {
-      setPreferredDistrict('')
-    }
+    updateField({
+      learningMode: nextMode,
+      preferredDistrict: nextMode === 'online' ? '' : preferredDistrict,
+      scenarioMeta: null,
+    })
   }
 
   const handleToggleTimeSlot = (slotKey) => {
-    setTimeSlots((prev) =>
-      prev.includes(slotKey)
-        ? prev.filter((item) => item !== slotKey)
-        : [...prev, slotKey]
-    )
+    const nextSlots = timeSlots.includes(slotKey)
+      ? timeSlots.filter((item) => item !== slotKey)
+      : [...timeSlots, slotKey]
+    updateField({
+      timeSlots: nextSlots,
+      scenarioMeta: null,
+    })
   }
 
   const handlePriorityChange = (criterionKey, level) => {
-    setPriorities((prev) => ({
-      ...prev,
-      [criterionKey]: level,
-    }))
+    updateField({
+      priorities: {
+        ...priorities,
+        [criterionKey]: level,
+      },
+      scenarioMeta: null,
+    })
   }
 
   const handleResetDefaults = () => {
-    setSubject('Toán')
-    setLearningMode('in_person')
-    setPreferredDistrict('Bình Thạnh')
-    setMaxBudgetVnd('200000')
-    setTimeSlots(['T2-tối', 'T4-tối'])
-    setPriorities({ ...DEFAULT_PRIORITIES })
-    setTopK(3)
     setValidationError('')
-    setApiError('')
-    setRecommendationResult(null)
+    onChangeSearchForm({
+      subject: 'Toán',
+      learningMode: 'in_person',
+      preferredDistrict: 'Bình Thạnh',
+      maxBudgetVnd: '200000',
+      timeSlots: ['T2-tối', 'T4-tối'],
+      priorities: { ...DEFAULT_PRIORITIES },
+      topK: 3,
+      scenarioMeta: null,
+    })
   }
 
   const validateForm = () => {
-    if (!subject.trim()) {
+    if (!String(subject || '').trim()) {
       return 'Vui lòng chọn môn học cần tìm gia sư.'
     }
 
-    const rawBudget = String(maxBudgetVnd).trim()
+    const rawBudget = String(maxBudgetVnd ?? '').trim()
     if (rawBudget !== '') {
       const parsedBudget = Number(rawBudget)
       if (!Number.isInteger(parsedBudget) || parsedBudget < 0) {
@@ -85,10 +105,9 @@ function SearchPage() {
     return ''
   }
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault()
     setValidationError('')
-    setApiError('')
 
     const errorMsg = validateForm()
     if (errorMsg) {
@@ -96,29 +115,7 @@ function SearchPage() {
       return
     }
 
-    const payload = buildRecommendationPayload({
-      subject,
-      learningMode,
-      preferredDistrict,
-      maxBudgetVnd,
-      timeSlots,
-      priorities,
-      topK,
-    })
-
-    setIsLoading(true)
-    try {
-      const responseData = await fetchRecommendations(payload)
-      setRecommendationResult(responseData)
-    } catch (error) {
-      setApiError(
-        error instanceof Error
-          ? error.message
-          : 'Đã xảy ra lỗi khi gửi yêu cầu tìm kiếm.'
-      )
-    } finally {
-      setIsLoading(false)
-    }
+    onSubmitSearch(searchForm)
   }
 
   return (
@@ -131,6 +128,49 @@ function SearchPage() {
           xếp hạng Top-k gia sư theo mô hình Weighted Scoring.
         </p>
       </header>
+
+      <section
+        className="scenario-preset-card"
+        aria-label="Nạp nhanh 14 kịch bản thực nghiệm Bảng 5.1"
+      >
+        <div className="scenario-preset-header">
+          <div>
+            <h2>Nạp nhanh 14 kịch bản thực nghiệm (Bảng 5.1 — KB01 đến KB14)</h2>
+            <p className="field-hint">
+              Chọn một kịch bản để tự động điền thông số truy vấn và chạy đối
+              chiếu trực tiếp với kết quả kỳ vọng trong đề cương.
+            </p>
+          </div>
+          {scenarioMeta && (
+            <span className="scenario-selected-badge">
+              Đang chọn: <strong>{scenarioMeta.id}</strong> — Kỳ vọng:{' '}
+              {scenarioMeta.expected_raw}
+            </span>
+          )}
+        </div>
+
+        <div className="scenario-chip-list">
+          {SCENARIOS_CATALOG.map((sc) => {
+            const isSelected = scenarioMeta?.id === sc.id
+            return (
+              <button
+                key={sc.id}
+                type="button"
+                disabled={isLoading}
+                title={sc.title}
+                className={`scenario-chip ${isSelected ? 'active' : ''}`}
+                onClick={() => {
+                  setValidationError('')
+                  onApplyScenario(sc)
+                }}
+              >
+                <strong>{sc.id}</strong>
+                <span>{sc.request.subject}</span>
+              </button>
+            )
+          })}
+        </div>
+      </section>
 
       <form className="search-form" onSubmit={handleSubmit} noValidate>
         <section className="form-card">
@@ -153,7 +193,9 @@ function SearchPage() {
               <select
                 id="subject-select"
                 value={subject}
-                onChange={(e) => setSubject(e.target.value)}
+                onChange={(e) =>
+                  updateField({ subject: e.target.value, scenarioMeta: null })
+                }
                 required
               >
                 {SUBJECT_OPTIONS.map((subj) => (
@@ -193,7 +235,12 @@ function SearchPage() {
                 <select
                   id="district-select"
                   value={preferredDistrict}
-                  onChange={(e) => setPreferredDistrict(e.target.value)}
+                  onChange={(e) =>
+                    updateField({
+                      preferredDistrict: e.target.value,
+                      scenarioMeta: null,
+                    })
+                  }
                 >
                   <option value="">-- Không giới hạn khu vực --</option>
                   {DISTRICT_OPTIONS.map((dist) => (
@@ -233,7 +280,12 @@ function SearchPage() {
                 step="10000"
                 placeholder="Để trống nếu không giới hạn (ví dụ: 200000)"
                 value={maxBudgetVnd}
-                onChange={(e) => setMaxBudgetVnd(e.target.value)}
+                onChange={(e) =>
+                  updateField({
+                    maxBudgetVnd: e.target.value,
+                    scenarioMeta: null,
+                  })
+                }
               />
               <span className="field-hint">
                 Học phí trong ngân sách đạt điểm tối đa 1,00; vượt quá 1,5 lần
@@ -246,7 +298,9 @@ function SearchPage() {
               <select
                 id="topk-select"
                 value={topK}
-                onChange={(e) => setTopK(Number(e.target.value))}
+                onChange={(e) =>
+                  updateField({ topK: Number(e.target.value) })
+                }
               >
                 {[1, 2, 3, 5, 10].map((k) => (
                   <option key={k} value={k}>
@@ -277,7 +331,9 @@ function SearchPage() {
                 <button
                   type="button"
                   className="btn-text"
-                  onClick={() => setTimeSlots([])}
+                  onClick={() =>
+                    updateField({ timeSlots: [], scenarioMeta: null })
+                  }
                 >
                   Bỏ chọn tất cả khung giờ
                 </button>
@@ -337,7 +393,7 @@ function SearchPage() {
             {CRITERIA_LIST.map((criterion) => {
               const isCriterionDisabled =
                 (criterion.key === 'district' &&
-                  (isOnlineMode || !preferredDistrict.trim())) ||
+                  (isOnlineMode || !String(preferredDistrict).trim())) ||
                 (criterion.key === 'fee' && !String(maxBudgetVnd).trim()) ||
                 (criterion.key === 'availability' && timeSlots.length === 0)
 
@@ -404,25 +460,10 @@ function SearchPage() {
           <button type="submit" className="btn-primary" disabled={isLoading}>
             {isLoading
               ? 'Đang tính điểm & xếp hạng...'
-              : 'Tìm gia sư phù hợp'}
+              : 'Tìm gia sư phù hợp →'}
           </button>
         </div>
       </form>
-
-      {recommendationResult && (
-        <ResultPage
-          recommendationResult={recommendationResult}
-          searchContext={{
-            subject,
-            learningMode,
-            preferredDistrict,
-            maxBudgetVnd,
-            timeSlots,
-            priorities,
-            topK,
-          }}
-        />
-      )}
     </div>
   )
 }
