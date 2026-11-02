@@ -29,5 +29,4 @@ Tài liệu định nghĩa vai trò, trách nhiệm và nguyên tắc phối h�
 ## 3. Nguyên tắc kỷ luật bắt buộc
 
 1. **Tách biệt vai trò PO và SM:** Product Owner (Cao Khánh Ngọc) tuyệt đối không kiêm nhiệm Scrum Master trong bất kỳ sprint nào để duy trì tính khách quan giữa việc định hướng yêu cầu (PO) và hỗ trợ quy trình (SM).
-2. **Không tự duyệt Pull Request:** Tuyệt đối không thành viên nào được tự merge hoặc tự phê duyệt (Approve) Pull Request do chính mình tạo ra trên GitHub.
-3. **Review chéo bắt buộc:** Mỗi Pull Request bắt buộc phải được ít nhất một thành viên khác trong nhóm kiểm tra mã nguồn, xác nhận CI pass và chính thức Approve trên GitHub trước khi thực hiện squash merge vào nhánh `main`.
+2. **Người phụ trách GitHub:** Trần Nguyễn Đức tạo và merge Pull Request. Các thành viên khác xem lại khi có thể. Thay đổi về công thức tính điểm, API contract và dữ liệu cần được Product Owner (Cao Khánh Ngọc) xác nhận trước khi merge; việc xác nhận được ghi trong mô tả hoặc bình luận của PR.

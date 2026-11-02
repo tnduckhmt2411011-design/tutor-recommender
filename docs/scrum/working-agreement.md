@@ -51,5 +51,5 @@ Nhằm tối ưu hóa thời gian và tránh lãng phí công sức, các nghi t
 3. **Quy trình Pull Request và Merge:**
    - Mỗi PR phải mô tả ngắn gọn nội dung thay đổi và liên kết với Issue tương ứng (ví dụ: `Closes #11`).
    - Bắt buộc kiểm tra tự động (CI pytest, ruff) báo xanh (pass 100%).
-   - Cần tối thiểu **1 thành viên khác trong nhóm review và phê duyệt (Approve)**.
+   - Người phụ trách GitHub (Trần Nguyễn Đức) merge PR sau khi kiểm tra; với thay đổi về công thức, API contract và dữ liệu cần Product Owner xác nhận trước (ghi trong PR).
    - Luôn sử dụng hình thức **Squash and merge** để giữ lịch sử git trên `main` gọn gàng.
