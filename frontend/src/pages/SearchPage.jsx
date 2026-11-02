@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import ResultPage from './ResultPage'
 import {
   CRITERIA_LIST,
   DAYS_OF_WEEK,
@@ -409,62 +410,18 @@ function SearchPage() {
       </form>
 
       {recommendationResult && (
-        <section className="result-preview-card" aria-live="polite">
-          <div className="card-header">
-            <h2>Kết quả phản hồi từ API (/api/recommend)</h2>
-            <span className={`status-pill status-${recommendationResult.status}`}>
-              status: {recommendationResult.status}
-            </span>
-          </div>
-
-          {recommendationResult.message && (
-            <div className="alert alert-warning">
-              {recommendationResult.message}
-            </div>
-          )}
-
-          <p className="summary-stats">
-            Tổng hồ sơ trong kho:{' '}
-            <strong>{recommendationResult.total_candidates}</strong> | Qua lọc
-            bắt buộc:{' '}
-            <strong>{recommendationResult.qualified_candidates}</strong>
-          </p>
-
-          {Array.isArray(recommendationResult.results) &&
-            recommendationResult.results.length > 0 && (
-              <div className="preview-list">
-                {recommendationResult.results.map((item) => (
-                  <article key={item.tutor_id} className="preview-item">
-                    <div className="preview-item-head">
-                      <span className="rank-badge">Hạng #{item.rank}</span>
-                      <h3>Mã gia sư: {item.tutor_id}</h3>
-                      <span className="score-badge">
-                        S = {Number(item.total_score).toFixed(3).replace('.', ',')}
-                      </span>
-                    </div>
-                    <p className="preview-reason">
-                      <strong>Lý do gợi ý:</strong> {item.reason}
-                    </p>
-                    {Array.isArray(item.notes) && item.notes.length > 0 && (
-                      <p className="preview-notes">
-                        Ghi chú: {item.notes.join(', ')}
-                      </p>
-                    )}
-                  </article>
-                ))}
-              </div>
-            )}
-
-          {Array.isArray(recommendationResult.unranked_candidates) &&
-            recommendationResult.unranked_candidates.length > 0 && (
-              <p className="preview-notes">
-                Ứng viên thỏa điều kiện bắt buộc nhưng chưa xếp hạng:{' '}
-                <strong>
-                  {recommendationResult.unranked_candidates.join(', ')}
-                </strong>
-              </p>
-            )}
-        </section>
+        <ResultPage
+          recommendationResult={recommendationResult}
+          searchContext={{
+            subject,
+            learningMode,
+            preferredDistrict,
+            maxBudgetVnd,
+            timeSlots,
+            priorities,
+            topK,
+          }}
+        />
       )}
     </div>
   )
