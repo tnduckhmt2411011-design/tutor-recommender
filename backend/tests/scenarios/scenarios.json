@@ -271,6 +271,6 @@
     "expected_top3": ["GS-G03"],
     "expected_raw": "1. GS-G03 (0,70)",
     "lý do": "Chỉ có 1 ứng viên vì đây là kịch bản cố ý giữ lại để minh họa; GS-T06 và GS-T07 không tham gia vì cả hai đều dạy Trực tiếp, không qua được lọc hình thức Trực tuyến.",
-    "ghi chú": "Theo Đức báo, nhóm đã chốt: nhãn môn của GS-G03 được sửa từ “Tiếng Anh” thành “Anh Văn” trong dữ liệu (PR sửa nhãn riêng). Sau khi sửa, KB14 có ứng viên GS-G03. Top-3 kỳ vọng giữ nguyên."
+    "ghi chú": "Theo Đức báo, nhóm đã chốt: nhãn môn của GS-G03 được sửa từ “Tiếng Anh” thành “Anh Văn” trong dữ liệu (xem data/README.md, mục Ghi chú hiệu chỉnh dữ liệu). Sau khi sửa, KB14 có ứng viên GS-G03. Top-3 kỳ vọng giữ nguyên."
   }
 ]
