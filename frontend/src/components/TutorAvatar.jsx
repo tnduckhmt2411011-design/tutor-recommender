@@ -68,6 +68,7 @@ export default function TutorAvatar({ tutorId = '', fullName = '', size = 52, cl
             height: '100%',
             objectFit: 'cover',
             display: 'block',
+            imageRendering: '-webkit-optimize-contrast',
           }}
         />
       ) : (

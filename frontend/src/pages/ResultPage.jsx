@@ -27,16 +27,17 @@ const listVariants = {
 
 const cardItemVariants = {
   hidden: { opacity: 0, y: 36, scale: 0.95 },
-  visible: {
+  visible: (i = 0) => ({
     opacity: 1,
     y: 0,
     scale: 1,
     transition: {
       type: 'spring',
-      stiffness: 260,
-      damping: 22,
+      stiffness: 240,
+      damping: 20,
+      delay: i * 0.16,
     },
-  },
+  }),
   exit: {
     opacity: 0,
     scale: 0.95,
@@ -373,13 +374,17 @@ function ResultPage({
               animate="visible"
             >
               <AnimatePresence mode="popLayout">
-                {results.map((item) => {
+                {results.map((item, idx) => {
                   const delta = rankDeltas[item.tutor_id]
                   return (
                     <motion.div
                       layout
                       key={item.tutor_id}
                       className="tutor-card-container"
+                      custom={idx}
+                      initial="hidden"
+                      animate="visible"
+                      exit="exit"
                       variants={cardItemVariants}
                       whileHover={{ y: -3, transition: { duration: 0.18 } }}
                     >
