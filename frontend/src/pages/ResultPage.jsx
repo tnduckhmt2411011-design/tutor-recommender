@@ -14,33 +14,22 @@ import {
 } from '../data/tutorsCatalog'
 
 
-const listVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.15,
-      delayChildren: 0.08,
-    },
-  },
-}
-
 const cardItemVariants = {
-  hidden: { opacity: 0, y: 36, scale: 0.95 },
+  hidden: { opacity: 0, y: 48, scale: 0.94 },
   visible: (i = 0) => ({
     opacity: 1,
     y: 0,
     scale: 1,
     transition: {
       type: 'spring',
-      stiffness: 240,
-      damping: 20,
-      delay: i * 0.16,
+      stiffness: 160,
+      damping: 18,
+      delay: i * 0.18,
     },
   }),
   exit: {
     opacity: 0,
-    scale: 0.95,
+    scale: 0.94,
     transition: { duration: 0.2 },
   },
 }
@@ -355,58 +344,65 @@ function ResultPage({
         )}
 
         <main className="results-main">
-          {isCalculating && (
-            <div className="tutor-cards-list" role="status" aria-live="polite">
-              <div className="loading-badge" style={{ marginBottom: 8 }}>
-                <span className="spinner-icon" aria-hidden="true" />
-                <span>Đang chuẩn hóa 5 tiêu chí & tính toán Top-3 tối ưu...</span>
-              </div>
-              <SkeletonLoader count={3} />
-            </div>
-          )}
-
-          {!isCalculating && status === 'success' && results.length > 0 && (
-            <motion.div
-              layout
-              className="tutor-cards-list"
-              variants={listVariants}
-              initial="hidden"
-              animate="visible"
-            >
-              <AnimatePresence mode="popLayout">
-                {results.map((item, idx) => {
-                  const delta = rankDeltas[item.tutor_id]
-                  return (
-                    <motion.div
-                      layout
-                      key={item.tutor_id}
-                      className="tutor-card-container"
-                      custom={idx}
-                      initial="hidden"
-                      animate="visible"
-                      exit="exit"
-                      variants={cardItemVariants}
-                      whileHover={{ y: -3, transition: { duration: 0.18 } }}
-                    >
-                      {delta !== undefined && delta !== 0 && (
-                        <motion.div
-                          layout="position"
-                          initial={{ opacity: 0, scale: 0.95 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          className={`rank-delta-indicator ${delta > 0 ? 'delta-up' : 'delta-down'}`}
-                        >
-                          {delta > 0
-                            ? `↑ Tăng ${delta} bậc sau khi điều chỉnh mức ưu tiên (CN03)`
-                            : `↓ Giảm ${Math.abs(delta)} bậc sau khi điều chỉnh mức ưu tiên (CN03)`}
-                        </motion.div>
-                      )}
-                      <TutorCard item={item} priorities={priorities} />
-                    </motion.div>
-                  )
-                })}
-              </AnimatePresence>
-            </motion.div>
-          )}
+          <AnimatePresence mode="wait">
+            {isCalculating ? (
+              <motion.div
+                key="skeleton-calculating-state"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0, transition: { duration: 0.18 } }}
+                className="tutor-cards-list"
+                role="status"
+                aria-live="polite"
+              >
+                <div className="loading-badge" style={{ marginBottom: 8 }}>
+                  <span className="spinner-icon" aria-hidden="true" />
+                  <span>Đang chuẩn hóa 5 tiêu chí & tính toán Top-3 tối ưu...</span>
+                </div>
+                <SkeletonLoader count={3} />
+              </motion.div>
+            ) : status === 'success' && results.length > 0 ? (
+              <motion.div
+                key="tutor-results-list"
+                className="tutor-cards-list"
+                initial="hidden"
+                animate="visible"
+              >
+                <AnimatePresence mode="popLayout">
+                  {results.map((item, idx) => {
+                    const delta = rankDeltas[item.tutor_id]
+                    return (
+                      <motion.div
+                        layout
+                        key={item.tutor_id}
+                        className="tutor-card-container"
+                        custom={idx}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                        variants={cardItemVariants}
+                        whileHover={{ y: -3, transition: { duration: 0.18 } }}
+                      >
+                        {delta !== undefined && delta !== 0 && (
+                          <motion.div
+                            layout="position"
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            className={`rank-delta-indicator ${delta > 0 ? 'delta-up' : 'delta-down'}`}
+                          >
+                            {delta > 0
+                              ? `↑ Tăng ${delta} bậc sau khi điều chỉnh mức ưu tiên (CN03)`
+                              : `↓ Giảm ${Math.abs(delta)} bậc sau khi điều chỉnh mức ưu tiên (CN03)`}
+                          </motion.div>
+                        )}
+                        <TutorCard item={item} priorities={priorities} />
+                      </motion.div>
+                    )
+                  })}
+                </AnimatePresence>
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
 
           {!isCalculating && status === 'no_match' && (
             <div
