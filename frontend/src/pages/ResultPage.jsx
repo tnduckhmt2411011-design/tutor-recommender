@@ -45,6 +45,18 @@ function ResultPage({
 
   const isOnlineMode = learningMode === 'online'
 
+  const totalActiveWeight = CRITERIA_LIST.reduce((sum, crit) => {
+    const isInactive =
+      (crit.key === 'district' &&
+        (isOnlineMode || !String(preferredDistrict).trim())) ||
+      (crit.key === 'fee' && !String(maxBudgetVnd).trim()) ||
+      (crit.key === 'availability' && timeSlots.length === 0)
+    if (isInactive) return sum
+    const level = priorities[crit.key] || 'medium'
+    const w = PRIORITY_OPTIONS.find((opt) => opt.value === level)?.weight ?? 2
+    return sum + w
+  }, 0)
+
   const handleCriterionPriorityClick = (criterionKey, nextLevel) => {
     if (!onUpdatePriorities) return
     const nextPriorities = {
@@ -63,13 +75,10 @@ function ResultPage({
     <section className="result-page" aria-live="polite">
       <header className="page-header result-page-header">
         <div>
-          <div className="academic-label">
-            Mô-đun CN02 & CN03 · Kết quả xếp hạng Top-{topK} & Điều chỉnh ưu tiên
-          </div>
           <h1>Kết quả Gợi ý Gia sư Phù hợp</h1>
           <p className="subtitle">
-            Xếp hạng theo tổng điểm có trọng số <var>S(g)</var> giảm dần (phá hòa theo mã hồ sơ <var>tutor_id</var>).
-            Sử dụng bảng điều khiển CN03 bên trái để cập nhật lại thứ hạng ngay lập tức.
+            Mô-đun CN02 & CN03 · Xếp hạng theo tổng điểm có trọng số <var>S(g)</var> giảm dần (phá hòa theo mã hồ sơ <var>tutor_id</var>).
+            Sử dụng bảng điều khiển bên trái để cập nhật lại thứ hạng ngay lập tức.
           </p>
         </div>
 
@@ -171,8 +180,7 @@ function ResultPage({
           >
             <div className="cn03-rail-head">
               <div>
-                <span className="academic-label">Mô-đun CN03 · Tương tác</span>
-                <h3 className="rail-title">Điều chỉnh mức ưu tiên</h3>
+                <h3 className="rail-title">Điều chỉnh mức ưu tiên (CN03)</h3>
               </div>
               {isUpdatingPriorities && (
                 <span className="updating-status" role="status">
@@ -183,6 +191,15 @@ function ResultPage({
             <p className="rail-desc">
               Thay đổi mức ưu tiên cho bất kỳ tiêu chí nào để gọi lại API và cập nhật thứ hạng tức thì.
             </p>
+
+            {totalActiveWeight === 0 && (
+              <div className="zero-weight-guard-alert" role="status">
+                <strong className="guard-title">Tổng trọng số hiện tại bằng 0 (∑w_i = 0)</strong>
+                <p className="guard-desc">
+                  Khi tất cả tiêu chí đều tắt (w = 0), điểm chuẩn hóa thành phần không được tính trọng số. Toàn bộ ứng viên nhận điểm đồng hạng 0,000 và được xếp thứ tự thuần túy theo mã hồ sơ (tutor_id).
+                </p>
+              </div>
+            )}
 
             <div className="cn03-presets-list">
               <span className="presets-label">Nạp nhanh trọng số:</span>

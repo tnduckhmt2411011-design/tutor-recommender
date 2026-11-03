@@ -11,6 +11,82 @@ import {
   SUBJECT_OPTIONS,
 } from '../services/api'
 
+const SCHEDULE_PATTERNS = [
+  {
+    label: 'Tối cả tuần (T2-CN)',
+    slots: ['T2-tối', 'T3-tối', 'T4-tối', 'T5-tối', 'T6-tối', 'T7-tối', 'CN-tối'],
+  },
+  {
+    label: 'Hai ngày cuối tuần (T7-CN)',
+    slots: ['T7-sáng', 'T7-chiều', 'T7-tối', 'CN-sáng', 'CN-chiều', 'CN-tối'],
+  },
+  {
+    label: 'Tối ngày thường (T2-T6)',
+    slots: ['T2-tối', 'T3-tối', 'T4-tối', 'T5-tối', 'T6-tối'],
+  },
+]
+
+function formatBudgetInVietnameseWords(amount) {
+  if (amount === undefined || amount === null || String(amount).trim() === '') {
+    return ''
+  }
+  const num = Number(amount)
+  if (!Number.isFinite(num) || num < 0) return ''
+  if (num === 0) return '= 0 VNĐ / giờ (Miễn phí)'
+
+  const digits = ['không', 'một', 'hai', 'ba', 'bốn', 'năm', 'sáu', 'bảy', 'tám', 'chín']
+  const readTriple = (n, showZeroHundred = false) => {
+    const h = Math.floor(n / 100)
+    const t = Math.floor((n % 100) / 10)
+    const u = n % 10
+    const res = []
+    if (h > 0 || showZeroHundred) {
+      res.push(digits[h] + ' trăm')
+    }
+    if (t > 1) {
+      res.push(digits[t] + ' mươi')
+      if (u === 1) res.push('mốt')
+      else if (u === 5) res.push('lăm')
+      else if (u > 0) res.push(digits[u])
+    } else if (t === 1) {
+      res.push('mười')
+      if (u === 5) res.push('lăm')
+      else if (u > 0) res.push(digits[u])
+    } else if (t === 0 && (h > 0 || showZeroHundred) && u > 0) {
+      res.push('lẻ ' + digits[u])
+    } else if (t === 0 && h === 0 && !showZeroHundred) {
+      if (u > 0) res.push(digits[u])
+    }
+    return res.join(' ')
+  }
+
+  const scales = ['', 'nghìn', 'triệu', 'tỷ']
+  let temp = Math.floor(num)
+  const groups = []
+  while (temp > 0) {
+    groups.push(temp % 1000)
+    temp = Math.floor(temp / 1000)
+  }
+
+  const parts = []
+  for (let i = groups.length - 1; i >= 0; i--) {
+    const g = groups[i]
+    if (g > 0) {
+      const showH = i < groups.length - 1
+      const txt = readTriple(g, showH)
+      if (txt) {
+        parts.push(txt + (scales[i] ? ' ' + scales[i] : ''))
+      }
+    }
+  }
+  let words = parts.join(' ').trim()
+  if (words) {
+    words = words.charAt(0).toUpperCase() + words.slice(1) + ' đồng / giờ'
+  }
+  const formattedVnd = num.toLocaleString('vi-VN') + ' VNĐ / giờ'
+  return `= ${formattedVnd} (${words})`
+}
+
 function SearchPage({
   searchForm,
   onChangeSearchForm,
@@ -20,6 +96,7 @@ function SearchPage({
   apiError = '',
 }) {
   const [validationError, setValidationError] = useState('')
+  const [autoRunScenario, setAutoRunScenario] = useState(true)
 
   const {
     subject,
@@ -58,6 +135,42 @@ function SearchPage({
       timeSlots: nextSlots,
       scenarioMeta: null,
     })
+  }
+
+  const handleApplySchedulePattern = (patternSlots) => {
+    updateField({
+      timeSlots: patternSlots,
+      scenarioMeta: null,
+    })
+  }
+
+  const handleSelectScenario = (sc) => {
+    setValidationError('')
+    if (autoRunScenario) {
+      onApplyScenario(sc)
+    } else {
+      onChangeSearchForm({
+        ...searchForm,
+        subject: sc.request.subject,
+        learningMode: sc.request.learning_mode,
+        preferredDistrict: sc.request.preferred_district || '',
+        maxBudgetVnd:
+          sc.request.max_budget_vnd !== undefined &&
+          sc.request.max_budget_vnd !== null &&
+          sc.request.max_budget_vnd !== ''
+            ? String(sc.request.max_budget_vnd)
+            : '',
+        timeSlots: Array.isArray(sc.request.time_slots)
+          ? [...sc.request.time_slots]
+          : [],
+        priorities: {
+          ...DEFAULT_PRIORITIES,
+          ...(sc.request.priorities || {}),
+        },
+        topK: 3,
+        scenarioMeta: sc,
+      })
+    }
   }
 
   const handlePriorityChange = (criterionKey, level) => {
@@ -121,10 +234,9 @@ function SearchPage({
   return (
     <div className="search-page">
       <header className="page-header">
-        <div className="academic-label">Mô-đun CN01 · Thiết lập nhu cầu & Trọng số ưu tiên</div>
         <h1>Tìm kiếm & Khuyến nghị Gia sư Đa tiêu chí</h1>
         <p className="subtitle">
-          Nhập điều kiện học tập và thiết lập trọng số ưu tiên cho 5 tiêu chí để
+          Mô-đun CN01 · Thiết lập điều kiện học tập và trọng số ưu tiên 5 tiêu chí để
           xếp hạng Top-k gia sư theo mô hình Weighted Scoring.
         </p>
       </header>
@@ -134,11 +246,35 @@ function SearchPage({
         aria-label="Nạp nhanh 14 kịch bản thực nghiệm Bảng 5.1"
       >
         <div className="scenario-strip-header">
-          <span className="strip-title">Kịch bản thực nghiệm (Bảng 5.1 · KB01 - KB14):</span>
+          <div className="strip-title-group">
+            <span className="strip-title">Kịch bản thực nghiệm (Bảng 5.1 · KB01 - KB14):</span>
+            <label
+              className="auto-run-toggle"
+              title="Khi bật: Click kịch bản sẽ chạy và chuyển thẳng đến trang kết quả. Khi tắt: Nạp thông số vào biểu mẫu để tùy chỉnh."
+            >
+              <input
+                type="checkbox"
+                checked={autoRunScenario}
+                onChange={(e) => setAutoRunScenario(e.target.checked)}
+              />
+              <span>Tự động chuyển kết quả</span>
+            </label>
+          </div>
           {scenarioMeta && (
-            <span className="scenario-active-indicator">
-              Đang chọn: <strong>{scenarioMeta.id}</strong> (Kỳ vọng: {scenarioMeta.expected_raw})
-            </span>
+            <div className="scenario-active-wrap">
+              <span className="scenario-active-indicator">
+                Đang nạp: <strong>{scenarioMeta.id}</strong> (Kỳ vọng: {scenarioMeta.expected_raw})
+              </span>
+              {!autoRunScenario && (
+                <button
+                  type="button"
+                  className="btn-accent-sm"
+                  onClick={() => onApplyScenario(scenarioMeta)}
+                >
+                  Xem kết quả ngay →
+                </button>
+              )}
+            </div>
           )}
         </div>
 
@@ -152,10 +288,7 @@ function SearchPage({
                 disabled={isLoading}
                 title={`${sc.title} - Kỳ vọng: ${sc.expected_raw}`}
                 className={`scenario-chip ${isSelected ? 'active' : ''}`}
-                onClick={() => {
-                  setValidationError('')
-                  onApplyScenario(sc)
-                }}
+                onClick={() => handleSelectScenario(sc)}
               >
                 <span className="sc-id">{sc.id}</span>
                 <span className="sc-subj">{sc.request.subject}</span>
@@ -282,6 +415,11 @@ function SearchPage({
                     })
                   }
                 />
+                {String(maxBudgetVnd ?? '').trim() !== '' && (
+                  <div className="currency-humanizer-tag" role="status">
+                    {formatBudgetInVietnameseWords(maxBudgetVnd)}
+                  </div>
+                )}
                 <span className="field-hint">
                   Học phí trong ngân sách đạt điểm 1,00; vượt quá 1,5 lần nhận 0 điểm.
                 </span>
@@ -332,6 +470,22 @@ function SearchPage({
                     Bỏ chọn tất cả
                   </button>
                 )}
+              </div>
+
+              <div className="schedule-power-bar" aria-label="Mẫu chọn nhanh khung giờ rảnh">
+                <span className="power-bar-title">Mẫu chọn nhanh:</span>
+                <div className="power-bar-buttons">
+                  {SCHEDULE_PATTERNS.map((pattern) => (
+                    <button
+                      key={pattern.label}
+                      type="button"
+                      className="power-pill-btn"
+                      onClick={() => handleApplySchedulePattern(pattern.slots)}
+                    >
+                      {pattern.label}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               <div className="schedule-table-wrap">
@@ -419,6 +573,7 @@ function SearchPage({
                           <button
                             key={opt.value}
                             type="button"
+                            disabled={isCriterionDisabled}
                             className={`seg-btn ${isActive ? 'active' : ''}`}
                             onClick={() =>
                               handlePriorityChange(criterion.key, opt.value)

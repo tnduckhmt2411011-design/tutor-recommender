@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import StackedBarScore from './StackedBarScore'
 import {
   formatCurrencyVnd,
@@ -7,6 +8,7 @@ import {
 } from '../data/tutorsCatalog'
 
 function TutorCard({ item, priorities }) {
+  const [activeCriterion, setActiveCriterion] = useState(null)
   const profile = getTutorProfile(item.tutor_id)
 
   const subjectsText =
@@ -88,15 +90,27 @@ function TutorCard({ item, priorities }) {
       </div>
 
       <div className="tutor-attributes-grid">
-        <div className="attr-item">
+        <div
+          className={`attr-item ${activeCriterion === 'fee' ? 'attr-highlighted' : ''}`}
+          onMouseEnter={() => setActiveCriterion('fee')}
+          onMouseLeave={() => setActiveCriterion(null)}
+        >
           <span className="attr-label">Học phí</span>
           <strong className="attr-value">{feeText}</strong>
         </div>
-        <div className="attr-item">
+        <div
+          className={`attr-item ${activeCriterion === 'experience' ? 'attr-highlighted' : ''}`}
+          onMouseEnter={() => setActiveCriterion('experience')}
+          onMouseLeave={() => setActiveCriterion(null)}
+        >
           <span className="attr-label">Kinh nghiệm</span>
           <strong className="attr-value">{experienceText}</strong>
         </div>
-        <div className="attr-item">
+        <div
+          className={`attr-item ${activeCriterion === 'rating' ? 'attr-highlighted' : ''}`}
+          onMouseEnter={() => setActiveCriterion('rating')}
+          onMouseLeave={() => setActiveCriterion(null)}
+        >
           <span className="attr-label">Đánh giá</span>
           <strong className="attr-value attr-rating">
             {hasRating && (
@@ -109,14 +123,22 @@ function TutorCard({ item, priorities }) {
             {ratingText}
           </strong>
         </div>
-        <div className="attr-item">
+        <div
+          className={`attr-item ${activeCriterion === 'district' ? 'attr-highlighted' : ''}`}
+          onMouseEnter={() => setActiveCriterion('district')}
+          onMouseLeave={() => setActiveCriterion(null)}
+        >
           <span className="attr-label">Khu vực dạy</span>
           <strong className="attr-value">{districtsText}</strong>
         </div>
       </div>
 
       {availabilityList.length > 0 && (
-        <div className="tutor-availability-row">
+        <div
+          className={`tutor-availability-row ${activeCriterion === 'availability' ? 'row-highlighted' : ''}`}
+          onMouseEnter={() => setActiveCriterion('availability')}
+          onMouseLeave={() => setActiveCriterion(null)}
+        >
           <span className="attr-label">Lịch rảnh:</span>
           <div className="slot-badge-list">
             {availabilityList.map((slot) => (
@@ -133,6 +155,8 @@ function TutorCard({ item, priorities }) {
         contributions={item.contributions}
         totalScore={item.total_score}
         priorities={priorities}
+        activeCriterion={activeCriterion}
+        onCriterionHover={setActiveCriterion}
       />
 
       <div className="tutor-explanation-box">

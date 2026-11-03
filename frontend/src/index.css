@@ -90,6 +90,35 @@ a {
   border-radius: 4px;
 }
 
+::selection {
+  background-color: var(--accent);
+  color: #ffffff;
+}
+
+/* Custom crisp scrollbars (Impeccable craft surface) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--control) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--control);
+  border-radius: 3px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--control-hover);
+}
+
 .num,
 .tabular,
 var,

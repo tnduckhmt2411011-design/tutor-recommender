@@ -11,8 +11,25 @@ function StackedBarScore({
   contributions = {},
   totalScore = 0,
   priorities = {},
+  activeCriterion = null,
+  onCriterionHover = null,
 }) {
-  const [activeKey, setActiveKey] = useState(null)
+  const [internalActiveKey, setInternalActiveKey] = useState(null)
+  const activeKey = activeCriterion ?? internalActiveKey
+
+  const handleCriterionEnter = (key) => {
+    setInternalActiveKey(key)
+    if (onCriterionHover) {
+      onCriterionHover(key)
+    }
+  }
+
+  const handleCriterionLeave = () => {
+    setInternalActiveKey(null)
+    if (onCriterionHover) {
+      onCriterionHover(null)
+    }
+  }
 
   const segments = CRITERIA_META.map((meta) => {
     const rawContribution = contributions?.[meta.key]
@@ -85,10 +102,10 @@ function StackedBarScore({
               }}
               title={tooltipText}
               aria-label={tooltipText}
-              onMouseEnter={() => setActiveKey(seg.key)}
-              onMouseLeave={() => setActiveKey(null)}
-              onFocus={() => setActiveKey(seg.key)}
-              onBlur={() => setActiveKey(null)}
+              onMouseEnter={() => handleCriterionEnter(seg.key)}
+              onMouseLeave={handleCriterionLeave}
+              onFocus={() => handleCriterionEnter(seg.key)}
+              onBlur={handleCriterionLeave}
             >
               {seg.widthPercent >= 10 && (
                 <span className="segment-inline-label">
@@ -105,7 +122,6 @@ function StackedBarScore({
           className="stacked-bar-tooltip"
           role="status"
           aria-live="polite"
-          style={{ borderLeftColor: activeSegment.color }}
         >
           <div className="tooltip-head">
             <span
@@ -153,10 +169,10 @@ function StackedBarScore({
             key={seg.key}
             type="button"
             className={`legend-chip ${activeKey === seg.key ? 'active' : ''}`}
-            onMouseEnter={() => setActiveKey(seg.key)}
-            onMouseLeave={() => setActiveKey(null)}
-            onFocus={() => setActiveKey(seg.key)}
-            onBlur={() => setActiveKey(null)}
+            onMouseEnter={() => handleCriterionEnter(seg.key)}
+            onMouseLeave={handleCriterionLeave}
+            onFocus={() => handleCriterionEnter(seg.key)}
+            onBlur={handleCriterionLeave}
           >
             <span
               className="legend-dot"
