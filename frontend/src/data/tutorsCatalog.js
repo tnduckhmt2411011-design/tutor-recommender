@@ -217,36 +217,36 @@ export const CRITERIA_META = [
     key: 'fee',
     label: 'Học phí',
     shortLabel: 'Học phí',
-    color: '#1b6c80',
-    bgLight: 'rgba(27, 108, 128, 0.10)',
+    color: '#10b981', // Emerald
+    bgLight: 'rgba(16, 185, 129, 0.15)',
   },
   {
     key: 'district',
     label: 'Khu vực',
     shortLabel: 'Khu vực',
-    color: '#2b5c8f',
-    bgLight: 'rgba(43, 92, 143, 0.10)',
+    color: '#0ea5e9', // Sky Blue
+    bgLight: 'rgba(14, 165, 233, 0.15)',
   },
   {
     key: 'experience',
     label: 'Kinh nghiệm',
     shortLabel: 'Kinh nghiệm',
-    color: '#1e7b4f',
-    bgLight: 'rgba(30, 123, 79, 0.10)',
+    color: '#8b5cf6', // Violet
+    bgLight: 'rgba(139, 92, 246, 0.15)',
   },
   {
     key: 'rating',
     label: 'Đánh giá',
     shortLabel: 'Đánh giá',
-    color: '#a86f0c',
-    bgLight: 'rgba(168, 111, 12, 0.10)',
+    color: '#f59e0b', // Amber
+    bgLight: 'rgba(245, 158, 11, 0.15)',
   },
   {
     key: 'availability',
     label: 'Lịch rảnh',
     shortLabel: 'Lịch rảnh',
-    color: '#475569',
-    bgLight: 'rgba(71, 85, 105, 0.10)',
+    color: '#f43f5e', // Rose
+    bgLight: 'rgba(244, 63, 94, 0.15)',
   },
 ]
 

@@ -44,9 +44,13 @@ function TutorCard({ item, priorities }) {
 
   const availabilityList = profile?.availability || []
   const isRealData = profile?.data_source === 'public_collected'
+  const isRankOne = item.rank === 1
 
   return (
-    <article className="tutor-card" aria-label={`Hạng ${item.rank} - ${item.tutor_id}`}>
+    <article
+      className={`tutor-card ${isRankOne ? 'rank-1-hero' : ''}`}
+      aria-label={`Hạng ${item.rank} - ${item.tutor_id}`}
+    >
       <div className="tutor-card-header">
         <div className="tutor-rank-group">
           <div className={`rank-mark rank-${item.rank <= 3 ? item.rank : 'other'}`}>
@@ -58,6 +62,14 @@ function TutorCard({ item, priorities }) {
                 {item.full_name || `Gia sư ${item.tutor_id}`}
               </h3>
               <code className="tutor-id-code">{item.tutor_id}</code>
+              {isRankOne && (
+                <span className="hero-best-badge">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                  </svg>
+                  Khuyến nghị tốt nhất
+                </span>
+              )}
               {profile && (
                 <span
                   className={`source-tag ${isRealData ? 'source-real' : 'source-sim'}`}

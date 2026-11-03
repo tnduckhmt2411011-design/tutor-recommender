@@ -24,10 +24,47 @@
 /* ---------- 2. Top Workflow Navigation ---------- */
 .workflow-nav {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 12px;
   border-bottom: 1px solid var(--border);
   padding-bottom: 16px;
   margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.workflow-tabs-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.theme-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background-color: var(--raised);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+  white-space: nowrap;
+}
+
+.theme-toggle-btn:hover {
+  background-color: var(--active);
+  border-color: var(--control);
+  color: var(--text-h);
+}
+
+.theme-toggle-icon {
+  font-size: 14px;
+  line-height: 1;
 }
 
 .workflow-tab {
@@ -995,6 +1032,30 @@
   border-radius: 8px;
   padding: 20px;
   background-color: var(--surface);
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.tutor-card.rank-1-hero {
+  border-color: rgba(16, 185, 129, 0.45);
+  background: linear-gradient(180deg, rgba(16, 185, 129, 0.05) 0%, var(--surface) 100%);
+  box-shadow: 0 0 24px -4px rgba(16, 185, 129, 0.18), 0 8px 24px -6px rgba(0, 0, 0, 0.35);
+}
+
+.hero-best-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  background: rgba(16, 185, 129, 0.16);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+.hero-best-badge svg {
+  color: #34d399;
 }
 
 .tutor-card-header {
@@ -1026,17 +1087,18 @@
 }
 
 .rank-1 {
-  background-color: #1b6c80;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: #ffffff;
+  box-shadow: 0 2px 8px -2px rgba(16, 185, 129, 0.4);
 }
 
 .rank-2 {
-  background-color: #2b5c8f;
+  background-color: #0ea5e9;
   color: #ffffff;
 }
 
 .rank-3 {
-  background-color: #1e7b4f;
+  background-color: #8b5cf6;
   color: #ffffff;
 }
 
@@ -1195,7 +1257,7 @@
 }
 
 .rating-star-icon {
-  color: #a86f0c;
+  color: #f59e0b;
   display: inline-flex;
 }
 

@@ -1,38 +1,38 @@
 :root {
-  /* framed-sheet palette & tokens (academic analytics workbench) */
-  --ground: #f4f6f8;
-  --surface: #ffffff;
-  --raised: #f8fafc;
-  --active: #edf2f7;
-  --border: #e2e5e9;
-  --rule: #edf0f2;
-  --control: #c8cbd0;
-  --control-hover: #9aa0a6;
+  /* Hybrid Modern Studio — Slate Dark Mode default */
+  --ground: #0b0f19;       /* Slate 950 deep canvas */
+  --surface: #111827;      /* Slate 900 card surface */
+  --raised: #1f2937;       /* Slate 800 elevation & inputs */
+  --active: #374151;       /* Slate 700 active item */
+  --border: #374151;       /* Slate 700 crisp 1px borders */
+  --rule: #1e293b;         /* Slate 800 subtle divider */
+  --control: #4b5563;      /* Slate 600 controls & scrollbars */
+  --control-hover: #6b7280;/* Slate 500 hover */
 
-  --text: #131416;
-  --text-h: #0f1012;
-  --muted: #575a60;
-  --faint: #6b6e74;
+  --text: #f3f4f6;         /* Slate 100 body text */
+  --text-h: #ffffff;       /* Pure white headings */
+  --muted: #9ca3af;        /* Slate 400 secondary text */
+  --faint: #6b7280;        /* Slate 500 subtle text */
 
-  --accent: #1b6c80;
-  --accent-soft: #eef6f8;
-  --accent-border: #9ec1ca;
+  --accent: #10b981;       /* Tremor Emerald accent */
+  --accent-soft: rgba(16, 185, 129, 0.12);
+  --accent-border: rgba(16, 185, 129, 0.4);
 
-  --primary: #131416;
+  --primary: #10b981;
   --primary-ink: #ffffff;
-  --primary-hover: #2b2e33;
+  --primary-hover: #059669;
 
-  --positive: #1e7b4f;
-  --positive-bg: #eaf6ef;
-  --positive-border: #a3d9bc;
+  --positive: #34d399;     /* Emerald 400 */
+  --positive-bg: rgba(16, 185, 129, 0.15);
+  --positive-border: rgba(16, 185, 129, 0.35);
 
-  --warning: #9a6700;
-  --warning-bg: #fef8e7;
-  --warning-border: #f4d58d;
+  --warning: #fbbf24;      /* Amber 400 */
+  --warning-bg: rgba(245, 158, 11, 0.15);
+  --warning-border: rgba(245, 158, 11, 0.35);
 
-  --negative: #c4242a;
-  --negative-bg: #fdf2f2;
-  --negative-border: #f5b7b9;
+  --negative: #f87171;     /* Rose 400 */
+  --negative-bg: rgba(239, 68, 68, 0.15);
+  --negative-border: rgba(239, 68, 68, 0.35);
 
   --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -45,6 +45,43 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Warm Light Mode */
+[data-theme="light"] {
+  --ground: #f8fafc;
+  --surface: #ffffff;
+  --raised: #f1f5f9;
+  --active: #e2e8f0;
+  --border: #e2e8f0;
+  --rule: #edf0f2;
+  --control: #cbd5e1;
+  --control-hover: #94a3b8;
+
+  --text: #0f172a;
+  --text-h: #020617;
+  --muted: #64748b;
+  --faint: #94a3b8;
+
+  --accent: #0d9488;
+  --accent-soft: rgba(13, 148, 136, 0.08);
+  --accent-border: #99f6e4;
+
+  --primary: #0f172a;
+  --primary-ink: #ffffff;
+  --primary-hover: #1e293b;
+
+  --positive: #16a34a;
+  --positive-bg: #f0fdf4;
+  --positive-border: #bbf7d0;
+
+  --warning: #d97706;
+  --warning-bg: #fffbeb;
+  --warning-border: #fde68a;
+
+  --negative: #dc2626;
+  --negative-bg: #fef2f2;
+  --negative-border: #fecaca;
 }
 
 *, *::before, *::after {
