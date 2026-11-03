@@ -192,7 +192,7 @@ function SearchPage({
       learningMode: 'in_person',
       preferredDistrict: 'Bình Thạnh',
       maxBudgetVnd: '200000',
-      timeSlots: ['T2-tối', 'T4-tối'],
+      timeSlots: [],
       priorities: { ...DEFAULT_PRIORITIES },
       topK: 3,
       scenarioMeta: null,
@@ -600,7 +600,7 @@ function SearchPage({
                                 transition={{ type: 'spring', stiffness: 450, damping: 32 }}
                               />
                             )}
-                            <span className="seg-label" style={{ position: 'relative', zIndex: 1 }}>{opt.label}</span>
+                            <span className="seg-label" style={{ position: 'relative', zIndex: 1 }}>{opt.shortLabel || opt.label}</span>
                             <span className="seg-weight" style={{ position: 'relative', zIndex: 1 }}>w={opt.weight}</span>
                           </motion.button>
                         )

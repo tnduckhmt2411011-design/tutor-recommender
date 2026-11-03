@@ -330,7 +330,7 @@ function ResultPage({
                               )
                             }
                           >
-                            <span className="step-label">{opt.label}</span>
+                            <span className="step-label">{opt.shortLabel || opt.label}</span>
                             <span className="step-w">w={opt.weight}</span>
                           </button>
                         )

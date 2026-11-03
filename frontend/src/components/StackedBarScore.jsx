@@ -87,7 +87,23 @@ function StackedBarScore({
       >
         {appliedSegments.map((seg) => {
           if (seg.widthPercent <= 0) {
-            return null
+            const zeroTooltip = `${seg.label}: s_i = ${formatScoreVi(seg.scoreValue ?? 0, 3)} | ${PRIORITY_LABEL_MAP[seg.priorityLevel] || `w=${seg.weight}`} | Đóng góp C_i = 0,000 (0,0% - Không đạt điểm)`
+            const isHovered = activeKey === seg.key
+            return (
+              <button
+                key={seg.key}
+                type="button"
+                className={`stacked-bar-segment is-zero ${isHovered ? 'is-active' : ''}`}
+                title={zeroTooltip}
+                aria-label={zeroTooltip}
+                onMouseEnter={() => handleCriterionEnter(seg.key)}
+                onMouseLeave={handleCriterionLeave}
+                onFocus={() => handleCriterionEnter(seg.key)}
+                onBlur={handleCriterionLeave}
+              >
+                <span className="segment-inline-label is-zero-text">0.00</span>
+              </button>
+            )
           }
           const tooltipText = `${seg.label}: s_i = ${formatScoreVi(seg.scoreValue, 3)} | ${PRIORITY_LABEL_MAP[seg.priorityLevel] || `w=${seg.weight}`} | Đóng góp C_i = ${formatScoreVi(seg.contributionValue, 3)} (${seg.shareInTotalPercent.toFixed(1).replace('.', ',')}% tổng điểm)`
           const isHovered = activeKey === seg.key

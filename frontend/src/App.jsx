@@ -36,7 +36,7 @@ function App() {
     learningMode: 'in_person',
     preferredDistrict: 'Bình Thạnh',
     maxBudgetVnd: '200000',
-    timeSlots: ['T2-tối', 'T4-tối'],
+    timeSlots: [],
     priorities: { ...DEFAULT_PRIORITIES },
     topK: 3,
     scenarioMeta: null,
