@@ -217,36 +217,36 @@ export const CRITERIA_META = [
     key: 'fee',
     label: 'Học phí',
     shortLabel: 'Học phí',
-    color: '#2563eb',
-    bgLight: 'rgba(37, 99, 235, 0.12)',
+    color: '#1b6c80',
+    bgLight: 'rgba(27, 108, 128, 0.10)',
   },
   {
     key: 'district',
     label: 'Khu vực',
     shortLabel: 'Khu vực',
-    color: '#059669',
-    bgLight: 'rgba(5, 150, 105, 0.12)',
+    color: '#2b5c8f',
+    bgLight: 'rgba(43, 92, 143, 0.10)',
   },
   {
     key: 'experience',
     label: 'Kinh nghiệm',
     shortLabel: 'Kinh nghiệm',
-    color: '#d97706',
-    bgLight: 'rgba(217, 119, 6, 0.12)',
+    color: '#1e7b4f',
+    bgLight: 'rgba(30, 123, 79, 0.10)',
   },
   {
     key: 'rating',
     label: 'Đánh giá',
     shortLabel: 'Đánh giá',
-    color: '#7c3aed',
-    bgLight: 'rgba(124, 58, 237, 0.12)',
+    color: '#a86f0c',
+    bgLight: 'rgba(168, 111, 12, 0.10)',
   },
   {
     key: 'availability',
     label: 'Lịch rảnh',
     shortLabel: 'Lịch rảnh',
-    color: '#db2777',
-    bgLight: 'rgba(219, 39, 119, 0.12)',
+    color: '#475569',
+    bgLight: 'rgba(71, 85, 105, 0.10)',
   },
 ]
 
@@ -266,7 +266,7 @@ export const PRIORITY_LABEL_MAP = {
 
 export function formatScoreVi(value, digits = 3) {
   if (value === null || value === undefined || Number.isNaN(Number(value))) {
-    return '—'
+    return '-'
   }
   return Number(value).toFixed(digits).replace('.', ',')
 }

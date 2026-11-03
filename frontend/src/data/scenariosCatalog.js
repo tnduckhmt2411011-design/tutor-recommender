@@ -7,7 +7,7 @@
 export const SCENARIOS_CATALOG = [
   {
     id: 'KB01',
-    title: 'KB01 — Toán, Trực tiếp, Bình Thạnh, ngân sách 200.000đ',
+    title: 'KB01 · Toán, Trực tiếp, Bình Thạnh, ngân sách 200.000đ',
     request: {
       subject: 'Toán',
       learning_mode: 'in_person',
@@ -27,7 +27,7 @@ export const SCENARIOS_CATALOG = [
   },
   {
     id: 'KB02',
-    title: 'KB02 — Anh Văn, Trực tiếp, Quận 2, ngân sách 220.000đ (đồng hạng 1–2)',
+    title: 'KB02 · Anh Văn, Trực tiếp, Quận 2, ngân sách 220.000đ (đồng hạng 1–2)',
     request: {
       subject: 'Anh Văn',
       learning_mode: 'in_person',
@@ -47,7 +47,7 @@ export const SCENARIOS_CATALOG = [
   },
   {
     id: 'KB03',
-    title: 'KB03 — Anh Văn, Trực tiếp, Thủ Đức, ngân sách 220.000đ',
+    title: 'KB03 · Anh Văn, Trực tiếp, Thủ Đức, ngân sách 220.000đ',
     request: {
       subject: 'Anh Văn',
       learning_mode: 'in_person',
@@ -67,7 +67,7 @@ export const SCENARIOS_CATALOG = [
   },
   {
     id: 'KB04',
-    title: 'KB04 — Lý, Trực tuyến, ngân sách 200.000đ, T2-tối & T4-tối',
+    title: 'KB04 · Lý, Trực tuyến, ngân sách 200.000đ, T2-tối & T4-tối',
     request: {
       subject: 'Lý',
       learning_mode: 'online',
@@ -87,7 +87,7 @@ export const SCENARIOS_CATALOG = [
   },
   {
     id: 'KB05',
-    title: 'KB05 — Tiếng Trung, Không yêu cầu hình thức (ca không khớp ứng viên)',
+    title: 'KB05 · Tiếng Trung, Không yêu cầu hình thức (ca không khớp ứng viên)',
     request: {
       subject: 'Tiếng Trung',
       learning_mode: 'any',
@@ -107,7 +107,7 @@ export const SCENARIOS_CATALOG = [
   },
   {
     id: 'KB06',
-    title: 'KB06 — Văn, Trực tiếp, Quận 1, ngân sách 180.000đ',
+    title: 'KB06 · Văn, Trực tiếp, Quận 1, ngân sách 180.000đ',
     request: {
       subject: 'Văn',
       learning_mode: 'in_person',
@@ -127,7 +127,7 @@ export const SCENARIOS_CATALOG = [
   },
   {
     id: 'KB07',
-    title: 'KB07 — Sinh, Cả hai hình thức, Thủ Đức, ngân sách 200.000đ',
+    title: 'KB07 · Sinh, Cả hai hình thức, Thủ Đức, ngân sách 200.000đ',
     request: {
       subject: 'Sinh',
       learning_mode: 'any',
@@ -147,7 +147,7 @@ export const SCENARIOS_CATALOG = [
   },
   {
     id: 'KB08',
-    title: 'KB08 — Tin học, Trực tuyến, ngân sách 250.000đ, T2-tối & T6-tối',
+    title: 'KB08 · Tin học, Trực tuyến, ngân sách 250.000đ, T2-tối & T6-tối',
     request: {
       subject: 'Tin học',
       learning_mode: 'online',
@@ -167,7 +167,7 @@ export const SCENARIOS_CATALOG = [
   },
   {
     id: 'KB09',
-    title: 'KB09 — Tiếng Nhật, Cả hai hình thức, Phú Nhuận, ngân sách 280.000đ',
+    title: 'KB09 · Tiếng Nhật, Cả hai hình thức, Phú Nhuận, ngân sách 280.000đ',
     request: {
       subject: 'Tiếng Nhật',
       learning_mode: 'any',
@@ -187,7 +187,7 @@ export const SCENARIOS_CATALOG = [
   },
   {
     id: 'KB10',
-    title: 'KB10 — Toán, Trực tiếp, Quận 7, ưu tiên Kinh nghiệm = Cao',
+    title: 'KB10 · Toán, Trực tiếp, Quận 7, ưu tiên Kinh nghiệm = Cao',
     request: {
       subject: 'Toán',
       learning_mode: 'in_person',
@@ -207,7 +207,7 @@ export const SCENARIOS_CATALOG = [
   },
   {
     id: 'KB11',
-    title: 'KB11 — Hóa, Trực tiếp, Quận 10, ngân sách 220.000đ',
+    title: 'KB11 · Hóa, Trực tiếp, Quận 10, ngân sách 220.000đ',
     request: {
       subject: 'Hóa',
       learning_mode: 'in_person',
@@ -227,7 +227,7 @@ export const SCENARIOS_CATALOG = [
   },
   {
     id: 'KB12',
-    title: 'KB12 — Anh Văn, Trực tiếp, Bình Chánh, ngân sách 200.000đ',
+    title: 'KB12 · Anh Văn, Trực tiếp, Bình Chánh, ngân sách 200.000đ',
     request: {
       subject: 'Anh Văn',
       learning_mode: 'in_person',
@@ -247,7 +247,7 @@ export const SCENARIOS_CATALOG = [
   },
   {
     id: 'KB13',
-    title: 'KB13 — Toán, Cả hai hình thức, ngân sách 150.000đ',
+    title: 'KB13 · Toán, Cả hai hình thức, ngân sách 150.000đ',
     request: {
       subject: 'Toán',
       learning_mode: 'any',
@@ -267,7 +267,7 @@ export const SCENARIOS_CATALOG = [
   },
   {
     id: 'KB14',
-    title: 'KB14 — Anh Văn, Trực tuyến (kiểm tra lọc hình thức Online)',
+    title: 'KB14 · Anh Văn, Trực tuyến (kiểm tra lọc hình thức Online)',
     request: {
       subject: 'Anh Văn',
       learning_mode: 'online',
