@@ -1915,9 +1915,33 @@
 }
 
 .pulse-anim {
-  background: linear-gradient(90deg, var(--raised) 0%, var(--active) 50%, var(--raised) 100%);
+  background: linear-gradient(90deg, var(--raised) 0%, rgba(16, 185, 129, 0.12) 50%, var(--raised) 100%);
   background-size: 200% 100%;
-  animation: shimmerPulse 1.6s ease-in-out infinite;
+  animation: shimmerPulse 1.4s ease-in-out infinite;
+}
+
+.cn03-updating-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #34d399;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.28);
+  border-radius: 999px;
+  padding: 2px 8px;
+  letter-spacing: 0.01em;
+}
+
+.spinner-icon-sm {
+  width: 10px;
+  height: 10px;
+  border: 2px solid rgba(52, 211, 153, 0.3);
+  border-top-color: #34d399;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
 }
 
 @keyframes shimmerPulse {

@@ -201,7 +201,15 @@ function ResultPage({
         {status === 'success' && (
           <aside className="cn03-rail" aria-label="Bảng điều chỉnh mức ưu tiên trực tiếp CN03">
             <div className="rail-header">
-              <h3>Điều chỉnh mức ưu tiên (CN03)</h3>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
+                <h3 style={{ margin: 0 }}>Điều chỉnh mức ưu tiên (CN03)</h3>
+                {isUpdatingPriorities && (
+                  <span className="cn03-updating-pill">
+                    <span className="spinner-icon-sm" aria-hidden="true" />
+                    Đang tính lại...
+                  </span>
+                )}
+              </div>
               <p className="rail-hint">
                 Thay đổi mức ưu tiên cho bất kỳ tiêu chí nào để gọi lại API và cập nhật thứ hạng tức thì.
               </p>

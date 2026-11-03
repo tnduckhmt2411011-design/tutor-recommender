@@ -70,7 +70,7 @@ function App() {
     try {
       const fetchPromise = fetchRecommendations(payload)
       const minDelayPromise = options.switchToResult
-        ? new Promise((r) => setTimeout(r, 380))
+        ? new Promise((r) => setTimeout(r, 650))
         : Promise.resolve()
       const [responseData] = await Promise.all([fetchPromise, minDelayPromise])
 
