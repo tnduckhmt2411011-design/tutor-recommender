@@ -61,6 +61,7 @@ export default function TutorAvatar({ tutorId = '', fullName = '', size = 52, cl
           width={size}
           height={size}
           loading="lazy"
+          decoding="async"
           onError={() => setImgError(true)}
           style={{
             width: '100%',
