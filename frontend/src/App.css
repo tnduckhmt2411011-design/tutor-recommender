@@ -1991,3 +1991,24 @@
   border-color: var(--primary);
   color: var(--text-h);
 }
+
+/* Tutor Avatar Anchor & Overlay Rank Badge */
+.tutor-avatar-anchor {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.rank-mark.rank-mark-overlay {
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  z-index: 3;
+  border: 2px solid var(--surface);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}

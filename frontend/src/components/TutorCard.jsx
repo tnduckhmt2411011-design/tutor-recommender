@@ -65,11 +65,12 @@ function TutorCard({ item, priorities }) {
     >
       <div className="tutor-card-header">
         <div className="tutor-rank-group">
-          <div className={`rank-mark rank-${item.rank <= 3 ? item.rank : 'other'}`}>
-            <span className="rank-num">#{item.rank}</span>
+          <div className="tutor-avatar-anchor">
+            <TutorAvatar tutorId={item.tutor_id} fullName={item.full_name} size={54} />
+            <div className={`rank-mark rank-mark-overlay rank-${item.rank <= 3 ? item.rank : 'other'}`}>
+              <span className="rank-num">#{item.rank}</span>
+            </div>
           </div>
-
-          <TutorAvatar tutorId={item.tutor_id} fullName={item.full_name} size={46} />
 
           <div className="tutor-identity">
             <div className="tutor-title-line">
