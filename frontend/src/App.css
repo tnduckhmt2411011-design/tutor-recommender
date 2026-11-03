@@ -1924,3 +1924,70 @@
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
+
+/* ---------- 19. Motiondivision Active-Pill & Tactile Interactions ---------- */
+.active-pill-background {
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  background-color: var(--primary);
+  z-index: 0;
+  pointer-events: none;
+  box-shadow: 0 1px 4px rgba(16, 185, 129, 0.25);
+}
+
+.seg-btn,
+.cn03-step-btn {
+  position: relative;
+  z-index: 1;
+}
+
+.seg-btn.active,
+.cn03-step-btn.active {
+  background-color: transparent !important;
+  color: var(--primary-ink) !important;
+  font-weight: 600;
+}
+
+.tutor-card {
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.tutor-card:hover {
+  border-color: var(--border-subtle, #334155);
+  box-shadow: 0 6px 20px -4px rgba(0, 0, 0, 0.35);
+}
+
+.tutor-card.rank-1-hero:hover {
+  border-color: rgba(16, 185, 129, 0.45);
+  box-shadow: 0 8px 24px -4px rgba(16, 185, 129, 0.2);
+}
+
+.scenario-chip {
+  cursor: pointer;
+  transition: border-color 140ms ease, background-color 140ms ease;
+}
+
+.scenario-chip:hover:not(:disabled) {
+  border-color: var(--primary);
+  background-color: var(--surface);
+}
+
+.slot-button {
+  cursor: pointer;
+  transition: background-color 120ms ease, border-color 120ms ease;
+}
+
+.slot-button:hover:not(:disabled) {
+  border-color: var(--primary);
+}
+
+.power-pill-btn {
+  cursor: pointer;
+  transition: border-color 140ms ease, color 140ms ease;
+}
+
+.power-pill-btn:hover {
+  border-color: var(--primary);
+  color: var(--text-h);
+}

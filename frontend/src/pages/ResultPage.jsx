@@ -316,17 +316,22 @@ function ResultPage({
           {status === 'success' && results.length > 0 && (
             <motion.div layout className="tutor-cards-list">
               <AnimatePresence mode="popLayout">
-                {results.map((item) => {
+                {results.map((item, idx) => {
                   const delta = rankDeltas[item.tutor_id]
                   return (
                     <motion.div
                       layout
                       key={item.tutor_id}
                       className="tutor-card-container"
-                      initial={{ opacity: 0, y: 14 }}
+                      initial={{ opacity: 0, y: 18 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, scale: 0.95 }}
-                      transition={{ type: 'spring', stiffness: 350, damping: 28 }}
+                      transition={{
+                        type: 'spring',
+                        stiffness: 320,
+                        damping: 26,
+                        delay: idx * 0.08,
+                      }}
                     >
                       {delta !== undefined && delta !== 0 && (
                         <motion.div

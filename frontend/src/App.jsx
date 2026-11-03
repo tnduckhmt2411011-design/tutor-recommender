@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { motion, AnimatePresence } from 'motion/react'
 import ResultPage from './pages/ResultPage'
 import SearchPage from './pages/SearchPage'
 import {
@@ -195,27 +196,45 @@ function App() {
         </button>
       </nav>
 
-      {activeTab === 'search' ? (
-        <SearchPage
-          searchForm={searchForm}
-          onChangeSearchForm={setSearchForm}
-          onSubmitSearch={handleSubmitSearch}
-          onApplyScenario={handleApplyScenario}
-          isLoading={isLoading}
-          apiError={apiError}
-        />
-      ) : (
-        <ResultPage
-          recommendationResult={recommendationResult}
-          searchContext={searchForm}
-          onBackToSearch={() => setActiveTab('search')}
-          onUpdatePriorities={handleUpdatePrioritiesLive}
-          isUpdatingPriorities={isLoading}
-          latencyMs={latencyMs}
-          apiError={apiError}
-          rankDeltas={rankDeltas}
-        />
-      )}
+      <AnimatePresence mode="wait">
+        {activeTab === 'search' ? (
+          <motion.div
+            key="search-step"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <SearchPage
+              searchForm={searchForm}
+              onChangeSearchForm={setSearchForm}
+              onSubmitSearch={handleSubmitSearch}
+              onApplyScenario={handleApplyScenario}
+              isLoading={isLoading}
+              apiError={apiError}
+            />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="result-step"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <ResultPage
+              recommendationResult={recommendationResult}
+              searchContext={searchForm}
+              onBackToSearch={() => setActiveTab('search')}
+              onUpdatePriorities={handleUpdatePrioritiesLive}
+              isUpdatingPriorities={isLoading}
+              latencyMs={latencyMs}
+              apiError={apiError}
+              rankDeltas={rankDeltas}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </main>
   )
 }

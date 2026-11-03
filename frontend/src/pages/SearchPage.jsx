@@ -300,7 +300,9 @@ function SearchPage({
           {SCENARIOS_CATALOG.map((sc) => {
             const isSelected = scenarioMeta?.id === sc.id
             return (
-              <button
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.94 }}
                 key={sc.id}
                 type="button"
                 disabled={isLoading}
@@ -310,7 +312,7 @@ function SearchPage({
               >
                 <span className="sc-id">{sc.id}</span>
                 <span className="sc-subj">{sc.request.subject}</span>
-              </button>
+              </motion.button>
             )
           })}
         </div>
@@ -473,22 +475,24 @@ function SearchPage({
                 <span className="power-bar-title">Mẫu chọn nhanh:</span>
                 <div className="power-bar-buttons">
                   {SCHEDULE_PATTERNS.map((pattern) => (
-                    <button
+                    <motion.button
+                      whileTap={{ scale: 0.94 }}
                       key={pattern.label}
                       type="button"
                       className="power-pill-btn"
                       onClick={() => handleApplySchedulePattern(pattern.slots)}
                     >
                       {pattern.label}
-                    </button>
+                    </motion.button>
                   ))}
-                  <button
+                  <motion.button
+                    whileTap={{ scale: 0.94 }}
                     type="button"
                     className="power-pill-btn"
                     onClick={() => handleApplySchedulePattern([])}
                   >
                     Bỏ chọn tất cả
-                  </button>
+                  </motion.button>
                 </div>
               </div>
 
@@ -511,14 +515,15 @@ function SearchPage({
                           const isSelected = timeSlots.includes(slotKey)
                           return (
                             <td key={slotKey}>
-                              <button
+                              <motion.button
+                                whileTap={{ scale: 0.92 }}
                                 type="button"
                                 className={`slot-button ${isSelected ? 'selected' : ''}`}
                                 onClick={() => handleToggleTimeSlot(slotKey)}
                                 aria-pressed={isSelected}
                               >
                                 {slotKey}
-                              </button>
+                              </motion.button>
                             </td>
                           )
                         })}
@@ -577,7 +582,8 @@ function SearchPage({
                       {PRIORITY_OPTIONS.map((opt) => {
                         const isActive = currentLevel === opt.value
                         return (
-                          <button
+                          <motion.button
+                            whileTap={!isCriterionDisabled ? { scale: 0.95 } : undefined}
                             key={opt.value}
                             type="button"
                             disabled={isCriterionDisabled}
@@ -585,10 +591,18 @@ function SearchPage({
                             onClick={() =>
                               handlePriorityChange(criterion.key, opt.value)
                             }
+                            style={{ position: 'relative' }}
                           >
-                            <span className="seg-label">{opt.label}</span>
-                            <span className="seg-weight">w={opt.weight}</span>
-                          </button>
+                            {isActive && (
+                              <motion.div
+                                layoutId={`search-pill-${criterion.key}`}
+                                className="active-pill-background"
+                                transition={{ type: 'spring', stiffness: 450, damping: 32 }}
+                              />
+                            )}
+                            <span className="seg-label" style={{ position: 'relative', zIndex: 1 }}>{opt.label}</span>
+                            <span className="seg-weight" style={{ position: 'relative', zIndex: 1 }}>w={opt.weight}</span>
+                          </motion.button>
                         )
                       })}
                     </div>
@@ -622,7 +636,13 @@ function SearchPage({
         )}
 
         <div className="submit-bar">
-          <button type="submit" className="btn-primary btn-large" disabled={isLoading}>
+          <motion.button
+            whileTap={!isLoading ? { scale: 0.98 } : undefined}
+            whileHover={!isLoading ? { y: -1 } : undefined}
+            type="submit"
+            className="btn-primary btn-large"
+            disabled={isLoading}
+          >
             {isLoading ? (
               <span className="btn-loading-content">
                 <span className="spinner-icon" aria-hidden="true" />
@@ -631,7 +651,7 @@ function SearchPage({
             ) : (
               <span>Tìm gia sư phù hợp →</span>
             )}
-          </button>
+          </motion.button>
         </div>
       </form>
     </div>
