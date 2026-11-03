@@ -61,9 +61,19 @@ function App() {
     setIsLoading(true)
     setApiError('')
 
+    if (options.switchToResult) {
+      setRecommendationResult(null)
+      setActiveTab('result')
+    }
+
     const startTime = performance.now()
     try {
-      const responseData = await fetchRecommendations(payload)
+      const fetchPromise = fetchRecommendations(payload)
+      const minDelayPromise = options.switchToResult
+        ? new Promise((r) => setTimeout(r, 380))
+        : Promise.resolve()
+      const [responseData] = await Promise.all([fetchPromise, minDelayPromise])
+
       if (seq !== requestSeqRef.current) {
         return
       }
@@ -90,9 +100,6 @@ function App() {
       }
 
       setRecommendationResult(responseData)
-      if (options.switchToResult) {
-        setActiveTab('result')
-      }
     } catch (error) {
       if (seq !== requestSeqRef.current) {
         return
@@ -227,7 +234,8 @@ function App() {
               searchContext={searchForm}
               onBackToSearch={() => setActiveTab('search')}
               onUpdatePriorities={handleUpdatePrioritiesLive}
-              isUpdatingPriorities={isLoading}
+              isUpdatingPriorities={isLoading && !!recommendationResult}
+              isCalculating={isLoading && !recommendationResult}
               latencyMs={latencyMs}
               apiError={apiError}
               rankDeltas={rankDeltas}

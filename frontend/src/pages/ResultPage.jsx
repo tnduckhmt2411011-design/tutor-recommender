@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'motion/react'
 import TutorCard from '../components/TutorCard'
+import SkeletonLoader from '../components/SkeletonLoader'
 import CriteriaIcon from '../components/CriteriaIcon'
 import {
   CRITERIA_LIST,
@@ -313,7 +314,17 @@ function ResultPage({
         )}
 
         <main className="results-main">
-          {status === 'success' && results.length > 0 && (
+          {isCalculating && (
+            <div className="tutor-cards-list" role="status" aria-live="polite">
+              <div className="loading-badge" style={{ marginBottom: 8 }}>
+                <span className="spinner-icon" aria-hidden="true" />
+                <span>Đang chuẩn hóa 5 tiêu chí & tính toán Top-3 tối ưu...</span>
+              </div>
+              <SkeletonLoader count={3} />
+            </div>
+          )}
+
+          {!isCalculating && status === 'success' && results.length > 0 && (
             <motion.div layout className="tutor-cards-list">
               <AnimatePresence mode="popLayout">
                 {results.map((item, idx) => {
@@ -323,14 +334,14 @@ function ResultPage({
                       layout
                       key={item.tutor_id}
                       className="tutor-card-container"
-                      initial={{ opacity: 0, y: 18 }}
-                      animate={{ opacity: 1, y: 0 }}
+                      initial={{ opacity: 0, y: 32, scale: 0.96 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.95 }}
                       transition={{
                         type: 'spring',
-                        stiffness: 320,
-                        damping: 26,
-                        delay: idx * 0.08,
+                        stiffness: 240,
+                        damping: 20,
+                        delay: idx * 0.1,
                       }}
                     >
                       {delta !== undefined && delta !== 0 && (
@@ -353,7 +364,7 @@ function ResultPage({
             </motion.div>
           )}
 
-          {status === 'no_match' && (
+          {!isCalculating && status === 'no_match' && (
             <div
               className="friendly-state-card state-no-match"
               role="region"
@@ -396,7 +407,7 @@ function ResultPage({
             </div>
           )}
 
-          {status === 'error' && (
+          {!isCalculating && status === 'error' && (
             <div className="friendly-state-card state-error" role="alert">
               <h3>Đã xảy ra lỗi khi gợi ý</h3>
               <p>{message || 'Vui lòng kiểm tra lại thông số đầu vào và thử lại.'}</p>
