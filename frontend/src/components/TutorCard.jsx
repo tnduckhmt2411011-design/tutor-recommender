@@ -1,5 +1,9 @@
 import { useState } from 'react'
+import { motion } from 'motion/react'
 import StackedBarScore from './StackedBarScore'
+import TutorAvatar from './TutorAvatar'
+import SubjectIcon from './SubjectIcon'
+import CriteriaIcon from './CriteriaIcon'
 import {
   formatCurrencyVnd,
   formatScoreVi,
@@ -15,6 +19,8 @@ function TutorCard({ item, priorities }) {
     profile?.subjects?.length > 0
       ? profile.subjects.join(', ')
       : 'Theo hồ sơ đăng ký'
+
+  const primarySubject = profile?.subjects?.[0] || 'Toán'
 
   const districtsText =
     profile?.districts?.length > 0
@@ -47,7 +53,13 @@ function TutorCard({ item, priorities }) {
   const isRankOne = item.rank === 1
 
   return (
-    <article
+    <motion.article
+      layout="position"
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.96 }}
+      transition={{ type: 'spring', stiffness: 350, damping: 28 }}
+      whileHover={{ y: -2, transition: { duration: 0.15 } }}
       className={`tutor-card ${isRankOne ? 'rank-1-hero' : ''}`}
       aria-label={`Hạng ${item.rank} - ${item.tutor_id}`}
     >
@@ -56,6 +68,9 @@ function TutorCard({ item, priorities }) {
           <div className={`rank-mark rank-${item.rank <= 3 ? item.rank : 'other'}`}>
             <span className="rank-num">#{item.rank}</span>
           </div>
+
+          <TutorAvatar tutorId={item.tutor_id} fullName={item.full_name} size={46} />
+
           <div className="tutor-identity">
             <div className="tutor-title-line">
               <h3 className="tutor-name">
@@ -79,7 +94,8 @@ function TutorCard({ item, priorities }) {
               )}
             </div>
             <p className="tutor-meta-line">
-              <span className="meta-item">
+              <span className="meta-item subject-meta-item">
+                <SubjectIcon subject={primarySubject} size={14} className="meta-subject-icon" />
                 <span className="meta-key">Môn dạy:</span> {subjectsText}
               </span>
               <span className="meta-sep">·</span>
@@ -107,7 +123,10 @@ function TutorCard({ item, priorities }) {
           onMouseEnter={() => setActiveCriterion('fee')}
           onMouseLeave={() => setActiveCriterion(null)}
         >
-          <span className="attr-label">Học phí</span>
+          <span className="attr-label">
+            <CriteriaIcon criterion="fee" size={13} className="attr-icon" />
+            Học phí
+          </span>
           <strong className="attr-value">{feeText}</strong>
         </div>
         <div
@@ -115,7 +134,10 @@ function TutorCard({ item, priorities }) {
           onMouseEnter={() => setActiveCriterion('experience')}
           onMouseLeave={() => setActiveCriterion(null)}
         >
-          <span className="attr-label">Kinh nghiệm</span>
+          <span className="attr-label">
+            <CriteriaIcon criterion="experience" size={13} className="attr-icon" />
+            Kinh nghiệm
+          </span>
           <strong className="attr-value">{experienceText}</strong>
         </div>
         <div
@@ -123,7 +145,10 @@ function TutorCard({ item, priorities }) {
           onMouseEnter={() => setActiveCriterion('rating')}
           onMouseLeave={() => setActiveCriterion(null)}
         >
-          <span className="attr-label">Đánh giá</span>
+          <span className="attr-label">
+            <CriteriaIcon criterion="rating" size={13} className="attr-icon" />
+            Đánh giá
+          </span>
           <strong className="attr-value attr-rating">
             {hasRating && (
               <span className="rating-star-icon" aria-hidden="true">
@@ -140,7 +165,10 @@ function TutorCard({ item, priorities }) {
           onMouseEnter={() => setActiveCriterion('district')}
           onMouseLeave={() => setActiveCriterion(null)}
         >
-          <span className="attr-label">Khu vực dạy</span>
+          <span className="attr-label">
+            <CriteriaIcon criterion="district" size={13} className="attr-icon" />
+            Khu vực dạy
+          </span>
           <strong className="attr-value">{districtsText}</strong>
         </div>
       </div>
@@ -151,7 +179,10 @@ function TutorCard({ item, priorities }) {
           onMouseEnter={() => setActiveCriterion('availability')}
           onMouseLeave={() => setActiveCriterion(null)}
         >
-          <span className="attr-label">Lịch rảnh:</span>
+          <span className="attr-label">
+            <CriteriaIcon criterion="availability" size={13} className="attr-icon" />
+            Lịch rảnh:
+          </span>
           <div className="slot-badge-list">
             {availabilityList.map((slot) => (
               <span key={slot} className="slot-mini-badge">
@@ -187,7 +218,7 @@ function TutorCard({ item, priorities }) {
           </div>
         )}
       </div>
-    </article>
+    </motion.article>
   )
 }
 

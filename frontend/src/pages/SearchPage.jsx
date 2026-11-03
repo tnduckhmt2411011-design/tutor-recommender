@@ -1,5 +1,9 @@
 import { useState } from 'react'
+import { motion } from 'motion/react'
 import { SCENARIOS_CATALOG } from '../data/scenariosCatalog'
+import SubjectIcon from '../components/SubjectIcon'
+import CriteriaIcon from '../components/CriteriaIcon'
+import SkeletonLoader from '../components/SkeletonLoader'
 import {
   CRITERIA_LIST,
   DAYS_OF_WEEK,
@@ -149,8 +153,7 @@ function SearchPage({
     if (autoRunScenario) {
       onApplyScenario(sc)
     } else {
-      onChangeSearchForm({
-        ...searchForm,
+      updateField({
         subject: sc.request.subject,
         learningMode: sc.request.learning_mode,
         preferredDistrict: sc.request.preferred_district || '',
@@ -167,7 +170,6 @@ function SearchPage({
           ...DEFAULT_PRIORITIES,
           ...(sc.request.priorities || {}),
         },
-        topK: 3,
         scenarioMeta: sc,
       })
     }
@@ -197,50 +199,66 @@ function SearchPage({
     })
   }
 
-  const validateForm = () => {
-    if (!String(subject || '').trim()) {
-      return 'Vui lòng chọn môn học cần tìm gia sư.'
-    }
+  const handleSubmit = (e) => {
+    e.preventDefault()
 
-    const rawBudget = String(maxBudgetVnd ?? '').trim()
-    if (rawBudget !== '') {
-      const parsedBudget = Number(rawBudget)
-      if (!Number.isInteger(parsedBudget) || parsedBudget < 0) {
-        return 'Ngân sách tối đa mỗi giờ phải là số nguyên không âm (VNĐ).'
-      }
-    }
-
-    const parsedTopK = Number(topK)
-    if (!Number.isInteger(parsedTopK) || parsedTopK < 1 || parsedTopK > 20) {
-      return 'Số lượng kết quả gợi ý (Top-k) phải là số nguyên từ 1 đến 20.'
-    }
-
-    return ''
-  }
-
-  const handleSubmit = (event) => {
-    event.preventDefault()
-    setValidationError('')
-
-    const errorMsg = validateForm()
-    if (errorMsg) {
-      setValidationError(errorMsg)
+    if (!subject || !String(subject).trim()) {
+      setValidationError('Vui lòng chọn môn học mong muốn.')
       return
     }
 
+    if (!learningMode) {
+      setValidationError('Vui lòng chọn hình thức học.')
+      return
+    }
+
+    if (learningMode === 'in_person' && (!preferredDistrict || !String(preferredDistrict).trim())) {
+      setValidationError('Hình thức học Trực tiếp (In-person) bắt buộc chọn khu vực Quận/Huyện mong muốn.')
+      return
+    }
+
+    if (maxBudgetVnd !== '' && maxBudgetVnd !== undefined && maxBudgetVnd !== null) {
+      const budgetNum = Number(maxBudgetVnd)
+      if (Number.isNaN(budgetNum) || budgetNum < 0) {
+        setValidationError('Ngân sách tối đa phải là một số không âm hợp lệ.')
+        return
+      }
+    }
+
+    setValidationError('')
     onSubmitSearch(searchForm)
   }
 
+  const budgetVietnameseWords = formatBudgetInVietnameseWords(maxBudgetVnd)
+
   return (
     <div className="search-page">
-      <header className="page-header">
-        <h1>Tìm kiếm & Khuyến nghị Gia sư Đa tiêu chí</h1>
-        <p className="subtitle">
-          Mô-đun CN01 · Thiết lập điều kiện học tập và trọng số ưu tiên 5 tiêu chí để
-          xếp hạng Top-k gia sư theo mô hình Weighted Scoring.
-        </p>
-      </header>
+      {/* Hero Banner Section */}
+      <motion.header
+        className="hero-banner"
+        initial={{ opacity: 0, y: -12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+      >
+        <div className="hero-content">
+          <div className="hero-badge">
+            <span className="hero-sparkle" aria-hidden="true">✦</span>
+            <span>Mô hình Tối ưu Đa tiêu chí Thông minh (Weighted Scoring)</span>
+          </div>
+          <h1 className="hero-title">Tìm kiếm & Khuyến nghị Gia sư Lý tưởng</h1>
+          <p className="hero-subtitle">
+            Cá nhân hóa điều kiện học tập, tối ưu hóa điểm số <var>S(g)</var> dựa trên 5 tiêu chí: Học phí, Khu vực, Kinh nghiệm, Đánh giá và Lịch rảnh.
+          </p>
+          <div className="hero-stats-row">
+            <span className="hero-stat-pill"><strong>16</strong> Hồ sơ gia sư</span>
+            <span className="hero-stat-pill"><strong>14</strong> Kịch bản thực nghiệm</span>
+            <span className="hero-stat-pill"><strong>5</strong> Tiêu chí chuẩn hóa</span>
+            <span className="hero-stat-pill highlight-pill"><strong>100%</strong> Minh bạch đóng góp</span>
+          </div>
+        </div>
+      </motion.header>
 
+      {/* Scenario Strip Panel */}
       <section
         className="scenario-strip-panel"
         aria-label="Nạp nhanh 14 kịch bản thực nghiệm Bảng 5.1"
@@ -315,8 +333,9 @@ function SearchPage({
 
             <div className="form-fields-grid">
               <div className="form-field">
-                <label htmlFor="subject-select">
-                  Môn học <span className="required">*</span>
+                <label htmlFor="subject-select" className="label-with-icon">
+                  <SubjectIcon subject={subject} size={15} color="var(--accent)" />
+                  <span>Môn học <span className="required">*</span></span>
                 </label>
                 <select
                   id="subject-select"
@@ -324,7 +343,6 @@ function SearchPage({
                   onChange={(e) =>
                     updateField({ subject: e.target.value, scenarioMeta: null })
                   }
-                  required
                 >
                   {SUBJECT_OPTIONS.map((subj) => (
                     <option key={subj} value={subj}>
@@ -346,56 +364,47 @@ function SearchPage({
                   value={learningMode}
                   onChange={(e) => handleLearningModeChange(e.target.value)}
                 >
-                  {LEARNING_MODE_OPTIONS.map((mode) => (
-                    <option key={mode.value} value={mode.value}>
-                      {mode.label}
+                  {LEARNING_MODE_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
                     </option>
                   ))}
                 </select>
                 <span className="field-hint">
-                  Khi học Trực tuyến, tiêu chí Khu vực tự động không áp dụng.
+                  {isOnlineMode
+                    ? 'Khi học Trực tuyến, tiêu chí Khu vực tự động không áp dụng.'
+                    : 'Học trực tiếp tại nhà học viên ở các quận/huyện đã chọn.'}
                 </span>
               </div>
 
-              {!isOnlineMode ? (
-                <div className="form-field">
-                  <label htmlFor="district-select">Khu vực mong muốn</label>
-                  <select
-                    id="district-select"
-                    value={preferredDistrict}
-                    onChange={(e) =>
-                      updateField({
-                        preferredDistrict: e.target.value,
-                        scenarioMeta: null,
-                      })
-                    }
-                  >
-                    <option value="">-- Không giới hạn khu vực --</option>
-                    {DISTRICT_OPTIONS.map((dist) => (
-                      <option key={dist} value={dist}>
-                        {dist}
-                      </option>
-                    ))}
-                  </select>
-                  <span className="field-hint">
-                    Dùng để tính điểm khớp vị trí dạy trực tiếp.
-                  </span>
-                </div>
-              ) : (
-                <div className="form-field disabled-field">
-                  <label htmlFor="district-disabled">Khu vực mong muốn</label>
-                  <input
-                    id="district-disabled"
-                    type="text"
-                    value="Không áp dụng khi học Trực tuyến (Online)"
-                    disabled
-                    readOnly
-                  />
-                  <span className="field-hint">
-                    Tiêu chí khu vực được loại khỏi công thức tổng hợp điểm.
-                  </span>
-                </div>
-              )}
+              <div className={`form-field ${isOnlineMode ? 'disabled-field' : ''}`}>
+                <label htmlFor="district-select">
+                  Khu vực mong muốn
+                </label>
+                <select
+                  id="district-select"
+                  value={preferredDistrict}
+                  disabled={isOnlineMode}
+                  onChange={(e) =>
+                    updateField({
+                      preferredDistrict: e.target.value,
+                      scenarioMeta: null,
+                    })
+                  }
+                >
+                  <option value="">-- Chọn quận/huyện (tùy chọn) --</option>
+                  {DISTRICT_OPTIONS.map((dist) => (
+                    <option key={dist} value={dist}>
+                      {dist}
+                    </option>
+                  ))}
+                </select>
+                <span className="field-hint">
+                  {isOnlineMode
+                    ? 'Không áp dụng khi học trực tuyến (tự động bỏ qua).'
+                    : 'Dùng để tính điểm khớp vị trí dạy trực tiếp.'}
+                </span>
+              </div>
 
               <div className="form-field">
                 <label htmlFor="budget-input">
@@ -406,7 +415,7 @@ function SearchPage({
                   type="number"
                   min="0"
                   step="10000"
-                  placeholder="Ví dụ: 200000 (để trống nếu không giới hạn)"
+                  placeholder="Ví dụ: 200000"
                   value={maxBudgetVnd}
                   onChange={(e) =>
                     updateField({
@@ -415,30 +424,33 @@ function SearchPage({
                     })
                   }
                 />
-                {String(maxBudgetVnd ?? '').trim() !== '' && (
+                {budgetVietnameseWords ? (
                   <div className="currency-humanizer-tag" role="status">
-                    {formatBudgetInVietnameseWords(maxBudgetVnd)}
+                    {budgetVietnameseWords}
                   </div>
+                ) : (
+                  <span className="field-hint">
+                    Học phí trong ngân sách đạt điểm 1,00; vượt quá 1,5 lần nhận 0 điểm.
+                  </span>
                 )}
-                <span className="field-hint">
-                  Học phí trong ngân sách đạt điểm 1,00; vượt quá 1,5 lần nhận 0 điểm.
-                </span>
               </div>
 
               <div className="form-field">
-                <label htmlFor="topk-select">Số lượng gợi ý (Top-k)</label>
+                <label htmlFor="topk-select">
+                  Số lượng gợi ý (Top-k)
+                </label>
                 <select
                   id="topk-select"
                   value={topK}
                   onChange={(e) =>
-                    updateField({ topK: Number(e.target.value) })
+                    updateField({
+                      topK: Number(e.target.value),
+                    })
                   }
                 >
-                  {[1, 2, 3, 5, 10].map((k) => (
-                    <option key={k} value={k}>
-                      Top {k} gia sư
-                    </option>
-                  ))}
+                  <option value={3}>Top 3 gia sư</option>
+                  <option value={5}>Top 5 gia sư</option>
+                  <option value={10}>Top 10 gia sư</option>
                 </select>
                 <span className="field-hint">
                   Mặc định gợi ý Top 3 gia sư có điểm tổng hợp cao nhất.
@@ -446,33 +458,18 @@ function SearchPage({
               </div>
             </div>
 
+            {/* Schedule Section */}
             <div className="schedule-section">
               <div className="schedule-header">
-                <div>
-                  <h3>Khung thời gian rảnh trong tuần</h3>
-                  <p className="field-hint">
-                    Đã chọn:{' '}
-                    <strong>
-                      {timeSlots.length > 0
-                        ? timeSlots.join(', ')
-                        : 'Chưa chọn (không tính tiêu chí lịch rảnh)'}
-                    </strong>
-                  </p>
-                </div>
-                {timeSlots.length > 0 && (
-                  <button
-                    type="button"
-                    className="btn-text"
-                    onClick={() =>
-                      updateField({ timeSlots: [], scenarioMeta: null })
-                    }
-                  >
-                    Bỏ chọn tất cả
-                  </button>
-                )}
+                <h3>Khung thời gian rảnh trong tuần</h3>
+                <span className="field-hint">
+                  {timeSlots.length > 0
+                    ? `Đã chọn: ${timeSlots.length} buổi`
+                    : 'Đã chọn: Chưa chọn (không tính tiêu chí lịch rảnh)'}
+                </span>
               </div>
 
-              <div className="schedule-power-bar" aria-label="Mẫu chọn nhanh khung giờ rảnh">
+              <div className="schedule-power-bar">
                 <span className="power-bar-title">Mẫu chọn nhanh:</span>
                 <div className="power-bar-buttons">
                   {SCHEDULE_PATTERNS.map((pattern) => (
@@ -485,6 +482,13 @@ function SearchPage({
                       {pattern.label}
                     </button>
                   ))}
+                  <button
+                    type="button"
+                    className="power-pill-btn"
+                    onClick={() => handleApplySchedulePattern([])}
+                  >
+                    Bỏ chọn tất cả
+                  </button>
                 </div>
               </div>
 
@@ -553,7 +557,10 @@ function SearchPage({
                     className={`criterion-card ${isCriterionDisabled ? 'disabled' : ''}`}
                   >
                     <div className="criterion-header">
-                      <strong className="criterion-title">{criterion.label}</strong>
+                      <div className="criterion-title-wrap">
+                        <CriteriaIcon criterion={criterion.key} size={15} className="criterion-header-icon" />
+                        <strong className="criterion-title">{criterion.label}</strong>
+                      </div>
                       {isCriterionDisabled && (
                         <span className="inactive-badge">
                           Tự động bỏ qua
@@ -604,11 +611,26 @@ function SearchPage({
           </div>
         )}
 
+        {isLoading && (
+          <div className="loading-preview-wrap">
+            <div className="loading-badge">
+              <span className="spinner-icon" aria-hidden="true" />
+              <span>Đang kết nối API và tối ưu hóa thứ hạng gia sư...</span>
+            </div>
+            <SkeletonLoader count={2} />
+          </div>
+        )}
+
         <div className="submit-bar">
           <button type="submit" className="btn-primary btn-large" disabled={isLoading}>
-            {isLoading
-              ? 'Đang tính điểm & xếp hạng...'
-              : 'Tìm gia sư phù hợp →'}
+            {isLoading ? (
+              <span className="btn-loading-content">
+                <span className="spinner-icon" aria-hidden="true" />
+                <span>Đang tính điểm & xếp hạng...</span>
+              </span>
+            ) : (
+              <span>Tìm gia sư phù hợp →</span>
+            )}
           </button>
         </div>
       </form>
