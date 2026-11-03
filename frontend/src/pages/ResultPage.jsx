@@ -19,23 +19,24 @@ function ResultPage({
   onBackToSearch,
   onUpdatePriorities,
   isUpdatingPriorities = false,
+  isCalculating = false,
   latencyMs = null,
   apiError = '',
   rankDeltas = {},
 }) {
-  if (!recommendationResult) {
+  if (!recommendationResult && !isCalculating) {
     return null
   }
 
   const {
-    status,
-    message,
+    status = isCalculating ? 'loading' : 'success',
+    message = '',
     total_candidates: totalCandidates = 0,
     qualified_candidates: qualifiedCandidates = 0,
     results = [],
     unranked_candidates: unrankedCandidates = [],
     insufficient_data_candidates: insufficientDataCandidates = [],
-  } = recommendationResult
+  } = recommendationResult || {}
 
   const priorities = searchContext?.priorities || DEFAULT_PRIORITIES
   const subject = searchContext?.subject || 'Chưa chọn'
