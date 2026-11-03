@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import ResultPage from './pages/ResultPage'
 import SearchPage from './pages/SearchPage'
 import {
@@ -9,6 +9,27 @@ import {
 import './App.css'
 
 function App() {
+  const [theme, setTheme] = useState(() => {
+    try {
+      return localStorage.getItem('tutor_theme') || 'dark'
+    } catch {
+      return 'dark'
+    }
+  })
+
+  useEffect(() => {
+    try {
+      document.documentElement.setAttribute('data-theme', theme)
+      localStorage.setItem('tutor_theme', theme)
+    } catch {
+      // fallback
+    }
+  }, [theme])
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))
+  }
+
   const [searchForm, setSearchForm] = useState({
     subject: 'Toán',
     learningMode: 'in_person',
@@ -137,25 +158,40 @@ function App() {
   return (
     <main className="app-container">
       <nav className="workflow-nav" aria-label="Điều hướng các bước khuyến nghị">
-        <button
-          type="button"
-          className={`workflow-tab ${activeTab === 'search' ? 'active' : ''}`}
-          onClick={() => setActiveTab('search')}
-        >
-          <span className="step-num">1</span>
-          <span>Nhập nhu cầu & Trọng số (CN01)</span>
-        </button>
+        <div className="workflow-tabs-group">
+          <button
+            type="button"
+            className={`workflow-tab ${activeTab === 'search' ? 'active' : ''}`}
+            onClick={() => setActiveTab('search')}
+          >
+            <span className="step-num">1</span>
+            <span>Nhập nhu cầu & Trọng số (CN01)</span>
+          </button>
+
+          <button
+            type="button"
+            className={`workflow-tab ${activeTab === 'result' ? 'active' : ''}`}
+            disabled={!recommendationResult}
+            onClick={() => setActiveTab('result')}
+          >
+            <span className="step-num">2</span>
+            <span>
+              Kết quả Top-{searchForm.topK} & Điều chỉnh trực tiếp (CN02 + CN03)
+            </span>
+          </button>
+        </div>
 
         <button
           type="button"
-          className={`workflow-tab ${activeTab === 'result' ? 'active' : ''}`}
-          disabled={!recommendationResult}
-          onClick={() => setActiveTab('result')}
+          className="theme-toggle-btn"
+          onClick={toggleTheme}
+          title={`Chuyển sang chế độ ${theme === 'dark' ? 'sáng' : 'tối'}`}
+          aria-label={`Chế độ giao diện: ${theme === 'dark' ? 'Tối' : 'Sáng'}. Nhấn để đổi.`}
         >
-          <span className="step-num">2</span>
-          <span>
-            Kết quả Top-{searchForm.topK} & Điều chỉnh trực tiếp (CN02 + CN03)
+          <span className="theme-toggle-icon" aria-hidden="true">
+            {theme === 'dark' ? '☀️' : '🌙'}
           </span>
+          <span>{theme === 'dark' ? 'Chế độ Sáng' : 'Chế độ Tối'}</span>
         </button>
       </nav>
 
