@@ -7,7 +7,7 @@ Toàn bộ quá trình sử dụng các gói **Free Tier trọn đời ($0)** c�
 
 > [!IMPORTANT]
 > **Hệ thống đã được triển khai trực tiếp và đang hoạt động 24/7:**
-> - **Ứng dụng Web trực tuyến (Frontend Live):** https://tutor-recommender-khmt.vercel.app *(Hoặc alias: https://frontend-ochre-six-11.vercel.app)*
+> - **Ứng dụng Web trực tuyến (Frontend Live):** https://tutor-recommender.vercel.app *(Hoặc alias: https://frontend-ochre-six-11.vercel.app)*
 > - **Máy chủ API Backend (FastAPI Live):** https://tutor-recommender-api.onrender.com
 > - **Tài liệu API tương tác (Swagger UI):** https://tutor-recommender-api.onrender.com/docs
 > - **Kiểm tra trạng thái máy chủ (Health Check):** https://tutor-recommender-api.onrender.com/health

@@ -12,7 +12,7 @@
   - Lê Thị Bích Chuyền (`KHMT2411037` — Scrum Master các Sprint 2, 4, 6)
 - **Kỳ báo cáo:** Sprint 1 đến Sprint 5, số liệu tính đến ngày 02/11/2026 (nhánh `main`, commit `6cc690b`)
 - **Mã nguồn:** https://github.com/tnduckhmt2411011-design/tutor-recommender
-- **Đường dẫn ứng dụng trực tuyến (Demo Live):** https://tutor-recommender-khmt.vercel.app
+- **Đường dẫn ứng dụng trực tuyến (Demo Live):** https://tutor-recommender.vercel.app
 - **Tài liệu API tương tác (Swagger UI Live):** https://tutor-recommender-api.onrender.com/docs
 
 ---
