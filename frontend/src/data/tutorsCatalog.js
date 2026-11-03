@@ -258,7 +258,7 @@ export const PRIORITY_WEIGHT_MAP = {
 }
 
 export const PRIORITY_LABEL_MAP = {
-  none: 'Không quan tâm (w=0)',
+  none: 'Bỏ qua (w=0)',
   low: 'Thấp (w=1)',
   medium: 'Trung bình (w=2)',
   high: 'Cao (w=3)',

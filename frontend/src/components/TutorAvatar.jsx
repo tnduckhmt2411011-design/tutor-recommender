@@ -30,7 +30,7 @@ function getFallbackColor(tutorId = '') {
 export default function TutorAvatar({ tutorId = '', fullName = '', size = 52, className = '' }) {
   const [imgError, setImgError] = useState(false)
 
-  const avatarSrc = `/avatars/${tutorId}.webp`
+  const avatarSrc = `/avatars/${tutorId}.webp?v=sprint6`
   const shortCode = tutorId.replace(/^GS-?/, '') || 'GS'
   const altText = `Gia sư ${tutorId}`
   const gradient = getFallbackColor(tutorId)

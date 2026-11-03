@@ -541,7 +541,7 @@ function SearchPage({
               <div>
                 <h2>2. Mức độ ưu tiên cho 5 tiêu chí (Bảng 3.5)</h2>
                 <p className="field-hint">
-                  Trọng số: Không quan tâm (w = 0), Thấp (w = 1), Trung bình (w = 2, mặc định), Cao (w = 3).
+                  Trọng số: Bỏ qua (w = 0), Thấp (w = 1), Trung bình (w = 2, mặc định), Cao (w = 3).
                 </p>
               </div>
             </div>

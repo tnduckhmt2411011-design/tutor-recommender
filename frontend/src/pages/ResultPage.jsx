@@ -110,7 +110,7 @@ function ResultPage({
         <div className="header-actions">
           {latencyMs !== null && (
             <span
-              className={`latency-indicator ${latencyMs < 1000 ? 'latency-good' : 'latency-warn'}`}
+              className={`latency-indicator ${latencyMs < 1500 ? 'latency-good' : 'latency-warn'}`}
               title="Thời gian phản hồi toàn trình API"
             >
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
@@ -140,7 +140,11 @@ function ResultPage({
             <span className="kpi-chip kpi-scenario">
               <span className="kpi-chip-label">Kịch bản:</span>{' '}
               <strong>{scenarioMeta.id}</strong>{' '}
-              <span className="kpi-chip-detail">({scenarioMeta.expected_raw})</span>
+              {status === 'zero_weight' ? (
+                <span className="kpi-chip-detail" style={{ color: '#f87171' }}>(Tùy chỉnh: ∑w=0)</span>
+              ) : (
+                <span className="kpi-chip-detail">({scenarioMeta.expected_raw})</span>
+              )}
             </span>
           )}
           <span className="kpi-chip">
@@ -188,7 +192,7 @@ function ResultPage({
       {/* 2-Column Result Workbench */}
       <div className="results-workbench">
         {/* CN03 Rail Bên Trái */}
-        {status === 'success' && (
+        {(status === 'success' || status === 'zero_weight') && (
           <aside className="cn03-rail" aria-label="Bảng điều chỉnh mức ưu tiên trực tiếp CN03">
             <div className="rail-header">
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
@@ -404,6 +408,42 @@ function ResultPage({
             ) : null}
           </AnimatePresence>
 
+          {!isCalculating && status === 'zero_weight' && (
+            <div
+              className="friendly-state-card state-zero-weight"
+              role="region"
+              aria-label="Tổng trọng số bằng 0"
+            >
+              <div className="state-icon" aria-hidden="true" style={{ color: '#f59e0b' }}>
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                  <line x1="12" y1="9" x2="12" y2="13" />
+                  <line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg>
+              </div>
+              <h3 style={{ marginTop: 8, marginBottom: 8 }}>Không thể xếp hạng do tổng trọng số bằng 0</h3>
+              <p className="state-message" style={{ maxWidth: 540, margin: '0 auto 16px' }}>
+                Tất cả tiêu chí đang ở mức &ldquo;Bỏ qua&rdquo; (w = 0). Vui lòng chọn mức ưu tiên cho ít nhất một tiêu chí ở bảng điều khiển bên trái để thuật toán tiến hành tính điểm và xếp hạng Top-3.
+              </p>
+              <button
+                type="button"
+                className="btn-accent-sm"
+                style={{ padding: '8px 16px', fontSize: 13 }}
+                onClick={() =>
+                  handleQuickPreset({
+                    fee: 'medium',
+                    district: 'medium',
+                    experience: 'medium',
+                    rating: 'medium',
+                    availability: 'medium',
+                  })
+                }
+              >
+                Khôi phục trọng số mặc định (w = 2)
+              </button>
+            </div>
+          )}
+
           {!isCalculating && status === 'no_match' && (
             <div
               className="friendly-state-card state-no-match"
@@ -454,7 +494,7 @@ function ResultPage({
             </div>
           )}
 
-          {unrankedCandidates.length > 0 && (
+          {status === 'success' && unrankedCandidates.length > 0 && (
             <div className="unranked-summary">
               <span className="summary-label">
                 Ứng viên hợp lệ khác trong kho nhưng ngoài Top-{topK}:

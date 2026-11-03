@@ -87,7 +87,8 @@ function StackedBarScore({
       >
         {appliedSegments.map((seg) => {
           if (seg.widthPercent <= 0) {
-            const zeroTooltip = `${seg.label}: s_i = ${formatScoreVi(seg.scoreValue ?? 0, 3)} | ${PRIORITY_LABEL_MAP[seg.priorityLevel] || `w=${seg.weight}`} | Đóng góp C_i = 0,000 (0,0% - Không đạt điểm)`
+            const reasonZero = seg.weight === 0 ? 'mức ưu tiên Bỏ qua (w=0)' : 'tiêu chí không khớp (s=0,000)'
+            const zeroTooltip = `${seg.label}: Không đóng góp điểm (C_i = 0,000 do ${reasonZero})`
             const isHovered = activeKey === seg.key
             return (
               <button
@@ -100,9 +101,7 @@ function StackedBarScore({
                 onMouseLeave={handleCriterionLeave}
                 onFocus={() => handleCriterionEnter(seg.key)}
                 onBlur={handleCriterionLeave}
-              >
-                <span className="segment-inline-label is-zero-text">0.00</span>
-              </button>
+              />
             )
           }
           const tooltipText = `${seg.label}: s_i = ${formatScoreVi(seg.scoreValue, 3)} | ${PRIORITY_LABEL_MAP[seg.priorityLevel] || `w=${seg.weight}`} | Đóng góp C_i = ${formatScoreVi(seg.contributionValue, 3)} (${seg.shareInTotalPercent.toFixed(1).replace('.', ',')}% tổng điểm)`

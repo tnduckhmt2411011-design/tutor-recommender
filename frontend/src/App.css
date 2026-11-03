@@ -2040,21 +2040,26 @@
 }
 
 .stacked-bar-segment.is-zero {
-  width: 28px;
-  min-width: 28px;
+  width: 10px;
+  min-width: 10px;
   flex-shrink: 0;
   background: repeating-linear-gradient(
     -45deg,
-    rgba(239, 68, 68, 0.25),
-    rgba(239, 68, 68, 0.25) 4px,
-    rgba(30, 41, 59, 0.7) 4px,
-    rgba(30, 41, 59, 0.7) 8px
+    rgba(239, 68, 68, 0.3),
+    rgba(239, 68, 68, 0.3) 3px,
+    rgba(30, 41, 59, 0.6) 3px,
+    rgba(30, 41, 59, 0.6) 6px
   );
-  border-right: 1px dashed rgba(239, 68, 68, 0.5);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  opacity: 0.8;
+  transition: opacity 120ms ease, width 120ms ease;
+}
+
+.stacked-bar-segment.is-zero:hover,
+.stacked-bar-segment.is-zero.is-active {
+  width: 14px;
+  opacity: 1;
 }
 
 .stacked-bar-segment.is-zero:hover,

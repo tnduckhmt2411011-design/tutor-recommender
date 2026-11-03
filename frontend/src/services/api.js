@@ -68,7 +68,7 @@ export const SESSIONS_OF_DAY = [
 ]
 
 export const PRIORITY_OPTIONS = [
-  { value: 'none', label: 'Không quan tâm', shortLabel: 'Bỏ qua', weight: 0 },
+  { value: 'none', label: 'Bỏ qua', shortLabel: 'Bỏ qua', weight: 0 },
   { value: 'low', label: 'Thấp', shortLabel: 'Thấp', weight: 1 },
   { value: 'medium', label: 'Trung bình', shortLabel: 'Trung bình', weight: 2 },
   { value: 'high', label: 'Cao', shortLabel: 'Cao', weight: 3 },
