@@ -10,7 +10,7 @@
 export const API_BASE_URL = (
   import.meta.env.VITE_API_URL ||
   import.meta.env.VITE_API_BASE_URL ||
-  'http://localhost:8000'
+  (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1' ? 'https://tutor-recommender-api.onrender.com' : 'http://localhost:8000')
 ).replace(/\/+$/, '')
 
 export const SUBJECT_OPTIONS = [
@@ -68,10 +68,10 @@ export const SESSIONS_OF_DAY = [
 ]
 
 export const PRIORITY_OPTIONS = [
-  { value: 'none', label: 'Không quan tâm', weight: 0 },
-  { value: 'low', label: 'Thấp', weight: 1 },
-  { value: 'medium', label: 'Trung bình', weight: 2 },
-  { value: 'high', label: 'Cao', weight: 3 },
+  { value: 'none', label: 'Bỏ qua', shortLabel: 'Bỏ qua', weight: 0 },
+  { value: 'low', label: 'Thấp', shortLabel: 'Thấp', weight: 1 },
+  { value: 'medium', label: 'Trung bình', shortLabel: 'Trung bình', weight: 2 },
+  { value: 'high', label: 'Cao', shortLabel: 'Cao', weight: 3 },
 ]
 
 export const CRITERIA_LIST = [

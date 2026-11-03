@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { motion } from 'motion/react'
 import {
   CRITERIA_META,
   PRIORITY_LABEL_MAP,
@@ -86,18 +87,35 @@ function StackedBarScore({
       >
         {appliedSegments.map((seg) => {
           if (seg.widthPercent <= 0) {
-            return null
+            const reasonZero = seg.weight === 0 ? 'mức ưu tiên Bỏ qua (w=0)' : 'tiêu chí không khớp (s=0,000)'
+            const zeroTooltip = `${seg.label}: Không đóng góp điểm (C_i = 0,000 do ${reasonZero})`
+            const isHovered = activeKey === seg.key
+            return (
+              <button
+                key={seg.key}
+                type="button"
+                className={`stacked-bar-segment is-zero ${isHovered ? 'is-active' : ''}`}
+                title={zeroTooltip}
+                aria-label={zeroTooltip}
+                onMouseEnter={() => handleCriterionEnter(seg.key)}
+                onMouseLeave={handleCriterionLeave}
+                onFocus={() => handleCriterionEnter(seg.key)}
+                onBlur={handleCriterionLeave}
+              />
+            )
           }
           const tooltipText = `${seg.label}: s_i = ${formatScoreVi(seg.scoreValue, 3)} | ${PRIORITY_LABEL_MAP[seg.priorityLevel] || `w=${seg.weight}`} | Đóng góp C_i = ${formatScoreVi(seg.contributionValue, 3)} (${seg.shareInTotalPercent.toFixed(1).replace('.', ',')}% tổng điểm)`
           const isHovered = activeKey === seg.key
 
           return (
-            <button
+            <motion.button
               key={seg.key}
               type="button"
               className={`stacked-bar-segment ${isHovered ? 'is-active' : ''}`}
+              initial={{ width: 0 }}
+              animate={{ width: `${seg.widthPercent.toFixed(3)}%` }}
+              transition={{ duration: 0.5, ease: 'easeOut' }}
               style={{
-                width: `${seg.widthPercent.toFixed(3)}%`,
                 backgroundColor: seg.color,
               }}
               title={tooltipText}
@@ -112,7 +130,7 @@ function StackedBarScore({
                   {formatScoreVi(seg.contributionValue, 2)}
                 </span>
               )}
-            </button>
+            </motion.button>
           )
         })}
       </div>
@@ -139,28 +157,22 @@ function StackedBarScore({
               <strong>{formatScoreVi(activeSegment.scoreValue, 3)}</strong>
             </span>
             <span>
-              Trọng số <var>w_i</var>: <strong>{activeSegment.weight}</strong>
+              Mức ưu tiên <var>w_i</var>:{' '}
+              <strong>{activeSegment.weight}</strong>
             </span>
             <span>
               Đóng góp <var>C_i</var>:{' '}
-              <strong>
-                +{formatScoreVi(activeSegment.contributionValue, 3)}
-              </strong>
+              <strong>{formatScoreVi(activeSegment.contributionValue, 3)}</strong>
             </span>
             <span>
-              Tỷ trọng trong <var>S</var>:{' '}
-              <strong>
-                {activeSegment.shareInTotalPercent.toFixed(1).replace('.', ',')}%
-              </strong>
+              Tỷ trọng: <strong>{activeSegment.shareInTotalPercent.toFixed(1).replace('.', ',')}%</strong>
             </span>
           </div>
         </div>
       ) : (
-        <p className="stacked-bar-hint">
-          Di chuột hoặc nhấn phím Tab vào từng phân đoạn màu để xem chi tiết
-          điểm thành phần <var>s_i</var>, trọng số <var>w_i</var> và mức đóng
-          góp <var>C_i</var>.
-        </p>
+        <div className="stacked-bar-hint">
+          Di chuột hoặc nhấn phím Tab vào từng phân đoạn màu để xem chi tiết điểm thành phần <var>s_i</var>, trọng số <var>w_i</var> và mức đóng góp <var>C_i</var>.
+        </div>
       )}
 
       <div className="stacked-bar-legend">
@@ -168,7 +180,7 @@ function StackedBarScore({
           <button
             key={seg.key}
             type="button"
-            className={`legend-chip ${activeKey === seg.key ? 'active' : ''}`}
+            className={`legend-pill ${activeKey === seg.key ? 'is-active' : ''}`}
             onMouseEnter={() => handleCriterionEnter(seg.key)}
             onMouseLeave={handleCriterionLeave}
             onFocus={() => handleCriterionEnter(seg.key)}
@@ -178,21 +190,21 @@ function StackedBarScore({
               className="legend-dot"
               style={{ backgroundColor: seg.color }}
             />
-            <span className="legend-name">{seg.label}:</span>
-            <span className="legend-val">
+            <span className="legend-label">{seg.shortLabel}:</span>
+            <strong className="legend-val">
               C = {formatScoreVi(seg.contributionValue, 3)}
-            </span>
-            <small className="legend-sub">
+            </strong>
+            <span className="legend-sub">
               (s={formatScoreVi(seg.scoreValue, 2)}, w={seg.weight})
-            </small>
+            </span>
           </button>
         ))}
 
         {excludedSegments.map((seg) => (
-          <span key={seg.key} className="legend-chip legend-excluded">
-            <span className="legend-dot excluded-dot" />
-            <span className="legend-name">{seg.label}:</span>
-            <small>Không áp dụng</small>
+          <span key={seg.key} className="legend-pill is-excluded">
+            <span className="legend-dot is-empty" />
+            <span className="legend-label">{seg.shortLabel}:</span>
+            <span className="legend-sub">Không áp dụng</span>
           </span>
         ))}
       </div>
