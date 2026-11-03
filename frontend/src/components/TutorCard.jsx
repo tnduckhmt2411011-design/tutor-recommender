@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { motion } from 'motion/react'
 import StackedBarScore from './StackedBarScore'
 import TutorAvatar from './TutorAvatar'
 import SubjectIcon from './SubjectIcon'
@@ -53,13 +52,7 @@ function TutorCard({ item, priorities }) {
   const isRankOne = item.rank === 1
 
   return (
-    <motion.article
-      layout="position"
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.96 }}
-      transition={{ type: 'spring', stiffness: 350, damping: 28 }}
-      whileHover={{ y: -2, transition: { duration: 0.15 } }}
+    <article
       className={`tutor-card ${isRankOne ? 'rank-1-hero' : ''}`}
       aria-label={`Hạng ${item.rank} - ${item.tutor_id}`}
     >
@@ -219,7 +212,7 @@ function TutorCard({ item, priorities }) {
           </div>
         )}
       </div>
-    </motion.article>
+    </article>
   )
 }
 

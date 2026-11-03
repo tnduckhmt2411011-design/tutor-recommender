@@ -13,6 +13,37 @@ import {
   getTutorProfile,
 } from '../data/tutorsCatalog'
 
+
+const listVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.08,
+    },
+  },
+}
+
+const cardItemVariants = {
+  hidden: { opacity: 0, y: 36, scale: 0.95 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      type: 'spring',
+      stiffness: 260,
+      damping: 22,
+    },
+  },
+  exit: {
+    opacity: 0,
+    scale: 0.95,
+    transition: { duration: 0.2 },
+  },
+}
+
 function ResultPage({
   recommendationResult,
   searchContext,
@@ -326,24 +357,23 @@ function ResultPage({
           )}
 
           {!isCalculating && status === 'success' && results.length > 0 && (
-            <motion.div layout className="tutor-cards-list">
+            <motion.div
+              layout
+              className="tutor-cards-list"
+              variants={listVariants}
+              initial="hidden"
+              animate="visible"
+            >
               <AnimatePresence mode="popLayout">
-                {results.map((item, idx) => {
+                {results.map((item) => {
                   const delta = rankDeltas[item.tutor_id]
                   return (
                     <motion.div
                       layout
                       key={item.tutor_id}
                       className="tutor-card-container"
-                      initial={{ opacity: 0, y: 32, scale: 0.96 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.95 }}
-                      transition={{
-                        type: 'spring',
-                        stiffness: 240,
-                        damping: 20,
-                        delay: idx * 0.1,
-                      }}
+                      variants={cardItemVariants}
+                      whileHover={{ y: -3, transition: { duration: 0.18 } }}
                     >
                       {delta !== undefined && delta !== 0 && (
                         <motion.div

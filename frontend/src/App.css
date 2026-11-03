@@ -1954,8 +1954,8 @@
 }
 
 .tutor-card:hover {
-  border-color: var(--border-subtle, #334155);
-  box-shadow: 0 6px 20px -4px rgba(0, 0, 0, 0.35);
+  border-color: rgba(52, 211, 153, 0.4);
+  box-shadow: 0 10px 28px -6px rgba(0, 0, 0, 0.45);
 }
 
 .tutor-card.rank-1-hero:hover {
