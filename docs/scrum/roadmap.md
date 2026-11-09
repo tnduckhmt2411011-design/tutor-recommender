@@ -22,10 +22,10 @@ Nhóm đã thống nhất áp dụng **Mô hình A**:
   $$\text{Công suất an toàn cho hạng mục Must} \le \frac{78\text{ SP}}{1.15} \approx 67.8\text{ SP}$$
 - **Đối chiếu thực tế Backlog đã hoạch định:**
   - **Tổng điểm Must:** **56 SP** (~112 giờ).
-  - **Dự phòng 15%:** **8.4 SP** (~17 giờ).
-  - **Tổng Must + Dự phòng:** **64.4 SP** (~129 giờ) $\le 78\text{ SP}$ (ngân sách còn dư an toàn 13.6 SP ~ 27 giờ).
+  - **Dự phòng 15%:** **8,4 SP** (~17 giờ).
+  - **Tổng Must + Dự phòng:** **64,4 SP** (~129 giờ) $\le 78\text{ SP}$ (ngân sách còn dư an toàn 13,6 SP ~ 27 giờ).
   - **Tổng Should:** **9 SP** (~18 giờ).
-  - **Tổng Must + Dự phòng + Should:** **73.4 SP** (~147 giờ) $\le 78\text{ SP}$ (ngân sách còn dư 4.6 SP ~ 9 giờ).
+  - **Tổng Must + Dự phòng + Should:** **73,4 SP** (~147 giờ) $\le 78\text{ SP}$ (ngân sách còn dư 4,6 SP ~ 9 giờ).
   - **Tổng Could:** **4 SP** (~8 giờ, backlog dự phòng chưa xếp sprint).
   - **Kết luận:** Kế hoạch hoàn toàn nằm gọn trong công suất khả dụng của nhóm, có biên độ an toàn dự phòng rủi ro vững chắc.
 
