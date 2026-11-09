@@ -2,13 +2,13 @@
 
 Giao diện web dành cho người học để nhập các tiêu chí tìm kiếm và xem kết quả gia sư được gợi ý.
 
-> **Trạng thái hiện tại:** Đã scaffold bằng Vite + React (JavaScript/JSX) ở Sprint 1; chưa có màn hình nghiệp vụ.
+> **Trạng thái hiện tại:** Đã có màn hình nhập nhu cầu (CN01/CN03) và màn hình kết quả gợi ý (CN02) nối với API backend; giao diện dùng CSS thuần, không dùng TailwindCSS/Recharts.
 
 ## 1. Công nghệ dự kiến
 
 - **Framework/Build tool:** ReactJS (Vite)
 - **Ngôn ngữ:** JavaScript (JSX) - theo tên tệp `SearchPage.jsx`, `api.js` trong product backlog
-- **Thư viện giao diện & biểu đồ:** TailwindCSS, Recharts (hoặc Chart.js) phục vụ biểu đồ đóng góp tiêu chí - **chưa cài ở Sprint 1**
+- **Thư viện giao diện & biểu đồ:** CSS thuần; thanh xếp chồng (stacked bar) vẽ bằng HTML/CSS, không dùng TailwindCSS/Recharts
 
 ## 2. Các màn hình chính (theo Mục 3.8 và 4.5 của đề cương)
 
@@ -18,7 +18,10 @@ Giao diện web dành cho người học để nhập các tiêu chí tìm kiế
    - Chọn khu vực mong muốn (nếu học trực tiếp)
    - Nhập ngân sách tối đa theo giờ (VNĐ)
    - Chọn các khung giờ rảnh trong tuần (lưới ngày trong tuần × buổi)
-   - Chọn mức ưu tiên cho từng tiêu chí (Không quan tâm, Thấp, Trung bình, Cao)
+   - Chọn **mục tiêu học tập** để hệ thống điền sẵn bộ mức ưu tiên cho 5 tiêu chí; người học vẫn chỉnh tay được, và khi chỉnh tay ô chọn chuyển thành "Tùy chỉnh"
+   - Chọn mức ưu tiên cho từng tiêu chí (Bỏ qua, Thấp, Trung bình, Cao)
+
+   > **Phạm vi:** ô chọn **Cấp lớp CHƯA hiện thực** vì hồ sơ gia sư trong `data/processed/tutors.json` không có trường cấp lớp; một ô chọn không tác dụng sẽ làm người dùng hiểu sai. Bộ mức ưu tiên điền sẵn chỉ là gợi ý khởi tạo do nhóm đặt, chưa kiểm chứng với người dùng, và không thêm trường nào vào payload gửi API.
 
 2. **Màn hình kết quả gợi ý:**
    - Danh sách Top-k gia sư phù hợp nhất kèm điểm tổng hợp

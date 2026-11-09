@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'motion/react'
 import { SCENARIOS_CATALOG } from '../data/scenariosCatalog'
+import { GOAL_PRESETS } from '../data/goalPresets'
 import SubjectIcon from '../components/SubjectIcon'
 import CriteriaIcon from '../components/CriteriaIcon'
 import SkeletonLoader from '../components/SkeletonLoader'
@@ -115,6 +116,21 @@ function SearchPage({
 
   const isOnlineMode = learningMode === 'online'
 
+  // Ô chọn mục tiêu không có state riêng: giá trị hiển thị được suy ra bằng cách so
+  // 5 mức ưu tiên hiện tại với từng bộ điền sẵn. Nhờ vậy nạp kịch bản KB, đặt lại mặc
+  // định hay sửa tay một tiêu chí đều tự nhất quán, không cần thêm trường vào searchForm.
+  const normalizedPriorities = {
+    ...DEFAULT_PRIORITIES,
+    ...priorities,
+  }
+
+  const matchedGoalPreset = GOAL_PRESETS.find((preset) =>
+    CRITERIA_LIST.every(
+      (criterion) => normalizedPriorities[criterion.key] === preset.priorities[criterion.key]
+    )
+  )
+  const goalSelectValue = matchedGoalPreset ? matchedGoalPreset.key : 'custom'
+
   const updateField = (patch) => {
     setValidationError('')
     onChangeSearchForm({
@@ -185,6 +201,15 @@ function SearchPage({
     })
   }
 
+  const handleGoalChange = (goalKey) => {
+    const preset = GOAL_PRESETS.find((item) => item.key === goalKey)
+    if (!preset) return
+    updateField({
+      priorities: { ...preset.priorities },
+      scenarioMeta: null,
+    })
+  }
+
   const handleResetDefaults = () => {
     setValidationError('')
     onChangeSearchForm({
@@ -243,7 +268,7 @@ function SearchPage({
         <div className="hero-content">
           <div className="hero-badge">
             <span className="hero-sparkle" aria-hidden="true">✦</span>
-            <span>Mô hình Tối ưu Đa tiêu chí Thông minh (Weighted Scoring)</span>
+            <span>Mô hình Tối ưu Đa tiêu chí (Weighted Scoring)</span>
           </div>
           <h1 className="hero-title">Tìm kiếm & Khuyến nghị Gia sư Lý tưởng</h1>
           <p className="hero-subtitle">
@@ -543,6 +568,33 @@ function SearchPage({
                 <p className="field-hint">
                   Trọng số: Bỏ qua (w = 0), Thấp (w = 1), Trung bình (w = 2, mặc định), Cao (w = 3).
                 </p>
+              </div>
+            </div>
+
+            <div className="goal-preset-block">
+              <div className="form-field">
+                <label htmlFor="goal-select">
+                  Mục tiêu học tập (gợi ý mức ưu tiên)
+                </label>
+                <select
+                  id="goal-select"
+                  value={goalSelectValue}
+                  onChange={(e) => handleGoalChange(e.target.value)}
+                >
+                  {GOAL_PRESETS.map((preset) => (
+                    <option key={preset.key} value={preset.key}>
+                      {preset.label}
+                    </option>
+                  ))}
+                  {goalSelectValue === 'custom' && (
+                    <option value="custom" disabled>
+                      Tùy chỉnh
+                    </option>
+                  )}
+                </select>
+                <span className="field-hint">
+                  Gợi ý khởi tạo do nhóm đặt; bạn vẫn chỉnh được từng tiêu chí.
+                </span>
               </div>
             </div>
 
