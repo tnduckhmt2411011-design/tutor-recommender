@@ -54,8 +54,8 @@ Tài liệu quản lý toàn bộ các hạng mục công việc (User Stories) 
 
 - **Tổng số User Stories:** 40 stories
 - **Tổng điểm Story Points:** 69 SP
-  - **Mức Must (Bắt buộc):** 56 SP (31 stories)
-  - **Mức Should (Nên có):** 9 SP (6 stories: CI backend, Swagger/CORS, thanh xếp chồng, tương tác CN03, đề xuất mở rộng mô hình)
+  - **Mức Must (Bắt buộc):** 56 SP (32 stories)
+  - **Mức Should (Nên có):** 9 SP (5 stories: CI backend, Swagger/CORS, thanh xếp chồng, tương tác CN03, đề xuất mở rộng mô hình)
   - **Mức Could (Có thể):** 4 SP (3 stories dự phòng: SQLite, lưu lịch sử LocalStorage, xuất PDF)
 - **Phân bổ theo Sprint:**
   - **Sprint 1:** 12 SP (11 Must, 1 Should)
