@@ -49,13 +49,14 @@ Tài liệu quản lý toàn bộ các hạng mục công việc (User Stories) 
 | **US-38** | E5 Giao diện | Là người học, tôi muốn xem lại các cấu hình nhu cầu tìm kiếm trước đó được lưu trữ trong trình ... | 1 | Could | Chưa xếp | Tính năng mở rộng | [#38](https://github.com/tnduckhmt2411011-design/tutor-recommender/issues/38) |
 | **US-39** | E5 Giao diện | Là người học, tôi muốn xuất danh sách Top-k gia sư kèm thông tin liên hệ và lý do gợi ý ra file... | 1 | Could | Chưa xếp | Tính năng mở rộng | [#39](https://github.com/tnduckhmt2411011-design/tutor-recommender/issues/39) |
 | **US-40** | E1 Thiết kế và dữ liệu | Là nhóm phát triển, tôi muốn soạn tài liệu đề xuất mở rộng mô hình gợi ý sang tổ hợp ba chiều (Môn học, Cấp lớp, Mục tiêu học tập) theo chỉ dẫn của GVHD... | 2 | Should | Sprint 6 | Mục 3.6, Mục 6.2 (Mục 4.2 báo cáo giữa kỳ) | [#79](https://github.com/tnduckhmt2411011-design/tutor-recommender/issues/79) |
+| **US-41** | E5 Giao diện | Là người học, tôi muốn chọn mục tiêu học tập ở màn hình nhập nhu cầu để hệ thống điền sẵn mức ưu tiên cho 5 tiêu chí, để không phải đặt từng tiêu chí... | 2 | Should | Sprint 6 | Mục 6.2 (Mục 3.4, 4.2 báo cáo giữa kỳ) | [#82](https://github.com/tnduckhmt2411011-design/tutor-recommender/issues/82) |
 
 ## 2. Thống kê độ lớn Backlog
 
-- **Tổng số User Stories:** 40 stories
-- **Tổng điểm Story Points:** 69 SP
+- **Tổng số User Stories:** 41 stories
+- **Tổng điểm Story Points:** 71 SP
   - **Mức Must (Bắt buộc):** 56 SP (32 stories)
-  - **Mức Should (Nên có):** 9 SP (5 stories: CI backend, Swagger/CORS, thanh xếp chồng, tương tác CN03, đề xuất mở rộng mô hình)
+  - **Mức Should (Nên có):** 11 SP (6 stories: CI backend, Swagger/CORS, thanh xếp chồng, tương tác CN03, đề xuất mở rộng mô hình, gợi ý mức ưu tiên theo mục tiêu học tập)
   - **Mức Could (Có thể):** 4 SP (3 stories dự phòng: SQLite, lưu lịch sử LocalStorage, xuất PDF)
 - **Phân bổ theo Sprint:**
   - **Sprint 1:** 12 SP (11 Must, 1 Should)
@@ -63,5 +64,5 @@ Tài liệu quản lý toàn bộ các hạng mục công việc (User Stories) 
   - **Sprint 3:** 9 SP (9 Must)
   - **Sprint 4:** 11 SP (10 Must, 1 Should)
   - **Sprint 5:** 12 SP (7 Must, 5 Should)
-  - **Sprint 6:** 11 SP (9 Must, 2 Should)
+  - **Sprint 6:** 13 SP (9 Must, 4 Should)
   - **Chưa xếp sprint (Could):** 4 SP (3 stories dự phòng)

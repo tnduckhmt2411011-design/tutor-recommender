@@ -4,8 +4,8 @@
 # Kế hoạch Sprint 6 (Sprint 6 Planning)
 
 - **Thời gian thực hiện:** Hạn: 2027-01-01 (theo Milestone Sprint 6); ngày bắt đầu: [Chờ nhóm điền]
-- **Mục tiêu Sprint (Sprint Goal):** Đánh giá độ ổn định, hoàn thiện báo cáo khóa luận, tài liệu vận hành, slide demo và đóng gói bàn giao `v1.0` (Epic E6 & E7) — thực hiện kiểm thử độ nhạy tham số ($\delta$, $E_{\max}$), biến động ngân sách và đa bộ mức ưu tiên theo Mục 5.2, hoàn thiện toàn văn Chương 5 và Chương 6 kèm các Phụ lục A–D, cập nhật tài liệu hướng dẫn triển khai nhanh `README.md` trong 5 phút, thiết kế bộ slide thuyết trình và kịch bản phân vai demo bảo vệ CN01–CN03, soạn tài liệu đề xuất mở rộng mô hình theo tổ hợp Cấp lớp – Mục tiêu học tập (E1, Should), đồng bộ mục lục/bảng biểu/hình ảnh và gắn tag phát hành chính thức `v1.0` để hoàn tất **Cổng chất lượng 4 (Quality Gate 4)**.
-- **Giả định công suất nhóm:** 11 Story Points *(9 Must, 2 Should)*.
+- **Mục tiêu Sprint (Sprint Goal):** Đánh giá độ ổn định, hoàn thiện báo cáo khóa luận, tài liệu vận hành, slide demo và đóng gói bàn giao `v1.0` (Epic E6 & E7) — thực hiện kiểm thử độ nhạy tham số ($\delta$, $E_{\max}$), biến động ngân sách và đa bộ mức ưu tiên theo Mục 5.2, hoàn thiện toàn văn Chương 5 và Chương 6 kèm các Phụ lục A–D, cập nhật tài liệu hướng dẫn triển khai nhanh `README.md` trong 5 phút, thiết kế bộ slide thuyết trình và kịch bản phân vai demo bảo vệ CN01–CN03, soạn tài liệu đề xuất mở rộng mô hình theo tổ hợp Cấp lớp – Mục tiêu học tập (E1, Should) và ô chọn mục tiêu học tập gợi ý mức ưu tiên cho 5 tiêu chí (E5, Should), đồng bộ mục lục/bảng biểu/hình ảnh và gắn tag phát hành chính thức `v1.0` để hoàn tất **Cổng chất lượng 4 (Quality Gate 4)**.
+- **Giả định công suất nhóm:** 13 Story Points *(9 Must, 4 Should)*.
 
 ---
 
@@ -19,9 +19,11 @@
 | **US-35** | Thiết kế slide thuyết trình và chuẩn bị kịch bản demo bảo vệ | 2 | Must | Báo cáo đồ án & slide | #35 | *[Chờ nhóm phân công]* | Chưa làm |
 | **US-36** | Cập nhật mục lục, đóng gói hồ sơ đồ án và gắn tag phát hành `v1.0` | 1 | Must | Mục lục, Toàn bộ báo cáo | #36 | *[Chờ nhóm phân công]* | Chưa làm |
 | **US-40** | Đề xuất mở rộng mô hình: Tổ hợp Cấp lớp và Mục tiêu học tập theo chỉ dẫn của GVHD | 2 | Should | Mục 3.6, Mục 6.2 | #79 | *[Chờ nhóm phân công]* | Chưa làm |
+| **US-41** | Thêm gợi ý mức ưu tiên theo mục tiêu học tập ở màn hình nhập nhu cầu | 2 | Should | Mục 6.2 | #82 | *[Chờ nhóm phân công]* | Chưa làm |
 
-- **Tổng điểm Story Points:** **11 SP** (9 Must, 2 Should).
+- **Tổng điểm Story Points:** **13 SP** (9 Must, 4 Should).
 - *Ghi chú về US-40 (`Should`):* Đây là tài liệu đề xuất, không viết code; nếu GVHD chưa phản hồi câu hỏi nên áp dụng *Adaptive Weight Mapping* hay bổ sung tiêu chí $s_6$, hoặc tiến độ căng, nhóm có thể cắt khỏi Sprint 6 mà không ảnh hưởng Cổng chất lượng 4 hay bản phát hành `v1.0`.
+- *Ghi chú về US-41 (`Should`):* Chỉ làm phần **Mục tiêu học tập** ở tầng giao diện; **chưa làm Cấp lớp** vì hồ sơ gia sư hiện không có trường cấp lớp/trình độ nên một ô chọn như vậy sẽ không có tác dụng. Story phụ thuộc US-40 (#79) và chỉ bắt đầu khi GVHD chốt Phương án 1 cùng bảng ánh xạ; nếu chưa có phản hồi hoặc tiến độ căng thì cắt khỏi Sprint 6 mà không ảnh hưởng Cổng chất lượng 4.
 - *Ghi chú về nhóm tính năng mở rộng (`Could Have`):* 3 User Stories dự phòng gồm `US-37` (#37 — SQLite, 2 SP), `US-38` (#38 — LocalStorage, 1 SP) và `US-39` (#39 — Xuất PDF, 1 SP) thuộc phạm vi `Could Have` chưa xếp sprint theo `docs/scrum/roadmap.md`; nhóm ưu tiên hoàn tất 100% các hạng mục `Must Have` và nghiệm thu Cổng chất lượng 4 trước.
 
 ---
@@ -44,6 +46,10 @@
   - [ ] US-40 (#79):
     - Soạn tài liệu `docs/design/de-xuat-mo-rong-cap-lop-muc-tieu.md` trình bày nhu cầu ba chiều (Môn học, Cấp lớp, Mục tiêu học tập), phân tích hai phương án *Adaptive Weight Mapping* và *Goal Compatibility* (`s_6`), khuyến nghị Phương án 1 kèm lộ trình triển khai và rủi ro.
     - Không sửa mã nguồn, 14 kịch bản, 200 bài kiểm thử hay `data/processed/tutors.json`; sản phẩm chỉ là tài liệu trong `docs/design/`.
+  - [ ] US-41 (#82):
+    - Thêm ô chọn mục tiêu học tập (3 giá trị: *Điểm cao / luyện thi chuyên – học sinh giỏi*, *Đủ điểm đậu / lấy lại căn bản*, *Không nêu mục tiêu*) ở `frontend/src/pages/SearchPage.jsx` và bảng ánh xạ mục tiêu → 5 mức ưu tiên ở `frontend/src/services/api.js`; giữ nguyên `buildRecommendationPayload` với đúng 7 trường.
+    - Thêm `learningGoal` vào `searchForm` ở `frontend/src/App.jsx` và đặt lại "Không nêu mục tiêu" khi nạp KB01–KB14; hiển thị mục tiêu đã chọn cùng nhãn "Tùy chỉnh" ở `frontend/src/pages/ResultPage.jsx`.
+    - Chỉ sửa frontend; không thêm trường vào `SearchRequest`, không đổi backend, dữ liệu, công thức chấm điểm hay `scenarios.json`. **Chưa làm Cấp lớp** vì hồ sơ gia sư thiếu dữ liệu cấp lớp/trình độ.
 
 ---
 
@@ -54,7 +60,7 @@
 - [ ] Tài liệu `README.md` đầy đủ hướng dẫn cài đặt, chạy thử nghiệm trong 5 phút và có hình minh họa giao diện; bộ slide thuyết trình và kịch bản demo bảo vệ CN01–CN03 sẵn sàng tại `docs/thesis/slides/`.
 - [ ] Mục lục, Danh mục hình ảnh, Danh mục bảng biểu đồng bộ; repository sạch sẽ không có tệp thừa/tạm; hoàn tất gắn tag phát hành chính thức `v1.0` trên nhánh `main`.
 
-> **Lưu ý:** US-40 là hạng mục `Should`, **không** phải điều kiện nghiệm thu Cổng chất lượng 4; có thể cắt khỏi Sprint 6 nếu GVHD chưa phản hồi câu hỏi nên áp dụng *Adaptive Weight Mapping* hay bổ sung tiêu chí $s_6$, hoặc nếu tiến độ căng.
+> **Lưu ý:** US-40 và US-41 là hạng mục `Should`, **không** phải điều kiện nghiệm thu Cổng chất lượng 4; có thể cắt khỏi Sprint 6 nếu GVHD chưa phản hồi câu hỏi nên áp dụng *Adaptive Weight Mapping* hay bổ sung tiêu chí $s_6$, hoặc nếu tiến độ căng.
 
 ---
 
@@ -63,4 +69,4 @@
 - *Rủi ro 1:* Trong Python, các hàm `score_fee(price, budget, delta=DELTA)` và `score_experience(years, e_max=E_MAX)` trong `backend/app/scoring/criteria.py` gắn giá trị mặc định ngay tại thời điểm nạp module (`import` time), nên nếu bài kiểm thử độ nhạy Mục 5.2 chỉ gán lại biến `config.DELTA` hoặc `config.E_MAX` thì kết quả tính điểm qua `ranker.py` sẽ không thay đổi. $\rightarrow$ *Phương án:* Sử dụng `unittest.mock.patch` tại tầng `app.scoring.ranker.{score_fee, score_experience}` trong `test_sensitivity_muc_5_2.py` để truyền trực tiếp tham số `delta` và `e_max` biến thiên vào hàm gốc mà không cần sửa đổi bất kỳ dòng mã nguồn nào trong `backend/app/`.
 - *Rủi ro 2:* Bất đồng bộ số liệu giữa kết quả chạy kiểm thử tự động với nội dung văn bản trong Chương 5, Chương 6, `README.md` và Slide bảo vệ. $\rightarrow$ *Phương án:* Trích xuất trực tiếp toàn bộ bảng số liệu độ nhạy từ kết quả chạy `pytest` trên 16 hồ sơ chuẩn hóa và 14 kịch bản `scenarios.json`, đồng thời đối chiếu chéo với `docs/thesis/report/muc-5.1-bang-5.1-ket-qua.md` và `docs/thesis/report/discrepancy_analysis.md`.
 - *Rủi ro 3:* Xung đột tệp khi mở và hợp nhất các Pull Request bằng `Squash and merge` trên GitHub. $\rightarrow$ *Phương án:* Phân tách các PR của Sprint 6 trên các tập tệp hoàn toàn rời nhau từ `origin/main`, và chỉ gắn tag `v1.0` sau khi tất cả các PR đã được người phụ trách GitHub kiểm tra và hợp nhất vào `main`.
-- *Rủi ro 4:* GVHD chưa phản hồi câu hỏi nên áp dụng Phương án 1 *Adaptive Weight Mapping* hay Phương án 2 *Goal Compatibility* ($s_6$) nên phạm vi US-40 có thể phải điều chỉnh. $\rightarrow$ *Phương án:* Giữ US-40 ở mức `Should`, chỉ soạn tài liệu đề xuất và khuyến nghị Phương án 1; nếu GVHD bác hoặc tiến độ căng thì cắt khỏi Sprint 6 mà không ảnh hưởng Cổng chất lượng 4.
+- *Rủi ro 4:* GVHD chưa phản hồi câu hỏi nên áp dụng Phương án 1 *Adaptive Weight Mapping* hay Phương án 2 *Goal Compatibility* ($s_6$) nên phạm vi US-40 và US-41 có thể phải điều chỉnh. $\rightarrow$ *Phương án:* Giữ US-40 và US-41 ở mức `Should`, chỉ soạn tài liệu đề xuất và khuyến nghị Phương án 1, chưa viết mã giao diện; nếu GVHD bác hoặc tiến độ căng thì cắt khỏi Sprint 6 mà không ảnh hưởng Cổng chất lượng 4.
