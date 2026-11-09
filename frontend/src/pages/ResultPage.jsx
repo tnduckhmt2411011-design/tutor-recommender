@@ -1,4 +1,7 @@
+import { motion, AnimatePresence } from 'motion/react'
 import TutorCard from '../components/TutorCard'
+import SkeletonLoader from '../components/SkeletonLoader'
+import CriteriaIcon from '../components/CriteriaIcon'
 import {
   CRITERIA_LIST,
   DEFAULT_PRIORITIES,
@@ -10,29 +13,51 @@ import {
   getTutorProfile,
 } from '../data/tutorsCatalog'
 
+
+const cardItemVariants = {
+  hidden: { opacity: 0, y: 48, scale: 0.94 },
+  visible: (i = 0) => ({
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      type: 'spring',
+      stiffness: 160,
+      damping: 18,
+      delay: i * 0.18,
+    },
+  }),
+  exit: {
+    opacity: 0,
+    scale: 0.94,
+    transition: { duration: 0.2 },
+  },
+}
+
 function ResultPage({
   recommendationResult,
   searchContext,
   onBackToSearch,
   onUpdatePriorities,
   isUpdatingPriorities = false,
+  isCalculating = false,
   latencyMs = null,
   apiError = '',
   rankDeltas = {},
 }) {
-  if (!recommendationResult) {
+  if (!recommendationResult && !isCalculating) {
     return null
   }
 
   const {
-    status,
-    message,
+    status = isCalculating ? 'loading' : 'success',
+    message = '',
     total_candidates: totalCandidates = 0,
     qualified_candidates: qualifiedCandidates = 0,
     results = [],
     unranked_candidates: unrankedCandidates = [],
     insufficient_data_candidates: insufficientDataCandidates = [],
-  } = recommendationResult
+  } = recommendationResult || {}
 
   const priorities = searchContext?.priorities || DEFAULT_PRIORITIES
   const subject = searchContext?.subject || 'Chưa chọn'
@@ -78,14 +103,14 @@ function ResultPage({
           <h1>Kết quả Gợi ý Gia sư Phù hợp</h1>
           <p className="subtitle">
             Mô-đun CN02 & CN03 · Xếp hạng theo tổng điểm có trọng số <var>S(g)</var> giảm dần (phá hòa theo mã hồ sơ <var>tutor_id</var>).
-            Sử dụng bảng điều khiển bên trái để cập nhật lại thứ hạng ngay lập tức.
+            Sử dụng bảng điều khiển bên trái để cập nhật lại thứ hạng tức thì.
           </p>
         </div>
 
         <div className="header-actions">
           {latencyMs !== null && (
             <span
-              className={`latency-indicator ${latencyMs < 1000 ? 'latency-good' : 'latency-warn'}`}
+              className={`latency-indicator ${latencyMs < 1500 ? 'latency-good' : 'latency-warn'}`}
               title="Thời gian phản hồi toàn trình API"
             >
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
@@ -108,120 +133,120 @@ function ResultPage({
         </div>
       </header>
 
-      {/* KPI & Summary Strip */}
+      {/* KPI Strip */}
       <div className="workbench-kpi-strip">
         <div className="kpi-chips">
           {scenarioMeta && (
-            <div className="kpi-chip kpi-scenario">
-              <span className="kpi-label">Kịch bản:</span>
-              <strong className="kpi-val">{scenarioMeta.id}</strong>
-              <span className="kpi-note">(Kỳ vọng: {scenarioMeta.expected_raw})</span>
-            </div>
+            <span className="kpi-chip kpi-scenario">
+              <span className="kpi-chip-label">Kịch bản:</span>{' '}
+              <strong>{scenarioMeta.id}</strong>{' '}
+              {status === 'zero_weight' ? (
+                <span className="kpi-chip-detail" style={{ color: '#f87171' }}>(Tùy chỉnh: ∑w=0)</span>
+              ) : (
+                <span className="kpi-chip-detail">({scenarioMeta.expected_raw})</span>
+              )}
+            </span>
           )}
-          <div className="kpi-chip">
-            <span className="kpi-label">Môn:</span>
-            <strong className="kpi-val">{subject}</strong>
-          </div>
-          <div className="kpi-chip">
-            <span className="kpi-label">Hình thức:</span>
-            <span className="kpi-val">{formatTeachingMode(learningMode)}</span>
-          </div>
-          <div className="kpi-chip">
-            <span className="kpi-label">Khu vực:</span>
-            <span className="kpi-val">
-              {isOnlineMode
-                ? 'Không áp dụng (Online)'
-                : preferredDistrict || 'Không giới hạn'}
+          <span className="kpi-chip">
+            <span className="kpi-chip-label">Môn:</span> <strong>{subject}</strong>
+          </span>
+          <span className="kpi-chip">
+            <span className="kpi-chip-label">Hình thức:</span>{' '}
+            <strong>{formatTeachingMode(learningMode)}</strong>
+          </span>
+          {learningMode !== 'online' && preferredDistrict && (
+            <span className="kpi-chip">
+              <span className="kpi-chip-label">Khu vực:</span>{' '}
+              <strong>{preferredDistrict}</strong>
             </span>
-          </div>
-          <div className="kpi-chip">
-            <span className="kpi-label">Ngân sách:</span>
-            <span className="kpi-val">
-              {String(maxBudgetVnd).trim() !== ''
-                ? formatCurrencyVnd(Number(maxBudgetVnd))
-                : 'Không giới hạn'}
+          )}
+          {maxBudgetVnd && (
+            <span className="kpi-chip">
+              <span className="kpi-chip-label">Ngân sách:</span>{' '}
+              <strong>{Number(maxBudgetVnd).toLocaleString('vi-VN')} VNĐ/giờ</strong>
             </span>
-          </div>
-          <div className="kpi-chip">
-            <span className="kpi-label">Lịch:</span>
-            <span className="kpi-val">
-              {timeSlots.length > 0 ? timeSlots.join(', ') : 'Không giới hạn'}
-            </span>
-          </div>
+          )}
+          <span className="kpi-chip">
+            <span className="kpi-chip-label">Lịch:</span>{' '}
+            <strong>
+              {timeSlots.length > 0 ? `${timeSlots.length} buổi` : 'Không giới hạn'}
+            </strong>
+          </span>
         </div>
 
         <div className="kpi-funnel">
-          <span className="funnel-step">
-            Kho: <strong>{totalCandidates}</strong> hồ sơ
-          </span>
-          <span className="funnel-sep">→</span>
-          <span className="funnel-step">
-            Hợp lệ: <strong>{qualifiedCandidates}</strong> ứng viên
-          </span>
-          <span className="funnel-sep">→</span>
-          <span className="funnel-step">
-            Top-{topK}: <strong>{results.length}</strong> gợi ý
-          </span>
+          <span className="funnel-step">Kho: <strong>{totalCandidates}</strong> hồ sơ</span>
+          <span className="funnel-arrow">→</span>
+          <span className="funnel-step">Hợp lệ: <strong>{qualifiedCandidates}</strong> ứng viên</span>
+          <span className="funnel-arrow">→</span>
+          <span className="funnel-step funnel-highlight">Top-3: <strong>{results.length}</strong> gợi ý</span>
         </div>
       </div>
 
       {apiError && (
         <div className="alert alert-error" role="alert">
-          <strong>Lỗi máy chủ:</strong> {apiError}
+          <strong>Lỗi khi gửi yêu cầu tới máy chủ:</strong> {apiError}
         </div>
       )}
 
-      {/* 2-Column Workbench Layout: Left = CN03 Interactive Rail, Right = Ranked Results */}
-      <div className="result-workbench-layout">
-        {onUpdatePriorities && (
-          <aside
-            className="cn03-rail panel"
-            aria-label="CN03 - Điều chỉnh nhanh mức ưu tiên tiêu chí"
-          >
-            <div className="cn03-rail-head">
-              <div>
-                <h3 className="rail-title">Điều chỉnh mức ưu tiên (CN03)</h3>
+      {/* 2-Column Result Workbench */}
+      <div className="results-workbench">
+        {/* CN03 Rail Bên Trái */}
+        {(status === 'success' || status === 'zero_weight') && (
+          <aside className="cn03-rail" aria-label="Bảng điều chỉnh mức ưu tiên trực tiếp CN03">
+            <div className="rail-header">
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
+                <h3 style={{ margin: 0 }}>Điều chỉnh mức ưu tiên (CN03)</h3>
+                {isUpdatingPriorities && (
+                  <span className="cn03-updating-pill">
+                    <span className="spinner-icon-sm" aria-hidden="true" />
+                    Đang tính lại...
+                  </span>
+                )}
               </div>
-              {isUpdatingPriorities && (
-                <span className="updating-status" role="status">
-                  Đang tính lại...
-                </span>
-              )}
+              <p className="rail-hint">
+                Thay đổi mức ưu tiên cho bất kỳ tiêu chí nào để gọi lại API và cập nhật thứ hạng tức thì.
+              </p>
             </div>
-            <p className="rail-desc">
-              Thay đổi mức ưu tiên cho bất kỳ tiêu chí nào để gọi lại API và cập nhật thứ hạng tức thì.
-            </p>
 
             {totalActiveWeight === 0 && (
-              <div className="zero-weight-guard-alert" role="status">
-                <strong className="guard-title">Tổng trọng số hiện tại bằng 0 (∑w_i = 0)</strong>
-                <p className="guard-desc">
-                  Khi tất cả tiêu chí đều tắt (w = 0), điểm chuẩn hóa thành phần không được tính trọng số. Toàn bộ ứng viên nhận điểm đồng hạng 0,000 và được xếp thứ tự thuần túy theo mã hồ sơ (tutor_id).
-                </p>
+              <div className="zero-weight-warning" role="alert">
+                <span className="warning-icon" aria-hidden="true">⚠️</span>
+                <div>
+                  <strong>Tổng trọng số ∑w_i = 0</strong>
+                  <p>Tất cả tiêu chí đang ở mức w=0. Hệ thống phá hòa theo thứ tự mã hồ sơ gia sư.</p>
+                </div>
               </div>
             )}
 
-            <div className="cn03-presets-list">
+            {/* Nạp nhanh trọng số */}
+            <div className="rail-presets-box">
               <span className="presets-label">Nạp nhanh trọng số:</span>
               <div className="presets-buttons">
                 <button
                   type="button"
-                  className="preset-pill"
-                  disabled={isUpdatingPriorities}
-                  onClick={() => handleQuickPreset({ ...DEFAULT_PRIORITIES })}
+                  className="preset-btn"
+                  onClick={() =>
+                    handleQuickPreset({
+                      fee: 'medium',
+                      district: 'medium',
+                      experience: 'medium',
+                      rating: 'medium',
+                      availability: 'medium',
+                    })
+                  }
                 >
                   Mặc định (w=2)
                 </button>
                 <button
                   type="button"
-                  className="preset-pill"
-                  disabled={isUpdatingPriorities}
+                  className="preset-btn"
                   onClick={() =>
                     handleQuickPreset({
                       fee: 'high',
                       district: 'low',
-                      experience: 'low',
-                      rating: 'low',
+                      experience: 'none',
+                      rating: 'none',
                       availability: 'low',
                     })
                   }
@@ -230,24 +255,22 @@ function ResultPage({
                 </button>
                 <button
                   type="button"
-                  className="preset-pill"
-                  disabled={isUpdatingPriorities}
+                  className="preset-btn"
                   onClick={() =>
                     handleQuickPreset({
-                      fee: 'low',
-                      district: 'low',
+                      fee: 'none',
+                      district: 'none',
                       experience: 'high',
                       rating: 'high',
-                      availability: 'low',
+                      availability: 'none',
                     })
                   }
                 >
-                  Ưu tiên KN & Đánh giá
+                  Ưu tiên KN &amp; Đánh giá
                 </button>
                 <button
                   type="button"
-                  className="preset-pill preset-pill-warn"
-                  disabled={isUpdatingPriorities}
+                  className="preset-btn preset-danger"
                   onClick={() =>
                     handleQuickPreset({
                       fee: 'none',
@@ -263,9 +286,10 @@ function ResultPage({
               </div>
             </div>
 
-            <div className="cn03-controls-stack">
+            {/* Danh sách 5 tiêu chí CN03 */}
+            <div className="cn03-criteria-list">
               {CRITERIA_LIST.map((criterion) => {
-                const isCriterionInactive =
+                const isInactive =
                   (criterion.key === 'district' &&
                     (isOnlineMode || !String(preferredDistrict).trim())) ||
                   (criterion.key === 'fee' && !String(maxBudgetVnd).trim()) ||
@@ -276,12 +300,17 @@ function ResultPage({
                 return (
                   <div
                     key={criterion.key}
-                    className={`cn03-item ${isCriterionInactive ? 'item-inactive' : ''}`}
+                    className={`cn03-criterion-item ${isInactive ? 'is-inactive' : ''}`}
                   >
-                    <div className="cn03-item-head">
-                      <span className="cn03-item-name">{criterion.label}</span>
-                      {isCriterionInactive && (
-                        <span className="item-inactive-tag">Không áp dụng</span>
+                    <div className="item-title-row">
+                      <div className="criterion-name-with-icon">
+                        <CriteriaIcon criterion={criterion.key} size={14} className="rail-criteria-icon" />
+                        <strong className="item-name">{criterion.label}</strong>
+                      </div>
+                      {isInactive && (
+                        <span className="item-inactive-tag">
+                          Không áp dụng
+                        </span>
                       )}
                     </div>
 
@@ -296,7 +325,7 @@ function ResultPage({
                           <button
                             key={opt.value}
                             type="button"
-                            disabled={isUpdatingPriorities}
+                            disabled={isInactive || isUpdatingPriorities}
                             className={`cn03-step-btn ${isActive ? 'active' : ''}`}
                             onClick={() =>
                               handleCriterionPriorityClick(
@@ -305,7 +334,7 @@ function ResultPage({
                               )
                             }
                           >
-                            <span className="step-label">{opt.label}</span>
+                            <span className="step-label">{opt.shortLabel || opt.label}</span>
                             <span className="step-w">w={opt.weight}</span>
                           </button>
                         )
@@ -319,29 +348,103 @@ function ResultPage({
         )}
 
         <main className="results-main">
-          {status === 'success' && results.length > 0 && (
-            <div className="tutor-cards-list">
-              {results.map((item) => {
-                const delta = rankDeltas[item.tutor_id]
-                return (
-                  <div key={item.tutor_id} className="tutor-card-container">
-                    {delta !== undefined && delta !== 0 && (
-                      <div
-                        className={`rank-delta-indicator ${delta > 0 ? 'delta-up' : 'delta-down'}`}
+          <AnimatePresence mode="wait">
+            {isCalculating ? (
+              <motion.div
+                key="skeleton-calculating-state"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0, transition: { duration: 0.18 } }}
+                className="tutor-cards-list"
+                role="status"
+                aria-live="polite"
+              >
+                <div className="loading-badge" style={{ marginBottom: 8 }}>
+                  <span className="spinner-icon" aria-hidden="true" />
+                  <span>Đang chuẩn hóa 5 tiêu chí & tính toán Top-3 tối ưu...</span>
+                </div>
+                <SkeletonLoader count={3} />
+              </motion.div>
+            ) : status === 'success' && results.length > 0 ? (
+              <motion.div
+                key="tutor-results-list"
+                className="tutor-cards-list"
+                initial="hidden"
+                animate="visible"
+              >
+                <AnimatePresence mode="popLayout">
+                  {results.map((item, idx) => {
+                    const delta = rankDeltas[item.tutor_id]
+                    return (
+                      <motion.div
+                        layout
+                        key={item.tutor_id}
+                        className="tutor-card-container"
+                        custom={idx}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                        variants={cardItemVariants}
+                        whileHover={{ y: -3, transition: { duration: 0.18 } }}
                       >
-                        {delta > 0
-                          ? `↑ Tăng ${delta} bậc sau khi điều chỉnh mức ưu tiên (CN03)`
-                          : `↓ Giảm ${Math.abs(delta)} bậc sau khi điều chỉnh mức ưu tiên (CN03)`}
-                      </div>
-                    )}
-                    <TutorCard item={item} priorities={priorities} />
-                  </div>
-                )
-              })}
+                        {delta !== undefined && delta !== 0 && (
+                          <motion.div
+                            layout="position"
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            className={`rank-delta-indicator ${delta > 0 ? 'delta-up' : 'delta-down'}`}
+                          >
+                            {delta > 0
+                              ? `↑ Tăng ${delta} bậc sau khi điều chỉnh mức ưu tiên (CN03)`
+                              : `↓ Giảm ${Math.abs(delta)} bậc sau khi điều chỉnh mức ưu tiên (CN03)`}
+                          </motion.div>
+                        )}
+                        <TutorCard item={item} priorities={priorities} />
+                      </motion.div>
+                    )
+                  })}
+                </AnimatePresence>
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
+
+          {!isCalculating && status === 'zero_weight' && (
+            <div
+              className="friendly-state-card state-zero-weight"
+              role="region"
+              aria-label="Tổng trọng số bằng 0"
+            >
+              <div className="state-icon" aria-hidden="true" style={{ color: '#f59e0b' }}>
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                  <line x1="12" y1="9" x2="12" y2="13" />
+                  <line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg>
+              </div>
+              <h3 style={{ marginTop: 8, marginBottom: 8 }}>Không thể xếp hạng do tổng trọng số bằng 0</h3>
+              <p className="state-message" style={{ maxWidth: 540, margin: '0 auto 16px' }}>
+                Tất cả tiêu chí đang ở mức &ldquo;Bỏ qua&rdquo; (w = 0). Vui lòng chọn mức ưu tiên cho ít nhất một tiêu chí ở bảng điều khiển bên trái để thuật toán tiến hành tính điểm và xếp hạng Top-3.
+              </p>
+              <button
+                type="button"
+                className="btn-accent-sm"
+                style={{ padding: '8px 16px', fontSize: 13 }}
+                onClick={() =>
+                  handleQuickPreset({
+                    fee: 'medium',
+                    district: 'medium',
+                    experience: 'medium',
+                    rating: 'medium',
+                    availability: 'medium',
+                  })
+                }
+              >
+                Khôi phục trọng số mặc định (w = 2)
+              </button>
             </div>
           )}
 
-          {status === 'no_match' && (
+          {!isCalculating && status === 'no_match' && (
             <div
               className="friendly-state-card state-no-match"
               role="region"
@@ -381,68 +484,26 @@ function ResultPage({
                   </div>
                 </div>
               )}
-
-              <div className="state-suggestions">
-                <p>
-                  <strong>Gợi ý điều chỉnh:</strong> Mở rộng khung giờ rảnh, chọn hình thức <em>Không yêu cầu (Cả hai)</em> hoặc môn học khác.
-                </p>
-                {onBackToSearch && (
-                  <button
-                    type="button"
-                    className="btn-primary"
-                    onClick={onBackToSearch}
-                  >
-                    Quay lại điều chỉnh điều kiện tìm kiếm
-                  </button>
-                )}
-              </div>
             </div>
           )}
 
-          {status === 'zero_weight' && (
-            <div
-              className="friendly-state-card state-zero-weight"
-              role="region"
-              aria-label="Tổng trọng số bằng 0"
-            >
-              <div className="state-icon" aria-hidden="true">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M12 3v18M6 8l6-5 6 5M6 8l-3 7h6l-3-7zm12 0l-3 7h6l-3-7z" />
-                </svg>
-              </div>
-              <h3>Chưa thể xếp hạng do tổng trọng số bằng 0 (∑w_i = 0)</h3>
-              <p className="state-message">
-                {message ||
-                  'Tất cả các tiêu chí đang áp dụng đều ở mức "Không quan tâm" (w = 0). Vui lòng đặt ít nhất một tiêu chí ở mức Thấp, Trung bình hoặc Cao trên thanh điều khiển CN03 bên trái.'}
-              </p>
+          {!isCalculating && status === 'error' && (
+            <div className="friendly-state-card state-error" role="alert">
+              <h3>Đã xảy ra lỗi khi gợi ý</h3>
+              <p>{message || 'Vui lòng kiểm tra lại thông số đầu vào và thử lại.'}</p>
+            </div>
+          )}
 
-              {unrankedCandidates.length > 0 && (
-                <div className="candidate-fallback-box">
-                  <h4>
-                    Danh sách {unrankedCandidates.length} gia sư đã vượt qua bước lọc bắt buộc (chưa xếp hạng):
-                  </h4>
-                  <div className="fallback-candidate-grid">
-                    {unrankedCandidates.map((id) => {
-                      const prof = getTutorProfile(id)
-                      return (
-                        <div key={id} className="fallback-candidate-item">
-                          <div className="fallback-item-head">
-                            <code>{id}</code>
-                            {prof && (
-                              <span>{formatTeachingMode(prof.teaching_mode)}</span>
-                            )}
-                          </div>
-                          {prof && (
-                            <p className="fallback-item-meta">
-                              Môn: {prof.subjects.join(', ')} · Học phí: {formatCurrencyVnd(prof.hourly_fee_vnd)} · KN: {prof.years_experience} năm
-                            </p>
-                          )}
-                        </div>
-                      )
-                    })}
-                  </div>
-                </div>
-              )}
+          {status === 'success' && unrankedCandidates.length > 0 && (
+            <div className="unranked-summary">
+              <span className="summary-label">
+                Ứng viên hợp lệ khác trong kho nhưng ngoài Top-{topK}:
+              </span>{' '}
+              {unrankedCandidates.map((id) => (
+                <code key={id} className="candidate-tag">
+                  {id}
+                </code>
+              ))}
             </div>
           )}
         </main>

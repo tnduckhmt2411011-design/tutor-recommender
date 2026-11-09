@@ -1,5 +1,8 @@
 import { useState } from 'react'
 import StackedBarScore from './StackedBarScore'
+import TutorAvatar from './TutorAvatar'
+import SubjectIcon from './SubjectIcon'
+import CriteriaIcon from './CriteriaIcon'
 import {
   formatCurrencyVnd,
   formatScoreVi,
@@ -15,6 +18,8 @@ function TutorCard({ item, priorities }) {
     profile?.subjects?.length > 0
       ? profile.subjects.join(', ')
       : 'Theo hồ sơ đăng ký'
+
+  const primarySubject = profile?.subjects?.[0] || 'Toán'
 
   const districtsText =
     profile?.districts?.length > 0
@@ -44,20 +49,36 @@ function TutorCard({ item, priorities }) {
 
   const availabilityList = profile?.availability || []
   const isRealData = profile?.data_source === 'public_collected'
+  const isRankOne = item.rank === 1
 
   return (
-    <article className="tutor-card" aria-label={`Hạng ${item.rank} - ${item.tutor_id}`}>
+    <article
+      className={`tutor-card ${isRankOne ? 'rank-1-hero' : ''}`}
+      aria-label={`Hạng ${item.rank} - ${item.tutor_id}`}
+    >
       <div className="tutor-card-header">
         <div className="tutor-rank-group">
-          <div className={`rank-mark rank-${item.rank <= 3 ? item.rank : 'other'}`}>
-            <span className="rank-num">#{item.rank}</span>
+          <div className="tutor-avatar-anchor">
+            <TutorAvatar tutorId={item.tutor_id} fullName={item.full_name} size={54} />
+            <div className={`rank-mark rank-mark-overlay rank-${item.rank <= 3 ? item.rank : 'other'}`}>
+              <span className="rank-num">#{item.rank}</span>
+            </div>
           </div>
+
           <div className="tutor-identity">
             <div className="tutor-title-line">
               <h3 className="tutor-name">
                 {item.full_name || `Gia sư ${item.tutor_id}`}
               </h3>
               <code className="tutor-id-code">{item.tutor_id}</code>
+              {isRankOne && (
+                <span className="hero-best-badge">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                  </svg>
+                  Khuyến nghị tốt nhất
+                </span>
+              )}
               {profile && (
                 <span
                   className={`source-tag ${isRealData ? 'source-real' : 'source-sim'}`}
@@ -67,7 +88,8 @@ function TutorCard({ item, priorities }) {
               )}
             </div>
             <p className="tutor-meta-line">
-              <span className="meta-item">
+              <span className="meta-item subject-meta-item">
+                <SubjectIcon subject={primarySubject} size={14} className="meta-subject-icon" />
                 <span className="meta-key">Môn dạy:</span> {subjectsText}
               </span>
               <span className="meta-sep">·</span>
@@ -95,7 +117,10 @@ function TutorCard({ item, priorities }) {
           onMouseEnter={() => setActiveCriterion('fee')}
           onMouseLeave={() => setActiveCriterion(null)}
         >
-          <span className="attr-label">Học phí</span>
+          <span className="attr-label">
+            <CriteriaIcon criterion="fee" size={13} className="attr-icon" />
+            Học phí
+          </span>
           <strong className="attr-value">{feeText}</strong>
         </div>
         <div
@@ -103,7 +128,10 @@ function TutorCard({ item, priorities }) {
           onMouseEnter={() => setActiveCriterion('experience')}
           onMouseLeave={() => setActiveCriterion(null)}
         >
-          <span className="attr-label">Kinh nghiệm</span>
+          <span className="attr-label">
+            <CriteriaIcon criterion="experience" size={13} className="attr-icon" />
+            Kinh nghiệm
+          </span>
           <strong className="attr-value">{experienceText}</strong>
         </div>
         <div
@@ -111,7 +139,10 @@ function TutorCard({ item, priorities }) {
           onMouseEnter={() => setActiveCriterion('rating')}
           onMouseLeave={() => setActiveCriterion(null)}
         >
-          <span className="attr-label">Đánh giá</span>
+          <span className="attr-label">
+            <CriteriaIcon criterion="rating" size={13} className="attr-icon" />
+            Đánh giá
+          </span>
           <strong className="attr-value attr-rating">
             {hasRating && (
               <span className="rating-star-icon" aria-hidden="true">
@@ -128,7 +159,10 @@ function TutorCard({ item, priorities }) {
           onMouseEnter={() => setActiveCriterion('district')}
           onMouseLeave={() => setActiveCriterion(null)}
         >
-          <span className="attr-label">Khu vực dạy</span>
+          <span className="attr-label">
+            <CriteriaIcon criterion="district" size={13} className="attr-icon" />
+            Khu vực dạy
+          </span>
           <strong className="attr-value">{districtsText}</strong>
         </div>
       </div>
@@ -139,7 +173,10 @@ function TutorCard({ item, priorities }) {
           onMouseEnter={() => setActiveCriterion('availability')}
           onMouseLeave={() => setActiveCriterion(null)}
         >
-          <span className="attr-label">Lịch rảnh:</span>
+          <span className="attr-label">
+            <CriteriaIcon criterion="availability" size={13} className="attr-icon" />
+            Lịch rảnh:
+          </span>
           <div className="slot-badge-list">
             {availabilityList.map((slot) => (
               <span key={slot} className="slot-mini-badge">
