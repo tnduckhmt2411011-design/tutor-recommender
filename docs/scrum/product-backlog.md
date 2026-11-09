@@ -48,13 +48,14 @@ Tài liệu quản lý toàn bộ các hạng mục công việc (User Stories) 
 | **US-37** | E1 Thiết kế và dữ liệu | Là nhóm phát triển, tôi muốn chuyển đổi cơ chế lưu trữ từ tệp JSON sang bảng đơn trong cơ sở dữ liệu ... | 2 | Could | Chưa xếp | Mục 2.4, Mục 4.2 | [#37](https://github.com/tnduckhmt2411011-design/tutor-recommender/issues/37) |
 | **US-38** | E5 Giao diện | Là người học, tôi muốn xem lại các cấu hình nhu cầu tìm kiếm trước đó được lưu trữ trong trình ... | 1 | Could | Chưa xếp | Tính năng mở rộng | [#38](https://github.com/tnduckhmt2411011-design/tutor-recommender/issues/38) |
 | **US-39** | E5 Giao diện | Là người học, tôi muốn xuất danh sách Top-k gia sư kèm thông tin liên hệ và lý do gợi ý ra file... | 1 | Could | Chưa xếp | Tính năng mở rộng | [#39](https://github.com/tnduckhmt2411011-design/tutor-recommender/issues/39) |
+| **US-40** | E1 Thiết kế và dữ liệu | Là nhóm phát triển, tôi muốn soạn tài liệu đề xuất mở rộng mô hình gợi ý sang tổ hợp ba chiều (Môn học, Cấp lớp, Mục tiêu học tập) theo chỉ dẫn của GVHD... | 2 | Should | Sprint 6 | Mục 3.6, Mục 6.2 (Mục 4.2 báo cáo giữa kỳ) | [#79](https://github.com/tnduckhmt2411011-design/tutor-recommender/issues/79) |
 
 ## 2. Thống kê độ lớn Backlog
 
-- **Tổng số User Stories:** 39 stories
-- **Tổng điểm Story Points:** 67 SP
-  - **Mức Must (Bắt buộc):** 56 SP (31 stories)
-  - **Mức Should (Nên có):** 7 SP (5 stories: CI backend, Swagger/CORS, thanh xếp chồng, tương tác CN03)
+- **Tổng số User Stories:** 40 stories
+- **Tổng điểm Story Points:** 69 SP
+  - **Mức Must (Bắt buộc):** 56 SP (32 stories)
+  - **Mức Should (Nên có):** 9 SP (5 stories: CI backend, Swagger/CORS, thanh xếp chồng, tương tác CN03, đề xuất mở rộng mô hình)
   - **Mức Could (Có thể):** 4 SP (3 stories dự phòng: SQLite, lưu lịch sử LocalStorage, xuất PDF)
 - **Phân bổ theo Sprint:**
   - **Sprint 1:** 12 SP (11 Must, 1 Should)
@@ -62,5 +63,5 @@ Tài liệu quản lý toàn bộ các hạng mục công việc (User Stories) 
   - **Sprint 3:** 9 SP (9 Must)
   - **Sprint 4:** 11 SP (10 Must, 1 Should)
   - **Sprint 5:** 12 SP (7 Must, 5 Should)
-  - **Sprint 6:** 9 SP (9 Must)
+  - **Sprint 6:** 11 SP (9 Must, 2 Should)
   - **Chưa xếp sprint (Could):** 4 SP (3 stories dự phòng)
