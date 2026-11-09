@@ -1,7 +1,7 @@
 {
   "meta": {
     "topic": "Hệ thống khuyến nghị gia sư dựa trên phương pháp Content-Base Filtering",
-    "git_commit": "1163e5b8cf8388aa1c425a5b940cec35620e3807",
+    "git_commit": "e9f62ebe6a50894f276e4aa6a8c62d57b8671db8",
     "total_scenarios": 14,
     "total_tutors": 16,
     "parameters": {
