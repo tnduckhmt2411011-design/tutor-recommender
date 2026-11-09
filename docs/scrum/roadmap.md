@@ -24,7 +24,7 @@ Nhóm đã thống nhất áp dụng **Mô hình A**:
   - **Tổng điểm Must:** **56 SP** (~112 giờ).
   - **Dự phòng 15%:** **8.4 SP** (~17 giờ).
   - **Tổng Must + Dự phòng:** **64.4 SP** (~129 giờ) $\le 78\text{ SP}$ (ngân sách còn dư an toàn 13.6 SP ~ 27 giờ).
-  - **Tổng Should:** **7 SP** (~14 giờ).
+  - **Tổng Should:** **9 SP** (~18 giờ).
   - **Tổng Could:** **4 SP** (~8 giờ, backlog dự phòng chưa xếp sprint).
   - **Kết luận:** Kế hoạch hoàn toàn nằm gọn trong công suất khả dụng của nhóm, có biên độ an toàn dự phòng rủi ro vững chắc.
 
@@ -38,7 +38,7 @@ flowchart LR
     S2 --> S3["Sprint 3 (Tuần 5–6)<br/>Xếp hạng backend & 14 kịch bản<br/>9 SP"]
     S3 --> S4["Sprint 4 (Tuần 7–8)<br/>API FastAPI & SearchPage<br/>11 SP"]
     S4 --> S5["Sprint 5 (Tuần 9–10)<br/>ResultPage, CN03 & Tích hợp<br/>12 SP"]
-    S5 --> S6["Sprint 6 (Tuần 11–12)<br/>Đánh giá 5.2, Báo cáo & v1.0<br/>9 SP"]
+    S5 --> S6["Sprint 6 (Tuần 11–12)<br/>Đánh giá 5.2, Báo cáo & v1.0<br/>11 SP"]
 ```
 
 ### Chi tiết kế hoạch từng Sprint:
@@ -50,7 +50,7 @@ flowchart LR
 | **Sprint 3** | Tuần 5–6 | **Xếp hạng backend**<br/>Cài đặt quy tắc ngưỡng dữ liệu, thuật toán Weighted Scoring, tính đóng góp tiêu chí, kiểm thử tự động 14 kịch bản và điều tra sai lệch. | 9 SP<br/>*(9 Must)* | - `backend/app/scoring/threshold.py`<br/>- `backend/app/scoring/ranker.py`<br/>- Module giải thích lý do gợi ý<br/>- Test runner tự động 14 kịch bản từ `scenarios.json`<br/>- Tài liệu phân tích sai lệch thứ hạng | - 14 kịch bản chạy tự động không crash.<br/>- Đếm chính xác số gia sư trùng (0–3).<br/>- Mọi chỗ lệch thứ hạng được điều tra và giải thích cặn kẽ, tuyệt đối không sửa Top-3 kỳ vọng.<br/>- **Qua Cổng chất lượng 2**. |
 | **Sprint 4** | Tuần 7–8 | **API và màn hình nhập**<br/>Hoàn thiện endpoint FastAPI `POST /api/recommend`, kiểm tra hợp lệ dữ liệu, integration test và màn hình `SearchPage` ReactJS. | 11 SP<br/>*(10 Must, 1 Should)* | - Endpoint `POST /api/recommend` trong `backend/app/api/`<br/>- Pydantic validation và các mã lỗi (`no_match`, `zero_weight`, 422)<br/>- Integration tests với `TestClient`<br/>- Màn hình nhập nhu cầu `SearchPage.jsx` (CN01)<br/>- Frontend API client service | - Endpoint API phản hồi dưới 1 giây với dữ liệu mẫu.<br/>- Integration test đạt 100% trong CI.<br/>- Form ReactJS nhập đầy đủ nhu cầu và chọn 4 mức ưu tiên cho 5 tiêu chí. |
 | **Sprint 5** | Tuần 9–10 | **Màn hình kết quả và tích hợp**<br/>Hoàn thiện `ResultPage` hiển thị Top-k kèm điểm, thanh xếp chồng, tương tác CN03, tích hợp end-to-end và kiểm thử ca biên. | 12 SP<br/>*(7 Must, 5 Should)* | - Màn hình `ResultPage.jsx` (CN02)<br/>- Component thanh xếp chồng phân rã điểm đóng góp<br/>- Tính năng điều chỉnh ưu tiên trực tiếp (CN03)<br/>- Luồng tích hợp end-to-end frontend - backend<br/>- Kiểm thử ca biên giao diện & điền cột Top-3 hệ thống | - Demo chạy mượt mà từ giao diện tới kết quả.<br/>- Đổi mức ưu tiên CN03 tự động cập nhật thứ hạng dưới 1 giây.<br/>- Cột Top-3 hệ thống của Bảng 5.1 được điền đầy đủ.<br/>- **Qua Cổng chất lượng 3**. |
-| **Sprint 6** | Tuần 11–12 | **Đánh giá và nộp**<br/>Phân tích thực nghiệm Mục 5.2, hoàn thiện nội dung Chương 5–6, tài liệu README, slide thuyết trình, bảo vệ thử và tag v1.0. | 9 SP<br/>*(9 Must)* | - Thử nghiệm độ nhạy tham số và phân tích Mục 5.2<br/>- Báo cáo hoàn chỉnh Chương 5, 6 và Phụ lục B, C, D<br/>- `README.md` hướng dẫn cài đặt và chạy trong 5 phút<br/>- Slide thuyết trình và kịch bản demo bảo vệ<br/>- Cập nhật mục lục, đóng gói hồ sơ, git tag `v1.0` | - Báo cáo đồ án khớp 100% với hệ thống thực tế.<br/>- Diễn tập bảo vệ thử thành công.<br/>- Repository gắn tag phát hành `v1.0`.<br/>- **Qua Cổng chất lượng 4**. |
+| **Sprint 6** | Tuần 11–12 | **Đánh giá và nộp**<br/>Phân tích thực nghiệm Mục 5.2, hoàn thiện nội dung Chương 5–6, tài liệu README, slide thuyết trình, bảo vệ thử, tài liệu đề xuất mở rộng mô hình và tag v1.0. | 11 SP<br/>*(9 Must, 1 Should)* | - Thử nghiệm độ nhạy tham số và phân tích Mục 5.2<br/>- Báo cáo hoàn chỉnh Chương 5, 6 và Phụ lục B, C, D<br/>- `README.md` hướng dẫn cài đặt và chạy trong 5 phút<br/>- Slide thuyết trình và kịch bản demo bảo vệ<br/>- Tài liệu đề xuất mở rộng mô hình tổ hợp Cấp lớp – Mục tiêu học tập (E1, Should)<br/>- Cập nhật mục lục, đóng gói hồ sơ, git tag `v1.0` | - Báo cáo đồ án khớp 100% với hệ thống thực tế.<br/>- Diễn tập bảo vệ thử thành công.<br/>- Repository gắn tag phát hành `v1.0`.<br/>- **Qua Cổng chất lượng 4**. |
 
 ---
 
@@ -75,7 +75,7 @@ Các cổng chất lượng đóng vai trò là chốt chặn nghiêm ngặt (Ha
 | Mức ưu tiên | Nhãn GitHub | Phạm vi chức năng & Công việc |
 |:---|:---|:---|
 | **Must Have**<br/>*(Bắt buộc phải có)* | `priority:high` | - Dữ liệu 16 hồ sơ (`data/processed/`) và 14 kịch bản fixture trong repo.<br/>- Module lọc điều kiện bắt buộc (môn, hình thức, khung giờ).<br/>- 5 hàm tính điểm thành phần theo Bảng 3.6 và module trọng số Bảng 3.5.<br/>- Quy tắc ngưỡng dữ liệu tối thiểu và thuật toán Weighted Scoring.<br/>- Xếp hạng Top-k kèm lý do gợi ý.<br/>- Endpoint FastAPI `POST /api/recommend` kèm validation.<br/>- Màn hình nhập nhu cầu `SearchPage` (CN01) và màn hình kết quả `ResultPage` (CN02).<br/>- Chạy tự động 14 kịch bản và phân tích sai lệch.<br/>- Báo cáo hoàn thiện Chương 5, Chương 6, slide và kịch bản demo. |
-| **Should Have**<br/>*(Nên có nếu kịp tiến độ)* | `priority:medium` | - Quy trình CI tự động kiểm tra code (`ruff`, `pytest`) trên GitHub Actions (US-02).<br/>- Cấu hình CORS và Swagger UI tài liệu hóa chi tiết (US-22).<br/>- Thanh xếp chồng (stacked bar) trực quan hóa tỉ lệ đóng góp của từng tiêu chí (US-26).<br/>- Tính năng tương tác điều chỉnh mức ưu tiên cập nhật thứ hạng tức thì CN03 (US-27). |
+| **Should Have**<br/>*(Nên có nếu kịp tiến độ)* | `priority:medium` | - Quy trình CI tự động kiểm tra code (`ruff`, `pytest`) trên GitHub Actions (US-02).<br/>- Cấu hình CORS và Swagger UI tài liệu hóa chi tiết (US-22).<br/>- Thanh xếp chồng (stacked bar) trực quan hóa tỉ lệ đóng góp của từng tiêu chí (US-26).<br/>- Tính năng tương tác điều chỉnh mức ưu tiên cập nhật thứ hạng tức thì CN03 (US-27).<br/>- Tài liệu đề xuất mở rộng mô hình theo tổ hợp Cấp lớp và Mục tiêu học tập (US-40). |
 | **Could Have**<br/>*(Có thể làm nếu dư giờ)* | `priority:low` | - Nâng cấp cơ chế lưu trữ dữ liệu từ JSON sang bảng SQLite đơn giản (US-37).<br/>- Lưu lịch sử các lần tìm kiếm gần nhất vào LocalStorage (US-38).<br/>- Xuất danh sách gợi ý gia sư ra tệp PDF tóm tắt (US-39). |
 | **Won't Have**<br/>*(Dứt khoát không làm trong đồ án)* | *(Không tạo Issue)* | - Đăng ký tài khoản, đăng nhập và phân quyền người dùng (học sinh, phụ huynh, gia sư, admin).<br/>- Thanh toán trực tuyến hoặc nạp tiền.<br/>- Đặt lịch học, điểm danh và quản lý lớp học.<br/>- Áp dụng Machine Learning / Learning-to-Rank để tự động học trọng số.<br/>- Xây dựng nền tảng mạng xã hội kết nối gia sư đầy đủ. |
 
