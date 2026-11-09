@@ -589,6 +589,7 @@ def generate_raw_json_data() -> Path:
                 "qualified_count": q_count,
                 "insufficient_data_ids": ins_ids,
                 "expected_top3": sc["expected_top3"],
+                "priorities_used": sc["request"].get("priorities"),
                 "top3_ids": top3,
                 "overlap_expected": label,
                 "matched_count": matched,
@@ -616,6 +617,7 @@ def generate_raw_json_data() -> Path:
                     {
                         "id": sid,
                         "status": "success" if q_count > 0 else "no_match",
+                        "fee_applicable": sc["request"].get("max_budget_vnd") is not None,
                         "top3_ids": top3,
                         "overlap_expected": label,
                         "same_order_as_baseline": same_order,
