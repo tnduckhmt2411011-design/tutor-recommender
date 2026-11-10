@@ -143,7 +143,7 @@ TQ2 high_score GS-G10 0.794 > GS-T06 0.650 > GS-G01 0.645
 TQ2 pass_basic GS-G10 0.773 > GS-G01 0.589 > GS-T06 0.556
 ```
 
-**Phạm vi khảo sát:** 19 truy vấn gồm 14 kịch bản KB01–KB14 và 5 truy vấn tự đặt (TQ1, TQ2, Toán trực tuyến 300.000đ với T2-tối/T4-tối, Lý trực tiếp Thủ Đức 180.000đ, Hóa trực tiếp Quận 10 220.000đ với T7-sáng). Kết quả: **3/19 ca đổi thứ hạng** (KB10, TQ1, TQ2); **không ca nào đổi hạng 1**; các ca còn lại giữ nguyên thứ hạng (điểm có thể đổi). KB10 **không dùng làm bằng chứng** vì kịch bản này vốn có Kinh nghiệm = Cao nên bộ `high_score` gần giống thiết lập gốc, và mức “mặc định” trong so sánh đã ghi đè thiết lập đó.
+**Phạm vi khảo sát:** 19 truy vấn gồm 14 kịch bản KB01–KB14 và 5 truy vấn tự đặt (TQ1–TQ5). Mỗi ca chạy với bộ ưu tiên **gốc của ca** (KB01–KB14 lấy `priorities` trong `backend/tests/scenarios/scenarios.json`; TQ1–TQ5 là 5 × Trung bình), rồi so với `high_score` và `pass_basic`. Kết quả: **3/19 ca đổi thứ hạng** (KB10, TQ1, TQ2); **không ca nào đổi hạng 1**; KB05 không có gia sư thỏa điều kiện bắt buộc nên không xếp hạng. KB10 **không dùng làm bằng chứng** vì kịch bản đã có Kinh nghiệm = Cao nên `high_score` trùng thiết lập gốc; thay đổi chỉ đến từ `pass_basic` và chỉ đảo hạng 2–3. Script tái lập cả 19 truy vấn ở Phụ lục (Mục 7).
 
 Đây chỉ là minh họa cơ chế trên 16 hồ sơ, không phải bằng chứng chất lượng gợi ý và không chứng minh rằng mục tiêu học tập luôn làm đổi thứ hạng.
 
@@ -200,8 +200,9 @@ Các nhóm tệp và hạng mục phải đổi nếu chọn Phương án 2 (m�
 
 Ngoài danh sách trên, các tệp kiểm thử phụ thuộc thứ hạng như `backend/tests/scenarios/test_scenarios.py`, `backend/tests/api/test_boundary_muc_5_1.py` và `backend/tests/scenarios/test_sensitivity_muc_5_2.py` cũng có thể phải rà soát. Chưa chạy thử nên nhóm **không khẳng định** con số bài kiểm thử sẽ hỏng.
 
-### 3.5. Giao diện — 6 tệp
+### 3.5. Giao diện — 7 tệp
 
+- `frontend/src/data/goalPresets.js`: thêm khóa `s_6` vào cả 3 bộ điền sẵn để ô chọn mục tiêu vẫn khớp đủ 6 tiêu chí.
 - `frontend/src/App.jsx`: thêm trạng thái mục tiêu/cấp lớp và đặt lại khi nạp kịch bản.
 - `frontend/src/services/api.js`: thêm `s_6` vào `CRITERIA_LIST` và `DEFAULT_PRIORITIES`.
 - `frontend/src/data/tutorsCatalog.js`: thêm `s_6` vào `CRITERIA_META` (nhãn, màu, mô tả).
@@ -209,7 +210,7 @@ Ngoài danh sách trên, các tệp kiểm thử phụ thuộc thứ hạng như
 - `frontend/src/pages/SearchPage.jsx`: thêm điều khiển mức ưu tiên thứ 6 và trường mục tiêu.
 - `frontend/src/pages/ResultPage.jsx`: hiển thị tiêu chí thứ 6 trong bảng điểm/đóng góp và câu giải thích.
 
-**Tổng kiểm kê:** **26 đường dẫn** được liệt kê — **25 tệp phải sửa** và **1 tệp khóa bất biến** (`backend/tests/scenarios/scenarios.json`) chỉ được rà soát, không được sửa. Hai tệp `backend/app/schemas/recommendation.py` và `frontend/src/App.jsx` được bổ sung khi rà mã nguồn: `backend/app/schemas/recommendation.py` chỉ cần sửa mô tả, `frontend/src/App.jsx` cần giữ trạng thái mục tiêu. Nhóm **chưa có nguồn dữ liệu** cho trường trình độ gia sư; không được tự bịa giá trị cho 16 hồ sơ.
+**Tổng kiểm kê:** **27 đường dẫn** được liệt kê — **26 tệp phải sửa** và **1 tệp khóa bất biến** (`backend/tests/scenarios/scenarios.json`) chỉ được rà soát, không được sửa. Hai tệp `backend/app/schemas/recommendation.py` và `frontend/src/App.jsx` được bổ sung khi rà mã nguồn: `backend/app/schemas/recommendation.py` chỉ cần sửa mô tả, `frontend/src/App.jsx` cần giữ trạng thái mục tiêu. `frontend/src/data/goalPresets.js` đã tồn tại từ Phương án 1 nhưng phải sửa nếu `priorities` có 6 khóa. Nhóm **chưa có nguồn dữ liệu** cho trường trình độ gia sư; không được tự bịa giá trị cho 16 hồ sơ.
 
 ---
 
@@ -217,7 +218,7 @@ Ngoài danh sách trên, các tệp kiểm thử phụ thuộc thứ hạng như
 
 | Tiêu chí so sánh | Phương án 1 — Adaptive Weight Mapping | Phương án 2 — `s_6` Goal Compatibility |
 |:---|:---|:---|
-| **Số tệp phải đổi** | Đã hiện thực: 4 tệp frontend — `frontend/src/data/goalPresets.js` (mới), `frontend/src/pages/SearchPage.jsx`, `frontend/src/App.css`, `frontend/README.md`. Không đổi backend, dữ liệu, hợp đồng API hay test. | 25 tệp: 7 dữ liệu/schema, 5 lõi chấm điểm, 2 hợp đồng/tài liệu, 5 test, 6 frontend; thêm `backend/tests/scenarios/scenarios.json` là tệp khóa không được sửa. |
+| **Số tệp phải đổi** | Đã hiện thực: 4 tệp frontend — `frontend/src/data/goalPresets.js` (mới), `frontend/src/pages/SearchPage.jsx`, `frontend/src/App.css`, `frontend/README.md`. Không đổi backend, dữ liệu, hợp đồng API hay test. | 26 tệp: 7 dữ liệu/schema, 5 lõi chấm điểm, 2 hợp đồng/tài liệu, 5 test, 7 frontend; thêm `backend/tests/scenarios/scenarios.json` là tệp khóa không được sửa. |
 | **Ảnh hưởng bộ kiểm thử** | Không đổi payload/response nên không phải sửa test; bộ kiểm thử backend vẫn giữ 200 bài. | Phải sửa các test khẳng định `CRITERIA_KEYS`, số khóa response và thứ hạng; một số test kịch bản/biên có thể hỏng. Chưa hiện thực nên **không khẳng định** số bài hỏng cụ thể. |
 | **Ảnh hưởng 14 kịch bản** | Không đổi: khi nạp KB01–KB14, giao diện giữ nguyên `priorities` của kịch bản; mục tiêu chỉ là lựa chọn của người dùng. | Xung đột với `backend/tests/scenarios/scenarios.json` khóa bất biến: thêm `s_6` làm đổi mẫu số/tổng trọng số và có thể đổi thứ hạng, trong khi không được sửa `expected_top3`/`expected_raw`. |
 | **Nguồn dữ liệu cần thêm** | Không cần dữ liệu mới. Bảng ánh xạ đã dùng trong code; các ô giả định vẫn chờ GVHD xác nhận. | Cần dữ liệu trình độ học vấn, cấp lớp và thế mạnh sư phạm của gia sư; hiện **chưa có nguồn** trong repo. Nếu không có dữ liệu, `s_6` chỉ là tổ hợp lại 5 tiêu chí cũ. |
@@ -259,3 +260,80 @@ Ba câu hỏi dự kiến gửi GVHD (nhóm không tự trả lời):
 1. Cô đánh giá thế nào về việc nhóm chọn và hiện thực **Phương án 1 — Adaptive Weight Mapping** ở mức giao diện? Có cần chuyển sang **Phương án 2 — bổ sung tiêu chí `s_6` Goal Compatibility** không?
 2. Có cần bổ sung dữ liệu **trình độ học vấn, cấp lớp và thế mạnh sư phạm** của gia sư không? Nếu có, nguồn dữ liệu nào được phép sử dụng để tránh tự tạo dữ liệu?
 3. Trong bảng ánh xạ, ngoài hai mục tiêu “Điểm cao / luyện thi chuyên – học sinh giỏi” và “Đủ điểm đậu / lấy lại kiến thức căn bản”, có cần thêm mục tiêu nào (ví dụ mất gốc, ôn thi chuyển cấp) và mức ưu tiên tương ứng không?
+
+---
+
+## 7. Phụ lục — script tái lập khảo sát 19 truy vấn
+
+Phụ lục này không trích vào Chương 6. Script đọc 14 kịch bản từ `backend/tests/scenarios/scenarios.json` và khai báo trực tiếp TQ1–TQ5; lưu thành một tệp tạm (ví dụ `%TEMP%\survey_19.py`) rồi chạy từ thư mục `backend/`:
+
+```powershell
+$env:PYTHONIOENCODING = "utf-8"
+$env:PYTHONPATH = "."
+& "<đường-dẫn-venv>\Scripts\python.exe" "$env:TEMP\survey_19.py"
+```
+
+```python
+import json
+from pathlib import Path
+
+from app.data.repository import TutorRepository
+from app.schemas.search_request import SearchRequest
+from app.scoring.eligibility import filter_eligible_candidates
+from app.scoring.filters import filter_mandatory
+from app.scoring.ranker import score_and_rank
+from app.scoring.weights import compute_effective_weights
+
+PRESETS = {
+    "high_score": dict(fee="medium", district="medium", experience="high", rating="high", availability="medium"),
+    "pass_basic": dict(fee="high", district="medium", experience="medium", rating="medium", availability="medium"),
+}
+EXTRA = {
+    "TQ1": dict(subject="Toán", learning_mode="in_person", preferred_district="Bình Thạnh", max_budget_vnd=250000),
+    "TQ2": dict(subject="Toán", learning_mode="in_person", preferred_district="Gò Vấp", max_budget_vnd=150000),
+    "TQ3": dict(subject="Toán", learning_mode="online", max_budget_vnd=300000, time_slots=["T2-tối", "T4-tối"]),
+    "TQ4": dict(subject="Lý", learning_mode="in_person", preferred_district="Thủ Đức", max_budget_vnd=180000),
+    "TQ5": dict(subject="Hóa", learning_mode="in_person", preferred_district="Quận 10", max_budget_vnd=220000, time_slots=["T7-sáng"]),
+}
+
+
+def top3(tutors, payload):
+    query = SearchRequest(**payload)
+    weights = compute_effective_weights(query)
+    eligible, _ = filter_eligible_candidates(filter_mandatory(tutors, query), weights)
+    return [r.tutor_id for r in score_and_rank(eligible, query, weights, top_k=3)]
+
+
+scenarios = json.loads(Path("tests/scenarios/scenarios.json").read_text(encoding="utf-8"))
+cases = {s["id"]: s["request"] for s in scenarios}
+cases.update(EXTRA)
+
+tutors = TutorRepository().get_all()
+changed, rank1_changed = [], []
+for case_id, request in cases.items():
+    base = top3(tutors, request)
+    variants = {name: top3(tutors, {**request, "priorities": priorities}) for name, priorities in PRESETS.items()}
+    if not base or any(not order for order in variants.values()):
+        print(f"{case_id}: KHONG_DU_DU_LIEU")
+        continue
+    if any(order != base for order in variants.values()):
+        changed.append(case_id)
+    if any(order[0] != base[0] for order in variants.values()):
+        rank1_changed.append(case_id)
+    b = " > ".join(base)
+    h = " > ".join(variants["high_score"])
+    p = " > ".join(variants["pass_basic"])
+    print(f"{case_id}: goc {b} | high_score {h} | pass_basic {p}")
+
+print(f"TONG={len(cases)} DOI_THU_HANG={len(changed)} DOI_HANG_1={len(rank1_changed)}")
+print("DOI_THU_HANG_CASES=" + ",".join(changed))
+```
+
+Kết quả thật, hai dòng cuối:
+
+```text
+TONG=19 DOI_THU_HANG=3 DOI_HANG_1=0
+DOI_THU_HANG_CASES=KB10,TQ1,TQ2
+```
+
+Mỗi ca in một dòng `goc ... | high_score ... | pass_basic ...`; KB05 in `KHONG_DU_DU_LIEU` vì không có gia sư thỏa điều kiện bắt buộc. Script chỉ dùng `app.*`, `data/processed/tutors.json` (qua `TutorRepository`) và đọc `backend/tests/scenarios/scenarios.json`.
