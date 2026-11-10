@@ -1,11 +1,11 @@
 > [!NOTE]
-> **Đề xuất, nhóm xác nhận**
+> **Đề xuất, nhóm đã chọn Phương án 1 và hiện thực ở mức giao diện**
 
 # Đề xuất mở rộng mô hình: tổ hợp Cấp lớp và Mục tiêu học tập
 
-> ĐỀ XUẤT, CHƯA HIỆN THỰC, CHƯA CÓ PHẢN HỒI CỦA GVHD
+> PHƯƠNG ÁN 1 ĐÃ HIỆN THỰC Ở MỨC GIAO DIỆN (US-41, PR #85); PHƯƠNG ÁN 2 VÀ CẤP LỚP CHƯA HIỆN THỰC; CHƯA CÓ PHẢN HỒI CỦA GVHD
 
-**Phạm vi:** tài liệu thiết kế để thảo luận với GVHD; không thay đổi mã nguồn, dữ liệu, 14 kịch bản hay bộ kiểm thử hiện có. Tài liệu dự kiến được trích vào Mục 6.2 của Chương 6 và dùng để chuẩn bị trả lời phản biện.
+**Phạm vi:** tài liệu thiết kế để thảo luận với GVHD, ghi lại hiện trạng Phương án 1 đã hiện thực ở tầng giao diện và Phương án 2 chưa hiện thực. Phương án 1 không thay đổi backend, dữ liệu, 14 kịch bản hay bộ kiểm thử hiện có. Tài liệu dự kiến được trích vào Mục 6.2 của Chương 6 và dùng để chuẩn bị trả lời phản biện.
 
 ---
 
@@ -18,7 +18,7 @@ Báo cáo giữa kỳ ghi nhận chỉ dẫn của GVHD: nhu cầu của ngườ
 - **Học sinh A — Toán lớp 8, mục tiêu điểm 10 cuối kỳ hoặc luyện thi chuyên/học sinh giỏi:** ưu tiên gia sư có trình độ chuyên môn cao (giảng viên, thạc sĩ, thủ khoa), nhiều năm kinh nghiệm, đánh giá xuất sắc; chấp nhận học phí cao.
 - **Học sinh B — Toán lớp 9, mục tiêu vừa đủ điểm đậu hoặc lấy lại kiến thức căn bản:** ưu tiên gia sư là sinh viên khá/giỏi, nhiệt tình, kiên nhẫn, học phí vừa phải và ở gần nhà.
 
-Hai ví dụ cho thấy cùng một tiêu chí có thể có mức ưu tiên rất khác nhau tùy mục tiêu. Báo cáo đề xuất hai hướng kỹ thuật: (1) *Adaptive Weight Mapping* — mục tiêu học tập gợi ý bộ mức ưu tiên khởi tạo cho 5 tiêu chí hiện có, người học vẫn tinh chỉnh ở CN03; (2) bổ sung tiêu chí thành phần thứ 6 `s_6` *Goal Compatibility*. Đến thời điểm soạn tài liệu này, nhóm **chưa có phản hồi của GVHD** về việc chọn hướng nào.
+Hai ví dụ cho thấy cùng một tiêu chí có thể có mức ưu tiên rất khác nhau tùy mục tiêu. Báo cáo đề xuất hai hướng kỹ thuật: (1) *Adaptive Weight Mapping* — mục tiêu học tập gợi ý bộ mức ưu tiên khởi tạo cho 5 tiêu chí hiện có, người học vẫn tinh chỉnh ở CN03; (2) bổ sung tiêu chí thành phần thứ 6 `s_6` *Goal Compatibility*. Nhóm đã chọn Phương án 1 và hiện thực ở mức giao diện; Phương án 2 chưa hiện thực. Tại thời điểm hiện thực, nhóm **chưa có phản hồi của GVHD**.
 
 ### 1.2. Giới hạn dữ liệu và mô hình hiện tại
 
@@ -36,74 +36,125 @@ Hệ quả: các mô tả như “giảng viên/thạc sĩ/thủ khoa” hay “
 
 ## 2. Phương án 1 — Adaptive Weight Mapping
 
-### 2.1. Cơ chế đề xuất
+### 2.1. Cơ chế đã hiện thực
 
 Mục tiêu học tập **chỉ sinh ra bộ mức ưu tiên khởi tạo ở tầng giao diện**. API, hợp đồng dữ liệu và lõi chấm điểm giữ nguyên:
 
-1. Người học chọn mục tiêu ở CN01 (hoặc một bộ chọn mục tiêu đặt cạnh phần mức ưu tiên).
-2. Giao diện tra bảng ánh xạ ở Mục 2.2 và đặt 5 mức ưu tiên tương ứng.
-3. Người học vẫn nhìn thấy và chỉnh được từng mức ưu tiên như CN03 hiện tại.
-4. `buildRecommendationPayload` tiếp tục gửi đúng 5 khóa `fee`, `district`, `experience`, `rating`, `availability`; **không gửi thêm trường mục tiêu** vì `SearchRequest` đang `extra="forbid"`.
+1. Ô chọn **“Mục tiêu học tập (gợi ý mức ưu tiên)”** đặt ngay trên khối 5 tiêu chí ở màn hình nhập nhu cầu.
+2. Khi người học chọn một mục tiêu, giao diện tra `GOAL_PRESETS` và điền 5 mức ưu tiên tương ứng.
+3. Ô chọn **không có state riêng**: giá trị hiển thị được suy ra bằng cách so khớp 5 mức ưu tiên hiện tại với từng bộ điền sẵn; không khớp bộ nào thì hiện “Tùy chỉnh”.
+4. Người học vẫn nhìn thấy và chỉnh được từng mức ưu tiên như CN03 hiện tại; khi chỉnh tay một tiêu chí, ô chọn chuyển thành “Tùy chỉnh”.
+5. `buildRecommendationPayload` tiếp tục gửi đúng 7 trường và đúng 5 khóa `fee`, `district`, `experience`, `rating`, `availability`; **không gửi thêm trường mục tiêu** vì `SearchRequest` đang `extra="forbid"`.
 
-Các tệp giao diện dự kiến chạm tới (đã kiểm tra tồn tại):
+Các tệp giao diện đã chạm tới trong PR #85 (đã kiểm tra tồn tại):
 
-- `frontend/src/App.jsx`: thêm `learningGoal` vào trạng thái `searchForm`; đặt lại về “Không nêu mục tiêu” khi nạp kịch bản để không đè lên bộ ưu tiên của 14 kịch bản.
-- `frontend/src/services/api.js`: thêm hằng số danh sách mục tiêu và bảng ánh xạ mục tiêu → mức ưu tiên; giữ nguyên `CRITERIA_LIST`, `DEFAULT_PRIORITIES` và `buildRecommendationPayload`.
-- `frontend/src/pages/SearchPage.jsx`: thêm bộ chọn mục tiêu; khi đổi mục tiêu thì cập nhật 5 mức ưu tiên; khi người học tự đổi một mức ưu tiên thì giữ nguyên lựa chọn thủ công đó.
-- `frontend/src/pages/ResultPage.jsx`: hiển thị mục tiêu đã chọn và ghi chú “mức ưu tiên chỉ là gợi ý, có thể chỉnh ở CN03”.
+- `frontend/src/data/goalPresets.js` (mới): định nghĩa `GOAL_PRESETS` gồm 3 mục tiêu; mỗi mục tiêu có `key`, `label`, `description` và `priorities` đủ 5 khóa; dùng `DEFAULT_PRIORITIES` từ `frontend/src/services/api.js`, không định nghĩa lại nhãn mức ưu tiên.
+- `frontend/src/pages/SearchPage.jsx`: thêm ô chọn mục tiêu và `handleGoalChange`; không thêm state/trường vào `searchForm`; đổi mục tiêu chỉ cập nhật `priorities` và đặt `scenarioMeta: null`.
+- `frontend/src/App.css`: thêm lớp `.goal-preset-block`.
+- `frontend/README.md`: mô tả tính năng và nêu rõ Cấp lớp chưa hiện thực vì hồ sơ gia sư thiếu dữ liệu cấp lớp.
 
-Không cần sửa backend, không cần endpoint mới, không cần thêm trường vào request. Khi nạp kịch bản KB01–KB14, giao diện giữ nguyên `priorities` của kịch bản và đặt mục tiêu về “Không nêu”; nhờ vậy 14 kịch bản không bị ảnh hưởng.
+Không sửa `frontend/src/App.jsx`, `frontend/src/pages/ResultPage.jsx`, backend, dữ liệu hay hợp đồng API. Khi nạp kịch bản KB01–KB14, giao diện giữ nguyên `priorities` của kịch bản; nhờ vậy 14 kịch bản không bị ảnh hưởng. Ví dụ, nạp KB01 hiện “Không nêu mục tiêu” (5 × Trung bình), còn nạp KB10 hiện “Tùy chỉnh” vì kịch bản có Kinh nghiệm = Cao.
 
 ### 2.2. Bảng ánh xạ Mục tiêu → mức ưu tiên
 
 Mỗi ô ghi kèm thẻ nguồn. `[báo cáo giữa kỳ]` là giá trị báo cáo đã nêu; `[giả định nhóm, chờ GVHD xác nhận]` là giá trị nhóm tự đề xuất, **chưa được GVHD xác nhận**; `[Bảng 3.5 — mặc định hiện tại]` là bộ mặc định đang chạy trong hệ thống.
 
+**Giá trị đang dùng trong code: `frontend/src/data/goalPresets.js`.**
+
 | Mục tiêu | Học phí | Khu vực | Kinh nghiệm | Đánh giá | Lịch rảnh |
 |:---|:---|:---|:---|:---|:---|
-| **Điểm cao / luyện thi chuyên – học sinh giỏi** (học sinh A) | Trung bình<br>`[giả định nhóm, chờ GVHD xác nhận]` | Trung bình<br>`[giả định nhóm, chờ GVHD xác nhận]` | **Cao**<br>`[báo cáo giữa kỳ]` | **Cao**<br>`[báo cáo giữa kỳ]` | Trung bình<br>`[giả định nhóm, chờ GVHD xác nhận]` |
-| **Đủ điểm đậu / lấy lại căn bản** (học sinh B) | **Cao**<br>`[báo cáo giữa kỳ]` | Trung bình<br>`[giả định nhóm, chờ GVHD xác nhận]` | Trung bình<br>`[giả định nhóm, chờ GVHD xác nhận]` | Trung bình<br>`[giả định nhóm, chờ GVHD xác nhận]` | Trung bình<br>`[giả định nhóm, chờ GVHD xác nhận]` |
-| **Không nêu mục tiêu** | Trung bình<br>`[Bảng 3.5 — mặc định hiện tại]` | Trung bình<br>`[Bảng 3.5 — mặc định hiện tại]` | Trung bình<br>`[Bảng 3.5 — mặc định hiện tại]` | Trung bình<br>`[Bảng 3.5 — mặc định hiện tại]` | Trung bình<br>`[Bảng 3.5 — mặc định hiện tại]` |
+| **Không nêu mục tiêu** (`none`) | Trung bình<br>`[Bảng 3.5 — mặc định hiện tại]` | Trung bình<br>`[Bảng 3.5 — mặc định hiện tại]` | Trung bình<br>`[Bảng 3.5 — mặc định hiện tại]` | Trung bình<br>`[Bảng 3.5 — mặc định hiện tại]` | Trung bình<br>`[Bảng 3.5 — mặc định hiện tại]` |
+| **Điểm cao / luyện thi chuyên – học sinh giỏi** (`high_score`) (học sinh A) | Trung bình<br>`[giả định nhóm, chờ GVHD xác nhận]` | Trung bình<br>`[giả định nhóm, chờ GVHD xác nhận]` | **Cao**<br>`[báo cáo giữa kỳ]` | **Cao**<br>`[báo cáo giữa kỳ]` | Trung bình<br>`[giả định nhóm, chờ GVHD xác nhận]` |
+| **Đủ điểm đậu / lấy lại kiến thức căn bản** (`pass_basic`) (học sinh B) | **Cao**<br>`[báo cáo giữa kỳ]` | Trung bình<br>`[giả định nhóm, chờ GVHD xác nhận]` | Trung bình<br>`[giả định nhóm, chờ GVHD xác nhận]` | Trung bình<br>`[giả định nhóm, chờ GVHD xác nhận]` | Trung bình<br>`[giả định nhóm, chờ GVHD xác nhận]` |
 
-**Gợi ý bổ sung của nhóm (ghi riêng, chưa đưa vào bảng chính):**
+**Gợi ý bổ sung của nhóm — để ngỏ, chưa hiện thực:**
 
-- Với học sinh A, vì báo cáo nêu A **chấp nhận học phí cao**, nhóm đề xuất đặt Học phí = **Thấp** thay vì Trung bình để tránh đẩy học phí lên ngang các tiêu chí chuyên môn. Đây là `[giả định nhóm, chờ GVHD xác nhận]`.
-- Với học sinh B, vì báo cáo nêu B ưu tiên gia sư **ở gần nhà**, nhóm đề xuất đặt Khu vực = **Cao** thay vì Trung bình. Đây là `[giả định nhóm, chờ GVHD xác nhận]`.
-- Các ô còn lại giữ Trung bình vì báo cáo không nêu mức cụ thể; nhóm không tự suy ra giá trị khác khi chưa có căn cứ.
+- Với học sinh A, vì báo cáo nêu A **chấp nhận học phí cao**, nhóm từng đề xuất đặt Học phí = **Thấp** thay vì Trung bình để tránh đẩy học phí lên ngang các tiêu chí chuyên môn. Gợi ý này **không được dùng trong code**; code đang dùng Học phí = Trung bình theo bảng chốt ở trên.
+- Với học sinh B, vì báo cáo nêu B ưu tiên gia sư **ở gần nhà**, nhóm từng đề xuất đặt Khu vực = **Cao** thay vì Trung bình. Gợi ý này **không được dùng trong code**; code đang dùng Khu vực = Trung bình theo bảng chốt ở trên.
+- Các ô còn lại giữ Trung bình vì báo cáo không nêu mức cụ thể; nhóm không tự suy ra giá trị khác khi chưa có căn cứ. Hai gợi ý trên chỉ để thảo luận với GVHD, chưa hiện thực.
 
-### 2.3. Ví dụ minh họa trên KB01
+### 2.3. Ví dụ minh họa trên TQ1 và TQ2
 
-Chạy từ thư mục `backend/`, dùng script tạm đặt ngoài repo; kết quả ghi ra `%TEMP%\kb01-adaptive-weight-example.json` bằng UTF-8, stdout chỉ in ký tự ASCII:
+Hai ca minh họa dưới đây được chọn **sau khi thử 19 truy vấn** (14 kịch bản KB01–KB14 và 5 truy vấn tự đặt), nên chỉ là ca minh họa cơ chế, không phải bằng chứng chất lượng gợi ý. KB01 được giữ làm **ca đối chiếu mặc định** vì là kịch bản đã đánh giá.
+
+| Ca (hồ sơ) | Bộ ưu tiên | Hạng 1 | Hạng 2 | Hạng 3 |
+|:---|:---|:---|:---|:---|
+| **KB01** — Toán · trực tiếp · Bình Thạnh · 200.000đ<br>(ca đối chiếu mặc định) | Mặc định | GS-G01 — 0,938 | GS-G10 — 0,745 | GS-T06 — 0,625 |
+| | `high_score` (A) | GS-G01 — 0,925 | GS-G10 — 0,794 | GS-T06 — 0,650 |
+| | `pass_basic` (B) | GS-G01 — 0,944 | GS-G10 — 0,773 | GS-T06 — 0,556 |
+| **TQ1** — Toán · trực tiếp · Bình Thạnh · 250.000đ<br>(học sinh A) | Mặc định | GS-G01 — 0,938 | GS-G10 — 0,745 | GS-G02 — 0,644 |
+| | `high_score` (A) | GS-G01 — 0,925 | GS-G10 — 0,794 | **GS-T06 — 0,650** |
+| | `pass_basic` (B) | GS-G01 — 0,944 | GS-G10 — 0,773 | GS-G02 — 0,639 |
+| **TQ2** — Toán · trực tiếp · Gò Vấp · 150.000đ<br>(học sinh B) | Mặc định | GS-G10 — 0,745 | GS-T06 — 0,625 | GS-G01 — 0,588 |
+| | `high_score` (A) | GS-G10 — 0,794 | GS-T06 — 0,650 | GS-G01 — 0,645 |
+| | `pass_basic` (B) | GS-G10 — 0,773 | **GS-G01 — 0,589** | **GS-T06 — 0,556** |
+
+- **KB01:** cả ba bộ giữ nguyên thứ hạng `GS-G01 > GS-G10 > GS-T06`; chỉ điểm tổng thay đổi.
+- **TQ1:** bộ `high_score` thay `GS-G02` bằng `GS-T06` ở hạng 3; hạng 1 và 2 không đổi.
+- **TQ2:** bộ `pass_basic` đảo hạng 2 và 3 (`GS-T06`/`GS-G01`); hạng 1 không đổi.
+
+Đoạn mã dưới chỉ dùng `app.*` và `data/processed/tutors.json` (qua `TutorRepository`), không đọc `backend/tests/scenarios/scenarios.json`. Lưu vào một tệp tạm (ví dụ `%TEMP%\goal_presets_compare.py`) rồi chạy từ thư mục `backend/`:
 
 ```powershell
-# Từ thư mục backend/ của worktree
-$env:PYTHONDONTWRITEBYTECODE = "1"
 $env:PYTHONIOENCODING = "utf-8"
-& "<đường-dẫn-venv>\Scripts\python.exe" "$env:TEMP\opencode\kb01_adaptive_example.py"
+$env:PYTHONPATH = "."
+& "<đường-dẫn-venv>\Scripts\python.exe" "$env:TEMP\goal_presets_compare.py"
 ```
 
-Script đọc `KB01` từ `backend/tests/scenarios/scenarios.json`, gọi `POST /api/recommend` qua `TestClient` với ba bộ ưu tiên: mặc định (5 × Trung bình), học sinh A (Kinh nghiệm Cao, Đánh giá Cao, còn lại Trung bình), học sinh B (Học phí Cao, còn lại Trung bình). Kết quả thật:
+```python
+from app.data.repository import TutorRepository
+from app.schemas.search_request import SearchRequest
+from app.scoring.eligibility import filter_eligible_candidates
+from app.scoring.filters import filter_mandatory
+from app.scoring.ranker import score_and_rank
+from app.scoring.weights import compute_effective_weights
+
+PRESETS = {
+    "default": dict(fee="medium", district="medium", experience="medium", rating="medium", availability="medium"),
+    "high_score": dict(fee="medium", district="medium", experience="high", rating="high", availability="medium"),
+    "pass_basic": dict(fee="high", district="medium", experience="medium", rating="medium", availability="medium"),
+}
+CASES = {"KB01": ("Bình Thạnh", 200000), "TQ1": ("Bình Thạnh", 250000), "TQ2": ("Gò Vấp", 150000)}
+
+tutors = TutorRepository().get_all()
+for case, (district, budget) in CASES.items():
+    for name, priorities in PRESETS.items():
+        query = SearchRequest(
+            subject="Toán", learning_mode="in_person", preferred_district=district,
+            max_budget_vnd=budget, priorities=priorities, top_k=3,
+        )
+        weights = compute_effective_weights(query)
+        eligible, _ = filter_eligible_candidates(filter_mandatory(tutors, query), weights)
+        top3 = score_and_rank(eligible, query, weights, top_k=3)
+        print(case, name, " > ".join(f"{r.tutor_id} {r.total_score:.3f}" for r in top3))
+```
+
+Kết quả thật:
 
 ```text
-WROTE C:\Users\LENOVO\AppData\Local\Temp\kb01-adaptive-weight-example.json
-default -> GS-G01=0.938, GS-G10=0.745, GS-T06=0.625
-student_a -> GS-G01=0.925, GS-G10=0.794, GS-T06=0.650
-student_b -> GS-G01=0.944, GS-G10=0.773, GS-T06=0.556
+KB01 default GS-G01 0.938 > GS-G10 0.745 > GS-T06 0.625
+KB01 high_score GS-G01 0.925 > GS-G10 0.794 > GS-T06 0.650
+KB01 pass_basic GS-G01 0.944 > GS-G10 0.773 > GS-T06 0.556
+TQ1 default GS-G01 0.938 > GS-G10 0.745 > GS-G02 0.644
+TQ1 high_score GS-G01 0.925 > GS-G10 0.794 > GS-T06 0.650
+TQ1 pass_basic GS-G01 0.944 > GS-G10 0.773 > GS-G02 0.639
+TQ2 default GS-G10 0.745 > GS-T06 0.625 > GS-G01 0.588
+TQ2 high_score GS-G10 0.794 > GS-T06 0.650 > GS-G01 0.645
+TQ2 pass_basic GS-G10 0.773 > GS-G01 0.589 > GS-T06 0.556
 ```
 
-| Bộ ưu tiên | Hạng 1 | Hạng 2 | Hạng 3 |
-|:---|:---|:---|:---|
-| Mặc định (5 × Trung bình) | GS-G01 — 0,938 | GS-G10 — 0,745 | GS-T06 — 0,625 |
-| Học sinh A (Kinh nghiệm Cao, Đánh giá Cao) | GS-G01 — 0,925 | GS-G10 — 0,794 | GS-T06 — 0,650 |
-| Học sinh B (Học phí Cao) | GS-G01 — 0,944 | GS-G10 — 0,773 | GS-T06 — 0,556 |
+**Phạm vi khảo sát:** 19 truy vấn gồm 14 kịch bản KB01–KB14 và 5 truy vấn tự đặt (TQ1, TQ2, Toán trực tuyến 300.000đ với T2-tối/T4-tối, Lý trực tiếp Thủ Đức 180.000đ, Hóa trực tiếp Quận 10 220.000đ với T7-sáng). Kết quả: **3/19 ca đổi thứ hạng** (KB10, TQ1, TQ2); **không ca nào đổi hạng 1**; các ca còn lại giữ nguyên thứ hạng (điểm có thể đổi). KB10 **không dùng làm bằng chứng** vì kịch bản này vốn có Kinh nghiệm = Cao nên bộ `high_score` gần giống thiết lập gốc, và mức “mặc định” trong so sánh đã ghi đè thiết lập đó.
 
-Với KB01, **thứ hạng Top-3 không đổi**; chỉ điểm tổng và mức đóng góp thay đổi. Ví dụ ở bộ ưu tiên A, đóng góp của GS-G01 là Học phí 0,200; Khu vực 0,200; Kinh nghiệm 0,225; Đánh giá 0,300; Lịch rảnh `null` (KB01 không có `time_slots`, nên tiêu chí này không áp dụng). Đây chỉ là **minh họa cơ chế trên 16 hồ sơ**, không phải bằng chứng chất lượng gợi ý và không chứng minh rằng mục tiêu học tập luôn làm đổi thứ hạng.
+Đây chỉ là minh họa cơ chế trên 16 hồ sơ, không phải bằng chứng chất lượng gợi ý và không chứng minh rằng mục tiêu học tập luôn làm đổi thứ hạng.
 
 ### 2.4. Tác động
 
-- **Không đổi hợp đồng API:** request vẫn 7 trường, `priorities` vẫn đúng 5 khóa; response vẫn đủ 5 khóa `criteria_scores` và `contributions`.
-- **Không đổi `scoring-spec.md`:** công thức $S = \sum w_i s_i / \sum w_i$, bảng quy đổi $0/1/2/3$ và các ngưỡng giữ nguyên.
-- **Không đổi dữ liệu:** 16 hồ sơ, 14 kịch bản và `tutors.json`/`tutors.csv` giữ nguyên.
-- **Không đổi các test hiện có:** backend vẫn nhận đúng 5 khóa; frontend chỉ thay cách khởi tạo `priorities`. Cần chạy lại kiểm thử để xác nhận, không được chỉ suy luận.
+- **Tệp thay đổi thực tế (PR #85):** đúng 4 tệp frontend — `frontend/src/data/goalPresets.js` (mới), `frontend/src/pages/SearchPage.jsx`, `frontend/src/App.css`, `frontend/README.md`.
+- **Không đổi hợp đồng API:** request vẫn 7 trường `subject`, `learning_mode`, `preferred_district`, `max_budget_vnd`, `time_slots`, `priorities`, `top_k`; `priorities` vẫn đúng 5 khóa; response vẫn đủ 5 khóa `criteria_scores` và `contributions`.
+- **Không đổi `docs/design/scoring-spec.md`:** công thức $S = \sum w_i s_i / \sum w_i$, bảng quy đổi $0/1/2/3$ và các ngưỡng giữ nguyên.
+- **Không đổi backend, dữ liệu, kịch bản:** không sửa `backend/`, `data/`, `backend/tests/scenarios/scenarios.json`; 16 hồ sơ và 14 kịch bản giữ nguyên.
+- **Ô chọn là bộ điền sẵn:** giá trị ô được suy ra từ 5 mức ưu tiên hiện tại; không thêm state/trường vào `searchForm`; không gửi mục tiêu lên API.
+- **Không đổi bộ kiểm thử:** backend vẫn nhận đúng 5 khóa; frontend chỉ thay cách khởi tạo `priorities`.
 - **Cấp lớp KHÔNG tham gia lọc hay chấm điểm.** Hồ sơ gia sư không có trường cấp lớp, nên hệ thống không thể lọc “gia sư dạy lớp 8” hay “lớp 9”. Tương tự, trình độ học vấn và thế mạnh sư phạm cũng không tham gia trực tiếp; chúng chỉ được xấp xỉ gián tiếp qua kinh nghiệm, đánh giá, học phí và khu vực.
 - **Đây là gợi ý ở tầng giao diện**, không phải quy tắc bắt buộc của hệ thống. Người dùng gọi API trực tiếp vẫn có thể gửi bất kỳ bộ ưu tiên hợp lệ nào; điều này là chấp nhận được vì mục tiêu chỉ nhằm giảm thao tác cho người dùng, không nhằm thay đổi lõi chấm điểm.
 
@@ -111,7 +162,7 @@ Với KB01, **thứ hạng Top-3 không đổi**; chỉ điểm tổng và mức
 
 ## 3. Phương án 2 — Bổ sung tiêu chí `s_6` Goal Compatibility
 
-Phương án 2 thêm một tiêu chí thành phần thứ 6 vào công thức tổng hợp. Để `s_6` có ý nghĩa, cần đồng thời có: (a) mục tiêu học tập của người học trong `SearchRequest`; (b) thuộc tính của gia sư để so khớp mục tiêu (trình độ, cấp lớp, thế mạnh sư phạm); (c) dữ liệu cho 16 hồ sơ. Hiện repo **chưa có (b) và (c)**. Nếu chỉ tính `s_6` từ 5 trường hiện có thì `s_6` thực chất là một cách tổ hợp lại các tiêu chí cũ, trùng với Phương án 1 nhưng phức tạp hơn.
+**Trạng thái: chưa hiện thực.** Phương án 2 thêm một tiêu chí thành phần thứ 6 vào công thức tổng hợp. Để `s_6` có ý nghĩa, cần đồng thời có: (a) mục tiêu học tập của người học trong `SearchRequest`; (b) thuộc tính của gia sư để so khớp mục tiêu (trình độ, cấp lớp, thế mạnh sư phạm); (c) dữ liệu cho 16 hồ sơ. Hiện repo **chưa có (b) và (c)**. Nếu chỉ tính `s_6` từ 5 trường hiện có thì `s_6` thực chất là một cách tổ hợp lại các tiêu chí cũ, trùng với Phương án 1 nhưng phức tạp hơn.
 
 Các nhóm tệp và hạng mục phải đổi nếu chọn Phương án 2 (mọi đường dẫn đã kiểm tra tồn tại):
 
@@ -158,7 +209,7 @@ Ngoài danh sách trên, các tệp kiểm thử phụ thuộc thứ hạng như
 - `frontend/src/pages/SearchPage.jsx`: thêm điều khiển mức ưu tiên thứ 6 và trường mục tiêu.
 - `frontend/src/pages/ResultPage.jsx`: hiển thị tiêu chí thứ 6 trong bảng điểm/đóng góp và câu giải thích.
 
-**Tổng kiểm kê:** **26 đường dẫn** được liệt kê — **25 tệp phải sửa** và **1 tệp khóa bất biến** (`scenarios.json`) chỉ được rà soát, không được sửa. Hai tệp `recommendation.py` và `App.jsx` không nằm trong danh sách gợi ý ban đầu nhưng bị ảnh hưởng khi rà mã nguồn: `recommendation.py` chỉ cần sửa mô tả, `App.jsx` cần giữ trạng thái mục tiêu. Nhóm **chưa có nguồn dữ liệu** cho trường trình độ gia sư; không được tự bịa giá trị cho 16 hồ sơ.
+**Tổng kiểm kê:** **26 đường dẫn** được liệt kê — **25 tệp phải sửa** và **1 tệp khóa bất biến** (`backend/tests/scenarios/scenarios.json`) chỉ được rà soát, không được sửa. Hai tệp `backend/app/schemas/recommendation.py` và `frontend/src/App.jsx` được bổ sung khi rà mã nguồn: `backend/app/schemas/recommendation.py` chỉ cần sửa mô tả, `frontend/src/App.jsx` cần giữ trạng thái mục tiêu. Nhóm **chưa có nguồn dữ liệu** cho trường trình độ gia sư; không được tự bịa giá trị cho 16 hồ sơ.
 
 ---
 
@@ -166,47 +217,45 @@ Ngoài danh sách trên, các tệp kiểm thử phụ thuộc thứ hạng như
 
 | Tiêu chí so sánh | Phương án 1 — Adaptive Weight Mapping | Phương án 2 — `s_6` Goal Compatibility |
 |:---|:---|:---|
-| **Số tệp phải đổi** | 4 tệp frontend: `App.jsx`, `api.js`, `SearchPage.jsx`, `ResultPage.jsx`. Không đổi backend, dữ liệu, hợp đồng API hay test. | 25 tệp: 7 dữ liệu/schema, 5 lõi chấm điểm, 2 hợp đồng/tài liệu, 5 test, 6 frontend; thêm `scenarios.json` là tệp khóa không được sửa. |
-| **Ảnh hưởng 190/200 bài kiểm thử** | Không đổi payload/response nên không phải sửa test. Báo cáo giữa kỳ ghi 190 bài; bản hiện tại đã thu 200 bài (10 test độ nhạy Mục 5.2 bổ sung). Cần chạy lại để xác nhận, không suy luận. | Phải sửa các test khẳng định `CRITERIA_KEYS`, số khóa response và thứ hạng; một số test kịch bản/biên có thể hỏng. Chưa hiện thực nên **không khẳng định** số bài hỏng cụ thể. |
-| **Ảnh hưởng 14 kịch bản** | Không đổi: khi nạp KB01–KB14, giao diện giữ nguyên `priorities` của kịch bản; mục tiêu chỉ là lựa chọn của người dùng. | Xung đột với `scenarios.json` khóa bất biến: thêm `s_6` làm đổi mẫu số/tổng trọng số và có thể đổi thứ hạng, trong khi không được sửa `expected_top3`/`expected_raw`. |
-| **Nguồn dữ liệu cần thêm** | Không cần dữ liệu mới. Chỉ cần bảng ánh xạ do nhóm đề xuất, phải ghi rõ là giả định và chờ GVHD xác nhận. | Cần dữ liệu trình độ học vấn, cấp lớp và thế mạnh sư phạm của gia sư; hiện **chưa có nguồn** trong repo. Nếu không có dữ liệu, `s_6` chỉ là tổ hợp lại 5 tiêu chí cũ. |
-| **Khả năng giải thích (XAI)** | Dùng đúng 5 tiêu chí và 5 khóa đóng góp hiện có; giao diện giải thích được “vì mục tiêu A nên Kinh nghiệm/Đánh giá được đặt Cao”. Minh bạch, dễ đối chiếu với scoring-spec. | `s_6` cần định nghĩa và dữ liệu riêng để giải thích; nếu dữ liệu không có, lý do gợi ý dễ thành suy diễn hoặc trùng lặp tiêu chí cũ, khó bảo vệ trước phản biện. |
+| **Số tệp phải đổi** | Đã hiện thực: 4 tệp frontend — `frontend/src/data/goalPresets.js` (mới), `frontend/src/pages/SearchPage.jsx`, `frontend/src/App.css`, `frontend/README.md`. Không đổi backend, dữ liệu, hợp đồng API hay test. | 25 tệp: 7 dữ liệu/schema, 5 lõi chấm điểm, 2 hợp đồng/tài liệu, 5 test, 6 frontend; thêm `backend/tests/scenarios/scenarios.json` là tệp khóa không được sửa. |
+| **Ảnh hưởng bộ kiểm thử** | Không đổi payload/response nên không phải sửa test; bộ kiểm thử backend vẫn giữ 200 bài. | Phải sửa các test khẳng định `CRITERIA_KEYS`, số khóa response và thứ hạng; một số test kịch bản/biên có thể hỏng. Chưa hiện thực nên **không khẳng định** số bài hỏng cụ thể. |
+| **Ảnh hưởng 14 kịch bản** | Không đổi: khi nạp KB01–KB14, giao diện giữ nguyên `priorities` của kịch bản; mục tiêu chỉ là lựa chọn của người dùng. | Xung đột với `backend/tests/scenarios/scenarios.json` khóa bất biến: thêm `s_6` làm đổi mẫu số/tổng trọng số và có thể đổi thứ hạng, trong khi không được sửa `expected_top3`/`expected_raw`. |
+| **Nguồn dữ liệu cần thêm** | Không cần dữ liệu mới. Bảng ánh xạ đã dùng trong code; các ô giả định vẫn chờ GVHD xác nhận. | Cần dữ liệu trình độ học vấn, cấp lớp và thế mạnh sư phạm của gia sư; hiện **chưa có nguồn** trong repo. Nếu không có dữ liệu, `s_6` chỉ là tổ hợp lại 5 tiêu chí cũ. |
+| **Khả năng giải thích (XAI)** | Dùng đúng 5 tiêu chí và 5 khóa đóng góp hiện có; giao diện giải thích được “vì mục tiêu A nên Kinh nghiệm/Đánh giá được đặt Cao”. Minh bạch, dễ đối chiếu với `docs/design/scoring-spec.md`. | `s_6` cần định nghĩa và dữ liệu riêng để giải thích; nếu dữ liệu không có, lý do gợi ý dễ thành suy diễn hoặc trùng lặp tiêu chí cũ, khó bảo vệ trước phản biện. |
 | **Rủi ro chính** | Bảng ánh xạ là giả định chưa được GVHD xác nhận; Cấp lớp không được dùng; người dùng có thể hiểu nhầm mục tiêu tham gia chấm điểm; API client gọi trực tiếp có thể bỏ qua gợi ý. | Phá vỡ `TutorProfile`/`SearchRequest` do `extra="forbid"`; phải bịa hoặc bổ sung dữ liệu mới; đổi hợp đồng API và `CRITERIA_KEYS`; ảnh hưởng 14 kịch bản và nhiều test; công sức sửa toàn chuỗi lớn hơn nhiều. |
 
 ---
 
 ## 5. Khuyến nghị
 
-**Khuyến nghị: chọn Phương án 1 — Adaptive Weight Mapping**, với các điều kiện sau:
+**Khuyến nghị: nhóm đã chọn Phương án 1 — Adaptive Weight Mapping và hiện thực ở mức giao diện.** Phương án 2 giữ nguyên, chưa hiện thực.
 
-1. **Chỉ triển khai khi GVHD đồng ý** với hướng tiếp cận và bảng ánh xạ ở Mục 2.2. Hiện trạng thái là **chờ GVHD xác nhận**.
-2. **Chưa nằm trong phạm vi bắt buộc của `v1.0`.** Đây là hạng mục `Should`; nếu GVHD chưa phản hồi hoặc tiến độ căng, nhóm có thể cắt mà không ảnh hưởng Cổng chất lượng 4.
-3. Chỉ thay đổi tầng giao diện/khởi tạo mức ưu tiên; **không** sửa `TutorProfile`, `SearchRequest`, `CRITERIA_KEYS`, `validate_tutors.py`, hợp đồng API, dữ liệu hay 14 kịch bản.
-4. Giao diện phải ghi rõ mục tiêu chỉ **gợi ý** mức ưu tiên; người học vẫn chỉnh được và nhìn thấy đủ 5 tiêu chí.
-5. Khi nạp kịch bản, giữ nguyên bộ ưu tiên của kịch bản; không để bảng ánh xạ đè lên 14 kịch bản đã khóa.
+1. **Bảng ánh xạ vẫn là giả định của nhóm**, chưa được GVHD xác nhận; cần hỏi GVHD để chốt giá trị từng ô và nhãn “gợi ý”.
+2. **Phạm vi đã hiện thực chỉ ở tầng giao diện**: không sửa `backend/app/schemas/tutor.py`, `backend/app/schemas/search_request.py`, `backend/app/core/config.py`, `scripts/validate_tutors.py`, hợp đồng API, dữ liệu hay 14 kịch bản.
+3. Giao diện ghi rõ mục tiêu chỉ **gợi ý** mức ưu tiên; người học vẫn chỉnh được và nhìn thấy đủ 5 tiêu chí.
+4. Khi nạp kịch bản, giữ nguyên bộ ưu tiên của kịch bản; không để bảng ánh xạ đè lên 14 kịch bản đã khóa.
+5. Phương án 2 chỉ nên triển khai nếu GVHD yêu cầu và có nguồn dữ liệu cấp lớp/trình độ/thế mạnh sư phạm; hiện chưa có.
 
-**Lộ trình theo giai đoạn nếu được duyệt:**
+**Lộ trình:**
 
-- **Giai đoạn 0 — Chờ GVHD chốt:** gửi 3 câu hỏi ở Mục 6; chưa viết mã.
-- **Giai đoạn 1 — Chốt bảng ánh xạ:** xác nhận giá trị từng ô và nhãn “gợi ý”; không thay đổi dữ liệu.
-- **Giai đoạn 2 — Giao diện:** thêm mục tiêu và bảng ánh xạ vào 4 tệp frontend đã nêu; không gửi mục tiêu lên API.
-- **Giai đoạn 3 — Kiểm thử hồi quy:** chạy lại toàn bộ test backend (200 bài hiện tại), lint/build frontend; kiểm tra payload vẫn đúng 5 khóa; nạp thử 14 kịch bản và đối chiếu `expected_top3`.
-- **Giai đoạn 4 — Chỉ khi GVHD yêu cầu dùng Cấp lớp:** lập đề xuất riêng về thu thập dữ liệu cấp lớp/trình độ; không gộp vào phạm vi tài liệu này.
+- **Giai đoạn 0 — Đã hiện thực (Phương án 1):** ô chọn mục tiêu và bộ điền sẵn ở frontend; không gửi mục tiêu lên API. Chưa có phản hồi của GVHD tại thời điểm hiện thực.
+- **Giai đoạn 1 — Chờ GVHD góp ý:** xác nhận giá trị từng ô và nhãn “gợi ý”; nếu GVHD yêu cầu khác thì điều chỉnh bảng hoặc gỡ phần gợi ý.
+- **Giai đoạn 2 — Nếu GVHD yêu cầu dùng Cấp lớp hoặc `s_6`:** lập đề xuất riêng về thu thập dữ liệu cấp lớp/trình độ; không gộp vào phạm vi tài liệu này.
 
 ---
 
 ## 6. Trạng thái và câu hỏi chờ GVHD
 
-> ĐỀ XUẤT, CHƯA HIỆN THỰC, CHƯA CÓ PHẢN HỒI CỦA GVHD
+> PHƯƠNG ÁN 1 ĐÃ HIỆN THỰC Ở MỨC GIAO DIỆN (US-41, PR #85); PHƯƠNG ÁN 2 VÀ CẤP LỚP CHƯA HIỆN THỰC; CHƯA CÓ PHẢN HỒI CỦA GVHD
 
 **Ba điểm chưa xác minh:**
 
-- Các ô `[giả định nhóm, chờ GVHD xác nhận]` trong bảng ánh xạ ở Mục 2.2 **chưa được GVHD xác nhận**.
-- Phương án 2 mới chỉ được **phân tích định tính**, chưa chạy prototype `s_6`.
-- Nhóm **chưa biết GVHD chọn phương án nào**.
+- **(a)** Các ô `[giả định nhóm, chờ GVHD xác nhận]` trong bảng ánh xạ ở Mục 2.2 **chưa được GVHD xác nhận**; bảng là giá trị nhóm tự đặt, chưa kiểm chứng với người dùng.
+- **(b)** Phương án 2 mới chỉ được **phân tích định tính**, chưa chạy prototype `s_6`.
+- **(c)** **Chưa có phản hồi của GVHD tại thời điểm hiện thực**; nhóm chưa biết GVHD đánh giá Phương án 1 đã hiện thực như thế nào và có yêu cầu chuyển sang Phương án 2 hay không.
 
 Ba câu hỏi dự kiến gửi GVHD (nhóm không tự trả lời):
 
-1. Cô chọn **Phương án 1 — Adaptive Weight Mapping** hay **Phương án 2 — bổ sung tiêu chí `s_6` Goal Compatibility**?
+1. Cô đánh giá thế nào về việc nhóm chọn và hiện thực **Phương án 1 — Adaptive Weight Mapping** ở mức giao diện? Có cần chuyển sang **Phương án 2 — bổ sung tiêu chí `s_6` Goal Compatibility** không?
 2. Có cần bổ sung dữ liệu **trình độ học vấn, cấp lớp và thế mạnh sư phạm** của gia sư không? Nếu có, nguồn dữ liệu nào được phép sử dụng để tránh tự tạo dữ liệu?
-3. Trong bảng ánh xạ, ngoài hai mục tiêu “Điểm cao / luyện thi chuyên – học sinh giỏi” và “Đủ điểm đậu / lấy lại căn bản”, có cần thêm mục tiêu nào (ví dụ mất gốc, ôn thi chuyển cấp) và mức ưu tiên tương ứng không?
+3. Trong bảng ánh xạ, ngoài hai mục tiêu “Điểm cao / luyện thi chuyên – học sinh giỏi” và “Đủ điểm đậu / lấy lại kiến thức căn bản”, có cần thêm mục tiêu nào (ví dụ mất gốc, ôn thi chuyển cấp) và mức ưu tiên tương ứng không?
