@@ -93,13 +93,7 @@ Hai ca minh họa dưới đây được chọn **sau khi thử 19 truy vấn** 
 - **TQ1:** bộ `high_score` thay `GS-G02` bằng `GS-T06` ở hạng 3; hạng 1 và 2 không đổi.
 - **TQ2:** bộ `pass_basic` đảo hạng 2 và 3 (`GS-T06`/`GS-G01`); hạng 1 không đổi.
 
-Đoạn mã dưới chỉ dùng `app.*` và `data/processed/tutors.json` (qua `TutorRepository`), không đọc `backend/tests/scenarios/scenarios.json`. Lưu vào một tệp tạm (ví dụ `%TEMP%\goal_presets_compare.py`) rồi chạy từ thư mục `backend/`:
-
-```powershell
-$env:PYTHONIOENCODING = "utf-8"
-$env:PYTHONPATH = "."
-& "<đường-dẫn-venv>\Scripts\python.exe" "$env:TEMP\goal_presets_compare.py"
-```
+Đoạn mã dưới chỉ dùng `app.*` và `data/processed/tutors.json` (qua `TutorRepository`), không đọc `backend/tests/scenarios/scenarios.json`. Chạy khối mã từ thư mục `backend/` với `PYTHONPATH=.`:
 
 ```python
 from app.data.repository import TutorRepository
@@ -143,7 +137,7 @@ TQ2 high_score GS-G10 0.794 > GS-T06 0.650 > GS-G01 0.645
 TQ2 pass_basic GS-G10 0.773 > GS-G01 0.589 > GS-T06 0.556
 ```
 
-**Phạm vi khảo sát:** 19 truy vấn gồm 14 kịch bản KB01–KB14 và 5 truy vấn tự đặt (TQ1–TQ5). Mỗi ca chạy với bộ ưu tiên **gốc của ca** (KB01–KB14 lấy `priorities` trong `backend/tests/scenarios/scenarios.json`; TQ1–TQ5 là 5 × Trung bình), rồi so với `high_score` và `pass_basic`. Kết quả: **3/19 ca đổi thứ hạng** (KB10, TQ1, TQ2); **không ca nào đổi hạng 1**; KB05 không có gia sư thỏa điều kiện bắt buộc nên không xếp hạng. KB10 **không dùng làm bằng chứng** vì kịch bản đã có Kinh nghiệm = Cao nên `high_score` trùng thiết lập gốc; thay đổi chỉ đến từ `pass_basic` và chỉ đảo hạng 2–3. Script tái lập cả 19 truy vấn ở Phụ lục (Mục 7).
+**Phạm vi khảo sát:** 19 truy vấn gồm 14 kịch bản KB01–KB14 và 5 truy vấn tự đặt (TQ1–TQ5). Mỗi truy vấn chạy với cả 3 bộ `default`, `high_score`, `pass_basic`. Kết quả: **trong 5 truy vấn tự đặt, 2 truy vấn có Top-3 khác giữa các bộ** (TQ1 đổi thành viên hạng 3; TQ2 đảo hạng 2 và 3); **trong 14 kịch bản chỉ KB10 khác**, và KB10 **không dùng làm bằng chứng** vì kịch bản vốn có Kinh nghiệm = Cao nên bộ `default` ghi đè thiết lập gốc; **không truy vấn nào đổi hạng 1**. KB05 không có gia sư thỏa điều kiện bắt buộc nên không xếp hạng. Script tái lập cả 19 truy vấn ở Phụ lục (Mục 7).
 
 Đây chỉ là minh họa cơ chế trên 16 hồ sơ, không phải bằng chứng chất lượng gợi ý và không chứng minh rằng mục tiêu học tập luôn làm đổi thứ hạng.
 
@@ -265,13 +259,7 @@ Ba câu hỏi dự kiến gửi GVHD (nhóm không tự trả lời):
 
 ## 7. Phụ lục — script tái lập khảo sát 19 truy vấn
 
-Phụ lục này không trích vào Chương 6. Script đọc 14 kịch bản từ `backend/tests/scenarios/scenarios.json` và khai báo trực tiếp TQ1–TQ5; lưu thành một tệp tạm (ví dụ `%TEMP%\survey_19.py`) rồi chạy từ thư mục `backend/`:
-
-```powershell
-$env:PYTHONIOENCODING = "utf-8"
-$env:PYTHONPATH = "."
-& "<đường-dẫn-venv>\Scripts\python.exe" "$env:TEMP\survey_19.py"
-```
+Phụ lục này không trích vào Chương 6. Script đọc 14 kịch bản từ `backend/tests/scenarios/scenarios.json` và khai báo trực tiếp TQ1–TQ5. Chạy khối mã dưới từ thư mục `backend/` với `PYTHONPATH=.`; stdout chỉ dùng ASCII.
 
 ```python
 import json
@@ -285,6 +273,7 @@ from app.scoring.ranker import score_and_rank
 from app.scoring.weights import compute_effective_weights
 
 PRESETS = {
+    "default": dict(fee="medium", district="medium", experience="medium", rating="medium", availability="medium"),
     "high_score": dict(fee="medium", district="medium", experience="high", rating="high", availability="medium"),
     "pass_basic": dict(fee="high", district="medium", experience="medium", rating="medium", availability="medium"),
 }
@@ -309,31 +298,47 @@ cases = {s["id"]: s["request"] for s in scenarios}
 cases.update(EXTRA)
 
 tutors = TutorRepository().get_all()
-changed, rank1_changed = [], []
+khac, doi_hang_1 = 0, 0
 for case_id, request in cases.items():
-    base = top3(tutors, request)
-    variants = {name: top3(tutors, {**request, "priorities": priorities}) for name, priorities in PRESETS.items()}
-    if not base or any(not order for order in variants.values()):
-        print(f"{case_id}: KHONG_DU_DU_LIEU")
-        continue
-    if any(order != base for order in variants.values()):
-        changed.append(case_id)
-    if any(order[0] != base[0] for order in variants.values()):
-        rank1_changed.append(case_id)
-    b = " > ".join(base)
-    h = " > ".join(variants["high_score"])
-    p = " > ".join(variants["pass_basic"])
-    print(f"{case_id}: goc {b} | high_score {h} | pass_basic {p}")
+    orders = {name: top3(tutors, {**request, "priorities": p}) for name, p in PRESETS.items()}
+    is_khac = len({tuple(v) for v in orders.values()}) > 1
+    if is_khac:
+        khac += 1
+    if len({v[0] for v in orders.values() if v}) > 1:
+        doi_hang_1 += 1
+    label = "KHAC" if is_khac else "giong"
+    parts = []
+    for name in ("default", "high_score", "pass_basic"):
+        ids = ",".join(orders[name]) if orders[name] else "none"
+        parts.append(f"{name}={ids}")
+    print(f"{case_id} {label} " + " | ".join(parts))
 
-print(f"TONG={len(cases)} DOI_THU_HANG={len(changed)} DOI_HANG_1={len(rank1_changed)}")
-print("DOI_THU_HANG_CASES=" + ",".join(changed))
+print(f"TONG={len(cases)} SO_CA_KHAC={khac} SO_CA_DOI_HANG_1={doi_hang_1}")
 ```
 
-Kết quả thật, hai dòng cuối:
+Kết quả thật:
 
 ```text
-TONG=19 DOI_THU_HANG=3 DOI_HANG_1=0
-DOI_THU_HANG_CASES=KB10,TQ1,TQ2
+KB01 giong default=GS-G01,GS-G10,GS-T06 | high_score=GS-G01,GS-G10,GS-T06 | pass_basic=GS-G01,GS-G10,GS-T06
+KB02 giong default=GS-G11,GS-G12,GS-T07 | high_score=GS-G11,GS-G12,GS-T07 | pass_basic=GS-G11,GS-G12,GS-T07
+KB03 giong default=GS-G12,GS-G11,GS-T07 | high_score=GS-G12,GS-G11,GS-T07 | pass_basic=GS-G12,GS-G11,GS-T07
+KB04 giong default=GS006,GS020 | high_score=GS006,GS020 | pass_basic=GS006,GS020
+KB05 giong default=none | high_score=none | pass_basic=none
+KB06 giong default=GS-G04 | high_score=GS-G04 | pass_basic=GS-G04
+KB07 giong default=GS-G05 | high_score=GS-G05 | pass_basic=GS-G05
+KB08 giong default=GS-G07 | high_score=GS-G07 | pass_basic=GS-G07
+KB09 giong default=GS-G08 | high_score=GS-G08 | pass_basic=GS-G08
+KB10 KHAC default=GS-G10,GS-G09,GS-G01 | high_score=GS-G10,GS-G01,GS-G09 | pass_basic=GS-G10,GS-G09,GS-G01
+KB11 giong default=GS-G06,GS-T06 | high_score=GS-G06,GS-T06 | pass_basic=GS-G06,GS-T06
+KB12 giong default=GS-T07,GS-G11,GS-G12 | high_score=GS-T07,GS-G11,GS-G12 | pass_basic=GS-T07,GS-G11,GS-G12
+KB13 giong default=GS-G10,GS-G01,GS-T06 | high_score=GS-G10,GS-G01,GS-T06 | pass_basic=GS-G10,GS-G01,GS-T06
+KB14 giong default=GS-G03 | high_score=GS-G03 | pass_basic=GS-G03
+TQ1 KHAC default=GS-G01,GS-G10,GS-G02 | high_score=GS-G01,GS-G10,GS-T06 | pass_basic=GS-G01,GS-G10,GS-G02
+TQ2 KHAC default=GS-G10,GS-T06,GS-G01 | high_score=GS-G10,GS-T06,GS-G01 | pass_basic=GS-G10,GS-G01,GS-T06
+TQ3 giong default=GS-G01,GS-G02 | high_score=GS-G01,GS-G02 | pass_basic=GS-G01,GS-G02
+TQ4 giong default=GS-T06 | high_score=GS-T06 | pass_basic=GS-T06
+TQ5 giong default=GS-G06 | high_score=GS-G06 | pass_basic=GS-G06
+TONG=19 SO_CA_KHAC=3 SO_CA_DOI_HANG_1=0
 ```
 
-Mỗi ca in một dòng `goc ... | high_score ... | pass_basic ...`; KB05 in `KHONG_DU_DU_LIEU` vì không có gia sư thỏa điều kiện bắt buộc. Script chỉ dùng `app.*`, `data/processed/tutors.json` (qua `TutorRepository`) và đọc `backend/tests/scenarios/scenarios.json`.
+Mỗi ca in một dòng `giong` hoặc `KHAC` kèm Top-3 của cả 3 bộ; KB05 in `none` vì không có gia sư thỏa điều kiện bắt buộc. Script chỉ dùng `app.*`, `data/processed/tutors.json` (qua `TutorRepository`) và đọc `backend/tests/scenarios/scenarios.json`.
