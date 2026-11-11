@@ -3,7 +3,7 @@
 > [!NOTE]
 > **Đề xuất, nhóm xác nhận**
 
-Chương này trình bày quá trình hiện thực hệ thống khuyến nghị gia sư thuộc đề tài "Hệ thống khuyến nghị gia sư dựa trên phương pháp Content-Base Filtering" theo sáu mục của kế hoạch hiện thực trong đề cương: chuẩn bị môi trường phát triển (4.1), xây dựng tập dữ liệu mẫu (4.2), cài đặt module tính điểm (4.3), xây dựng API gợi ý (4.4), xây dựng giao diện demo (4.5) và tích hợp giao diện với API cùng kiểm tra luồng end-to-end (4.6). Mô tả trong chương phản ánh đúng những gì đã được hiện thực trong kho mã nguồn tại commit gốc `0ca15fd` trên nhánh chính `origin/main` (tại thời điểm soạn chương, 2026-11); mọi tên tệp, tên hàm và phiên bản phần mềm nêu dưới đây đều truy ngược được về tệp tương ứng hoặc là output của lệnh chạy lại được. Những điểm mà kế hoạch trong đề cương khác với hiện thực (ví dụ cơ sở dữ liệu SQLite) được nêu thẳng tại từng mục. Số liệu kiểm thử định lượng không lập lại trong chương này mà dẫn về Chương 5.
+Chương này trình bày quá trình hiện thực hệ thống khuyến nghị gia sư thuộc đề tài "Hệ thống khuyến nghị gia sư dựa trên phương pháp Content-Base Filtering" theo sáu mục của kế hoạch hiện thực trong đề cương: chuẩn bị môi trường phát triển (4.1), xây dựng tập dữ liệu mẫu (4.2), cài đặt module tính điểm (4.3), xây dựng API gợi ý (4.4), xây dựng giao diện demo (4.5) và tích hợp giao diện với API cùng kiểm tra luồng end-to-end (4.6). Mô tả trong chương phản ánh đúng những gì đã được hiện thực trong kho mã nguồn trên nhánh chính `origin/main` (tại thời điểm soạn chương, 2026-11); mọi tên tệp, tên hàm và phiên bản phần mềm nêu dưới đây đều truy ngược được về tệp tương ứng hoặc là output của lệnh chạy lại được. Những điểm mà kế hoạch trong đề cương khác với hiện thực (ví dụ cơ sở dữ liệu SQLite) được nêu thẳng tại từng mục. Số liệu kiểm thử định lượng không lập lại trong chương này mà dẫn về Chương 5.
 
 ---
 
@@ -278,8 +278,7 @@ Hệ thống được đưa lên nền tảng đám mây theo `docs/deployment/d
 
 ## Giới hạn của việc hiện thực
 
-- **Quy mô dữ liệu nhỏ:** toàn bộ hệ thống vận hành trên 16 hồ sơ mẫu (14 mô phỏng; hai hồ sơ thu thập có học phí và lịch rảnh là ước tính, đánh dấu `(*)`), chưa phản ánh quy mô dữ liệu thực tế.
 - **Cơ sở dữ liệu chưa hiện thực:** lưu trữ chỉ dùng JSON/CSV; phương án SQLite (US-37) xếp `Could Have`, chưa xếp sprint.
-- **CI chỉ bao phủ backend:** frontend chưa có job trong GitHub Actions và chưa có bộ kiểm thử tự động riêng (chỉ oxlint và `vite build` chạy thủ công).
-- **Mở rộng Cấp lớp và tiêu chí thứ sáu `s_6` chưa hiện thực:** chỉ hiện thực Phương án 1 (ô "Mục tiêu học tập" điền sẵn mức ưu tiên) ở tầng giao diện; `SearchRequest` không có trường mới.
-- **Chưa đo đạc trên môi trường mạng:** độ trễ toàn trình và cold start của Render chưa được đo; chỉ số độ trễ hiển thị trên giao diện là giá trị đo tại trình duyệt của từng lần chạy, chưa tổng hợp có hệ thống.
+- **CI chỉ bao phủ backend:** frontend chưa có job trong GitHub Actions và chưa có bộ kiểm thử tự động riêng (chỉ oxlint và `vite build` chạy từ terminal).
+
+Các giới hạn còn lại — quy mô và tính đại diện của bộ dữ liệu 16 hồ sơ, tham số và bộ trọng số ấn định thủ công, việc chỉ hiện thực Phương án 1 (ô "Mục tiêu học tập") trong khi Cấp lớp và tiêu chí thứ sáu `s_6` chưa hiện thực, cùng việc chưa đo đạc độ trễ mạng toàn trình và cold start của Render — được trình bày tại Mục 5.3 (Hạn chế của hệ thống, Chương 5) và Mục 6.2 (Hạn chế và hướng phát triển, Chương 6) để tránh lặp.
