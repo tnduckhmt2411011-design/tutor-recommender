@@ -63,7 +63,7 @@ Hệ thống đã được triển khai sẵn sàng trên nền tảng đám mâ
 - **Node.js:** Phiên bản tương thích `^20.19.0 || >=22.12.0` (đã kiểm chứng với Node.js v24.19.0 và npm 11.17.0).
 - **Git:** Phiên bản 2.x (đã kiểm chứng với Git 2.55).
 
-### 5.2. Các bước cài đặt và khởi chạy (thực hiện trong khoảng 3–5 phút)
+### 5.2. Các bước cài đặt và khởi chạy (đo được khoảng 2 phút trên máy nhóm; phụ thuộc mạng)
 
 #### Bước 1: Sao chép kho lưu trữ
 ```powershell
