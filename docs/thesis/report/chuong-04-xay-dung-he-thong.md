@@ -200,7 +200,7 @@ Khởi chạy dịch vụ cục bộ bằng `python -m uvicorn app.main:app` (m�
 }
 ```
 
-Các ca biên gọi thật cùng lúc đó: thiếu `subject` trả HTTP 422 với `{"detail":[{"type":"missing","loc":["body","subject"],"msg":"Field required",…}]}`; `max_budget_vnd = -5` trả 422 `greater_than_equal`; môn Tiếng Trung trả `no_match` (HTTP 200); toàn bộ mức ưu tiên `none` trả `zero_weight` (HTTP 200) với `unranked_candidates` gồm 5 mã gia sư qua lọc. Số liệu hiệu năng và kết quả kiểm thử đầy đủ của bộ 200 bài kiểm thử tự động (trong đó `backend/tests/api/` gồm 41 bài) được trình bày tại Chương 5, chương này không lập lại.
+Các ca biên gọi thật cùng lúc đó: thiếu `subject` trả HTTP 422 với `{"detail":[{"type":"missing","loc":["body","subject"],"msg":"Field required",…}]}`; `max_budget_vnd = -5` trả 422 `greater_than_equal`; môn Tiếng Trung trả `no_match` (HTTP 200); toàn bộ mức ưu tiên `none` trả `zero_weight` (HTTP 200) với `unranked_candidates` gồm 5 mã gia sư qua lọc. Số liệu hiệu năng và kết quả kiểm thử đầy đủ của bộ kiểm thử tự động gồm 200 bài — trong đó 41 bài API và ca biên — được trình bày tại Chương 5; chương này không lập lại.
 
 ## 4.5. Xây dựng giao diện demo
 
@@ -211,8 +211,8 @@ Giao diện là một Single Page Application React 19 (Vite), CSS thuần trong
 | Tệp | Vai trò | Chức năng |
 |:---|:---|:---|
 | `src/App.jsx` | Điều phối trung tâm | Điều hướng 2 bước (tab CN01 và tab CN02+CN03); lưu trạng thái chung (`searchForm`, `recommendationResult`, `isLoading`, `apiError`, `latencyMs`, `rankDeltas`); `executeRecommendationRequest` gọi API; chống chồng lấn request bằng `requestSeqRef` (Mục 4.6) |
-| `src/pages/SearchPage.jsx` | Màn hình nhập nhu cầu (CN01) | Biểu mẫu theo Bảng 3.4 (môn học, hình thức, khu vực, ngân sách kèm dòng quy đổi bằng chữ, Top-k); bảng chọn lịch 7 ngày × 3 buổi và 3 mẫu chọn nhanh; kiểm tra hợp lệ phía client (môn học, khu vực bắt buộc khi học trực tiếp, ngân sách không âm); thanh chip "Nạp nhanh" 14 kịch bản KB01–KB14 kèm tùy chọn tự động chuyển kết quả |
-| `src/pages/ResultPage.jsx` | Màn hình kết quả (CN02 + CN03) | Dải KPI (kịch bản, môn, hình thức, khu vực, ngân sách, lịch) và phễu "Kho → Hợp lệ → Top-k"; rail CN03 với 5 tiêu chí và 4 nút nạp nhanh trọng số (Mặc định w=2, Ưu tiên Học phí, Ưu tiên KN & Đánh giá, Thử ∑w_i = 0); hiển thị 3 trạng thái `success`/`no_match`/`zero_weight`; chip độ trễ đo tại trình duyệt |
+| `src/pages/SearchPage.jsx` | Màn hình nhập nhu cầu (CN01) | Biểu mẫu theo Bảng 3.4 (môn học, hình thức, khu vực, ngân sách kèm dòng quy đổi bằng chữ, Top-k); bảng chọn lịch 7 ngày × 3 buổi và 3 mẫu chọn nhanh; kiểm tra hợp lệ phía client — môn học ("Vui lòng chọn môn học mong muốn."), khu vực bắt buộc khi học Trực tiếp ("Hình thức học Trực tiếp (In-person) bắt buộc chọn khu vực Quận/Huyện mong muốn."), ngân sách không âm ("Ngân sách tối đa phải là một số không âm hợp lệ."); thanh chip "Nạp nhanh" 14 kịch bản KB01–KB14 (tiêu đề "Kịch bản thực nghiệm (Bảng 5.1 · KB01 - KB14)") kèm tùy chọn "Tự động chuyển kết quả" |
+| `src/pages/ResultPage.jsx` | Màn hình kết quả (CN02 + CN03) | Dải KPI (kịch bản, môn, hình thức, khu vực, ngân sách, lịch) và phễu "Kho → Hợp lệ → Top-k"; rail CN03 với 5 tiêu chí và 4 nút nạp nhanh trọng số có nhãn lần lượt "Mặc định (w=2)", "Ưu tiên Học phí", "Ưu tiên KN & Đánh giá", "Thử ∑w_i = 0"; hiển thị 3 trạng thái `success`/`no_match`/`zero_weight`; chip độ trễ đo tại trình duyệt |
 | `src/components/TutorCard.jsx` | Thẻ gia sư | Avatar, huy hiệu hạng, huy hiệu "Khuyến nghị tốt nhất" cho hạng 1, nhãn nguồn dữ liệu ("Dữ liệu thực tế" cho `public_collected`, "Dữ liệu đối chứng" cho `simulated`), lưới thuộc tính 4 ô và hàng lịch rảnh, lý do gợi ý và ghi chú dữ liệu |
 | `src/components/StackedBarScore.jsx` | Thanh xếp chồng tự dựng | Vẽ phân đoạn theo đóng góp `C_i = w_i·s_i/∑w_i`; tooltip s_i, w_i, C_i và tỷ trọng; legend đếm cả tiêu chí "Không áp dụng" (`null` bị ẩn khỏi thanh) |
 | `src/components/TutorAvatar.jsx` | Ảnh đại diện | Ảnh chân dung `/avatars/{tutor_id}.webp` (16 tệp WebP trong `frontend/public/avatars/`), fallback sang monogram gradient khi ảnh thiếu |
@@ -228,19 +228,19 @@ Giao diện là một Single Page Application React 19 (Vite), CSS thuần trong
 
 Bốn ảnh giao diện sau (theo README mục 9, chụp trực tiếp từ hệ thống đang chạy cục bộ) đã có trên `origin/main` trong `docs/thesis/figures/`:
 
-![Hình 4.1 - Màn hình nhập nhu cầu học tập CN01](../../figures/hinh-ui-01-cn01-nhap-nhu-cau.png)
+![Hình 4.1 - Màn hình nhập nhu cầu học tập CN01](../figures/hinh-ui-01-cn01-nhap-nhu-cau.png)
 
 **Hình 4.1 - Màn hình nhập nhu cầu học tập (CN01).** Mở ảnh thấy giao diện chế độ tối với thanh chip 14 kịch bản KB01–KB14 (KB01 đang được chọn), biểu mẫu "Thông tin nhu cầu học tập (Bảng 3.4)" — môn Toán, hình thức Trực tiếp, khu vực Bình Thạnh, ngân sách 200000 kèm dòng quy đổi "= 200.000 VNĐ / giờ (hai trăm nghìn đồng / giờ)" — và cột phải "Mức độ ưu tiên cho 5 tiêu chí (Bảng 3.5)" với ô "Mục tiêu học tập (gợi ý mức ưu tiên)" đang ở "Không nêu mục tiêu" cùng nút mức ưu tiên có nhãn w = 0, 1, 2, 3 (Học phí đang ở Trung bình, w = 2).
 
-![Hình 4.2 - Màn hình kết quả gợi ý Top-3 kịch bản KB01 (CN02)](../../figures/hinh-ui-02-cn02-ket-qua-kb01.png)
+![Hình 4.2 - Màn hình kết quả gợi ý Top-3 kịch bản KB01 (CN02)](../figures/hinh-ui-02-cn02-ket-qua-kb01.png)
 
-**Hình 4.2 - Màn hình kết quả gợi ý Top-3 kịch bản KB01 (CN02).** Mở ảnh thấy dải KPI ghi đúng kỳ vọng "1. GS-G01 (0,938) 2. GS-G10 (0,745) 3. GS-T06 (0,625)", phễu "Kho: 16 hồ sơ → Hợp lệ: 5 ứng viên → Top-3: 3 gợi ý", rail CN03 bên trái, và thẻ hạng 1 GS-G01: huy hiệu "#1" và "Khuyến nghị tốt nhất", nhãn "Dữ liệu đối chứng", điểm tổng hợp S(g) 0,938 (Độ khớp 93,8%), thanh xếp chồng bốn phân đoạn 0,25 / 0,25 / 0,19 / 0,25 với legend kèm `C`, `s`, `w` từng tiêu chí và ô "Lịch rảnh: Không áp dụng", dòng "Lý do gợi ý: Học phí trong ngân sách, khu vực khớp, đánh giá 5,0/5"; chip độ trễ 651,5 ms là giá trị đo tại trình duyệt ở lần chạy chụp ảnh.
+**Hình 4.2 - Màn hình kết quả gợi ý Top-3 kịch bản KB01 (CN02).** Mở ảnh thấy dải KPI ghi đúng kỳ vọng "1. GS-G01 (0,938) 2. GS-G10 (0,745) 3. GS-T06 (0,625)", phễu "Kho: 16 hồ sơ → Hợp lệ: 5 ứng viên → Top-3: 3 gợi ý", rail CN03 bên trái, và thẻ hạng 1 GS-G01: huy hiệu "#1" và "Khuyến nghị tốt nhất", nhãn "Dữ liệu đối chứng", điểm tổng hợp S(g) 0,938 (Độ khớp 93,8%), thanh xếp chồng bốn phân đoạn 0,25 / 0,25 / 0,19 / 0,25 với legend kèm `C`, `s`, `w` từng tiêu chí và ô "Lịch rảnh: Không áp dụng", dòng "Lý do gợi ý: Học phí trong ngân sách, khu vực khớp, đánh giá 5,0/5"; chip 651,5 ms là độ trễ đo tại trình duyệt ở lần chạy chụp ảnh, không phải số liệu đo có hệ thống và không so sánh với số liệu Chương 5.
 
-![Hình 4.3 - Điều chỉnh mức ưu tiên trực tiếp trên màn hình kết quả (CN03)](../../figures/hinh-ui-03-cn03-dieu-chinh-uu-tien.png)
+![Hình 4.3 - Điều chỉnh mức ưu tiên trực tiếp trên màn hình kết quả (CN03)](../figures/hinh-ui-03-cn03-dieu-chinh-uu-tien.png)
 
 **Hình 4.3 - Điều chỉnh mức ưu tiên trực tiếp (CN03) làm đổi hạng.** Mở ảnh thấy sau khi đưa Học phí và Khu vực về "Bỏ qua (w=0)", Kinh nghiệm và Đánh giá lên "Cao (w=3)": GS-G10 (130.000 VNĐ/giờ, 12 năm, 4,9/5) vươn lên hạng 1 với điểm 0,990 (99,0%), huy hiệu "↑ Tăng 1 bậc sau khi điều chỉnh mức ưu tiên (CN03)" xuất hiện phía trên thẻ (và một huy hiệu "↓ Giảm 1 bậc…" trên thẻ tụt hạng), thanh xếp chồng chỉ còn hai phân đoạn Kinh nghiệm 0,50 và Đánh giá 0,49, ba tiêu chí còn lại hiển thị "Không áp dụng".
 
-![Hình 4.4 - Trạng thái biên khi tổng trọng số bằng 0](../../figures/hinh-ui-04-zero-weight.png)
+![Hình 4.4 - Trạng thái biên khi tổng trọng số bằng 0](../figures/hinh-ui-04-zero-weight.png)
 
 **Hình 4.4 - Trạng thái biên tổng trọng số bằng 0 (∑w_i = 0).** Mở ảnh thấy chip kịch bản đổi thành "KB01 (Tùy chỉnh: ∑w=0)", phễu kết quả "Top-3: 0 gợi ý", cảnh báo ở rail CN03 "Tổng trọng số ∑w_i = 0", cả 5 tiêu chí đang ở mức "Bỏ qua (w=0)", và thẻ trạng thái giữa trang "Không thể xếp hạng do tổng trọng số bằng 0" kèm nút "Khôi phục trọng số mặc định (w = 2)".
 
@@ -250,7 +250,7 @@ Bốn ảnh giao diện sau (theo README mục 9, chụp trực tiếp từ hệ
 
 Luồng chính thực hiện theo chuỗi: người học nhập nhu cầu tại `SearchPage` (CN01) hoặc nạp nhanh một kịch bản → `App.jsx` gọi `executeRecommendationRequest`, qua `buildRecommendationPayload` chuyển trạng thái biểu mẫu thành payload theo hợp đồng API → `fetchRecommendations` gửi `POST /api/recommend` đến backend → kết quả (cả 3 trạng thái) được `ResultPage` (CN02) hiển thị kèm thanh xếp chồng và lý do gợi ý → khi người học đổi mức ưu tiên trên rail CN03, `onUpdatePriorities` gọi lại API với `trackDeltaFrom` là kết quả trước đó; đối chiếu hạng cũ mới sinh `rankDeltas` để vẽ huy hiệu "Tăng/Giảm n bậc" trên từng thẻ. Nút "Thử ∑w_i = 0" trên rail đưa cả 5 tiêu chí về `none` và hiển thị trạng thái `zero_weight` của backend (Hình 4.4).
 
-Cơ chế chọn địa chỉ backend trong `frontend/src/services/api.js`: `API_BASE_URL` nhận lần lượt biến môi trường `VITE_API_URL`, rồi `VITE_API_BASE_URL`; nếu cả hai không đặt, chọn theo tên miền hiện hành — khi hostname khác `localhost`/`127.0.0.1` (triển khai trên Vercel) dùng `https://tutor-recommender-api.onrender.com`, ngược lại (chạy cục bộ) dùng `http://localhost:8000`; cuối cùng cắt mọi dấu gạch chéo cuối. Trong kho không commit tệp `.env*` của frontend; biến `VITE_API_URL` được cấu hình tại bảng điều khiển Vercel theo hướng dẫn triển khai.
+Cơ chế chọn địa chỉ backend trong `frontend/src/services/api.js`: `API_BASE_URL` nhận lần lượt biến môi trường `VITE_API_URL`, rồi `VITE_API_BASE_URL`; nếu cả hai không đặt, chọn theo tên miền hiện hành — khi hostname khác `localhost`/`127.0.0.1` (triển khai trên Vercel) dùng `https://tutor-recommender-api.onrender.com`, ngược lại (chạy cục bộ) dùng `http://localhost:8000`; cuối cùng cắt mọi dấu gạch chéo cuối. Trong kho không commit tệp `.env*` của frontend. Tài liệu triển khai (`docs/deployment/deploy-vercel-render.md`, phần B3) yêu cầu đặt biến `VITE_API_URL` bằng URL backend Render khi cấu hình dự án trên Vercel; việc biến này đã được đặt trên bảng điều khiển Vercel hay không **không xác minh được từ repo** — cơ chế chắc chắn (có trong code) là `frontend/src/services/api.js` tự chọn URL theo tên miền hiện hành như mô tả trên.
 
 ### 4.6.2. Xử lý lỗi cơ bản ở cả hai phía
 
@@ -263,10 +263,10 @@ Cơ chế chọn địa chỉ backend trong `frontend/src/services/api.js`: `API
 | Không có gia sư thỏa điều kiện bắt buộc | `backend/app/api/recommend.py`; `frontend/src/pages/ResultPage.jsx` | Backend trả `no_match`; giao diện hiển thị thẻ "Không tìm thấy gia sư thỏa mãn điều kiện" kèm danh sách ứng viên qua lọc nhưng thiếu dữ liệu (nếu có) |
 | Tổng trọng số bằng 0 | `recommend.py`; `ResultPage.jsx`; `App.jsx` (tính `totalActiveWeight` hiển thị cảnh báo ở rail) | Backend trả `zero_weight` kèm `unranked_candidates`; giao diện hiển thị thẻ cảnh báo và nút khôi phục trọng số mặc định (Hình 4.4) |
 | Backend không phản hồi | `frontend/src/services/api.js` | Bắt lỗi `fetch` và hiển thị "Không thể kết nối tới máy chủ gợi ý gia sư. Vui lòng kiểm tra dịch vụ Backend đang chạy." trên cả hai màn hình |
-| Phản hồi HTTP lỗi / không phải JSON | `frontend/src/services/api.js` | Hiển thị "Phản hồi từ máy chủ không hợp lệ (HTTP …)."; với 422, chuyển tiếp `detail` của backend cho người dùng đọc |
+| Phản hồi HTTP lỗi / không phải JSON | `frontend/src/services/api.js` | Hiển thị "Phản hồi từ máy chủ không hợp lệ (HTTP <mã trạng thái>)."; khi backend trả 422, dùng chuỗi `detail` của backend nếu là chuỗi, ngược lại hiển thị "Dữ liệu đầu vào không hợp lệ (HTTP 422). Vui lòng kiểm tra lại các trường đã nhập." |
 | Đổi mức ưu tiên liên tiếp (CN03) | `frontend/src/App.jsx` (`requestSeqRef`) | Mỗi yêu cầu nhận một số thứ tự; phản hồi của yêu cầu không còn là yêu cầu mới nhất bị bỏ qua, không ghi đè kết quả hiển thị |
 
-*Nguồn: `frontend/src/App.jsx` (hàm `executeRecommendationRequest`), `frontend/src/pages/SearchPage.jsx` (hàm `handleSubmit`), `frontend/src/pages/ResultPage.jsx`, `frontend/src/services/api.js` (hàm `fetchRecommendations`), `backend/app/schemas/search_request.py`, `backend/app/api/recommend.py`.*
+*Nguồn: `frontend/src/App.jsx` (hàm `executeRecommendationRequest`; `requestSeqRef` khai báo tại dòng 52, kiểm tra `seq !== requestSeqRef.current` tại dòng 77, 104, 113), `frontend/src/pages/SearchPage.jsx` (hàm `handleSubmit`; thông báo tại dòng 231, 241, 248), `frontend/src/pages/ResultPage.jsx` (cảnh báo "Tổng trọng số ∑w_i = 0" dòng 216, nút "Khôi phục trọng số mặc định (w = 2)" dòng 442, thẻ "Không tìm thấy gia sư thỏa mãn điều kiện" dòng 459), `frontend/src/services/api.js` (hàm `fetchRecommendations`; thông báo tại dòng 164, 172, 179), `backend/app/schemas/search_request.py` (thông báo tại dòng 90), `backend/app/api/recommend.py`.*
 
 Luồng end-to-end được kiểm tra theo hai lớp: kiểm thử tự động phía backend (bộ 41 bài test API và ca biên trong `backend/tests/api/`, gồm cả luồng đổi ưu tiên CN03) và kiểm tra thủ công trên giao diện khi demo (nạp kịch bản, đổi ưu tiên, ca `zero_weight`). Phía frontend chưa có bộ kiểm thử tự động — `frontend/package.json` chỉ định nghĩa bốn script `dev`, `build`, `lint`, `preview`.
 
