@@ -11,13 +11,15 @@
 
 ### 5.1.1. Tổng quan bộ kiểm thử tự động
 
-Hệ thống được xây dựng và kiểm thử theo phương pháp phát triển hướng kiểm thử (TDD). Toàn bộ quy trình tính toán, lọc điều kiện, chuẩn hóa điểm số và hợp đồng giao tiếp API được kiểm định bởi bộ kiểm thử tự động gồm 200 bài kiểm thử, phân bổ theo các thư mục trong `backend/tests/`:
+Hệ thống được xây dựng và kiểm thử theo phương pháp phát triển hướng kiểm thử (TDD). Toàn bộ quy trình tính toán, lọc điều kiện, chuẩn hóa điểm số và hợp đồng giao tiếp API được kiểm định bởi bộ kiểm thử tự động gồm 200 bài kiểm thử, phân bổ theo các thư mục trong `backend/tests/` như Bảng 5.1:
 
 - **Kiểm thử đơn vị (`backend/tests/unit/` và `backend/tests/test_environment.py`):** Gồm 132 bài kiểm thử (129 bài trong `backend/tests/unit/` và 3 bài kiểm tra môi trường trong `backend/tests/test_environment.py`). Nhóm này bao phủ các hàm chuẩn hóa điểm thành phần Bảng 3.6 (`backend/tests/unit/test_criteria.py`: 47 bài), quy tắc lọc điều kiện bắt buộc (`backend/tests/unit/test_filters.py`: 17 bài), kiểm tra ngưỡng dữ liệu tối thiểu (`backend/tests/unit/test_eligibility.py`: 17 bài), quy đổi trọng số và mức ưu tiên (`backend/tests/unit/test_weights.py`: 22 bài), thuật toán xếp hạng và phá hòa (`backend/tests/unit/test_ranker.py`: 8 bài), tầng truy xuất dữ liệu (`backend/tests/unit/test_repository.py`: 13 bài) và cấu hình hệ thống (`backend/tests/unit/test_config.py`: 5 bài).
 - **Kiểm thử kịch bản và độ nhạy (`backend/tests/scenarios/`):** Gồm 27 bài kiểm thử, bao gồm 17 bài kiểm thử hồi quy 14 kịch bản thực nghiệm KB01–KB14 (`backend/tests/scenarios/test_scenarios.py`) và 10 bài kiểm thử thực nghiệm chuyên sâu khảo sát độ nhạy tham số T1–T10 (`backend/tests/scenarios/test_sensitivity_muc_5_2.py`).
 - **Kiểm thử tích hợp API và ca biên (`backend/tests/api/`):** Gồm 41 bài kiểm thử, bao gồm 35 bài kiểm thử hợp đồng giao tiếp HTTP API qua `TestClient` (`backend/tests/api/test_recommend_api.py`) và 6 bài kiểm thử tích hợp chuyên sâu cho các ca biên toán học, tính đơn điệu và luồng tương tác điều chỉnh ưu tiên CN03 (`backend/tests/api/test_boundary_muc_5_1.py`).
 
 Kết quả thực thi toàn bộ bộ kiểm thử tự động ghi nhận tỷ lệ đạt 100% (**200/200 bài kiểm thử đạt, 0 lỗi, 0 bỏ qua** với thời gian chạy 1,18 giây). Độ bao phủ mã nguồn đo đạc bằng lệnh `pytest --cov=app` (chạy từ thư mục `backend/`) đạt **97%** trên toàn bộ khối mã nguồn nghiệp vụ `backend/app/` (340/351 câu lệnh được phủ (97%), 11 câu lệnh chưa phủ), trong đó toàn bộ các module cốt lõi (`backend/app/api/recommend.py`, `backend/app/main.py`, `backend/app/core/config.py`, `backend/app/data/repository.py`, `backend/app/scoring/criteria.py`, `backend/app/scoring/filters.py`, `backend/app/scoring/weights.py` và các mô hình dữ liệu Pydantic schemas) đều đạt độ bao phủ tuyệt đối 100%.
+
+**Bảng 5.1 - Phân bổ bộ kiểm thử tự động theo nhóm**
 
 | Nhóm kiểm thử | Thư mục mã nguồn | Số lượng kiểm thử | Kết quả thực thi | Độ bao phủ mã nguồn (`backend/app/`) |
 |:---|:---|:---:|:---:|:---:|
@@ -46,9 +48,9 @@ Giao thức giao tiếp giữa giao diện người dùng (React) và máy chủ
 
 ### 5.1.3. Kiểm thử ca biên của hàm điểm và tính đơn điệu
 
-Nhằm kiểm chứng tính đúng đắn toán học của 5 hàm chuẩn hóa điểm thành phần tại Bảng 3.6 và tính ổn định khi tương tác trực tiếp (CN03), các ca kiểm thử biên chuyên sâu đã được xây dựng tại `backend/tests/api/test_boundary_muc_5_1.py` và `backend/tests/unit/test_criteria.py`. Kết quả thực nghiệm được tổng hợp trong Bảng 5.8:
+Nhằm kiểm chứng tính đúng đắn toán học của 5 hàm chuẩn hóa điểm thành phần tại Bảng 3.6 và tính ổn định khi tương tác trực tiếp (CN03), các ca kiểm thử biên chuyên sâu đã được xây dựng tại `backend/tests/api/test_boundary_muc_5_1.py` và `backend/tests/unit/test_criteria.py`. Kết quả thực nghiệm được tổng hợp trong Bảng 5.2:
 
-**Bảng 5.8 - Kết quả kiểm thử ca biên của các hàm điểm và tính đơn điệu**
+**Bảng 5.2 - Kết quả kiểm thử ca biên của các hàm điểm và tính đơn điệu**
 
 | Nhóm kiểm thử | Ca biên / Tình huống kiểm thử | Đầu vào thực nghiệm | Kết quả kỳ vọng (Bảng 3.6 & Mục 5.1) | Kết quả thực tế hệ thống | Trạng thái |
 |:---|:---|:---|:---|:---|:---:|
@@ -69,7 +71,7 @@ Nhằm kiểm chứng tính đúng đắn toán học của 5 hàm chuẩn hóa 
 | | Đổi mức ưu tiên trực tiếp trên kết quả (CN03) | Từ KB01 mặc định $\rightarrow$ đặt `fee = none`, `rating = none`, `experience = high` | `GS-T06` (20 năm kinh nghiệm) vươn lên hạng 1 ($S = 1{,}000$); thời gian phản hồi $< 1$ giây | `GS-T06` lên hạng 1 (`S = 1.0`), thời gian xử lý qua TestClient đạt $\approx 3{,}5$ ms | Đạt |
 | | Đặt toàn bộ 5 mức ưu tiên về `none` ($\sum w_i = 0$) | `priorities = {fee: none, district: none, experience: none, rating: none, availability: none}` | Trả về `status = "zero_weight"` kèm danh sách `unranked_candidates` | `status = "zero_weight"`, trả đủ 5 ứng viên trong `unranked_candidates` | Đạt |
 
-*Nguồn: Tóm tắt kết quả kiểm thử tự động từ `backend/tests/api/test_boundary_muc_5_1.py` và `backend/tests/unit/test_criteria.py` (tham chiếu tài liệu làm việc `docs/thesis/report/muc-5.1-bang-5.1-ket-qua.md`). Bảng này được đánh số Bảng 5.8 để bảo toàn thứ tự đánh số Bảng 5.1–5.7 theo đề cương và theo Mục 5.2; danh mục bảng biểu sẽ được đồng bộ tại US-36.*
+*Nguồn: Tóm tắt kết quả kiểm thử tự động từ `backend/tests/api/test_boundary_muc_5_1.py` và `backend/tests/unit/test_criteria.py` (tham chiếu tài liệu làm việc `docs/thesis/report/muc-5.1-bang-5.1-ket-qua.md`).*
 
 ### 5.1.4. Xử lý các trường hợp đặc biệt
 
@@ -90,14 +92,14 @@ Hệ thống xử lý thống nhất các trường hợp nghiệp vụ đặc t
 
 ### 5.2.1. So khớp Top-3 hệ thống với kỳ vọng trên 14 kịch bản
 
-Bảng 5.1 trình bày kết quả thực nghiệm chi tiết của 14 kịch bản đánh giá KB01–KB14, đối chiếu giữa danh sách Top-3 kỳ vọng (được nhóm xây dựng và khóa bất biến trong `backend/tests/scenarios/scenarios.json`) với kết quả Top-3 do hệ thống tính toán thực tế qua pipeline `score_and_rank` trên tập dữ liệu 16 hồ sơ gia sư.
+Bảng 5.3 trình bày kết quả thực nghiệm chi tiết của 14 kịch bản đánh giá KB01–KB14, đối chiếu giữa danh sách Top-3 kỳ vọng (được nhóm xây dựng và khóa bất biến trong `backend/tests/scenarios/scenarios.json`) với kết quả Top-3 do hệ thống tính toán thực tế qua pipeline `score_and_rank` trên tập dữ liệu 16 hồ sơ gia sư.
 
 Quy ước chấm khớp tuân thủ hướng dẫn tại `backend/tests/scenarios/README.md` mục 3:
 - Khi Top-3 kỳ vọng có $m$ gia sư ($1 \le m \le 3$), số trùng được ghi nhận dưới dạng $x/m$.
 - Kịch bản KB05 kiểm tra trường hợp không có ứng viên thỏa điều kiện bắt buộc (`no_match`), kết quả trả về danh sách rỗng được tính là khớp quy ước 0/0.
 - Các gia sư đồng hạng trong kỳ vọng (KB02, KB12) được xem là hoán đổi được; hệ thống giải quyết đồng điểm bằng quy tắc phá hòa tất định theo mã hồ sơ `tutor_id` tăng dần.
 
-**Bảng 5.1 - Kết quả thực nghiệm 14 kịch bản đánh giá**
+**Bảng 5.3 - Kết quả thực nghiệm 14 kịch bản đánh giá**
 
 | Mã KB | Mô tả nhu cầu | Top-3 kỳ vọng (Đề cương Bảng 5.1 / `scenarios.json`) | Top-3 hệ thống (Chạy thực tế qua pipeline) | Số trùng (x/m) | Nhận xét thực nghiệm |
 |:---:|:---|:---|:---|:---:|:---|
@@ -118,9 +120,9 @@ Quy ước chấm khớp tuân thủ hướng dẫn tại `backend/tests/scenari
 
 *Nguồn: Kết quả chạy lại pipeline xếp hạng trên dữ liệu `data/processed/tutors.json` và `backend/tests/scenarios/scenarios.json` (tham chiếu tài liệu làm việc `docs/thesis/report/muc-5.1-bang-5.1-ket-qua.md` và `docs/thesis/report/discrepancy_analysis.md`).*
 
-Nhằm phục vụ đối chiếu trực quan về tỷ lệ trùng khớp của tập hợp và thứ tự Top-3, Bảng 5.2 trích dẫn bản rút gọn đối sánh thứ tự ứng viên theo cấu trúc của Mục 5.2:
+Nhằm phục vụ đối chiếu trực quan về tỷ lệ trùng khớp của tập hợp và thứ tự Top-3, Bảng 5.4 trích dẫn bản rút gọn đối sánh thứ tự ứng viên theo cấu trúc của Mục 5.2:
 
-**Bảng 5.2 - Đối chiếu Top-3 hệ thống với Top-3 kỳ vọng trên 14 kịch bản**
+**Bảng 5.4 - Đối chiếu Top-3 hệ thống với Top-3 kỳ vọng trên 14 kịch bản**
 
 | Mã KB | Top-3 kỳ vọng | Top-3 hệ thống | Số trùng x/m |
 |:---:|:---|:---|:---:|
@@ -146,9 +148,9 @@ Tổng thể thực nghiệm đạt tỷ lệ trùng khớp Top-3 kỳ vọng **
 
 1. **Kịch bản KB04 (Lệch giá trị điểm do công thức tính tay):**
    - Truy vấn KB04 là học trực tuyến (`online`), có ngân sách 200.000đ và yêu cầu khung giờ `["T2-tối", "T4-tối"]`. Theo Mục 6.1 của đặc tả tính điểm `docs/design/scoring-spec.md`, khi học trực tuyến chỉ duy nhất tiêu chí khu vực bị lược bỏ; tiêu chí lịch rảnh vẫn áp dụng đầy đủ. Vì vậy có 4 tiêu chí áp dụng với tổng trọng số $\sum w_i = 2 + 2 + 2 + 2 = 8$. Cả hai ứng viên GS006 và GS020 đều thỏa mãn toàn bộ khung giờ ($s_{\text{availability}} = 1,0$).
-   - Điểm thực tế hệ thống tính:
-     $$S(\text{GS006}) = \frac{2 \times 1{,}0 + 2 \times 0{,}625 + 2 \times 0{,}92 + 2 \times 1{,}0}{8} = \frac{7{,}09}{8} = 0{,}88625 \approx 0{,}886$$
-     $$S(\text{GS020}) = \frac{2 \times 0{,}6 + 2 \times 0{,}625 + 2 \times 0{,}92 + 2 \times 1{,}0}{8} = \frac{6{,}29}{8} = 0{,}78625 \approx 0{,}786$$
+   - Điểm thực tế hệ thống tính theo công thức (5.1) và (5.2):
+     $$S(\text{GS006}) = \frac{2 \times 1{,}0 + 2 \times 0{,}625 + 2 \times 0{,}92 + 2 \times 1{,}0}{8} = \frac{7{,}09}{8} = 0{,}88625 \approx 0{,}886 \qquad (5.1)$$
+     $$S(\text{GS020}) = \frac{2 \times 0{,}6 + 2 \times 0{,}625 + 2 \times 0{,}92 + 2 \times 1{,}0}{8} = \frac{6{,}29}{8} = 0{,}78625 \approx 0{,}786 \qquad (5.2)$$
    - Điểm tính tay trong đề cương (0,848 và 0,715) phát sinh do người tính thủ công chỉ cộng 3 tiêu chí (học phí, kinh nghiệm, đánh giá với tổng trọng số bằng 6), bỏ sót tiêu chí lịch rảnh. Vì $s_{\text{availability}} = 1,0$ ở cả hai ứng viên, việc cộng thêm tiêu chí lịch rảnh chỉ tịnh tiến đồng thời điểm của cả hai về phía 1,0 mà bảo toàn nguyên vẹn thứ tự xếp hạng (`GS006 > GS020`).
 2. **Kịch bản KB09 (Chênh lệch biểu diễn làm tròn số thực):**
    - Ứng viên GS-G08 có điểm thành phần: $s_{\text{fee}} = 1,0$; $s_{\text{district}} = 1,0$; $s_{\text{experience}} = 6/8 = 0,75$; $s_{\text{rating}} = 4,8/5 = 0,96$. Điểm tổng hợp chính xác là $(1,0 + 1,0 + 0,75 + 0,96)/4 = 3,71/4 = 0,9275$.
@@ -169,9 +171,9 @@ Do đó, nhóm nghiên cứu thống nhất: **Không tự ý điều chỉnh h�
 
 ### 5.2.3. Khảo sát tính ổn định và độ nhạy tham số
 
-Tính ổn định của thuật toán được đánh giá qua việc khảo sát độ nhạy khi thay đổi lần lượt các tham số nền tảng: biên dung sai học phí $\delta$, mốc bão hòa kinh nghiệm $E_{\max}$, và mức ngân sách của người học. Baseline sử dụng $\delta = 0,50$; $E_{\max} = 8$ năm; trọng số theo Bảng 3.5 và ngân sách gốc.
+Tính ổn định của thuật toán được đánh giá qua việc khảo sát độ nhạy khi thay đổi lần lượt các tham số nền tảng: biên dung sai học phí $\delta$, mốc bão hòa kinh nghiệm $E_{\max}$, và mức ngân sách của người học. Baseline sử dụng $\delta = 0,50$; $E_{\max} = 8$ năm; trọng số theo Bảng 3.5 và ngân sách gốc. Kết quả được tổng hợp trong Bảng 5.5 (theo $\delta$), Bảng 5.6 (theo $E_{\max}$) và Bảng 5.7 (theo mức ngân sách).
 
-**Bảng 5.3 - Độ nhạy của Top-3 theo tham số dung sai học phí $\delta$**
+**Bảng 5.5 - Độ nhạy của Top-3 theo tham số dung sai học phí $\delta$**
 
 | $\delta$ | Số KB đổi Top-3 | KB đổi | Số KB trùng Top-3 baseline (x/m) |
 |:---:|:---:|:---:|:---:|
@@ -186,7 +188,7 @@ Tính ổn định của thuật toán được đánh giá qua việc khảo s�
 
 Kết quả ghi nhận **0/14 kịch bản thay đổi Top-3** trên cả 6 mức $\delta$ khảo sát. Điều này phù hợp với công thức hàm điểm học phí: khi $P \le B$, $s_{\text{fee}} = 1$; khi $P > B$, mẫu số $\delta B$ tăng làm giảm mức phạt, do đó $s_{\text{fee}}$ không giảm khi $\delta$ tăng. Tuy nhiên, việc thứ tự giữ nguyên trên tập 16 hồ sơ là quan sát thực nghiệm cụ thể, không đại diện cho tính bất biến trên mọi tập dữ liệu bất kỳ.
 
-**Bảng 5.4 - Độ nhạy của Top-3 theo mốc kinh nghiệm bão hòa $E_{\max}$**
+**Bảng 5.6 - Độ nhạy của Top-3 theo mốc kinh nghiệm bão hòa $E_{\max}$**
 
 | $E_{\max}$ | Số KB đổi Top-3 | KB đổi | Top-3 của KB10 | Số KB trùng Top-3 baseline (x/m) |
 |:---:|:---:|:---:|:---|:---:|
@@ -203,7 +205,7 @@ Trong khảo sát $E_{\max}$, KB10 là kịch bản duy nhất có sự biến �
 - **Tại $E_{\max} = 10$:** Điểm của GS-G09 là $(2 \times 1 + 3 \times 2/10 + 2 \times 0,7)/7 = 4/7$; điểm của GS-T06 là $(2 \times 0 + 3 \times 1 + 2 \times 0,5)/7 = 4/7$. Kiểm tra chạy lại pipeline thực tế và in giá trị đại diện nhị phân `repr(total_score)` xác nhận: cả hai ứng viên đều đạt chính xác cùng một số thực `0.5714285714285714` (độ lệch bằng `0.0`). Do đó, hai ứng viên này **hòa điểm tuyệt đối**, và việc GS-G09 xếp hạng 2 còn GS-T06 xếp hạng 3 hoàn toàn là kết quả của cơ chế phá hòa tất định theo mã gia sư `tutor_id` (`"GS-G09" < "GS-T06"`). Sự thay đổi Top-3 ở đây phản ánh quy tắc phá hòa khi xuất hiện đồng điểm, không phải do hàm điểm tính sai.
 - **Tại $E_{\max} = 12$:** Điểm của GS-G09 giảm xuống $(2 \times 1 + 3 \times 2/12 + 2 \times 0,7)/7 = 3,9/7 \approx 0,55714$; trong khi GS-T06 (20 năm kinh nghiệm vẫn chạm trần bão hòa) giữ nguyên $4/7 \approx 0,57143$. Lúc này GS-T06 vượt điểm GS-G09 một cách thực chất, đưa Top-3 thành `GS-G10 > GS-T06 > GS-G09`.
 
-**Bảng 5.5 - Độ nhạy của Top-3 theo mức biến động ngân sách**
+**Bảng 5.7 - Độ nhạy của Top-3 theo mức biến động ngân sách**
 
 | Mức ngân sách | Số KB áp dụng | Số KB đổi Top-3 | KB đổi | Số KB áp dụng trùng Top-3 baseline (x/m) |
 |:---:|:---:|:---:|:---:|:---:|
@@ -231,9 +233,9 @@ Các tính chất đơn điệu này được bảo đảm bởi bản chất to
 
 ### 5.2.4. Ảnh hưởng của các bộ mức ưu tiên
 
-Khảo sát được thực hiện trên 4 bộ mức ưu tiên chuẩn hóa của bài kiểm thử T10: Mặc định (`default`), Ưu tiên Khu vực (`prioritize_district`), Ưu tiên Học phí (`prioritize_fee`), và Ưu tiên Kinh nghiệm & Đánh giá (`prioritize_experience_rating`).
+Khảo sát được thực hiện trên 4 bộ mức ưu tiên chuẩn hóa của bài kiểm thử T10: Mặc định (`default`), Ưu tiên Khu vực (`prioritize_district`), Ưu tiên Học phí (`prioritize_fee`), và Ưu tiên Kinh nghiệm & Đánh giá (`prioritize_experience_rating`). Bảng 5.8 ghi số kịch bản đổi Top-3 và danh sách ứng viên cụ thể của từng bộ.
 
-**Bảng 5.6 - Ảnh hưởng của bốn bộ mức ưu tiên đến Top-3**
+**Bảng 5.8 - Ảnh hưởng của bốn bộ mức ưu tiên đến Top-3**
 
 | Bộ mức ưu tiên | Số KB đổi Top-3 | KB đổi Top-3 | Thay đổi Top-3 cụ thể |
 |:---|:---:|:---:|:---|
@@ -255,7 +257,7 @@ Khảo sát được thực hiện trên 4 bộ mức ưu tiên chuẩn hóa c�
 
 Khả năng giải thích là ưu điểm trọng tâm của phương pháp Weighted Scoring kết hợp phân rã điểm đóng góp. Phản hồi thực tế từ `POST /api/recommend` cho kịch bản KB01 minh chứng tính minh bạch này:
 
-**Bảng 5.7 - Thành phần điểm và mức đóng góp của Top-3 gia sư tại KB01**
+**Bảng 5.9 - Thành phần điểm và mức đóng góp của Top-3 gia sư tại KB01**
 
 | Hạng | Gia sư | Điểm tổng $S$ | Điểm thành phần `criteria_scores`<br/>(fee; district; experience; rating; availability) | Mức đóng góp `contributions`<br/>(fee; district; experience; rating; availability) |
 |:---:|:---|:---:|:---|:---|
@@ -293,4 +295,4 @@ Trên tinh thần học thuật khách quan và trung thực, nhóm nghiên cứ
 ---
 
 > [!NOTE]
-> **Đồng bộ danh mục bảng biểu:** Toàn bộ việc đánh số thứ tự bảng trong báo cáo khóa luận (gồm Bảng 5.1 đến Bảng 5.8) sẽ được rà soát và chuẩn hóa đồng bộ trên toàn bộ văn bản khóa luận tại User Story US-36.
+> **Đồng bộ danh mục bảng biểu:** Các bảng trong chương được đánh số theo thứ tự xuất hiện, từ Bảng 5.1 đến Bảng 5.9; danh mục bảng biểu toàn quyển được lập tại User Story US-36.

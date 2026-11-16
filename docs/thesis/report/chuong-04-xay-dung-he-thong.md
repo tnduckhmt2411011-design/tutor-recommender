@@ -11,6 +11,8 @@ Chương này trình bày quá trình hiện thực hệ thống khuyến nghị
 
 Nhóm tách hệ thống thành hai thư mục độc lập: `backend/` (dịch vụ API) và `frontend/` (giao diện), cùng thư mục dữ liệu dùng chung `data/processed/`. Phiên bản các thư viện được ghim tĩnh: phía Python bằng tệp `backend/requirements.txt` và `backend/requirements-dev.txt` (theo chú thích trong tệp, phiên bản ghim từ `pip freeze` của môi trường Python 3.12), phía JavaScript bằng `frontend/package.json` và `frontend/package-lock.json`.
 
+Bảng 4.1 tóm tắt thành phần và phiên bản của từng công nghệ tại thời điểm hiện thực.
+
 **Bảng 4.1 - Thành phần và công nghệ của hệ thống tại thời điểm hiện thực**
 
 | Thành phần | Công nghệ (phiên bản) | Vai trò |
@@ -42,6 +44,8 @@ Dữ liệu được lưu bằng hai tệp đồng bộ: `data/processed/tutors.
 ### 4.2.2. Cấu trúc dữ liệu
 
 Cấu trúc bản ghi được mã hóa thành các mô hình Pydantic tại `backend/app/schemas/`, ánh xạ từ Bảng 3.3 và Bảng 3.4 của đề cương theo `docs/design/data-dictionary.md` (từ điển dữ liệu chuyển tên trường tiếng Việt thành định danh tiếng Anh).
+
+Bảng 4.2 trích rút gọn các ánh xạ chính; từ điển đầy đủ nằm tại `docs/design/data-dictionary.md`.
 
 **Bảng 4.2 - Ánh xạ trường dữ liệu đề cương sang định danh trong code (rút gọn từ data-dictionary.md)**
 
@@ -146,7 +150,7 @@ rank=3 tutor_id=GS-T06 total_score=0.625
   notes: ['chưa có đánh giá']
 ```
 
-Kết quả minh họa các cơ chế đã cài đặt: tiêu chí lịch rảnh không áp dụng vì KB01 không nhập khung giờ (giá trị `null`); `GS-T06` có học phí ước tính 400.000 vượt trần dung sai nên `s_fee = 0` nhưng không bị loại cứng; hồ sơ chưa có đánh giá nhận điểm trung tính 0,5 kèm ghi chú. Dãy điểm khớp đúng với Bảng 5.7 của Chương 5.
+Kết quả minh họa các cơ chế đã cài đặt: tiêu chí lịch rảnh không áp dụng vì KB01 không nhập khung giờ (giá trị `null`); `GS-T06` có học phí ước tính 400.000 vượt trần dung sai nên `s_fee = 0` nhưng không bị loại cứng; hồ sơ chưa có đánh giá nhận điểm trung tính 0,5 kèm ghi chú. Dãy điểm khớp đúng với Bảng 5.9 của Chương 5.
 
 ## 4.4. Xây dựng API gợi ý
 
@@ -163,6 +167,8 @@ Endpoint chính `POST /api/recommend` (hàm `recommend_tutors`) nhận `SearchRe
 5. Tính điểm, xếp hạng, lấy Top-k: `score_and_rank` với `top_k` của yêu cầu.
 
 Lớp truy xuất dữ liệu được cấp qua cơ chế dependency injection của FastAPI: hàm `get_tutor_repository()` trả `TutorRepository()`, gắn vào endpoint bằng `Annotated[TutorRepository, Depends(get_tutor_repository)]`. Cách làm này cho phép kiểm thử thay thế nguồn dữ liệu bằng dependency override trong bộ test API mà không sửa mã endpoint.
+
+Bốn trạng thái phản hồi cùng điều kiện phát sinh tương ứng được tổng hợp ở Bảng 4.4.
 
 **Bảng 4.4 - Các trạng thái phản hồi của `POST /api/recommend`**
 
@@ -206,12 +212,14 @@ Các ca biên gọi thật cùng lúc đó: thiếu `subject` trả HTTP 422 v�
 
 Giao diện là một Single Page Application React 19 (Vite), CSS thuần trong `frontend/src/App.css` (2.089 dòng) và `index.css` — không dùng TailwindCSS và không dùng thư viện biểu đồ; thanh xếp chồng được tự dựng bằng HTML/CSS. Kho lưu trữ trạng thái dùng các hook chuẩn React trong `App.jsx`.
 
+Bảng 4.5 liệt kê các tệp giao diện theo từng chức năng CN01–CN03.
+
 **Bảng 4.5 - Thành phần giao diện và chức năng theo CN01–CN03**
 
 | Tệp | Vai trò | Chức năng |
 |:---|:---|:---|
 | `src/App.jsx` | Điều phối trung tâm | Điều hướng 2 bước (tab CN01 và tab CN02+CN03); lưu trạng thái chung (`searchForm`, `recommendationResult`, `isLoading`, `apiError`, `latencyMs`, `rankDeltas`); `executeRecommendationRequest` gọi API; chống chồng lấn request bằng `requestSeqRef` (Mục 4.6) |
-| `src/pages/SearchPage.jsx` | Màn hình nhập nhu cầu (CN01) | Biểu mẫu theo Bảng 3.4 (môn học, hình thức, khu vực, ngân sách kèm dòng quy đổi bằng chữ, Top-k); bảng chọn lịch 7 ngày × 3 buổi và 3 mẫu chọn nhanh; kiểm tra hợp lệ phía client — môn học ("Vui lòng chọn môn học mong muốn."), khu vực bắt buộc khi học Trực tiếp ("Hình thức học Trực tiếp (In-person) bắt buộc chọn khu vực Quận/Huyện mong muốn."), ngân sách không âm ("Ngân sách tối đa phải là một số không âm hợp lệ."); thanh chip "Nạp nhanh" 14 kịch bản KB01–KB14 (tiêu đề "Kịch bản thực nghiệm (Bảng 5.1 · KB01 - KB14)") kèm tùy chọn "Tự động chuyển kết quả" |
+| `src/pages/SearchPage.jsx` | Màn hình nhập nhu cầu (CN01) | Biểu mẫu theo Bảng 3.4 (môn học, hình thức, khu vực, ngân sách kèm dòng quy đổi bằng chữ, Top-k); bảng chọn lịch 7 ngày × 3 buổi và 3 mẫu chọn nhanh; kiểm tra hợp lệ phía client — môn học ("Vui lòng chọn môn học mong muốn."), khu vực bắt buộc khi học Trực tiếp ("Hình thức học Trực tiếp (In-person) bắt buộc chọn khu vực Quận/Huyện mong muốn."), ngân sách không âm ("Ngân sách tối đa phải là một số không âm hợp lệ."); thanh chip "Nạp nhanh" 14 kịch bản KB01–KB14 (nhãn giao diện "Kịch bản thực nghiệm (Bảng 5.1 · KB01 - KB14)", tương ứng Bảng 5.3 của báo cáo) kèm tùy chọn "Tự động chuyển kết quả" |
 | `src/pages/ResultPage.jsx` | Màn hình kết quả (CN02 + CN03) | Dải KPI (kịch bản, môn, hình thức, khu vực, ngân sách, lịch) và phễu "Kho → Hợp lệ → Top-k"; rail CN03 với 5 tiêu chí và 4 nút nạp nhanh trọng số có nhãn lần lượt "Mặc định (w=2)", "Ưu tiên Học phí", "Ưu tiên KN & Đánh giá", "Thử ∑w_i = 0"; hiển thị 3 trạng thái `success`/`no_match`/`zero_weight`; chip độ trễ đo tại trình duyệt |
 | `src/components/TutorCard.jsx` | Thẻ gia sư | Avatar, huy hiệu hạng, huy hiệu "Khuyến nghị tốt nhất" cho hạng 1, nhãn nguồn dữ liệu ("Dữ liệu thực tế" cho `public_collected`, "Dữ liệu đối chứng" cho `simulated`), lưới thuộc tính 4 ô và hàng lịch rảnh, lý do gợi ý và ghi chú dữ liệu |
 | `src/components/StackedBarScore.jsx` | Thanh xếp chồng tự dựng | Vẽ phân đoạn theo đóng góp `C_i = w_i·s_i/∑w_i`; tooltip s_i, w_i, C_i và tỷ trọng; legend đếm cả tiêu chí "Không áp dụng" (`null` bị ẩn khỏi thanh) |
@@ -226,23 +234,31 @@ Giao diện là một Single Page Application React 19 (Vite), CSS thuần trong
 
 Ô "Mục tiêu học tập" (US-41) được đặt trên khối 5 tiêu chí ở CN01. Đặc điểm triển khai đã được ghi lại trong `docs/design/de-xuat-mo-rong-cap-lop-muc-tieu.md`: preset chỉ sinh bộ mức ưu tiên khởi tạo ở tầng giao diện; ô không có state riêng mà suy ra giá trị hiển thị bằng cách so khớp 5 mức ưu tiên hiện tại với từng preset (không khớp thì hiện "Tùy chỉnh"); payload gửi API vẫn đúng 7 trường và 5 khóa ưu tiên. Cấp lớp nhận dạy chưa hiện thực vì `TutorProfile` chỉ có 9 trường, không có dữ liệu cấp lớp (theo tài liệu nêu trên và `frontend/README.md`).
 
-Bốn ảnh giao diện sau (theo README mục 9, chụp trực tiếp từ hệ thống đang chạy cục bộ) đã có trên `origin/main` trong `docs/thesis/figures/`:
+Bốn ảnh giao diện sau minh họa lần lượt bốn trạng thái của luồng sử dụng: nhập nhu cầu (Hình 4.1), kết quả Top-3 của KB01 (Hình 4.2), xếp hạng lại sau khi đổi mức ưu tiên (Hình 4.3) và trạng thái biên khi tổng trọng số bằng 0 (Hình 4.4). Các ảnh được chụp trực tiếp từ hệ thống đang chạy cục bộ (theo README mục 9) và đã có trên `origin/main` trong `docs/thesis/figures/`:
 
 ![Hình 4.1 - Màn hình nhập nhu cầu học tập CN01](../figures/hinh-ui-01-cn01-nhap-nhu-cau.png)
 
-**Hình 4.1 - Màn hình nhập nhu cầu học tập (CN01).** Mở ảnh thấy giao diện chế độ tối với thanh chip 14 kịch bản KB01–KB14 (KB01 đang được chọn), biểu mẫu "Thông tin nhu cầu học tập (Bảng 3.4)" — môn Toán, hình thức Trực tiếp, khu vực Bình Thạnh, ngân sách 200000 kèm dòng quy đổi "= 200.000 VNĐ / giờ (hai trăm nghìn đồng / giờ)" — và cột phải "Mức độ ưu tiên cho 5 tiêu chí (Bảng 3.5)" với ô "Mục tiêu học tập (gợi ý mức ưu tiên)" đang ở "Không nêu mục tiêu" cùng nút mức ưu tiên có nhãn w = 0, 1, 2, 3 (Học phí đang ở Trung bình, w = 2).
+**Hình 4.1 - Màn hình nhập nhu cầu học tập (CN01)**
+
+Mở ảnh thấy giao diện chế độ tối với thanh chip 14 kịch bản KB01–KB14 (KB01 đang được chọn), biểu mẫu "Thông tin nhu cầu học tập (Bảng 3.4)" — môn Toán, hình thức Trực tiếp, khu vực Bình Thạnh, ngân sách 200000 kèm dòng quy đổi "= 200.000 VNĐ / giờ (hai trăm nghìn đồng / giờ)" — và cột phải "Mức độ ưu tiên cho 5 tiêu chí (Bảng 3.5)" với ô "Mục tiêu học tập (gợi ý mức ưu tiên)" đang ở "Không nêu mục tiêu" cùng nút mức ưu tiên có nhãn w = 0, 1, 2, 3 (Học phí đang ở Trung bình, w = 2).
 
 ![Hình 4.2 - Màn hình kết quả gợi ý Top-3 kịch bản KB01 (CN02)](../figures/hinh-ui-02-cn02-ket-qua-kb01.png)
 
-**Hình 4.2 - Màn hình kết quả gợi ý Top-3 kịch bản KB01 (CN02).** Mở ảnh thấy dải KPI ghi đúng kỳ vọng "1. GS-G01 (0,938) 2. GS-G10 (0,745) 3. GS-T06 (0,625)", phễu "Kho: 16 hồ sơ → Hợp lệ: 5 ứng viên → Top-3: 3 gợi ý", rail CN03 bên trái, và thẻ hạng 1 GS-G01: huy hiệu "#1" và "Khuyến nghị tốt nhất", nhãn "Dữ liệu đối chứng", điểm tổng hợp S(g) 0,938 (Độ khớp 93,8%), thanh xếp chồng bốn phân đoạn 0,25 / 0,25 / 0,19 / 0,25 với legend kèm `C`, `s`, `w` từng tiêu chí và ô "Lịch rảnh: Không áp dụng", dòng "Lý do gợi ý: Học phí trong ngân sách, khu vực khớp, đánh giá 5,0/5"; chip 651,5 ms là độ trễ đo tại trình duyệt ở lần chạy chụp ảnh, không phải số liệu đo có hệ thống và không so sánh với số liệu Chương 5.
+**Hình 4.2 - Màn hình kết quả gợi ý Top-3 kịch bản KB01 (CN02)**
+
+Mở ảnh thấy dải KPI ghi đúng kỳ vọng "1. GS-G01 (0,938) 2. GS-G10 (0,745) 3. GS-T06 (0,625)", phễu "Kho: 16 hồ sơ → Hợp lệ: 5 ứng viên → Top-3: 3 gợi ý", rail CN03 bên trái, và thẻ hạng 1 GS-G01: huy hiệu "#1" và "Khuyến nghị tốt nhất", nhãn "Dữ liệu đối chứng", điểm tổng hợp S(g) 0,938 (Độ khớp 93,8%), thanh xếp chồng bốn phân đoạn 0,25 / 0,25 / 0,19 / 0,25 với legend kèm `C`, `s`, `w` từng tiêu chí và ô "Lịch rảnh: Không áp dụng", dòng "Lý do gợi ý: Học phí trong ngân sách, khu vực khớp, đánh giá 5,0/5"; chip 651,5 ms là độ trễ đo tại trình duyệt ở lần chạy chụp ảnh, không phải số liệu đo có hệ thống và không so sánh với số liệu Chương 5.
 
 ![Hình 4.3 - Điều chỉnh mức ưu tiên trực tiếp trên màn hình kết quả (CN03)](../figures/hinh-ui-03-cn03-dieu-chinh-uu-tien.png)
 
-**Hình 4.3 - Điều chỉnh mức ưu tiên trực tiếp (CN03) làm đổi hạng.** Mở ảnh thấy sau khi đưa Học phí và Khu vực về "Bỏ qua (w=0)", Kinh nghiệm và Đánh giá lên "Cao (w=3)": GS-G10 (130.000 VNĐ/giờ, 12 năm, 4,9/5) vươn lên hạng 1 với điểm 0,990 (99,0%), huy hiệu "↑ Tăng 1 bậc sau khi điều chỉnh mức ưu tiên (CN03)" xuất hiện phía trên thẻ (và một huy hiệu "↓ Giảm 1 bậc…" trên thẻ tụt hạng), thanh xếp chồng chỉ còn hai phân đoạn Kinh nghiệm 0,50 và Đánh giá 0,49, ba tiêu chí còn lại hiển thị "Không áp dụng".
+**Hình 4.3 - Điều chỉnh mức ưu tiên trực tiếp (CN03) làm đổi hạng**
+
+Mở ảnh thấy sau khi đưa Học phí và Khu vực về "Bỏ qua (w=0)", Kinh nghiệm và Đánh giá lên "Cao (w=3)": GS-G10 (130.000 VNĐ/giờ, 12 năm, 4,9/5) vươn lên hạng 1 với điểm 0,990 (99,0%), huy hiệu "↑ Tăng 1 bậc sau khi điều chỉnh mức ưu tiên (CN03)" xuất hiện phía trên thẻ (và một huy hiệu "↓ Giảm 1 bậc…" trên thẻ tụt hạng), thanh xếp chồng chỉ còn hai phân đoạn Kinh nghiệm 0,50 và Đánh giá 0,49, ba tiêu chí còn lại hiển thị "Không áp dụng".
 
 ![Hình 4.4 - Trạng thái biên khi tổng trọng số bằng 0](../figures/hinh-ui-04-zero-weight.png)
 
-**Hình 4.4 - Trạng thái biên tổng trọng số bằng 0 (∑w_i = 0).** Mở ảnh thấy chip kịch bản đổi thành "KB01 (Tùy chỉnh: ∑w=0)", phễu kết quả "Top-3: 0 gợi ý", cảnh báo ở rail CN03 "Tổng trọng số ∑w_i = 0", cả 5 tiêu chí đang ở mức "Bỏ qua (w=0)", và thẻ trạng thái giữa trang "Không thể xếp hạng do tổng trọng số bằng 0" kèm nút "Khôi phục trọng số mặc định (w = 2)".
+**Hình 4.4 - Trạng thái biên tổng trọng số bằng 0 ($\sum w_i = 0$)**
+
+Mở ảnh thấy chip kịch bản đổi thành "KB01 (Tùy chỉnh: ∑w=0)", phễu kết quả "Top-3: 0 gợi ý", cảnh báo ở rail CN03 "Tổng trọng số ∑w_i = 0", cả 5 tiêu chí đang ở mức "Bỏ qua (w=0)", và thẻ trạng thái giữa trang "Không thể xếp hạng do tổng trọng số bằng 0" kèm nút "Khôi phục trọng số mặc định (w = 2)".
 
 ## 4.6. Tích hợp giao diện với API và kiểm tra luồng end-to-end
 
@@ -253,6 +269,8 @@ Luồng chính thực hiện theo chuỗi: người học nhập nhu cầu tại
 Cơ chế chọn địa chỉ backend trong `frontend/src/services/api.js`: `API_BASE_URL` nhận lần lượt biến môi trường `VITE_API_URL`, rồi `VITE_API_BASE_URL`; nếu cả hai không đặt, chọn theo tên miền hiện hành — khi hostname khác `localhost`/`127.0.0.1` (triển khai trên Vercel) dùng `https://tutor-recommender-api.onrender.com`, ngược lại (chạy cục bộ) dùng `http://localhost:8000`; cuối cùng cắt mọi dấu gạch chéo cuối. Trong kho không commit tệp `.env*` của frontend. Tài liệu triển khai (`docs/deployment/deploy-vercel-render.md`, phần B3) yêu cầu đặt biến `VITE_API_URL` bằng URL backend Render khi cấu hình dự án trên Vercel; việc biến này đã được đặt trên bảng điều khiển Vercel hay không **không xác minh được từ repo** — cơ chế chắc chắn (có trong code) là `frontend/src/services/api.js` tự chọn URL theo tên miền hiện hành như mô tả trên.
 
 ### 4.6.2. Xử lý lỗi cơ bản ở cả hai phía
+
+Bảng 4.6 tổng hợp các tình huống lỗi đã gặp và nơi xử lý tương ứng ở cả hai phía.
 
 **Bảng 4.6 - Các tình huống lỗi và nơi xử lý**
 
@@ -276,7 +294,7 @@ Hệ thống được đưa lên nền tảng đám mây theo `docs/deployment/d
 
 ---
 
-## Giới hạn của việc hiện thực
+## 4.7. Giới hạn của việc hiện thực
 
 - **Cơ sở dữ liệu chưa hiện thực:** lưu trữ chỉ dùng JSON/CSV; phương án SQLite (US-37) xếp `Could Have`, chưa xếp sprint.
 - **CI chỉ bao phủ backend:** frontend chưa có job trong GitHub Actions và chưa có bộ kiểm thử tự động riêng (chỉ oxlint và `vite build` chạy từ terminal).

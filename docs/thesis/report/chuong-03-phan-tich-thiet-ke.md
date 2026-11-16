@@ -159,50 +159,42 @@ Ghi chú: hàng n = 5 được giữ nguyên nhưng không được kích hoạt
 
 Luồng xử lý gồm tám bước, độc lập với công nghệ triển khai: (1) người học nhập nhu cầu và mức ưu tiên; (2) kiểm tra, chuẩn hóa tiêu chí đầu vào; (3) lọc các gia sư không thỏa điều kiện bắt buộc; (4) tính điểm phù hợp theo từng tiêu chí ưu tiên; (5) tổng hợp điểm theo trọng số; (6) xếp hạng các gia sư còn lại; (7) trả Top-k kèm điểm thành phần và lý do gợi ý; (8) người học điều chỉnh mức ưu tiên và xem thứ hạng thay đổi. Hình 3.1 minh họa luồng tám bước này; hình vẽ cũng thể hiện việc kiểm tra ngưỡng dữ liệu tối thiểu (Bảng 3.7) sau bước (3), cùng các nhánh thông báo khi không còn gia sư thỏa điều kiện bắt buộc, khi tổng trọng số bằng 0 và khi đầu vào không hợp lệ.
 
+![Hình 3.1 - Sơ đồ luồng xử lý khuyến nghị](../figures/hinh-3-1-luong-xu-ly-khuyen-nghi.png)
+
 **Hình 3.1 - Sơ đồ luồng xử lý khuyến nghị**
 
-*(Vẽ lại bằng draw.io — đặc tả ở Ghi chú biên tập cuối chương.)*
+*Nguồn: thiết kế của nhóm (Mục 3.7.1); đối chiếu mã nguồn `backend/app/api/recommend.py` và `backend/app/scoring/`.*
 
 ### 3.7.2. Kiến trúc ba lớp
 
 Hệ thống gồm ba lớp: giao diện ReactJS nhận nhu cầu từ người học và gửi yêu cầu đến API; lớp API (FastAPI) tiếp nhận, kiểm tra hợp lệ, nạp danh sách gia sư mẫu từ `TutorRepository` rồi truyền cho module tính điểm; module tính điểm thực hiện quy trình ở mục 3.6 và trả danh sách đã xếp hạng để API phản hồi lại giao diện. Hình 3.2 mô tả ba lớp này.
 
+![Hình 3.2 - Kiến trúc hệ thống ba lớp](../figures/hinh-3-2-kien-truc-ba-lop.png)
+
 **Hình 3.2 - Kiến trúc hệ thống ba lớp**
 
-*(Vẽ lại bằng draw.io — đặc tả ở Ghi chú biên tập cuối chương.)*
+*Nguồn: thiết kế của nhóm (Mục 3.7.1); đối chiếu `backend/app/main.py`, `backend/app/data/repository.py` và thư mục `frontend/src/`.*
 
 Vì hệ thống chỉ có một luồng xử lý đi qua một module tính điểm và không có nhiều đối tượng nghiệp vụ tương tác qua nhiều lớp điều khiển, nhóm không áp dụng mô hình BCE (Boundary-Control-Entity) mà mô tả trực tiếp bằng sơ đồ luồng xử lý và một sơ đồ trình tự đơn giản: client → API → module tính điểm → trả kết quả (Hình 3.3).
 
+![Hình 3.3 - Sơ đồ trình tự: client → API → module tính điểm → kết quả](../figures/hinh-3-3-so-do-trinh-tu.png)
+
 **Hình 3.3 - Sơ đồ trình tự: client → API → module tính điểm → kết quả**
 
-*(Vẽ lại bằng draw.io — đặc tả ở Ghi chú biên tập cuối chương.)*
+*Nguồn: thiết kế của nhóm (Mục 3.7.2); tên hàm theo mã nguồn tại thời điểm viết báo cáo.*
 
 ## 3.8. Thiết kế giao diện
 
-Giao diện demo gồm hai màn hình. Màn hình nhập nhu cầu cho phép chọn môn học, hình thức học, khu vực, ngân sách, khung thời gian rảnh và chọn mức ưu tiên (Không quan tâm / Thấp / Trung bình / Cao) cho từng tiêu chí (Hình 3.4). Màn hình kết quả hiển thị Top-k gia sư theo mã gia sư, kèm điểm phù hợp tổng, điểm từng tiêu chí và một biểu đồ thanh xếp chồng thể hiện đóng góp của từng tiêu chí, giúp người học hiểu vì sao một gia sư được xếp cao. Người học có thể đổi mức ưu tiên ngay tại màn hình kết quả để thấy danh sách xếp hạng lại (CN03) (Hình 3.5).
+Giao diện demo gồm hai màn hình. Màn hình nhập nhu cầu cho phép chọn môn học, hình thức học, khu vực, ngân sách, khung thời gian rảnh và chọn mức ưu tiên (Không quan tâm / Thấp / Trung bình / Cao) cho từng tiêu chí (Hình 3.4). Màn hình kết quả hiển thị Top-k gia sư theo mã gia sư, kèm điểm phù hợp tổng, điểm từng tiêu chí và một biểu đồ thanh xếp chồng thể hiện đóng góp của từng tiêu chí, giúp người học hiểu vì sao một gia sư được xếp cao. Người học có thể đổi mức ưu tiên ngay tại màn hình kết quả để thấy danh sách xếp hạng lại (CN03) (Hình 3.5). Hai hình dưới đây là phác thảo bố cục; giao diện hiện thực của hệ thống được trình bày ở Hình 4.1–4.4.
+
+![Hình 3.4 - Phác thảo màn hình nhập nhu cầu](../figures/hinh-3-4-phac-thao-nhap-nhu-cau.png)
 
 **Hình 3.4 - Phác thảo màn hình nhập nhu cầu**
 
-*(Vẽ lại bằng draw.io — đặc tả ở Ghi chú biên tập cuối chương.)*
+*Nguồn: thiết kế của nhóm (Mục 3.8); bố cục theo Bảng 3.4 và Bảng 3.5.*
+
+![Hình 3.5 - Phác thảo màn hình kết quả](../figures/hinh-3-5-phac-thao-ket-qua.png)
 
 **Hình 3.5 - Phác thảo màn hình kết quả**
 
-*(Vẽ lại bằng draw.io — đặc tả ở Ghi chú biên tập cuối chương.)*
-
----
-
-**[GHI CHÚ BIÊN TẬP — XÓA TRƯỚC KHI GHÉP WORD]**
-
-- **Câu cần trích dẫn học thuật:** Chương 3 không có câu khẳng định lĩnh vực nào trong danh sách rà soát (toàn bộ là thiết kế của nhóm).
-- **Đặc tả vẽ lại 5 hình (draw.io; full chi tiết ở mục 6.3 của tài liệu rà soát Chương 1–3 — tệp `ra-soat-chuong-1-3.md` trên nhánh `docs/ra-soat-chuong-1-3`):**
-  - **Hình 3.1** — 8 bước theo mục 3.7.1, kèm bước kiểm tra ngưỡng dữ liệu (Bảng 3.7) sau bước (3) và 3 nhánh thông báo: `no_match` (`recommend.py:60, 85`), `zero_weight` (`recommend.py:72`), đầu vào không hợp lệ 422 (`SearchRequest`; thông báo `api.js:179`); nhánh “thiếu dữ liệu” — `filter_eligible_candidates` (`eligibility.py:81`).
-  - **Hình 3.2** — 3 lớp: giao diện ReactJS (`App.jsx`, `SearchPage.jsx`, `ResultPage.jsx`, `services/api.js`); API FastAPI (`backend/app/api/recommend.py`, `POST /api/recommend`, `backend/app/schemas/`); module tính điểm `backend/app/scoring/` — **module không tự đọc dữ liệu**; nạp dữ liệu do `recommend.py` thực hiện qua `TutorRepository` (`backend/app/data/repository.py`) từ `data/processed/tutors.json`/`tutors.csv` (quyết định 9.4).
-  - **Hình 3.3** — trình tự với tên hàm thật: `fetchRecommendations` (`api.js:152`) → `POST /api/recommend` (`api.js:155`) → `recommend_tutors` (`recommend.py:47`) → `TutorRepository.get_all()` (`repository.py:32`) → `compute_effective_weights` (`weights.py:52`) → `filter_mandatory` (`filters.py:34`) → `filter_eligible_candidates` (`eligibility.py:81`) → `score_and_rank` (`ranker.py:157`, gọi 5 hàm `criteria.py:21-65` + `build_reason`/`build_notes` — `ranker.py:125, 118`) → phản hồi; nhánh CN03 lặp từ đầu (`requestSeqRef` — `App.jsx:52`).
-  - **Hình 3.4** — vẽ **theo phạm vi Mục 3.8** (quyết định 9.3): biểu mẫu theo Bảng 3.4 (Môn học*, Hình thức học*, Khu vực mong muốn, Ngân sách tối đa/giờ kèm dòng quy đổi bằng chữ, Top-k, khung thời gian rảnh 7 ngày × 3 buổi) + khối mức ưu tiên 5 tiêu chí × 4 mức theo Bảng 3.5 + thông báo kiểm tra hợp lệ (`SearchPage.jsx:231, 241, 248`); các thành phần demo mở rộng (banner hero, thanh 14 kịch bản, ô “Mục tiêu học tập”) **không đưa vào** — thuộc Hình 4.1 của Chương 4.
-  - **Hình 3.5** — vẽ **theo phạm vi Mục 3.8**: danh sách Top-k (`TutorCard`: hạng, điểm S(g), thanh xếp chồng C_i, “Lý do gợi ý”), rail CN03 5 hàng tiêu chí, trạng thái `no_match` (“Không tìm thấy gia sư thỏa mãn điều kiện” — `ResultPage.jsx:459`) và `zero_weight` (“Không thể xếp hạng do tổng trọng số bằng 0” — `:424`); dải KPI/phễu, chip độ trễ, huy hiệu đổi hạng, hộp “Nạp nhanh trọng số” **không đưa vào** — thuộc Hình 4.2–4.4 của Chương 4.
-- **Số hiệu bảng mới:** bảng ngưỡng được đánh số **Bảng 3.7** (đề cương để không đánh số, chỉ ghi “bảng dưới”) — cập nhật “DANH MỤC BẢNG BIỂU” khi ghép Word; các dẫn chiếu “bảng dưới” trong văn bản đã đổi thành “Bảng 3.7”.
-- **Sửa so với đề cương (ý không đổi):** mục 3.5 câu đầu bỏ nhắc SQLite (quyết định 9.2); “không phải cấu hình tối ưu” → “không phải bộ cấu hình đã được kiểm chứng” (từ cấm); mục 3.6 ví dụ tính điểm thêm “(không làm tròn từng thành phần, S = 113/150 ≈ 0,753)” (khớp `backend/tests/unit/test_ranker.py:84-86`); mục 3.7.2 sửa cụm “module tính điểm đọc dữ liệu gia sư mẫu” → lớp API nạp từ `TutorRepository` rồi truyền cho module (quyết định 9.4); đổi thì “Nhóm sẽ kiểm tra… sẽ được kiểm tra” → “Nhóm kiểm tra… được kiểm tra” (thực nghiệm Chương 5 đã thực hiện).
-- **Câu bổ sung so với đề cương (dẫn chiếu theo report_standards Mục 4.2):** các câu nhắc Bảng 2.1/3.7 và Hình 3.1–3.5 trong thân văn bản; câu hiệu năng ở 3.3 dẫn về mục 5.1.2.
-- **Điều kiện rút gọn:** câu mô tả Hình 3.1 ở mục 3.7.1 (“hình vẽ cũng thể hiện…”) giả định hình vẽ lại theo đặc tả trên; nếu nhóm quyết định giữ ảnh cũ của đề cương thì gỡ vế này.
-- **Điểm chờ nhóm quyết định:** (e) nhãn `estimated` của trường nguồn_dữ_liệu (Bảng 3.3 vẫn 2 giá trị như đề cương — xem `data/README.md` mục 3); (i) bổ sung 1–2 câu ghi nhận thành phần demo mở rộng vào mục 3.8.
-- **Dòng Nguồn dưới bảng:** các tệp mã nguồn được dẫn đã kiểm chứng tồn tại (`config.py`, `criteria.py`, `eligibility.py`, `data-dictionary.md`, `scoring-spec.md`); khi ghép Word, dòng Nguồn đặt ngay dưới bảng, cỡ chữ 10–11 pt.
+*Nguồn: thiết kế của nhóm (Mục 3.8); số liệu trong hình là ví dụ minh họa bố cục, không phải kết quả thực nghiệm (xem Chương 5).*

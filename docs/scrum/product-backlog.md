@@ -3,7 +3,7 @@
 
 # Danh mục yêu cầu sản phẩm (Product Backlog)
 
-Tài liệu quản lý toàn bộ các hạng mục công việc (User Stories) của đồ án **"Hệ thống khuyến nghị gia sư dựa trên mức độ phù hợp đa tiêu chí"**, được cấu trúc theo 8 Epic (E0–E7), ước lượng điểm theo thang Fibonacci và phân bổ trong 6 Sprint.
+Tài liệu quản lý toàn bộ các hạng mục công việc (User Stories) của đồ án **"Hệ thống khuyến nghị gia sư dựa trên phương pháp Content-Base Filtering"**, được cấu trúc theo 8 Epic (E0–E7), ước lượng điểm theo thang Fibonacci và phân bổ trong 6 Sprint.
 
 ## 1. Bảng tổng hợp Product Backlog
 

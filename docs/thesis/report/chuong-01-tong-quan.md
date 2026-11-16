@@ -9,9 +9,9 @@ Chương này xác lập bối cảnh và phạm vi của đề tài “Hệ th�
 
 ## 1.1. Lý do chọn đề tài
 
-Nhu cầu tìm gia sư phù hợp ngày càng tăng cùng với sự phát triển của các hình thức dạy học trực tuyến [4]. Khi chọn gia sư, người học (học sinh, hoặc phụ huynh thay mặt học sinh) thường phải cân nhắc đồng thời nhiều tiêu chí: môn học, khu vực, mức học phí có thể chi trả, hình thức học (trực tiếp hay trực tuyến) và thời gian học. Khi số hồ sơ gia sư ít, người học có thể tự so sánh; khi số hồ sơ tăng lên, việc xem từng hồ sơ để tìm ra lựa chọn cân bằng giữa các tiêu chí trở nên tốn nhiều thời gian.
+Nhu cầu tìm gia sư phù hợp ngày càng tăng cùng với sự phát triển của các hình thức dạy học trực tuyến [1]. Khi chọn gia sư, người học (học sinh, hoặc phụ huynh thay mặt học sinh) thường phải cân nhắc đồng thời nhiều tiêu chí: môn học, khu vực, mức học phí có thể chi trả, hình thức học (trực tiếp hay trực tuyến) và thời gian học. Khi số hồ sơ gia sư ít, người học có thể tự so sánh; khi số hồ sơ tăng lên, việc xem từng hồ sơ để tìm ra lựa chọn cân bằng giữa các tiêu chí trở nên tốn nhiều thời gian.
 
-Vấn đề cốt lõi không chỉ là lọc đúng/sai theo từng tiêu chí riêng lẻ, mà là xếp hạng mức độ phù hợp tổng thể khi các tiêu chí xung đột nhau [5]. Trong bài toán này có hai loại điều kiện khác nhau: điều kiện bắt buộc (ví dụ gia sư phải dạy đúng môn cần học) và tiêu chí ưu tiên (ví dụ học phí, khu vực, kinh nghiệm). Với các gia sư đã đáp ứng điều kiện bắt buộc, một gia sư có học phí hơi vượt ngân sách nhưng kinh nghiệm và đánh giá rất tốt vẫn có thể đáng được xếp trên một gia sư rẻ hơn nhưng ít kinh nghiệm. Đây là động lực để xây dựng một hệ thống khuyến nghị có khả năng kiểm tra điều kiện bắt buộc, tính điểm phù hợp, xếp hạng và giải thích thứ hạng cho người học, thay vì chỉ lọc nhị phân đúng/sai.
+Vấn đề cốt lõi không chỉ là lọc đúng/sai theo từng tiêu chí riêng lẻ, mà là xếp hạng mức độ phù hợp tổng thể khi các tiêu chí xung đột nhau [2]. Trong bài toán này có hai loại điều kiện khác nhau: điều kiện bắt buộc (ví dụ gia sư phải dạy đúng môn cần học) và tiêu chí ưu tiên (ví dụ học phí, khu vực, kinh nghiệm). Với các gia sư đã đáp ứng điều kiện bắt buộc, một gia sư có học phí hơi vượt ngân sách nhưng kinh nghiệm và đánh giá rất tốt vẫn có thể đáng được xếp trên một gia sư rẻ hơn nhưng ít kinh nghiệm. Đây là động lực để xây dựng một hệ thống khuyến nghị có khả năng kiểm tra điều kiện bắt buộc, tính điểm phù hợp, xếp hạng và giải thích thứ hạng cho người học, thay vì chỉ lọc nhị phân đúng/sai.
 
 ## 1.2. Khảo sát hiện trạng
 
@@ -37,17 +37,17 @@ Dựa trên nhận định ở mục 1.2, khoảng trống chức năng mà đ�
 
 ### 1.3.2. Lý do chọn hướng tiếp cận
 
-Lý do chọn phương pháp xuất phát từ loại dữ liệu hiện có. Hệ thống trong đồ án chưa vận hành nên chưa có dữ liệu lịch sử tương tác (ai từng học với ai, học bao nhiêu buổi, đánh giá bao nhiêu sao). Vì vậy Collaborative Filtering, vốn cần ma trận tương tác để học, không có dữ liệu đầu vào (Bảng 2.1) [6]. Ngược lại, hai loại dữ liệu sau đều có thể thu thập hoặc giả lập ngay: (1) hồ sơ gia sư (môn dạy, khu vực, học phí, kinh nghiệm, hình thức dạy, lịch rảnh, điểm đánh giá trung bình) và (2) nhu cầu của người học nhập tại thời điểm tìm kiếm. Lưu ý rằng điểm đánh giá trung bình ở đây là một thuộc tính của hồ sơ gia sư trong tập dữ liệu mẫu, không phải dữ liệu tương tác do hệ thống thu thập.
+Lý do chọn phương pháp xuất phát từ loại dữ liệu hiện có. Hệ thống trong đồ án chưa vận hành nên chưa có dữ liệu lịch sử tương tác (ai từng học với ai, học bao nhiêu buổi, đánh giá bao nhiêu sao). Vì vậy Collaborative Filtering, vốn cần ma trận tương tác để học, không có dữ liệu đầu vào (Bảng 2.1) [3]. Ngược lại, hai loại dữ liệu sau đều có thể thu thập hoặc giả lập ngay: (1) hồ sơ gia sư (môn dạy, khu vực, học phí, kinh nghiệm, hình thức dạy, lịch rảnh, điểm đánh giá trung bình) và (2) nhu cầu của người học nhập tại thời điểm tìm kiếm. Lưu ý rằng điểm đánh giá trung bình ở đây là một thuộc tính của hồ sơ gia sư trong tập dữ liệu mẫu, không phải dữ liệu tương tác do hệ thống thu thập.
 
-Trên cơ sở đó, đồ án dùng cách tiếp cận dựa trên đặc trưng hồ sơ gồm hai bước: lọc theo điều kiện bắt buộc, rồi tính điểm các tiêu chí ưu tiên bằng Weighted Scoring. Weighted Scoring cho phép kiểm soát và giải thích minh bạch cách các tiêu chí được cân nhắc (ví dụ tăng mức ưu tiên khu vực khi người học muốn gia sư gần nhà), thay vì phụ thuộc vào một mô hình học máy dạng hộp đen [7]. Chi tiết được trình bày ở Chương 2 và Chương 3.
+Trên cơ sở đó, đồ án dùng cách tiếp cận dựa trên đặc trưng hồ sơ gồm hai bước: lọc theo điều kiện bắt buộc, rồi tính điểm các tiêu chí ưu tiên bằng Weighted Scoring. Weighted Scoring cho phép kiểm soát và giải thích minh bạch cách các tiêu chí được cân nhắc (ví dụ tăng mức ưu tiên khu vực khi người học muốn gia sư gần nhà), thay vì phụ thuộc vào một mô hình học máy dạng hộp đen [4]. Chi tiết được trình bày ở Chương 2 và Chương 3.
 
-Nhóm có tham khảo đồ án GS360 [3] như một ví dụ về hướng xây dựng website hỗ trợ tìm kiếm gia sư. Đồ án này không kế thừa khung tính năng của GS360 mà chỉ tập trung vào phần khuyến nghị.
+Nhóm có tham khảo đồ án GS360 [5] như một ví dụ về hướng xây dựng website hỗ trợ tìm kiếm gia sư. Đồ án này không kế thừa khung tính năng của GS360 mà chỉ tập trung vào phần khuyến nghị.
 
-GS360 (Lê Thị Hoài Thương, Lê Nguyễn Quang Minh; Trường Đại học Công nghệ thông tin và Truyền thông Việt - Hàn, tháng 11/2024) là một website hỗ trợ tìm kiếm gia sư hoàn chỉnh: người dùng đăng ký/đăng nhập theo hai vai trò (người tìm gia sư và gia sư); gia sư quản lý hồ sơ, tìm và nhận suất dạy; phụ huynh/học sinh đăng bài tìm gia sư, đặt lịch, thanh toán và nhận hoàn tiền; người dùng đánh giá gia sư, đặt câu hỏi và trả lời; quản trị viên thống kê doanh thu (các use case 1-23, Mục 2.2.4.2, tr.15-28; giao diện Mục 3.4, tr.60-69).
+GS360 (Lê Thị Hoài Thương, Lê Nguyễn Quang Minh; Trường Đại học Công nghệ thông tin và Truyền thông Việt - Hàn, tháng 11/2024) là một website hỗ trợ tìm kiếm gia sư hoàn chỉnh: người dùng đăng ký/đăng nhập theo hai vai trò (người tìm gia sư và gia sư); gia sư quản lý hồ sơ, tìm và nhận suất dạy; phụ huynh/học sinh đăng bài tìm gia sư, đặt lịch, thanh toán và nhận hoàn tiền; người dùng đánh giá gia sư, đặt câu hỏi và trả lời; quản trị viên thống kê doanh thu (các use case 1–23, Mục 2.2.4.2, tr. 15–28; giao diện Mục 3.4, tr. 60–69).
 
 Về tìm kiếm, Mục 2.1 (tr.11) mô tả GS360 cho phép tìm gia sư thông qua từ khóa tên môn học, cấp học và địa điểm; giao diện “tìm gia sư” ở Mục 3.4.6 (tr.64) là biểu mẫu đăng bài tìm gia sư, sau đó bài đăng được hiển thị ở trang suất dạy. Tài liệu không mô tả cơ chế xếp hạng tổng hợp nhiều tiêu chí theo trọng số, không nêu điểm thành phần hay lý do gợi ý. Cụm “xếp hạng” chỉ xuất hiện một lần ở mục Hướng phát triển (tr.70-71) khi đề xuất bổ sung “hệ thống đánh giá, xếp hạng gia sư”; các cụm “trọng số”, “thuật toán” và “điểm thành phần” không xuất hiện trong nội dung tài liệu.
 
-Khác với GS360, đồ án này không xây dựng nền tảng gia sư đầy đủ mà tập trung vào bộ máy khuyến nghị: lọc điều kiện bắt buộc (môn học, hình thức học, khung giờ giao nhau), chấm điểm năm tiêu chí ưu tiên theo Bảng 3.6, gộp bằng Weighted Scoring (Mục 2.3, 3.6) và trả Top-k kèm điểm thành phần, đóng góp từng tiêu chí (Mục 3.1, 4.4). Vì vậy GS360 là mốc tham chiếu về phạm vi chức năng của một website gia sư, không phải baseline để so sánh độ chính xác xếp hạng; các kịch bản ở Bảng 5.1 mới là công cụ đánh giá của đồ án.
+Khác với GS360, đồ án này không xây dựng nền tảng gia sư đầy đủ mà tập trung vào bộ máy khuyến nghị: lọc điều kiện bắt buộc (môn học, hình thức học, khung giờ giao nhau), chấm điểm năm tiêu chí ưu tiên theo Bảng 3.6, gộp bằng Weighted Scoring (Mục 2.3, 3.6) và trả Top-k kèm điểm thành phần, đóng góp từng tiêu chí (Mục 3.1, 4.4). Vì vậy GS360 là mốc tham chiếu về phạm vi chức năng của một website gia sư, không phải baseline để so sánh độ chính xác xếp hạng; các kịch bản ở Bảng 5.3 mới là công cụ đánh giá của đồ án.
 
 ## 1.4. Mục tiêu và phạm vi đề tài
 
@@ -64,7 +64,7 @@ Khác với GS360, đồ án này không xây dựng nền tảng gia sư đầy
 
 ## 1.5. Công cụ và kế hoạch thực hiện
 
-Về công cụ trình bày, nhóm dùng draw.io để vẽ sơ đồ luồng xử lý và kiến trúc hệ thống. Về công nghệ triển khai, backend dùng FastAPI (Python), frontend dùng ReactJS; dữ liệu mẫu lưu dạng JSON và CSV - phương án SQLite là hướng mở rộng, chưa hiện thực trong đồ án.
+Về công cụ trình bày, nhóm dựng sơ đồ luồng xử lý và kiến trúc hệ thống bằng HTML/CSS rồi kết xuất thành ảnh PNG (Hình 3.1–3.5); giao diện được chụp trực tiếp từ hệ thống đang chạy (Hình 4.1–4.4). Về công nghệ triển khai, backend dùng FastAPI (Python), frontend dùng ReactJS; dữ liệu mẫu lưu dạng JSON và CSV – phương án SQLite là hướng mở rộng, chưa hiện thực trong đồ án.
 
 Thứ tự thực hiện được sắp xếp để phần thiết kế và kiểm chứng đi trước phần lập trình: chốt bài toán và công thức (Chương 3) → thiết kế dữ liệu mẫu và kịch bản kiểm thử → cài đặt module tính điểm → API → giao diện → kiểm thử và đánh giá. Khối lượng công việc theo Bảng 1.2, dựa trên ngân sách 2 tín chỉ (khoảng 90–120 giờ).
 
@@ -82,16 +82,3 @@ Thứ tự thực hiện được sắp xếp để phần thiết kế và ki�
 
 *Nguồn: kế hoạch phân bổ của nhóm (Mục 1.5).*
 *Ghi chú: Ngân sách 100 giờ của mỗi thành viên theo 2 tín chỉ; nhóm 3 người, tổng 300 giờ (Mô hình A, `docs/scrum/roadmap.md`). Đây là kế hoạch, không phải số giờ đã làm.*
-
----
-
-**[GHI CHÚ BIÊN TẬP — XÓA TRƯỚC KHI GHÉP WORD]**
-
-- **Câu cần trích dẫn học thuật — đã bổ sung nguồn (12/11/2026, kiểm chứng bằng agent-browser mở trực tiếp từng trang):** (1) mục 1.1 đoạn 1 → [4] (bối cảnh dạy học trực tuyến; mệnh đề “ngày càng tăng” là nhận định của nhóm); (2) mục 1.1 đoạn 2 → [5] (tiêu chí xung đột); (4) mục 1.3.2 đoạn 1 → [6] (Collaborative Filtering cần dữ liệu tương tác, cold start); (5) mục 1.3.2 đoạn 2 → [7] (khuyến nghị giải thích minh bạch). Riêng câu (3) — “ba kênh tiếp cận gia sư” — **không trích dẫn**: là nhận định ban đầu của nhóm, căn cứ Bảng 1.1 (không tìm được nguồn kiểm chứng phù hợp).
-- **Tài liệu tham khảo bổ sung đề xuất (IEEE, đánh số tiếp sau [1]–[3], chèn vào mục “TÀI LIỆU THAM KHẢO” khi ghép Word):**
-  - [4] Wikipedia, “Online tutoring,” Wikipedia, The Free Encyclopedia. [Online]. Available: https://en.wikipedia.org/wiki/Online_tutoring (truy cập 12/11/2026).
-  - [5] Wikipedia, “Multiple-criteria decision analysis,” Wikipedia, The Free Encyclopedia. [Online]. Available: https://en.wikipedia.org/wiki/Multiple-criteria_decision_analysis (truy cập 12/11/2026).
-  - [6] Wikipedia, “Collaborative filtering,” Wikipedia, The Free Encyclopedia. [Online]. Available: https://en.wikipedia.org/wiki/Collaborative_filtering (truy cập 12/11/2026).
-  - [7] Y. Zhang, X. Chen, “Explainable Recommendation: A Survey and New Perspectives,” arXiv:1804.11192, 2018. [Online]. Available: https://arxiv.org/abs/1804.11192 (truy cập 12/11/2026).
-- **Đối chiếu GS360 (16/11/2026):** bản `.docx` do nhóm cung cấp đã được trích toàn bộ đoạn văn và bảng (1.070 đoạn, 26 bảng). Xác nhận bìa đúng tên đề tài, hai tác giả, trường, Đà Nẵng tháng 11/2024; Mục 2.1 (tr.11) nêu tìm kiếm theo “từ khóa tên môn học, cấp học, địa điểm”; Mục 2.2.4.2 (tr.15-28) có 23 use case; Mục 2.2.6.1-2.2.6.19 (tr.30-44) là 19 biểu đồ hoạt động; Mục 3.4.6 (tr.64) là biểu mẫu đăng bài tìm gia sư; Mục 3.4 (tr.60-69) gồm 16 giao diện. Cụm “xếp hạng” chỉ xuất hiện một lần ở mục Hướng phát triển (tr.70-71); “trọng số”, “thuật toán” và “điểm thành phần” không xuất hiện. Đã gỡ hai nhãn nháp và sửa dẫn chiếu use case (bản cũ ghi nhầm 2.2.6.1-2.2.6.19 là use case).
-- **Khác biệt so với đề cương:** mục 1.2 đổi thì “nhóm cần kiểm tra” → “nhóm đã kiểm tra” (khảo sát Bảng 1.1 đã hoàn thành, chính văn bản xác nhận); mục 1.5 nêu SQLite là hướng mở rộng chưa hiện thực (quyết định nhóm 12/11/2026); Bảng 1.2 thêm ghi chú phạm vi 100/300 giờ (quyết định 9.1); caption bảng đặt trên bảng kèm dòng Nguồn; câu sau Bảng 1.1 viết lại theo mẫu “dữ liệu làm chủ ngữ” (“Bảng 1.1 cho thấy…”), ý không đổi; gắn số trích dẫn [4]–[7].

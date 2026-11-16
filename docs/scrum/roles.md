@@ -3,7 +3,7 @@
 
 # Cơ cấu vai trò Scrum (Scrum Roles)
 
-Tài liệu định nghĩa vai trò, trách nhiệm và nguyên tắc phối hợp của các thành viên trong nhóm đồ án **"Hệ thống khuyến nghị gia sư dựa trên mức độ phù hợp đa tiêu chí"**.
+Tài liệu định nghĩa vai trò, trách nhiệm và nguyên tắc phối hợp của các thành viên trong nhóm đồ án **"Hệ thống khuyến nghị gia sư dựa trên phương pháp Content-Base Filtering"**.
 
 ---
 

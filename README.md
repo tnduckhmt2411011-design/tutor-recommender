@@ -1,4 +1,4 @@
-﻿# Hệ thống khuyến nghị gia sư dựa trên mức độ phù hợp đa tiêu chí
+﻿# Hệ thống khuyến nghị gia sư dựa trên phương pháp Content-Base Filtering
 
 Repository mã nguồn và tài liệu của đồ án tốt nghiệp đại học về hệ thống gợi ý gia sư đa tiêu chí.
 
