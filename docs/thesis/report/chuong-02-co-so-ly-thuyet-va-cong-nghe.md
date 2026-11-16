@@ -9,7 +9,7 @@ Chương này trình bày cơ sở lý thuyết của cách tiếp cận “khuy
 
 ## 2.1. Hệ thống khuyến nghị
 
-Hệ thống khuyến nghị (recommender system) là lớp bài toán dự đoán mức độ phù hợp giữa một người dùng và một tập các đối tượng (sản phẩm, công việc, nội dung...), từ đó xếp hạng và gợi ý những đối tượng phù hợp nhất [6]. Ba nhóm phương pháp phổ biến là Content-Based Filtering (dựa trên đặc trưng của đối tượng), Collaborative Filtering (dựa trên hành vi của nhiều người dùng) và Hybrid (kết hợp cả hai) [6]. Bảng 2.1 so sánh ba nhóm theo các tiêu chí liên quan trực tiếp đến bài toán tìm gia sư.
+Hệ thống khuyến nghị (recommender system) là lớp bài toán ước lượng mức độ hữu ích của một đối tượng đối với một người dùng, từ đó xếp hạng và gợi ý những đối tượng phù hợp nhất [6]. Ba nhóm phương pháp phổ biến là Content-Based Filtering (dựa trên đặc trưng của đối tượng), Collaborative Filtering (dựa trên hành vi của nhiều người dùng) và Hybrid (kết hợp cả hai) [6]. Bảng 2.1 so sánh ba nhóm theo các tiêu chí liên quan trực tiếp đến bài toán tìm gia sư.
 
 **Bảng 2.1 - So sánh ba nhóm phương pháp trong hệ thống khuyến nghị**
 
@@ -20,7 +20,7 @@ Hệ thống khuyến nghị (recommender system) là lớp bài toán dự đo�
 | Độ phức tạp triển khai | Thấp - so khớp đặc trưng hồ sơ với nhu cầu | Trung bình đến cao - cần ma trận tương tác và mô hình học từ dữ liệu | Cao - phải kết hợp và cân bằng hai mô hình con |
 | Phù hợp với hệ thống mới vận hành? | Phù hợp - không cần dữ liệu tích lũy | Không phù hợp - chưa có dữ liệu tương tác | Chỉ phù hợp một phần |
 
-*Nguồn: tổng hợp của nhóm từ đặc điểm ba nhóm phương pháp khuyến nghị.*
+*Nguồn: tổng hợp của nhóm từ [6].*
 
 Bảng 2.1 cho thấy Content-Based Filtering là nhóm phù hợp nhất với một hệ thống mới vận hành: hàng “Phù hợp với hệ thống mới vận hành?” ghi rõ nhóm này không cần dữ liệu tích lũy, trong khi Collaborative Filtering không phù hợp khi chưa có dữ liệu tương tác. Bài toán tìm gia sư có cùng bản chất với các bài toán ghép nối như gợi ý việc làm phù hợp với hồ sơ ứng viên: đều là ghép một “nhu cầu” (tiêu chí của người tìm) với một tập “đối tượng có đặc trưng” (hồ sơ gia sư, tin tuyển dụng) sao cho mức độ phù hợp là cao nhất [7].
 
@@ -50,7 +50,7 @@ Bảng 2.2 minh họa ảnh hưởng của trọng số bằng một ví dụ s�
 
 *Nguồn: ví dụ số do nhóm lập để minh họa (không phải dữ liệu thực của hệ thống).*
 
-Bộ 1 ưu tiên học phí (trọng số học phí : khu vực : đánh giá = 3 : 1 : 1); bộ 2 ưu tiên khu vực (1 : 3 : 1). Ví dụ với gia sư A ở bộ 1: S = (3×1,00 + 1×0,00 + 1×0,80) ÷ 5 = 0,76. Gia sư A xếp thứ nhất khi ưu tiên học phí nhưng xuống thứ ba khi ưu tiên khu vực, cho thấy thứ hạng phụ thuộc trực tiếp vào trọng số. Vì trọng số phản ánh ưu tiên của từng người học, không tồn tại một bộ trọng số “đúng” cho mọi nhu cầu [9]; bộ mặc định của hệ thống chỉ là giá trị khởi tạo để demo (mục 3.5).
+Bộ 1 ưu tiên học phí (trọng số học phí : khu vực : đánh giá = 3 : 1 : 1); bộ 2 ưu tiên khu vực (1 : 3 : 1). Ví dụ với gia sư A ở bộ 1: S = (3×1,00 + 1×0,00 + 1×0,80) ÷ 5 = 0,76. Gia sư A xếp thứ nhất khi ưu tiên học phí nhưng xuống thứ ba khi ưu tiên khu vực, cho thấy thứ hạng phụ thuộc trực tiếp vào trọng số. Trong biểu diễn cộng tính, trọng số là độ đo mức ưu tiên do người ra quyết định đặt ra chứ không phải hằng số của bài toán [9], nên không tồn tại một bộ trọng số “đúng” cho mọi nhu cầu; bộ mặc định của hệ thống chỉ là giá trị khởi tạo để demo (mục 3.5).
 
 ## 2.4. Công nghệ sử dụng
 
