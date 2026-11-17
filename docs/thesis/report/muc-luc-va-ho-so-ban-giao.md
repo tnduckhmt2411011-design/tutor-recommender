@@ -256,9 +256,9 @@ Mục lục được tạo tự động trong Word từ ba cấp Heading (Headin
 
 | # | Việc | Người phụ trách | Trạng thái |
 | :-: | :--- | :--- | :--- |
-| 1 | Ghép 6 chương + tài liệu tham khảo + phụ lục thành một tệp Word theo mẫu | Nhóm | Chưa làm (thao tác Word, ngoài kho mã) |
-| 2 | Điền số trang cho mục lục, danh mục bảng, danh mục hình | Nhóm | Chưa làm (Word tự sinh) |
-| 3 | Rà từ cấm và cấu trúc Chương 1–6 lần cuối | Nhóm | Đã rà tự động (từ cấm, số thập phân, caption, dẫn chiếu, công thức); cần đọc lại bằng mắt |
+| 1 | Ghép 6 chương + tài liệu tham khảo + phụ lục thành một tệp Word theo mẫu | Nhóm | Đã ghép tự động bằng `scripts/thesis/build_docx.py` (`BAO_CAO_DO_AN_KHMT1_HOAN_CHINH.docx`) |
+| 2 | Điền số trang cho mục lục, danh mục bảng, danh mục hình | Nhóm | Đã nhúng trường động `TOC` và `PAGEREF` kèm `<w:updateFields w:val="true"/>` (nhấn `Ctrl+A` → `F9` khi mở trong Word/WPS Writer để cập nhật số trang cuối) |
+| 3 | Rà từ cấm và cấu trúc Chương 1–6 lần cuối | Nhóm | Hoàn tất kiểm định tự động 74/74 số liệu (`recompute_numbers.py`), 31 bảng/9 hình (`check_captions.py`) và cấu trúc DOCX (`verify_docx.py`) |
 | 4 | Slide thuyết trình và kịch bản demo (US-35) | Nhóm | Đã soạn (`docs/thesis/slides/`) |
 | 5 | Gắn tag `v1.0` sau khi hợp nhất | Nhóm trưởng | Chưa làm, chờ chỉ định |
 | 6 | Chụp lại ảnh giao diện nếu giao diện thay đổi sau thời điểm 10/11/2026 | Nhóm | Chưa cần |
