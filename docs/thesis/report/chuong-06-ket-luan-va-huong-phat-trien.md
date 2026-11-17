@@ -11,18 +11,18 @@ Chương này tổng kết toàn bộ kết quả thực hiện của đồ án 
 
 Hệ thống khuyến nghị gia sư đã hoàn thiện các thành phần cốt lõi từ thuật toán tính điểm, dịch vụ API backend, giao diện tương tác người dùng frontend cho đến bộ kiểm thử tự động và tài liệu thiết kế. Kết quả thực tế được đối chiếu chi tiết với bốn mục tiêu cụ thể tại Mục 1.4 của đề cương đồ án trong Khung đối chiếu dưới đây.
 
-### Khung đối chiếu kết quả thực hiện với bốn mục tiêu cụ thể (Mục 1.4 đề cương)
+### 6.1.1. Khung đối chiếu kết quả thực hiện với bốn mục tiêu cụ thể (Mục 1.4 đề cương)
 
 | Mục tiêu cụ thể (Mục 1.4) | Kết quả đạt được | Bằng chứng thực tế trong repo | Mức độ và giới hạn cụ thể |
 |:---|:---|:---|:---|
-| **(a) Mô hình hóa mức độ phù hợp và module lọc – tính điểm:** Phân loại tiêu chí (bắt buộc / ưu tiên / tùy chọn), công thức điểm cho từng tiêu chí, ngưỡng dữ liệu tối thiểu, module lọc – tính điểm có trọng số (Weighted Scoring). | Đã hiện thực trọn vẹn pipeline lọc và tính điểm: (1) Lọc điều kiện bắt buộc theo Bảng 3.2 (môn học, hình thức dạy, lịch rảnh tối thiểu); (2) Kiểm tra ngưỡng dữ liệu tối thiểu tương ứng với số tiêu chí áp dụng $n$; (3) Tính điểm thành phần $s_i \in [0, 1]$ cho 5 tiêu chí ưu tiên theo Bảng 3.6; (4) Tổng hợp điểm bằng công thức Weighted Scoring, phá hòa tất định theo mã gia sư (`tutor_id`) và trích xuất điểm đóng góp giải thích. | Mã nguồn backend: `backend/app/scoring/filters.py`, `backend/app/scoring/eligibility.py`, `backend/app/scoring/criteria.py`, `backend/app/scoring/weights.py`, `backend/app/scoring/ranker.py`, `backend/app/core/config.py`, tài liệu đặc tả `docs/design/scoring-spec.md`, 132 bài kiểm thử unit tại `backend/tests/unit/`, Bảng 5.8 (ca biên) tại Chương 5 `docs/thesis/report/chuong-05-thuc-nghiem-va-danh-gia.md`. | **Đã hiện thực, có giới hạn:** Pipeline hoạt động chính xác theo đặc tả; tuy nhiên các tham số ($\delta = 0,5$, $E_{\max} = 8$, điểm trung tính $0,5$) và bộ trọng số nguyên {0, 1, 2, 3} do nhóm ấn định theo phán đoán nghiệp vụ, chưa được ước lượng tự động từ dữ liệu hành vi người dùng. |
+| **(a) Mô hình hóa mức độ phù hợp và module lọc – tính điểm:** Phân loại tiêu chí (bắt buộc / ưu tiên / tùy chọn), công thức điểm cho từng tiêu chí, ngưỡng dữ liệu tối thiểu, module lọc – tính điểm có trọng số (Weighted Scoring). | Đã hiện thực trọn vẹn pipeline lọc và tính điểm: (1) Lọc điều kiện bắt buộc theo Bảng 3.2 (môn học, hình thức dạy, lịch rảnh tối thiểu); (2) Kiểm tra ngưỡng dữ liệu tối thiểu tương ứng với số tiêu chí áp dụng $n$; (3) Tính điểm thành phần $s_i \in [0, 1]$ cho 5 tiêu chí ưu tiên theo Bảng 3.6; (4) Tổng hợp điểm bằng công thức Weighted Scoring, phá hòa tất định theo mã gia sư (`tutor_id`) và trích xuất điểm đóng góp giải thích. | Mã nguồn backend: `backend/app/scoring/filters.py`, `backend/app/scoring/eligibility.py`, `backend/app/scoring/criteria.py`, `backend/app/scoring/weights.py`, `backend/app/scoring/ranker.py`, `backend/app/core/config.py`, tài liệu đặc tả `docs/design/scoring-spec.md`, 132 bài kiểm thử unit tại `backend/tests/unit/`, Bảng 5.2 (ca biên) tại Chương 5 `docs/thesis/report/chuong-05-thuc-nghiem-va-danh-gia.md`. | **Đã hiện thực, có giới hạn:** Pipeline hoạt động chính xác theo đặc tả; tuy nhiên các tham số ($\delta = 0,5$, $E_{\max} = 8$, điểm trung tính $0,5$) và bộ trọng số nguyên {0, 1, 2, 3} do nhóm ấn định theo phán đoán nghiệp vụ, chưa được ước lượng tự động từ dữ liệu hành vi người dùng. |
 | **(b) Dịch vụ API gợi ý bằng FastAPI:** Tiếp nhận nhu cầu tìm kiếm của người học và trả về danh sách gia sư đã xếp hạng kèm điểm thành phần và điểm đóng góp. | Đã xây dựng hoàn chỉnh endpoint `POST /api/recommend` trên nền tảng FastAPI (Python 3.12). Dịch vụ xử lý hợp lệ dữ liệu đầu vào theo Pydantic schema, phân luồng phản hồi chính xác cho cả 4 trạng thái nghiệp vụ: `success` (HTTP 200), `no_match` (HTTP 200 khi không có ứng viên vượt qua vòng lọc), `zero_weight` (HTTP 200 khi tổng trọng số bằng 0), và lỗi kiểm thực `422 Unprocessable Entity`. | Mã nguồn endpoint: `backend/app/api/recommend.py`, cấu trúc schema: `backend/app/schemas/search_request.py`, `backend/app/schemas/recommendation.py`, hợp đồng API: `docs/design/api-contract.md`, 41 bài kiểm thử API tại `backend/tests/api/test_recommend_api.py`, số liệu đo đạc TestClient trong Chương 5 (trung bình 3,54 ms, tối đa 7,97 ms). | **Đã hiện thực, có giới hạn:** API xử lý đúng chuẩn trong môi trường kiểm thử bộ nhớ; đã triển khai thực tế trên đám mây Render; tuy nhiên phiên bản Render miễn phí (Free Tier) có độ trễ khởi động lại (cold start) khoảng 30–40 giây sau thời gian không hoạt động, và độ trễ truyền thông qua mạng Internet chưa được đo đạc định lượng. |
 | **(c) Giao diện demo bằng ReactJS:** Cho phép người học nhập nhu cầu, chọn mức ưu tiên và xem kết quả xếp hạng kèm giải thích. | Đã xây dựng giao diện tương tác người dùng Single Page Application bằng React 18 và Vite: Màn hình nhập nhu cầu `SearchPage` (CN01) với bộ nạp nhanh 14 kịch bản; Màn hình kết quả `ResultPage` (CN02) hiển thị Top-$k$ gia sư kèm biểu đồ thanh xếp chồng điểm đóng góp và lý do gợi ý; Thanh điều chỉnh mức ưu tiên trực tiếp (CN03) cho phép cập nhật thứ hạng tức thì. | Mã nguồn frontend: `frontend/src/App.jsx`, `frontend/src/pages/SearchPage.jsx`, `frontend/src/pages/ResultPage.jsx`, `frontend/src/components/TutorCard.jsx`, `frontend/src/components/StackedBarScore.jsx`, `frontend/src/data/goalPresets.js`, `frontend/src/services/api.js`, ứng dụng trực tuyến tại Vercel. | **Đã hiện thực, có giới hạn:** Giao diện đáp ứng trọn vẹn kịch bản kiểm thử trải nghiệm và trực quan hóa thuật toán; tuy nhiên hệ thống dừng lại ở phạm vi demo tra cứu một chiều, chưa có hệ thống xác thực người dùng, chưa hỗ trợ đăng ký học hoặc đánh giá gia sư sau buổi học. |
-| **(d) Đánh giá chất lượng xếp hạng qua kịch bản thực nghiệm:** Đánh giá chất lượng xếp hạng bằng các kịch bản có kỳ vọng xác định trước, minh họa ảnh hưởng của mức ưu tiên. | Đã số hóa và kiểm thử tự động 14 kịch bản tại Bảng 5.1; đạt độ trùng khớp 14/14 (100%) so với Top-3 kỳ vọng; phân tích chi tiết bản chất kỹ thuật của các ca biên (KB04, KB09, KB02, KB12); thực hiện khảo sát độ nhạy toàn diện trên 5 nhóm tham số tại Mục 5.2 (Bảng 5.2–5.7) xác nhận tính ổn định thứ hạng và vai trò điều hướng của mức ưu tiên. | Bộ kịch bản: `backend/tests/scenarios/scenarios.json`, `backend/tests/scenarios/test_scenarios.py` (27 bài kiểm thử), kết quả thực nghiệm tại Chương 5 `docs/thesis/report/chuong-05-thuc-nghiem-va-danh-gia.md`, tài liệu phân tích `docs/thesis/report/muc-5.2-danh-gia-do-on-dinh.md`, `docs/thesis/report/muc-5.2-ket-qua-tho.json`, `docs/thesis/report/discrepancy_analysis.md`. | **Đã hiện thực, có giới hạn:** Top-3 kỳ vọng do nhóm tự xác định dựa trên logic phán đoán nghiệp vụ; do đó kết quả 14/14 chỉ chứng minh hệ thống tính toán chính xác và nhất quán theo công thức toán học đã lựa chọn, chưa phản ánh độ thỏa mãn thực tế của người học ngoài đời thực. |
+| **(d) Đánh giá chất lượng xếp hạng qua kịch bản thực nghiệm:** Đánh giá chất lượng xếp hạng bằng các kịch bản có kỳ vọng xác định trước, minh họa ảnh hưởng của mức ưu tiên. | Đã số hóa và kiểm thử tự động 14 kịch bản tại Bảng 5.3; đạt độ trùng khớp 14/14 (100%) so với Top-3 kỳ vọng; phân tích chi tiết bản chất kỹ thuật của các ca biên (KB04, KB09, KB02, KB12); thực hiện khảo sát độ nhạy toàn diện trên 5 nhóm tham số tại Mục 5.2 (Bảng 5.4–5.9) xác nhận tính ổn định thứ hạng và vai trò điều hướng của mức ưu tiên. | Bộ kịch bản: `backend/tests/scenarios/scenarios.json`, `backend/tests/scenarios/test_scenarios.py` (27 bài kiểm thử), kết quả thực nghiệm tại Chương 5 `docs/thesis/report/chuong-05-thuc-nghiem-va-danh-gia.md`, tài liệu phân tích `docs/thesis/report/muc-5.2-danh-gia-do-on-dinh.md`, `docs/thesis/report/muc-5.2-ket-qua-tho.json`, `docs/thesis/report/discrepancy_analysis.md`. | **Đã hiện thực, có giới hạn:** Top-3 kỳ vọng do nhóm tự xác định dựa trên logic phán đoán nghiệp vụ; do đó kết quả 14/14 chỉ chứng minh hệ thống tính toán chính xác và nhất quán theo công thức toán học đã lựa chọn, chưa phản ánh độ thỏa mãn thực tế của người học ngoài đời thực. |
 
 *Nguồn: Đối chiếu giữa Mục 1.4 đề cương đồ án với mã nguồn và kết quả thực nghiệm trong kho lưu trữ.*
 
-### Mở rộng ngoài đề cương: Hỗ trợ Mục tiêu học tập tại giao diện người dùng
+### 6.1.2. Mở rộng ngoài đề cương: Hỗ trợ Mục tiêu học tập tại giao diện người dùng
 
 Xuất phát từ chỉ dẫn chuyên môn của Giáo viên hướng dẫn (TS. Lê Anh Nhã Uyên) ghi nhận trong báo cáo tiến độ giữa kỳ (`docs/thesis/review/sprint-05-midterm-progress-report.md`) — cho rằng nhu cầu của người học nên được mở rộng theo bộ ba *(Môn học, Cấp lớp, Mục tiêu học tập)* thay vì chỉ dừng ở tên môn học — nhóm đã nghiên cứu và ban hành tài liệu thiết kế `docs/design/de-xuat-mo-rong-cap-lop-muc-tieu.md`.
 
@@ -32,7 +32,7 @@ Hiện trạng triển khai thực tế như sau:
 - **Thống kê thực nghiệm:** Trích dẫn nguyên văn kết quả thử nghiệm từ tài liệu `docs/design/de-xuat-mo-rong-cap-lop-muc-tieu.md`: thử nghiệm trên 19 truy vấn (gồm 14 kịch bản nền tảng và 5 truy vấn tự đặt TQ1–TQ5) cho thấy có 2/5 truy vấn tự đặt đổi thứ hạng 2–3 giữa các preset mục tiêu, không có truy vấn nào đổi thứ hạng 1 (tổng 19 ca có 3 ca biến động thứ hạng 2–3; ca được chọn sau khi thử 19 truy vấn).
 - **Trạng thái ghi nhận:** Đề xuất này là giải pháp kỹ thuật do nhóm chủ động nghiên cứu và hiện tại **chưa có phản hồi chính thức của GVHD**.
 
-### Môi trường triển khai thực tế
+### 6.1.3. Môi trường triển khai thực tế
 
 Hệ thống đã được đóng gói và triển khai trực tuyến trên hạ tầng đám mây công cộng theo tài liệu hướng dẫn `docs/deployment/deploy-vercel-render.md`:
 - **Giao diện người dùng (Frontend):** Triển khai trên nền tảng Vercel tại địa chỉ `https://tutor-recommender.vercel.app`.
@@ -74,31 +74,31 @@ Bên cạnh ba hướng phát triển nêu trên, nhóm đề xuất hướng m�
 
 ## 6.3. Tự đánh giá và phân công công việc
 
-### Bảng 6.1 - Phân công công việc và mức độ hoàn thành của các thành viên trong nhóm
+**Bảng 6.1 - Phân công công việc và mức độ hoàn thành của các thành viên trong nhóm**
 
 | STT | Thành viên | Mã sinh viên | Công việc phụ trách | Mức độ hoàn thành |
 |:---:|:---|:---:|:---|:---:|
-| 1 | **Lê Thị Bích Chuyền** | KHMT2411037 | **Scrum Master các Sprint 2, 4, 6 kiêm Developer:** Điều phối nghi thức Scrum ở các Sprint chẵn; phát triển giao diện ReactJS (Vite), kết nối API và kiểm thử trải nghiệm người dùng; tham gia thiết kế dữ liệu và kiểm thử hệ thống. | *[Điền cuối khóa luận]* |
-| 2 | **Trần Nguyễn Đức** | KHMT2411011 | **Scrum Master các Sprint 1, 3, 5 kiêm Developer:** Điều phối nghi thức Scrum ở các Sprint lẻ và phụ trách quản lý nhánh/PR trên GitHub; phát triển lõi chấm điểm backend FastAPI, thuật toán xếp hạng và kiểm thử tự động. | *[Điền cuối khóa luận]* |
-| 3 | **Cao Khánh Ngọc** *(Nhóm trưởng)* | KHMT2411025 | **Product Owner kiêm Developer:** Đại diện yêu cầu đề tài và làm việc với GVHD (TS. Lê Anh Nhã Uyên), quản lý và ưu tiên Product Backlog, nghiệm thu sản phẩm theo Definition of Done; tham gia phát triển tài liệu, thiết kế dữ liệu và kiểm thử. | *[Điền cuối khóa luận]* |
+| 1 | **Lê Thị Bích Chuyền** | KHMT2411037 | **Scrum Master các Sprint 2, 4, 6 kiêm Developer:** Điều phối nghi thức Scrum ở các Sprint chẵn; phát triển giao diện ReactJS (Vite), kết nối API và kiểm thử trải nghiệm người dùng; tham gia thiết kế dữ liệu và kiểm thử hệ thống. | Hoàn thành |
+| 2 | **Trần Nguyễn Đức** | KHMT2411011 | **Scrum Master các Sprint 1, 3, 5 kiêm Developer:** Điều phối nghi thức Scrum ở các Sprint lẻ và phụ trách quản lý nhánh/PR trên GitHub; phát triển lõi chấm điểm backend FastAPI, thuật toán xếp hạng và kiểm thử tự động. | Hoàn thành |
+| 3 | **Cao Khánh Ngọc** *(Nhóm trưởng)* | KHMT2411025 | **Product Owner kiêm Developer:** Đại diện yêu cầu đề tài và làm việc với GVHD (TS. Lê Anh Nhã Uyên), quản lý và ưu tiên Product Backlog, nghiệm thu sản phẩm theo Definition of Done; tham gia phát triển tài liệu, thiết kế dữ liệu và kiểm thử. | Hoàn thành |
 
 *Ghi chú: Phân công thực tế do nhóm xác nhận. Toàn bộ mã nguồn và tài liệu trên GitHub được quản trị và hợp nhất thông qua tài khoản điều phối kỹ thuật, do đó số lượng commit hoặc Pull Request trên Git không đại diện cho tỷ lệ đóng góp của từng cá nhân; mức độ hoàn thành sẽ được tập thể nhóm và GVHD đánh giá ở giai đoạn tổng kết khóa luận.*  
 *Nguồn: `docs/scrum/roles.md` và `docs/thesis/outline/muc-6.1-bang-6.1.md`.*
 
-### Tự đánh giá kết quả thực hiện
+### 6.3.1. Tự đánh giá kết quả thực hiện
 
 Tập thể nhóm tự đánh giá quá trình thực hiện đồ án dựa trên các bằng chứng kỹ thuật có thể kiểm chứng độc lập trong kho lưu trữ mã nguồn:
 - **Tính đầy đủ của sản phẩm:** Nhóm đã hoàn thành toàn bộ các thành phần phần mềm đã đăng ký trong đề cương, bao gồm module thuật toán tính điểm backend, dịch vụ RESTful API, ứng dụng web frontend tương tác trực quan và hạ tầng triển khai trực tuyến.
 - **Chất lượng kiểm thử và độ tin cậy:** Hệ thống đạt 200/200 bài kiểm thử tự động thành công (100% passed) thực hiện qua thư viện pytest; độ bao phủ mã nguồn backend đạt 97% (340/351 câu lệnh được phủ theo lệnh đo `pytest --cov=app`); 14/14 kịch bản thực nghiệm nền tảng đạt kết quả trùng khớp hoàn toàn với thứ tự kỳ vọng đã thiết lập.
 - **Tính toàn vẹn dữ liệu:** Toàn bộ 16 hồ sơ gia sư trong `data/processed/tutors.json` và `data/processed/tutors.csv` vượt qua kiểm tra toàn vẹn định dạng và bảo toàn cấu trúc dữ liệu theo kịch bản xác thực `scripts/validate_tutors.py`.
 - **Kỷ luật kỹ thuật và tài liệu hóa:** Quy trình phát triển phần mềm được tổ chức bài bản theo mô hình Scrum qua 6 Sprint; toàn bộ các tài liệu kiến trúc, đặc tả thuật toán, hợp đồng API, biên bản hồi tưởng và báo cáo thực nghiệm đều được cập nhật đồng bộ, lưu trữ phiên bản minh bạch trong kho lưu trữ Git.
-- Cột "Mức độ hoàn thành" tại Bảng 6.1 được giữ nguyên quy ước `[Điền cuối khóa luận]` để hội đồng đánh giá và GVHD đưa ra kết luận chính thức tại buổi bảo vệ đồ án.
+- Cột "Mức độ hoàn thành" tại Bảng 6.1 ghi nhận tự đánh giá của nhóm; hội đồng đánh giá và GVHD kết luận chính thức tại buổi bảo vệ đồ án.
 
 ---
 
-## PHỤ LỤC A. BỘ DỮ LIỆU MẪU
+# PHỤ LỤC A. BỘ DỮ LIỆU MẪU
 
-### 1. Mô tả nguồn gốc và quy trình xử lý dữ liệu gia sư
+## 1. Mô tả nguồn gốc và quy trình xử lý dữ liệu gia sư
 
 Nhóm nghiên cứu đã thực hiện khảo sát và thu thập thủ công 15 hồ sơ gia sư ban đầu từ hai nền tảng gia sư trực tuyến công khai tại Việt Nam là giasudatviet.com và giasudantri.vn. Sau bước xác minh sơ bộ, nhóm chọn lọc được 11 hồ sơ đáp ứng phạm vi nhận dạy thực tế trên địa bàn Thành phố Hồ Chí Minh.
 
@@ -110,7 +110,11 @@ Nhóm nghiên cứu đã thực hiện khảo sát và thu thập thủ công 15
 - **Chuẩn hóa nhãn môn học hồ sơ GS-G03:** Nhãn môn học của hồ sơ `GS-G03` được chuẩn hóa từ "Tiếng Anh" thành "Anh Văn" theo ghi nhận tại `data/README.md` (mục 4) nhằm đồng bộ với danh mục môn học chung của toàn hệ thống.
 - **Nhãn nguồn dữ liệu:** Nhãn `data_source` của hai hồ sơ `GS-T06` và `GS-T07` được giữ nguyên giá trị `public_collected` trong toàn bộ cơ sở dữ liệu (`data/processed/tutors.json`, `data/processed/tutors.csv`, `frontend/src/data/tutorsCatalog.js`) theo đúng quyết định thống nhất của nhóm nghiên cứu.
 
-### 2. Danh sách 16 hồ sơ gia sư mẫu
+## 2. Danh sách 16 hồ sơ gia sư mẫu
+
+Bảng A.1 liệt kê đầy đủ 16 hồ sơ theo đúng thứ tự mã, kèm nhãn nguồn dữ liệu và dấu `(*)` cho hai trường ước tính của `GS-T06`, `GS-T07`.
+
+**Bảng A.1 - Danh sách 16 hồ sơ gia sư mẫu**
 
 | STT | Mã gia sư | Môn dạy | Khu vực | Học phí (VNĐ/giờ) | Số năm KN | Hình thức dạy | Lịch rảnh | Đánh giá TB | Nguồn dữ liệu |
 |:---:|:---|:---|:---|:---:|:---:|:---:|:---|:---:|:---|
@@ -131,18 +135,17 @@ Nhóm nghiên cứu đã thực hiện khảo sát và thu thập thủ công 15
 | 15 | GS-G11 | Anh Văn | Quận 2, Bình Thạnh | 200.000 | 5 | Trực tiếp | T3-sáng, T6-sáng | 4,5 | Giả lập |
 | 16 | GS-G12 | Anh Văn | Quận 2, Thủ Đức | 200.000 | 5 | Trực tiếp | T3-sáng, T6-sáng | 4,5 | Giả lập |
 
-*Bảng A.1 - Danh sách 16 hồ sơ gia sư mẫu*  
 *Ghi chú: (*) Học phí và lịch rảnh của gia sư GS-T06 và GS-T07 là số liệu ước tính của nhóm nghiên cứu; môn dạy, khu vực và số năm kinh nghiệm là dữ liệu thu thập thực tế từ nguồn công khai đã được ẩn danh hóa. Điểm đánh giá để trống được thuật toán tự động xử lý bằng giá trị trung tính 0,5.*  
 *Nguồn: `data/processed/tutors.json` và `data/processed/tutors.csv`.*
 
-### 3. Danh mục khu vực quy ước trong hệ thống
+## 3. Danh mục khu vực quy ước trong hệ thống
 
 Tập hợp danh mục khu vực địa lý sử dụng trong hệ thống được trích xuất từ các khu vực xuất hiện trong `data/processed/tutors.json` và đối chiếu với danh mục lựa chọn `DISTRICT_OPTIONS` trong mã nguồn frontend `frontend/src/services/api.js`:
 - **Danh sách 16 quận/huyện quy ước:** Bình Chánh, Bình Thạnh, Gò Vấp, Nhà Bè, Phú Nhuận, Quận 1, Quận 2, Quận 3, Quận 7, Quận 8, Quận 9, Quận 10, Quận 11, Tân Bình, Tân Phú, Thủ Đức.
 - **Đối chiếu:** Hai tập hợp trong cơ sở dữ liệu `data/processed/tutors.json` và cấu hình giao diện `DISTRICT_OPTIONS` trùng khớp hoàn toàn 16/16 khu vực (độ sai lệch bằng 0).
 - **Khác biệt so với thực tế hành chính hiện hành:** Nhóm ghi nhận danh mục quy ước này không bám sát đơn vị hành chính hiện hành của Thành phố Hồ Chí Minh. Cụ thể, hệ thống vẫn duy trì tách biệt "Quận 2", "Quận 9" và "Thủ Đức" (trong khi các đơn vị này đã sáp nhập thành Thành phố Thủ Đức từ ngày 01/01/2021); đồng thời danh mục chưa bao quát đầy đủ 22 đơn vị hành chính cấp huyện của thành phố (thiếu Quận 4, Quận 5, Quận 6, Quận 12, Bình Tân, Hóc Môn, Củ Chi, Cần Giờ). Đây là danh mục quy ước đóng cục bộ phục vụ cho phạm vi thử nghiệm của đồ án.
 
-### 4. Kết quả kiểm tra tính toàn vẹn của bộ dữ liệu
+## 4. Kết quả kiểm tra tính toàn vẹn của bộ dữ liệu
 
 Tính toàn vẹn, hợp lệ kiểu dữ liệu và sự đồng bộ tuyệt đối giữa định dạng JSON và CSV của bộ dữ liệu 16 hồ sơ được xác minh thông qua lệnh chạy:
 
@@ -159,11 +162,11 @@ Kết quả thực thi thực tế:
 
 ---
 
-## PHỤ LỤC B. MODULE TÍNH ĐIỂM VÀ XẾP HẠNG
+# PHỤ LỤC B. MODULE TÍNH ĐIỂM VÀ XẾP HẠNG
 
-Bảng dưới đây liệt kê danh mục các tệp mã nguồn, lớp và hàm chính hiện thực logic tính điểm và điều phối gợi ý trong gói `backend/app/`, được đối chiếu với các bước xử lý tương ứng tại Mục 3.6 của đề cương đồ án.
+Bảng B.1 dưới đây liệt kê danh mục các tệp mã nguồn, lớp và hàm chính hiện thực logic tính điểm và điều phối gợi ý trong gói `backend/app/`, được đối chiếu với các bước xử lý tương ứng tại Mục 3.6 của đề cương đồ án.
 
-### Bảng B.1 - Danh mục tệp mã nguồn và hàm nghiệp vụ trong module gợi ý gia sư
+**Bảng B.1 - Danh mục tệp mã nguồn và hàm nghiệp vụ trong module gợi ý gia sư**
 
 | STT | Tệp mã nguồn | Lớp / Hàm chính | Vai trò kỹ thuật | Bước tương ứng trong Mục 3.6 |
 |:---:|:---|:---|:---|:---|
@@ -183,13 +186,13 @@ Bảng dưới đây liệt kê danh mục các tệp mã nguồn, lớp và hà
 
 ---
 
-## PHỤ LỤC C. DANH MỤC HÌNH ẢNH GIAO DIỆN DEMO
+# PHỤ LỤC C. DANH MỤC HÌNH ẢNH GIAO DIỆN DEMO
 
-### 1. Danh mục hình ảnh hiện có trong kho lưu trữ mã nguồn
+## 1. Danh mục hình ảnh hiện có trong kho lưu trữ mã nguồn
 
-Kho lưu trữ hiện lưu trữ 5 tệp hình ảnh chụp giao diện và kết quả kiểm thử tại thư mục `docs/thesis/assets/midterm/` (thư mục `docs/thesis/figures` hiện chỉ chứa `.gitkeep`):
+Kho lưu trữ lưu 5 tệp hình ảnh chụp giao diện và kết quả kiểm thử từ đợt giữa kỳ tại `docs/thesis/assets/midterm/`; từ Sprint 6, thư mục `docs/thesis/figures/` được bổ sung 9 hình dùng trong báo cáo (5 hình Chương 3 và 4 ảnh giao diện Chương 4). Bảng C.1 giữ danh mục ảnh giữa kỳ để đối chiếu lịch sử:
 
-### Bảng C.1 - Danh mục hình ảnh giao diện demo hiện có trong repo
+**Bảng C.1 - Danh mục hình ảnh giao diện demo hiện có trong repo**
 
 | STT | Tệp hình ảnh trong repo | Nội dung thể hiện | Đánh giá hiện trạng kỹ thuật |
 |:---:|:---|:---|:---|
@@ -201,23 +204,23 @@ Kho lưu trữ hiện lưu trữ 5 tệp hình ảnh chụp giao diện và kế
 
 *Nguồn: Thư mục `docs/thesis/assets/midterm/` trong kho lưu trữ mã nguồn.*
 
-### 2. Danh sách hình ảnh đề xuất chụp lại cho bản báo cáo chính thức
+## 2. Trạng thái các hình ảnh cho bản báo cáo chính thức
 
-Để đảm bảo tính đồng bộ tuyệt đối với phiên bản phần mềm nghiệm thu cuối cùng, các hình ảnh sau được đề xuất chụp mới để đưa vào bản thuyết minh chính thức (thay thế hoặc bổ sung vào `docs/thesis/figures`):
-1. **Hình chụp CN01 mới:** Màn hình nhập nhu cầu hiển thị đầy đủ ô lựa chọn "Mục tiêu học tập" với 3 preset (Mặc định, Luyện thi điểm cao / học chuyên, Đậu tốt nghiệp / lấy lại căn bản).
-2. **Hình chụp CN02 mới:** Màn hình kết quả Top-3 hiển thị thanh xếp chồng phân rã điểm thành phần ($w_i \cdot s_i / \sum w_i$) và văn bản giải thích rõ ràng.
-3. **Hình chụp CN03 mới:** Màn hình điều chỉnh trực tiếp mức ưu tiên với nhãn chuẩn hóa "Bỏ qua (w = 0)".
-4. **Hình chụp trạng thái tổng trọng số bằng 0:** Màn hình kết quả khi người học tắt toàn bộ các tiêu chí ưu tiên ($\sum w = 0$), hiển thị phản hồi hướng dẫn người học bật lại ít nhất một tiêu chí (`zero_weight`).
-5. **Hình chụp Swagger UI tài liệu API:** Giao diện Swagger UI của FastAPI hiển thị đầy đủ schema của `SearchRequest` và `RecommendationSuccessResponse`.
-6. **Hình chụp terminal kiểm thử 200 passed:** Kết quả chạy `pytest -q` đạt 200 passed và `pytest --cov=app` đạt độ bao phủ 97% trên môi trường Python 3.12.
+Để đảm bảo tính đồng bộ với phiên bản phần mềm nghiệm thu cuối cùng, danh sách dưới đây ghi lại các ảnh cần chụp cho bản thuyết minh chính thức. Bốn mục đầu đã hoàn tất và được đưa vào báo cáo tại Hình 4.1–4.4; hai mục cuối không đưa vào danh mục hình vì số liệu tương ứng đã được dẫn trực tiếp bằng bảng và liên kết.
+1. **Hình chụp CN01 mới (đã thực hiện — Hình 4.1):** Màn hình nhập nhu cầu hiển thị đầy đủ ô lựa chọn "Mục tiêu học tập" với 3 preset (Mặc định, Luyện thi điểm cao / học chuyên, Đậu tốt nghiệp / lấy lại căn bản).
+2. **Hình chụp CN02 mới (đã thực hiện — Hình 4.2):** Màn hình kết quả Top-3 hiển thị thanh xếp chồng phân rã điểm thành phần ($w_i \cdot s_i / \sum w_i$) và văn bản giải thích rõ ràng.
+3. **Hình chụp CN03 mới (đã thực hiện — Hình 4.3):** Màn hình điều chỉnh trực tiếp mức ưu tiên với nhãn chuẩn hóa "Bỏ qua (w = 0)".
+4. **Hình chụp trạng thái tổng trọng số bằng 0 (đã thực hiện — Hình 4.4):** Màn hình kết quả khi người học tắt toàn bộ các tiêu chí ưu tiên ($\sum w = 0$), hiển thị phản hồi hướng dẫn người học bật lại ít nhất một tiêu chí (`zero_weight`).
+5. **Hình chụp Swagger UI tài liệu API (không đưa vào báo cáo):** Giao diện Swagger UI của FastAPI hiển thị đầy đủ schema của `SearchRequest` và `RecommendationSuccessResponse`; báo cáo dẫn liên kết tài liệu tương tác ở Mục 6.1.3.
+6. **Hình chụp terminal kiểm thử 200 passed (không đưa vào báo cáo):** Kết quả chạy `pytest -q` đạt 200 passed và `pytest --coverage` đạt độ bao phủ 97% trên môi trường Python 3.12; số liệu này được trình bày ở Bảng 5.1 thay vì dùng ảnh chụp màn hình.
 
 ---
 
-## PHỤ LỤC D. KỊCH BẢN KIỂM THỬ THỰC NGHIỆM
+# PHỤ LỤC D. KỊCH BẢN KIỂM THỬ THỰC NGHIỆM
 
 Bảng D.1 đặc tả chi tiết toàn bộ tham số đầu vào và danh sách Top-3 kỳ vọng của 14 kịch bản tìm kiếm gia sư, được trích xuất trực tiếp từ tệp dữ liệu kịch bản `backend/tests/scenarios/scenarios.json`.
 
-### Bảng D.1 - Yêu cầu đầy đủ của 14 kịch bản thực nghiệm
+**Bảng D.1 - Yêu cầu đầy đủ của 14 kịch bản thực nghiệm**
 
 | Mã KB | Môn | Hình thức | Khu vực | Ngân sách (VNĐ/giờ) | Khung giờ | Mức ưu tiên khác mặc định | Top-3 kỳ vọng |
 |:---:|:---|:---|:---|:---:|:---|:---|:---|
@@ -236,13 +239,11 @@ Bảng D.1 đặc tả chi tiết toàn bộ tham số đầu vào và danh sác
 | KB13 | Toán | any | Không nhập | 150.000 | Không nhập | Mặc định (đều w=2) | GS-G10, GS-G01, GS-T06 |
 | KB14 | Anh Văn | Trực tuyến | Không nhập | Không nhập | Không nhập | Mặc định (đều w=2) | GS-G03 |
 
-*Bảng D.1 - Yêu cầu đầy đủ của 14 kịch bản thực nghiệm*  
 *Ghi chú: Cột "Khung giờ" và "Khu vực" ghi nhận "Không nhập" khi người học không điền tiêu chí tùy chọn tương ứng; mức ưu tiên mặc định của cả 5 tiêu chí là Trung bình (w = 2). Kết quả Top-3 kỳ vọng được xác lập dựa trên suy luận logic nghiệp vụ để đối chiếu với thuật toán.*  
 *Nguồn: `backend/tests/scenarios/scenarios.json`.*
 
-### Dẫn chiếu kết quả thực nghiệm và kiểm thử ca biên
+## Dẫn chiếu kết quả thực nghiệm và kiểm thử ca biên
 
 Nhằm đảm bảo tính súc tích và tránh trùng lặp số liệu trong toàn bộ báo cáo:
-- **Kết quả xếp hạng thực tế của hệ thống đối với 14 kịch bản:** Kết quả chạy thật qua pipeline xếp hạng, đối chiếu số lượng trùng khớp (14/14 đạt 100%) và phân tích chi tiết bản chất kỹ thuật của các ca đặc biệt (KB04, KB09, KB02, KB12) đã được trình bày đầy đủ tại **Bảng 5.1 (Kết quả thực nghiệm 14 kịch bản tìm kiếm gia sư)** trong Chương 5 (`docs/thesis/report/chuong-05-thuc-nghiem-va-danh-gia.md`).
-- **Kết quả kiểm thử ca biên của 5 hàm điểm:** Bảng ma trận kiểm thử các giá trị biên cực đoan và tính đơn điệu của các hàm điểm thành phần đã được trình bày chi tiết tại **Bảng 5.8 (Kết quả kiểm thử ca biên và tính đơn điệu của hàm điểm)** trong Chương 5.
-- *Ghi chú đồng bộ:* Số hiệu Bảng 5.8 trong Chương 5 có thể được điều chỉnh và đồng bộ lại danh mục bảng trong giai đoạn đóng gói toàn văn báo cáo khóa luận (US-36).
+- **Kết quả xếp hạng thực tế của hệ thống đối với 14 kịch bản:** Kết quả chạy thật qua pipeline xếp hạng, đối chiếu số lượng trùng khớp (14/14 đạt 100%) và phân tích chi tiết bản chất kỹ thuật của các ca đặc biệt (KB04, KB09, KB02, KB12) đã được trình bày đầy đủ tại **Bảng 5.3 (Kết quả thực nghiệm 14 kịch bản tìm kiếm gia sư)** trong Chương 5 (`docs/thesis/report/chuong-05-thuc-nghiem-va-danh-gia.md`).
+- **Kết quả kiểm thử ca biên của 5 hàm điểm:** Bảng ma trận kiểm thử các giá trị biên cực đoan và tính đơn điệu của các hàm điểm thành phần đã được trình bày chi tiết tại **Bảng 5.2 (Kết quả kiểm thử ca biên và tính đơn điệu của hàm điểm)** trong Chương 5.

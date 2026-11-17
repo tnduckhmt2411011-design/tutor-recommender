@@ -3,7 +3,7 @@
 
 # Lộ trình phát triển Scrum (Scrum Roadmap)
 
-Lộ trình vận hành Scrum cho đồ án tốt nghiệp **"Hệ thống khuyến nghị gia sư dựa trên mức độ phù hợp đa tiêu chí"**, trải qua 6 Sprint hai tuần (tổng thời gian 12 tuần), hướng tới mục tiêu hoàn thành sản phẩm phần mềm chất lượng cao và báo cáo đồ án đúng hạn.
+Lộ trình vận hành Scrum cho đồ án tốt nghiệp **"Hệ thống khuyến nghị gia sư dựa trên phương pháp Content-Base Filtering"**, trải qua 6 Sprint hai tuần (tổng thời gian 12 tuần), hướng tới mục tiêu hoàn thành sản phẩm phần mềm chất lượng cao và báo cáo đồ án đúng hạn.
 
 ---
 
