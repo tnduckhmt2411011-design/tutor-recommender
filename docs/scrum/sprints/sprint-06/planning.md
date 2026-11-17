@@ -18,8 +18,8 @@
 | **US-34** | Soạn thảo tài liệu hướng dẫn cài đặt và vận hành hệ thống (`README`) | 1 | Must | Mục 4.1, Phụ lục B | #34 | *[Chờ nhóm phân công]* | Đã hoàn thành |
 | **US-35** | Thiết kế slide thuyết trình và chuẩn bị kịch bản demo bảo vệ | 2 | Must | Báo cáo đồ án & slide | #35 | *[Chờ nhóm phân công]* | Đã hoàn thành |
 | **US-36** | Cập nhật mục lục, đóng gói hồ sơ đồ án và gắn tag phát hành `v1.0` | 1 | Must | Mục lục, Toàn bộ báo cáo | #36 | *[Chờ nhóm phân công]* | Đang làm (còn tag `v1.0`) |
-| **US-40** | Đề xuất mở rộng mô hình: Tổ hợp Cấp lớp và Mục tiêu học tập theo chỉ dẫn của GVHD | 2 | Should | Mục 3.6, Mục 6.2 | #79 | *[Chờ nhóm phân công]* | Chưa làm |
-| **US-41** | Thêm gợi ý mức ưu tiên theo mục tiêu học tập ở màn hình nhập nhu cầu | 2 | Should | Mục 6.2 | #82 | *[Chờ nhóm phân công]* | Chưa làm |
+| **US-40** | Đề xuất mở rộng mô hình: Tổ hợp Cấp lớp và Mục tiêu học tập theo chỉ dẫn của GVHD | 2 | Should | Mục 3.6, Mục 6.2 | #79 | *[Chờ nhóm phân công]* | Đã hoàn thành |
+| **US-41** | Thêm gợi ý mức ưu tiên theo mục tiêu học tập ở màn hình nhập nhu cầu | 2 | Should | Mục 6.2 | #82 | *[Chờ nhóm phân công]* | Đã hoàn thành |
 
 - **Tổng điểm Story Points:** **13 SP** (9 Must, 4 Should).
 - *Ghi chú về US-40 (`Should`):* Đây là tài liệu đề xuất, không viết code; nếu GVHD chưa phản hồi câu hỏi nên áp dụng *Adaptive Weight Mapping* hay bổ sung tiêu chí $s_6$, hoặc tiến độ căng, nhóm có thể cắt khỏi Sprint 6 mà không ảnh hưởng Cổng chất lượng 4 hay bản phát hành `v1.0`.
@@ -34,7 +34,7 @@
   - [x] US-30 (#32) + US-33 (#33):
     - Xây dựng bộ kiểm thử thực nghiệm tự động `backend/tests/scenarios/test_sensitivity_muc_5_2.py` khảo sát độ nhạy của tham số $\delta \in \{0{,}25;\, 0{,}30;\, 0{,}50;\, 0{,}70;\, 0{,}75;\, 1{,}00\}$, kinh nghiệm trần $E_{\max} \in \{5,\, 6,\, 8,\, 10,\, 12\}$, biến động ngân sách $\{-20\%,\, -10\%,\, -5\%,\, +5\%,\, +10\%,\, +20\%\}$ và đối chiếu thứ hạng dưới nhiều bộ mức ưu tiên trên dữ liệu thực theo tinh thần Bảng 2.2 (tổng cộng 10 bài kiểm thử tự động, nâng tổng số test toàn hệ thống từ `190` lên `200 passed, 0 skipped`).
     - Lập báo cáo chuyên đề `docs/thesis/report/muc-5.2-danh-gia-do-on-dinh.md` tổng hợp số liệu thống kê độ trùng khớp Top-3 (14/14 = 100%), phân tích độ ổn định và khả năng giải thích của mô hình.
-    - Soạn thảo báo cáo hoàn chỉnh Chương 5 tại `docs/thesis/report/chuong-05-thuc-nghiem-va-danh-gia.md` (tổng hợp Mục 5.1, Bảng 5.1, Mục 5.2 và phân tích 5 hạn chế thực tế tại Mục 5.3).
+    - Soạn thảo báo cáo hoàn chỉnh Chương 5 tại `docs/thesis/report/chuong-05-thuc-nghiem-va-danh-gia.md` (tổng hợp Mục 5.1, Bảng 5.1, Mục 5.2 và phân tích các hạn chế thực tế tại Mục 5.3).
     - Soạn thảo báo cáo hoàn chỉnh Chương 6 và hệ thống Phụ lục tại `docs/thesis/report/chuong-06-ket-luan-va-huong-phat-trien.md` (Mục 6.1 đối chiếu 4 mục tiêu cụ thể ở Mục 1.4, Mục 6.2 ba hướng phát triển lên đồ án tốt nghiệp, Mục 6.3 tự đánh giá Bảng 6.1, cùng Phụ lục A, B, C, D) và cập nhật `docs/thesis/outline/muc-6.1-bang-6.1.md`.
   - [x] US-34 (#34) + US-35 (#35):
     - Cập nhật toàn diện `README.md` tại thư mục gốc cùng `backend/README.md` và `frontend/README.md` để người chấm hoặc người dùng mới có thể cài đặt môi trường, khởi chạy backend (`uvicorn`), khởi chạy frontend (`vite`), chạy kiểm thử (`pytest`, `ruff`, `oxlint`) và trải nghiệm demo CN01–CN03 trong vòng 5 phút; bổ sung hình ảnh minh họa giao diện tại `docs/thesis/figures/`.
@@ -43,22 +43,23 @@
     - [x] Lập tài liệu tổng hợp `docs/thesis/report/muc-luc-va-ho-so-ban-giao.md` đồng bộ Mục lục, Danh mục hình ảnh (Hình 3.1–3.5 và hình giao diện thực tế), Danh mục bảng biểu (Bảng 1.1–6.1) và bảng kiểm tra tính toàn vẹn của hồ sơ bàn giao `v1.0`.
     - [x] Rà soát làm sạch các tệp `.gitkeep` dư thừa tại các thư mục đã có tệp thật và lập biên bản sơ kết/rút kinh nghiệm cuối khóa tại `docs/scrum/sprints/sprint-06/{review,retrospective}.md`.
     - [ ] Sau khi toàn bộ các PR của Sprint 6 được kiểm tra và hợp nhất vào `main`, tạo và đẩy git tag chính thức `v1.0` lên GitHub repository (chưa thực hiện, chờ nhóm chỉ định).
-  - [ ] US-40 (#79):
-    - Soạn tài liệu `docs/design/de-xuat-mo-rong-cap-lop-muc-tieu.md` trình bày nhu cầu ba chiều (Môn học, Cấp lớp, Mục tiêu học tập), phân tích hai phương án *Adaptive Weight Mapping* và *Goal Compatibility* (`s_6`), khuyến nghị Phương án 1 kèm lộ trình triển khai và rủi ro.
-    - Không sửa mã nguồn, 14 kịch bản, 200 bài kiểm thử hay `data/processed/tutors.json`; sản phẩm chỉ là tài liệu trong `docs/design/`.
-  - [ ] US-41 (#82):
-    - Thêm ô chọn mục tiêu học tập (3 giá trị: *Điểm cao / luyện thi chuyên – học sinh giỏi*, *Đủ điểm đậu / lấy lại căn bản*, *Không nêu mục tiêu*) ở `frontend/src/pages/SearchPage.jsx` và bảng ánh xạ mục tiêu → 5 mức ưu tiên ở `frontend/src/services/api.js`; giữ nguyên `buildRecommendationPayload` với đúng 7 trường.
-    - Thêm `learningGoal` vào `searchForm` ở `frontend/src/App.jsx` và đặt lại "Không nêu mục tiêu" khi nạp KB01–KB14; hiển thị mục tiêu đã chọn cùng nhãn "Tùy chỉnh" ở `frontend/src/pages/ResultPage.jsx`.
-    - Chỉ sửa frontend; không thêm trường vào `SearchRequest`, không đổi backend, dữ liệu, công thức chấm điểm hay `scenarios.json`. **Chưa làm Cấp lớp** vì hồ sơ gia sư thiếu dữ liệu cấp lớp/trình độ.
+  - [x] US-40 (#79):
+    - [x] Soạn tài liệu `docs/design/de-xuat-mo-rong-cap-lop-muc-tieu.md` trình bày nhu cầu ba chiều (Môn học, Cấp lớp, Mục tiêu học tập), phân tích hai phương án *Adaptive Weight Mapping* và *Goal Compatibility* (`s_6`), khuyến nghị Phương án 1 kèm lộ trình triển khai và rủi ro.
+    - [x] Không sửa mã nguồn, 14 kịch bản, 200 bài kiểm thử hay `data/processed/tutors.json`; sản phẩm chỉ là tài liệu trong `docs/design/`.
+  - [x] US-41 (#82):
+    - [x] Thêm ô chọn mục tiêu học tập (3 giá trị: *Điểm cao / luyện thi chuyên – học sinh giỏi*, *Đủ điểm đậu / lấy lại căn bản*, *Không nêu mục tiêu*) ở `frontend/src/pages/SearchPage.jsx`; bảng ánh xạ mục tiêu → 5 mức ưu tiên đặt tại `frontend/src/data/goalPresets.js` (thay cho `frontend/src/services/api.js` như kế hoạch ban đầu); giữ nguyên `buildRecommendationPayload` với đúng 7 trường.
+    - [x] Giá trị ô chọn được suy ra từ 5 mức ưu tiên hiện tại thay vì thêm trường `learningGoal` vào `searchForm` (lý do ghi tại chú thích `SearchPage.jsx`); nhãn "Tùy chỉnh" hiển thị ngay trong ô chọn, còn `ResultPage.jsx` không hiển thị lại mục tiêu — khác kế hoạch ban đầu, đã ghi nhận tại `review.md` và `retrospective.md` của Sprint 6.
+    - [x] Chỉ sửa frontend; không thêm trường vào `SearchRequest`, không đổi backend, dữ liệu, công thức chấm điểm hay `scenarios.json`. **Chưa làm Cấp lớp** vì hồ sơ gia sư thiếu dữ liệu cấp lớp/trình độ.
 
 ---
 
 ## 3. Tiêu chí nghiệm thu Cổng chất lượng 4 (Quality Gate 4)
 
-- [ ] Toàn bộ bài kiểm thử tự động ở backend (`pytest`, `ruff check`) và kiểm tra chất lượng mã nguồn ở frontend (`npm run lint`, `npm run build`) đều vượt qua 100% không lỗi.
-- [ ] Hoàn thiện báo cáo Chương 5 (Mục 5.1, Bảng 5.1, Mục 5.2, Mục 5.3), Chương 6 (Mục 6.1, 6.2, 6.3 - Bảng 6.1) và các Phụ lục A, B, C, D phản ánh trung thực kết quả thực nghiệm của hệ thống.
-- [ ] Tài liệu `README.md` đầy đủ hướng dẫn cài đặt, chạy thử nghiệm trong 5 phút và có hình minh họa giao diện; bộ slide thuyết trình và kịch bản demo bảo vệ CN01–CN03 sẵn sàng tại `docs/thesis/slides/`.
-- [ ] Mục lục, Danh mục hình ảnh, Danh mục bảng biểu đồng bộ; repository sạch sẽ không có tệp thừa/tạm; hoàn tất gắn tag phát hành chính thức `v1.0` trên nhánh `main`.
+- [x] Toàn bộ bài kiểm thử tự động ở backend (`pytest`, `ruff check`) và kiểm tra chất lượng mã nguồn ở frontend (`npm run lint`, `npm run build`) đều vượt qua 100% không lỗi.
+- [x] Hoàn thiện báo cáo Chương 5 (Mục 5.1, Bảng 5.1, Mục 5.2, Mục 5.3), Chương 6 (Mục 6.1, 6.2, 6.3 - Bảng 6.1) và các Phụ lục A, B, C, D phản ánh trung thực kết quả thực nghiệm của hệ thống.
+- [x] Tài liệu `README.md` đầy đủ hướng dẫn cài đặt, chạy thử nghiệm trong 5 phút và có hình minh họa giao diện; bộ slide thuyết trình và kịch bản demo bảo vệ CN01–CN03 sẵn sàng tại `docs/thesis/slides/`.
+- [x] Mục lục, Danh mục hình ảnh, Danh mục bảng biểu đồng bộ; repository sạch sẽ không có tệp thừa/tạm.
+- [ ] Hoàn tất gắn tag phát hành chính thức `v1.0` trên nhánh `main` sau khi hợp nhất PR #93 (chưa thực hiện, chờ nhóm chỉ định).
 
 > **Lưu ý:** US-40 và US-41 là hạng mục `Should`, **không** phải điều kiện nghiệm thu Cổng chất lượng 4; có thể cắt khỏi Sprint 6 nếu GVHD chưa phản hồi câu hỏi nên áp dụng *Adaptive Weight Mapping* hay bổ sung tiêu chí $s_6$, hoặc nếu tiến độ căng.
 
