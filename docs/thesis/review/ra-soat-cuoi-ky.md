@@ -5,7 +5,7 @@
 - **Quy chuẩn áp dụng:** `D:\Use Antigravity\Medical Vision\docs\report_standards.md` (Mục 2–3), `academic_writing_guide.md` (văn phong, từ cấm), và đối chiếu trực tiếp với mã nguồn `backend/`, `frontend/`, `data/processed/`, `Input\ĐỀ CƯƠNG HỆ THỐNG KHUYẾN NGHỊ_DU-THAO_v3.docx`.
 - **Công cụ kiểm chứng tự động:**
   - `pytest -q` (tại `backend/`): **200 passed, 1 warning in 1.32s** (và `--cov=app`: **340/351 statements, 97%**).
-  - `scripts/thesis/check_captions.py`: kiểm tra 31 bảng, 9 hình, ảnh nhúng, dẫn chiếu mục/bảng/hình, trích dẫn `[1]`–`[11]`.
+  - `scripts/thesis/check_captions.py`: kiểm tra 31 bảng, 9 hình, ảnh nhúng, dẫn chiếu mục/bảng/hình, trích dẫn `[1]`–`[5]`.
   - `scripts/thesis/recompute_numbers.py`: kiểm tra 74 claim số liệu và xuất bảng đối chiếu `docs/thesis/review/so-lieu-doi-chieu.csv`.
 
 ---
@@ -82,8 +82,8 @@ Toàn bộ các tệp thuộc báo cáo (`muc-luc-va-ho-so-ban-giao.md`, `chuong
 | Kiểm tra đủ 4 hạn chế bắt buộc | Đã nêu dữ liệu hỗn hợp & giới hạn hiện thực ở Mục 4.2.3, 4.7 | Mục 5.3 nêu đủ: mẫu nhỏ 16 hồ sơ, chưa có đánh giá thật, nhãn `public_collected` và 2 trường ước tính `(*)` của `GS-T06/T07` | Mục 6.2.1 tổng hợp lại (rút gọn để tránh lặp) | Đầy đủ |
 
 ### 2.3. Kiểm chứng Tài liệu tham khảo (`tai-lieu-tham-khao.md`)
-- Cả 11 mục `[1]`–`[11]` đều được trích dẫn trong Chương 1–2 theo đúng thứ tự tăng dần từ `1` đến `11`; không có mục dư, không có trích dẫn gãy.
-- Xác minh thực tế qua Crossref API, arXiv và HTTP trực tiếp: `[1]` (Elsevier 2003, Bray & Kwok), `[2]` (Springer 2000, Triantaphyllou), `[3]` (Hindawi 2009, Su & Khoshgoftaar), `[4]` (arXiv:1804.11192, Zhang & Chen), `[5]` (Scribd GS360, HTTP 200), `[6]` (IEEE TKDE 2005, Adomavicius & Tuzhilin), `[7]` (arXiv:1812.08947, Qin et al.), `[8]` (Cambridge 2008, Manning et al.), `[9]` (Operations Research 1967, Fishburn), `[10]` (FastAPI docs, HTTP 200), `[11]` (React docs, HTTP 200) — **11/11 nguồn xác thực, đúng tác giả và năm xuất bản**.
+- Thực hiện rà soát chuẩn IEEE từ 11 nguồn ban đầu và rút gọn theo Phương án A xuống còn **5 tài liệu cốt lõi `[1]`–`[5]`**, trích dẫn trong Chương 1–2 theo đúng thứ tự tăng dần từ `1` đến `5`; không có mục dư, không có trích dẫn gãy.
+- 5/5 nguồn giữ lại đã được xác minh trực tiếp qua Crossref API và HTTP: `[1]` (Springer 2000, Triantaphyllou), `[2]` (IEEE TKDE 2005, Adomavicius & Tuzhilin), `[3]` (Scribd GS360, HTTP 200), `[4]` (FastAPI docs, HTTP 200), `[5]` (React docs, HTTP 200).
 
 ---
 

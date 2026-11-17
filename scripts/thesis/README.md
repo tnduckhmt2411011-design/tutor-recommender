@@ -10,7 +10,7 @@ Kích hoạt hoặc dùng trực tiếp Python trong môi trường ảo `backen
 
 | Tệp | Chức năng | Lệnh chạy mẫu (từ gốc kho mã nguồn) |
 | :--- | :--- | :--- |
-| `check_captions.py` | Kiểm tra toàn bộ 31 chú thích bảng, 9 chú thích hình, đường dẫn ảnh nhúng, dẫn chiếu mục/bảng/hình, tiểu mục con đơn độc và trích dẫn `[1]`–`[11]`. | `backend\.venv\Scripts\python.exe scripts\thesis\check_captions.py` |
+| `check_captions.py` | Kiểm tra toàn bộ 31 chú thích bảng, 9 chú thích hình, đường dẫn ảnh nhúng, dẫn chiếu mục/bảng/hình, tiểu mục con đơn độc và trích dẫn `[1]`–`[5]`. | `backend\.venv\Scripts\python.exe scripts\thesis\check_captions.py` |
 | `benchmark_latency.py` | Thực hiện warm-up và đo thời gian phản hồi nội tại qua FastAPI `TestClient` (140 lượt và 700 lượt) trên 14 kịch bản `KB01–KB14`, đối chiếu ngưỡng SLA `< 1.000 ms`. | `backend\.venv\Scripts\python.exe scripts\thesis\benchmark_latency.py` |
 | `recompute_numbers.py` | Tính lại và đối chiếu 74 mệnh đề số liệu xuyên suốt Chương 1–6 với dữ liệu gốc và mã nguồn, xuất báo cáo đối chiếu `docs/thesis/review/so-lieu-doi-chieu.csv`. | `backend\.venv\Scripts\python.exe scripts\thesis\recompute_numbers.py` |
 | `build_docx.py` | Chuẩn hóa Markdown, dựng mẫu `reference.docx` (A4, lề chuẩn, Times New Roman), chuyển đổi công thức LaTeX sang OMML qua `pypandoc_binary`, nhúng 9 hình, chia 3 Section đánh số trang (`none` / `lowerRoman` / `decimal`) và ghép thành tệp `BAO_CAO_DO_AN_KHMT1_HOAN_CHINH.docx`. | `backend\.venv\Scripts\python.exe scripts\thesis\build_docx.py` |

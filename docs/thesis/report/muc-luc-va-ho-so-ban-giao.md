@@ -247,7 +247,7 @@ Mục lục được tạo tự động trong Word từ ba cấp Heading (Headin
 | `chuong-04-xay-dung-he-thong.md` | Chương 4 | Hoàn thành (4 ảnh giao diện) |
 | `chuong-05-thuc-nghiem-va-danh-gia.md` | Chương 5 | Hoàn thành (9 bảng) |
 | `chuong-06-ket-luan-va-huong-phat-trien.md` | Chương 6 và Phụ lục A–D | Hoàn thành |
-| `tai-lieu-tham-khao.md` | 11 tài liệu theo IEEE | Hoàn thành (đã kiểm chứng DOI) |
+| `tai-lieu-tham-khao.md` | 5 tài liệu theo IEEE | Hoàn thành (đã kiểm chứng DOI/URL và tinh gọn còn 5 nguồn cốt lõi) |
 | `muc-luc-va-ho-so-ban-giao.md` | 9 mục phần mở đầu + danh mục bàn giao | Hoàn thành |
 | `docs/thesis/figures/*.png` | 9 hình của báo cáo | Đủ 9/9 |
 | `docs/thesis/outline/dac-ta-hinh-3-1-3-5.md` | Đặc tả 5 hình Chương 3 (tài liệu làm việc) | Lưu nội bộ |
