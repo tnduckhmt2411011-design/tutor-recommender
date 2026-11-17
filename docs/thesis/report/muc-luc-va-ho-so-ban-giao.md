@@ -5,10 +5,10 @@
 
 ## 1. Căn cứ và phạm vi
 
-- **Quy chuẩn áp dụng:** `D:\Use Antigravity\Medical Vision\docs\report_standards.md` Mục 2.4 (đánh số trang) và Mục 3.1 (9 mục phần mở đầu); `academic_writing_guide.md` cho văn phong.
+- **Quy chuẩn áp dụng:** Quy chuẩn trình bày báo cáo đồ án của đơn vị đào tạo (đánh số trang phần mở đầu/thân bài, cấu trúc 9 mục phần mở đầu) và Cẩm nang văn phong khoa học tiếng Việt.
 - **Nguồn nội dung:** `chuong-01`–`chuong-06` trong cùng thư mục, `tai-lieu-tham-khao.md`, các bảng/hình trong `docs/thesis/figures/`.
 - **Tên đề tài dùng thống nhất:** “Hệ thống khuyến nghị gia sư dựa trên phương pháp Content-Base Filtering” (theo README mục “Đề tài đã đăng ký” và thân bài Chương 1–6).
-- **Đánh số trang:** bìa chính và bìa phụ không đánh số; phần mở đầu (Lời cảm ơn → Danh mục hình) dùng số La Mã thường ở giữa chân trang; từ Chương 1 đến hết Phụ lục dùng số Ả Rập.
+- **Đánh số trang:** bìa chính và bìa phụ không đánh số; phần mở đầu (Lời cảm ơn → Danh mục hình vẽ, sơ đồ, biểu đồ) dùng số La Mã thường ở giữa chân trang; từ Chương 1 đến hết Phụ lục dùng số Ả Rập.
 
 ## 2. Bảng tổng hợp 9 mục phần mở đầu
 
@@ -57,22 +57,22 @@ Cần Thơ, tháng 11 năm 2026
 
 ## 4. Lời cảm ơn
 
-Nhóm chúng em xin cảm ơn TS. Lê Anh Nhã Uyên đã hướng dẫn trong suốt quá trình thực hiện đồ án. Các buổi trao đổi với cô giúp nhóm thu hẹp phạm vi từ một nền tảng gia sư đầy đủ về một bộ máy khuyến nghị, đồng thời đặt ra yêu cầu kiểm chứng số liệu thay vì mô tả cảm tính. Những góp ý về cách đặt tiêu chí và cách trình bày kết quả thực nghiệm được phản ánh trực tiếp trong Chương 3 và Chương 5.
+Nhóm chúng em xin cảm ơn TS. Lê Anh Nhã Uyên đã hướng dẫn trong suốt quá trình thực hiện đồ án. Các buổi trao đổi với cô giúp nhóm thu hẹp phạm vi từ một nền tảng gia sư đầy đủ về một bộ máy khuyến nghị. Cô cũng đặt ra yêu cầu kiểm chứng số liệu thực nghiệm thay vì mô tả cảm tính. Những góp ý về cách đặt tiêu chí và cách trình bày kết quả được phản ánh trực tiếp trong Chương 3 và Chương 5.
 
-Nhóm xin cảm ơn quý thầy cô Khoa Công nghệ Thông tin, Trường Đại học Kỹ thuật Công nghệ Cần Thơ đã tạo điều kiện về tài liệu và môi trường học tập. Nhóm cũng cảm ơn gia đình và bạn bè đã động viên trong thời gian làm đồ án.
+Nhóm xin cảm ơn quý thầy cô Khoa Công nghệ Thông tin, Trường Đại học Kỹ thuật Công nghệ Cần Thơ đã tạo điều kiện về tài liệu và môi trường học tập. Nhóm cũng cảm ơn gia đình và bạn bè đã động viên trong thời gian thực hiện đồ án.
 
-Trong phạm vi hai tín chỉ và thời gian 12 tuần, nhóm ý thức rằng báo cáo còn hạn chế về quy mô dữ liệu và mức độ kiểm chứng với người dùng thật; các hạn chế này được nêu ở Mục 5.3 và Mục 6.2 thay vì được bỏ qua.
+Trong phạm vi hai tín chỉ và thời gian 12 tuần, nhóm nhận thức rằng báo cáo còn hạn chế về quy mô dữ liệu và mức độ kiểm chứng với người dùng thật. Các hạn chế này được trình bày cụ thể ở Mục 5.3 và Mục 6.2.
 
 Cần Thơ, tháng 11 năm 2026
 Nhóm thực hiện đồ án
 
 ## 5. Lời cam đoan liêm chính học thuật
 
-Nhóm chúng em cam đoan:
+Nhóm cam đoan:
 
-1. Nội dung báo cáo là kết quả làm việc của nhóm. Các đoạn tham khảo đều được trích dẫn theo chuẩn IEEE và ghi trong mục Tài liệu tham khảo.
-2. Số liệu thực nghiệm trong Chương 5 được lấy từ lần chạy thật của bộ kiểm thử tự động và từ phản hồi thật của `POST /api/recommend` trên bộ dữ liệu mẫu 16 hồ sơ; không có số liệu nào được điền ước lượng mà không ghi rõ.
-3. Bộ dữ liệu mẫu tách rõ hai nhãn `public_collected` và `simulated`; hai hồ sơ `GS-T06`, `GS-T07` có học phí và lịch rảnh ước tính, điểm đánh giá để trống và được ghi chú tại Chương 4, Chương 5 và Phụ lục A.
+1. Nội dung báo cáo là kết quả làm việc của nhóm. Các đoạn tham khảo đều được trích dẫn theo chuẩn IEEE và ghi trong Mục Tài liệu tham khảo.
+2. Số liệu thực nghiệm trong Chương 5 được thu thập từ bộ kiểm thử tự động và từ phản hồi thực tế của API khuyến nghị trên bộ dữ liệu mẫu 16 hồ sơ. Không có số liệu nào được điền ước lượng mà không ghi rõ.
+3. Bộ dữ liệu mẫu phân tách rõ nhóm dữ liệu thu thập công khai và nhóm dữ liệu giả lập. Hai hồ sơ `GS-T06`, `GS-T07` có học phí và lịch rảnh ước tính, điểm đánh giá để trống và được ghi chú đầy đủ tại Chương 4, Chương 5 và Phụ lục A.
 4. Báo cáo không sao chép nội dung của đồ án khác. Đồ án GS360 được tham khảo để đối chiếu phạm vi chức năng, không kế thừa mã nguồn hay khung tính năng.
 5. Nhóm chịu trách nhiệm trước hội đồng và giảng viên hướng dẫn về tính xác thực của các tuyên bố trong báo cáo.
 
@@ -88,9 +88,9 @@ Cần Thơ, tháng 11 năm 2026
 
 ### 6.1. Tóm tắt tiếng Việt
 
-Khi số hồ sơ gia sư tăng lên, người học phải cân nhắc đồng thời môn học, khu vực, học phí, hình thức học và thời gian học; các tiêu chí này thường xung đột nhau nên lọc đúng/sai theo từng tiêu chí không đủ để chọn ra gia sư phù hợp. Đồ án xây dựng một bộ máy khuyến nghị gia sư theo hướng dựa trên đặc trưng hồ sơ: lọc theo điều kiện bắt buộc (môn học, hình thức học, khung giờ giao nhau), kiểm tra ngưỡng dữ liệu tối thiểu, chấm điểm năm tiêu chí ưu tiên (học phí, khu vực, kinh nghiệm, đánh giá, lịch rảnh) rồi gộp bằng Weighted Scoring. Mỗi tiêu chí được chọn một trong bốn mức ưu tiên tương ứng trọng số 0–3, nhờ đó người học điều chỉnh được kết quả mà không phải tự chia tỷ lệ phần trăm.
+Khi số hồ sơ gia sư tăng lên, người học phải cân nhắc đồng thời môn học, khu vực, học phí, hình thức học và thời gian học. Do các tiêu chí thường xung đột nhau, việc lọc đúng/sai theo từng tiêu chí không đủ để chọn ra gia sư phù hợp. Đồ án xây dựng bộ máy khuyến nghị gia sư dựa trên đặc trưng hồ sơ. Hệ thống lọc điều kiện bắt buộc (môn học, hình thức học, khung giờ giao nhau), kiểm tra ngưỡng dữ liệu tối thiểu, chấm điểm năm tiêu chí ưu tiên (học phí, khu vực, kinh nghiệm, đánh giá, lịch rảnh) rồi gộp bằng Weighted Scoring. Mỗi tiêu chí nhận một trong bốn mức ưu tiên tương ứng trọng số 0–3, giúp người học điều chỉnh kết quả mà không cần tự chia tỷ lệ phần trăm.
 
-Hệ thống được hiện thực bằng FastAPI (Python 3.12) cho phần API và ReactJS cho giao diện demo, chạy trên bộ dữ liệu 16 hồ sơ và 14 kịch bản đánh giá cố định. Kết quả kiểm thử ghi nhận 200/200 bài kiểm thử tự động đạt, độ bao phủ 97% trên khối mã nghiệp vụ; cả 14 kịch bản cho Top-3 trùng với kỳ vọng; thời gian xử lý nội tại trung bình 3,54 ms. Khảo sát độ nhạy cho thấy thứ hạng ổn định khi thay đổi dung sai học phí và mốc kinh nghiệm bão hòa trong dải hợp lý, nhưng thay đổi rõ khi đổi bộ mức ưu tiên — phù hợp với thiết kế coi trọng số là đầu vào do người học quyết định.
+Hệ thống được hiện thực bằng FastAPI (Python 3.12) cho API và ReactJS cho giao diện demo, chạy trên 16 hồ sơ và 14 kịch bản đánh giá cố định. Kết quả kiểm thử ghi nhận 200/200 bài kiểm thử tự động đạt với độ bao phủ 97% trên khối mã nghiệp vụ, cùng 14/14 kịch bản trả về Top-3 khớp kỳ vọng. Thời gian xử lý phía máy chủ (in-process) đo bằng TestClient đạt trung bình 3,54 ms. Khảo sát độ nhạy cho thấy thứ hạng ổn định khi thay đổi dung sai học phí và mốc kinh nghiệm bão hòa trong dải hợp lý, nhưng thay đổi rõ khi đổi bộ mức ưu tiên — phù hợp với thiết kế xem trọng số là đầu vào do người học quyết định.
 
 Hạn chế chính là quy mô dữ liệu mẫu nhỏ, chưa có dữ liệu tương tác của người dùng thật và chưa kiểm chứng với người học ngoài nhóm. Hướng phát triển gồm mở rộng dữ liệu, bổ sung phản hồi sau khuyến nghị và thử nghiệm tiêu chí cấp lớp học.
 
@@ -98,7 +98,7 @@ Hạn chế chính là quy mô dữ liệu mẫu nhỏ, chưa có dữ liệu t�
 
 ### 6.2. Abstract (English)
 
-Choosing a tutor requires weighing subject, location, fee, teaching mode and available time at once; these criteria often conflict, so binary filtering per criterion cannot produce a sensible shortlist. This project builds a tutor recommender that follows a content-based approach: mandatory conditions are applied first (subject, teaching mode, overlapping time slots), a minimum-data threshold removes profiles with too little information, and five preference criteria (fee, district, experience, rating, availability) are scored and combined by weighted scoring. Each criterion takes one of four priority levels mapped to weights 0–3, so learners can change the ranking without specifying percentages.
+Choosing a tutor requires weighing subject, location, fee, teaching mode, and available time at once; these criteria often conflict, so binary filtering per criterion cannot produce a sensible shortlist. This project builds a tutor recommender following a content-based approach. Mandatory conditions are applied first (subject, teaching mode, overlapping time slots), followed by a minimum-data threshold, and five preference criteria (fee, district, experience, rating, availability) are scored and combined by weighted scoring. Each criterion takes one of four priority levels mapped to weights 0–3, enabling learners to adjust rankings without specifying percentages.
 
 The system is implemented with FastAPI (Python 3.12) and a ReactJS demo interface, running on a sample set of 16 tutor profiles and 14 fixed evaluation scenarios. All 200 automated tests pass with 97% coverage of the business modules; all 14 scenarios return the expected top-3 list; mean in-process latency is 3.54 ms. A sensitivity study shows the ranking is stable under reasonable changes of the fee tolerance and the experience saturation point, while it changes markedly when the priority set changes — consistent with the design decision that weights are a learner-controlled input.
 
@@ -112,7 +112,7 @@ Mục lục được tạo tự động trong Word từ ba cấp Heading (Headin
 
 | Mục | Tiêu đề | Trang |
 | :--- | :--- | :-: |
-| **Mở đầu** | 9 mục (bìa, bìa phụ, cảm ơn, cam đoan, tóm tắt, mục lục, từ viết tắt, danh mục bảng, danh mục hình) | i–xi |
+| **Mở đầu** | 9 mục (bìa chính và bìa phụ không đánh số; Lời cảm ơn đến Danh mục hình vẽ, sơ đồ, biểu đồ đánh số La Mã thường) | i–ix |
 | **1** | Tổng quan về đề tài | … |
 | 1.1 | Lý do chọn đề tài | … |
 | 1.2 | Khảo sát hiện trạng | … |
@@ -171,14 +171,11 @@ Mục lục được tạo tự động trong Word từ ba cấp Heading (Headin
 | KB01–KB14 | Mã 14 kịch bản đánh giá cố định |
 | MCDA | Multiple-Criteria Decision Analysis — phân tích quyết định đa tiêu chí |
 | $n$ | Số tiêu chí ưu tiên đang áp dụng trong một truy vấn |
-| PR | Pull Request |
 | $S(g)$ | Điểm phù hợp tổng của gia sư $g$ |
 | $s_i$ | Điểm thành phần của tiêu chí thứ $i$, trong khoảng [0, 1] |
-| SP | Story Point — đơn vị ước lượng công việc Scrum |
 | TDD | Test-Driven Development — phát triển hướng kiểm thử |
 | Top-$k$ | Danh sách $k$ kết quả đứng đầu sau khi xếp hạng |
 | UI | User Interface — giao diện người dùng |
-| US | User Story |
 | VNĐ | Việt Nam đồng |
 | $w_i$ | Trọng số của tiêu chí thứ $i$, nhận giá trị 0–3 |
 | $\delta$ | Dung sai học phí vượt ngân sách, mặc định 0,5 |
@@ -200,8 +197,8 @@ Mục lục được tạo tự động trong Word từ ba cấp Heading (Headin
 | Bảng 3.6 | Công thức điểm thành phần | … |
 | Bảng 3.7 | Ngưỡng dữ liệu tối thiểu để được xếp hạng | … |
 | Bảng 4.1 | Thành phần và công nghệ của hệ thống tại thời điểm hiện thực | … |
-| Bảng 4.2 | Ánh xạ trường dữ liệu đề cương sang định danh trong code | … |
-| Bảng 4.3 | Tệp, hàm/lớp chính và bước quy trình tương ứng | … |
+| Bảng 4.2 | Ánh xạ trường dữ liệu đề cương sang định danh trong code (rút gọn từ data-dictionary.md) | … |
+| Bảng 4.3 | Tệp, hàm/lớp chính và bước quy trình tương ứng (Mục 3.6) | … |
 | Bảng 4.4 | Các trạng thái phản hồi của `POST /api/recommend` | … |
 | Bảng 4.5 | Thành phần giao diện và chức năng theo CN01–CN03 | … |
 | Bảng 4.6 | Các tình huống lỗi và nơi xử lý | … |
@@ -217,12 +214,12 @@ Mục lục được tạo tự động trong Word từ ba cấp Heading (Headin
 | Bảng 6.1 | Phân công công việc và mức độ hoàn thành của các thành viên trong nhóm | … |
 | Bảng A.1 | Danh sách 16 hồ sơ gia sư mẫu | … |
 | Bảng B.1 | Danh mục tệp mã nguồn và hàm nghiệp vụ trong module gợi ý gia sư | … |
-| Bảng C.1 | Danh mục hình ảnh giao diện demo hiện có trong repo | … |
+| Bảng C.1 | Danh mục hình ảnh giao diện demo hiện có trong kho lưu trữ | … |
 | Bảng D.1 | Yêu cầu đầy đủ của 14 kịch bản thực nghiệm | … |
 
-**Tổng: 31 bảng** (Chương 1: 2; Chương 2: 2; Chương 3: 7; Chương 4: 6; Chương 5: 9; Chương 6: 1; phụ lục: 4).
+**Tổng: 31 bảng** (Chương 1: 2; Chương 2: 2; Chương 3: 7; Chương 4: 6; Chương 5: 9; Chương 6: 1; Phụ lục: 4).
 
-## 10. Danh mục hình vẽ
+## 10. Danh mục hình vẽ, sơ đồ, biểu đồ
 
 | Số hiệu | Tên hình | Trang |
 | :--- | :--- | :-: |
