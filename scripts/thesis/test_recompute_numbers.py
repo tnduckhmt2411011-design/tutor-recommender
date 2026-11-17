@@ -48,3 +48,5 @@ def test_verify_extra_report_claims_checks_slots_presets_and_19_queries() -> Non
     assert "SL-CH4-FIG43" in ids
     assert "SL-CH5-TESTS-PERFILE" in ids
     assert "SL-CH5-COV" in ids
+    lat = next(c for c in claims if c.claim_id == "SL-CH5-LATENCY")
+    assert lat.matched == "KHỚP"

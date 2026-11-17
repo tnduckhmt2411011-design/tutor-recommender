@@ -1,6 +1,6 @@
 # CHƯƠNG 2. CƠ SỞ LÝ THUYẾT VÀ CÔNG NGHỆ
 
-Chương này trình bày cơ sở lý thuyết của cách tiếp cận khuyến nghị đa tiêu chí đã chọn ở Mục 1.3.2. Nội dung lần lượt làm rõ vị trí bài toán trong ba nhóm phương pháp khuyến nghị (Mục 2.1), cách biểu diễn dựa trên đặc trưng hồ sơ (Mục 2.2), cơ chế lọc điều kiện bắt buộc và Weighted Scoring (Mục 2.3), cùng các công nghệ triển khai (Mục 2.4).
+Chương này trình bày cơ sở lý thuyết của cách tiếp cận khuyến nghị đa tiêu chí đã chọn ở Mục 1.3.2. Nội dung lần lượt làm rõ vị trí bài toán trong ba nhóm phương pháp khuyến nghị (Mục 2.1), phương pháp Content-Based Filtering trên đặc trưng hồ sơ có cấu trúc (Mục 2.2), cơ chế lọc điều kiện bắt buộc và Weighted Scoring (Mục 2.3), cùng các công nghệ triển khai (Mục 2.4).
 
 ---
 
@@ -21,11 +21,11 @@ Hệ thống khuyến nghị (*recommender system*) là lớp bài toán ước 
 
 Bảng 2.1 cho thấy Content-Based Filtering phù hợp nhất với một hệ thống mới vận hành chưa có dữ liệu tương tác tích lũy. Bài toán tìm gia sư có cùng bản chất với các bài toán ghép nối như gợi ý việc làm phù hợp với hồ sơ ứng viên [7]. Cả hai đều ghép một “nhu cầu” (tiêu chí của người học hoặc nhà tuyển dụng) với một tập “đối tượng có đặc trưng” (hồ sơ gia sư hoặc tin tuyển dụng) sao cho mức độ phù hợp là cao nhất.
 
-## 2.2. Khuyến nghị dựa trên đặc trưng hồ sơ
+## 2.2. Phương pháp Content-Based Filtering trên đặc trưng hồ sơ có cấu trúc
 
 Trong các hệ thống khuyến nghị dựa trên nội dung (*Content-Based Filtering*), mỗi đối tượng được biểu diễn bằng các đặc trưng rồi so khớp với nhu cầu của người dùng; đối tượng có mức so khớp cao được xếp trước [6]. Trong đồ án này, đối tượng là gia sư, được biểu diễn qua bảy đặc trưng: môn dạy, khu vực, học phí theo giờ, số năm kinh nghiệm, hình thức dạy, lịch rảnh và điểm đánh giá trung bình. “Hồ sơ nhu cầu” của người học không lấy từ lịch sử mà do người học nhập trực tiếp tại thời điểm tìm kiếm.
 
-Bảy đặc trưng trên có bản chất khác nhau: môn học và khu vực là so khớp tập hợp, học phí là đại lượng số có ngưỡng ngân sách, kinh nghiệm và đánh giá là đại lượng số liên tục, lịch rảnh là giao của hai tập khung giờ, còn hình thức dạy là biến phân loại. Vì chưa có một không gian đặc trưng thống nhất cho tất cả, đồ án không ép toàn bộ vào một vector để tính *cosine similarity*. Thay vào đó, mỗi tiêu chí được xử lý bằng một hàm điểm riêng (Mục 3.6). *Cosine similarity* là kỹ thuật phù hợp khi hồ sơ và nhu cầu được biểu diễn thành vector số (ví dụ vector từ mô tả văn bản của gia sư) [8]; kỹ thuật này không được dùng trong đồ án và chỉ được nhắc như một hướng mở rộng. Về tên gọi, đề tài không gọi phương pháp là Content-Based Filtering thuần túy; cụm từ “dựa trên đặc trưng hồ sơ” chỉ mô tả loại dữ liệu đầu vào của hệ thống.
+Bảy đặc trưng trên có bản chất khác nhau: môn học và khu vực là so khớp tập hợp, học phí là đại lượng số có ngưỡng ngân sách, kinh nghiệm và đánh giá là đại lượng số liên tục, lịch rảnh là giao của hai tập khung giờ, còn hình thức dạy là biến phân loại. Vì chưa có một không gian đặc trưng thống nhất cho tất cả, đồ án không ép toàn bộ vào một vector để tính *cosine similarity*. Thay vào đó, mỗi tiêu chí được xử lý bằng một hàm điểm riêng (Mục 3.6). *Cosine similarity* là kỹ thuật phù hợp khi hồ sơ và nhu cầu được biểu diễn thành vector số (ví dụ vector từ mô tả văn bản của gia sư) [8]; kỹ thuật này không được dùng trong đồ án và chỉ được nhắc như một hướng mở rộng. Như vậy, xét theo phân loại của Ricci và cộng sự [6], phương pháp của đồ án thuộc nhánh Content-Based Filtering (trong tên đề tài đăng ký ghi là “Content-Base Filtering”) vì toàn bộ quá trình gợi ý chỉ dựa trên việc đối sánh đặc trưng nội dung hồ sơ gia sư với hồ sơ nhu cầu của người học mà không sử dụng lịch sử tương tác chéo giữa những người dùng. Tuy nhiên, thay vì vector hóa văn bản tự do để tính độ tương đồng góc (*cosine similarity*), đồ án hiện thực hóa Content-Based Filtering trên dữ liệu thuộc tính có cấu trúc thông qua hai bước: lọc điều kiện bắt buộc và tính tổng trọng số đa tiêu chí (*Weighted Scoring*).
 
 ## 2.3. Lọc theo điều kiện bắt buộc và Weighted Scoring
 

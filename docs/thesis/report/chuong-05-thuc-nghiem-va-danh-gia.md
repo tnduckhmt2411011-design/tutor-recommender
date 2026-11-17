@@ -41,10 +41,10 @@ Giao thức giao tiếp giữa giao diện (React) và máy chủ tính toán (F
 1. **Cấu trúc phản hồi chuẩn hóa:** Dữ liệu JSON trả về gồm các trường `status`, `total_candidates`, `qualified_candidates`, `insufficient_data_candidates` và mảng kết quả `results[]`. Mỗi phần tử trong `results[]` chứa `rank`, `tutor_id`, `total_score`, `criteria_scores` (điểm thành phần 5 tiêu chí), `contributions` (mức đóng góp $C_i$), `reason` (chuỗi lý do) và `notes` (ghi chú dữ liệu).
 2. **Quy tắc sắp xếp và phá hòa tất định:** Danh sách kết quả được sắp xếp theo thứ tự giảm dần của `total_score`. Khi hai hoặc nhiều ứng viên có cùng điểm số, hệ thống phá hòa tất định theo thứ tự từ điển tăng dần của mã `tutor_id` để giữ thứ hạng ổn định qua mọi lần gọi.
 3. **Bao phủ bốn trạng thái phản hồi:** Bộ kiểm thử API kiểm chứng đủ bốn trạng thái: `success` (HTTP 200 kèm danh sách xếp hạng), `no_match` (HTTP 200, `results = []`), `zero_weight` (HTTP 200 khi $\sum w_i = 0$, kèm `unranked_candidates`) và `422 Unprocessable Entity` khi dữ liệu vi phạm ràng buộc Pydantic. Chi tiết xử lý các tình huống đặc biệt được trình bày tại Mục 5.1.4.
-4. **Hiệu năng xử lý nội tại:** Đo đạc thực nghiệm trên 14 kịch bản KB01–KB14 qua 140 lượt gọi API liên tục (10 lượt/kịch bản) bằng `TestClient` ghi nhận thời gian phản hồi trung bình đạt **3,54 ms** (lớn nhất **7,97 ms** sau lượt khởi động đầu tiên). Phép đo mở rộng 700 lượt ghi nhận trung bình **3,72 ms** và lớn nhất **26,64 ms**. Tốc độ xử lý này đáp ứng yêu cầu phi chức năng về thời gian phản hồi dưới 1.000 ms khi người học điều chỉnh mức ưu tiên trực tiếp trên giao diện (CN03).
+4. **Hiệu năng xử lý nội tại:** Đo đạc thực nghiệm qua kịch bản `scripts/thesis/benchmark_latency.py` trên 14 kịch bản KB01–KB14 qua 140 lượt gọi API liên tục (10 lượt/kịch bản) bằng `TestClient` ở phiên đo chuẩn ghi nhận thời gian phản hồi trung bình đạt **3,54 ms** (lớn nhất **7,97 ms** sau lượt khởi động đầu tiên). Phép đo mở rộng 700 lượt ghi nhận trung bình **3,72 ms** và lớn nhất **26,64 ms**. Tốc độ xử lý này đáp ứng yêu cầu phi chức năng về thời gian phản hồi dưới 1.000 ms khi người học điều chỉnh mức ưu tiên trực tiếp trên giao diện (CN03).
 
 > [!NOTE]
-> Chỉ số thời gian phản hồi trên được đo trong bộ nhớ cục bộ bằng `TestClient` (không có độ trễ truyền gói tin mạng). Thời gian này phản ánh tốc độ tính toán thuật toán và xử lý của FastAPI, không đại diện cho độ trễ truyền tải toàn trình (*end-to-end*) qua Internet giữa trình duyệt và máy chủ đám mây.
+> Chỉ số thời gian phản hồi trên được đo trong bộ nhớ cục bộ bằng `TestClient` (không có độ trễ truyền gói tin mạng). Thời gian này phản ánh tốc độ tính toán thuật toán và xử lý của FastAPI, không đại diện cho độ trễ truyền tải toàn trình (*end-to-end*) qua Internet giữa trình duyệt và máy chủ đám mây. Khi chạy lại kịch bản `scripts/thesis/benchmark_latency.py` trên các cấu hình phần cứng hoặc mức tải CPU khác nhau, thời gian xử lý trung bình thực tế dao động ở mức vài phần nghìn giây (thường từ 3 ms đến 15 ms), luôn thấp hơn hai bậc độ lớn so với ngưỡng yêu cầu phi chức năng 1.000 ms.
 
 ### 5.1.3. Kiểm thử ca biên của hàm điểm và tính đơn điệu
 
@@ -120,28 +120,20 @@ Quy ước chấm khớp tuân thủ `backend/tests/scenarios/README.md` mục 3
 
 *Nguồn: Kết quả chạy pipeline xếp hạng trên dữ liệu `data/processed/tutors.json` và `backend/tests/scenarios/scenarios.json`.*
 
-Nhằm phục vụ đối chiếu trực quan tỷ lệ trùng khớp của tập hợp và thứ tự Top-3, Bảng 5.4 tóm tắt cặp đối sánh ứng viên trên 14 kịch bản.
+Nhằm phục vụ đối chiếu trực quan mức độ trùng khớp của tập hợp, thứ tự Top-3 và sai số điểm theo từng đặc thù truy vấn, Bảng 5.4 tổng hợp kết quả thực nghiệm theo 5 nhóm kịch bản.
 
-**Bảng 5.4 - Đối chiếu Top-3 hệ thống với Top-3 kỳ vọng trên 14 kịch bản**
+**Bảng 5.4 - Tổng hợp kết quả đối chiếu Top-3 theo nhóm đặc trưng kịch bản**
 
-| Mã KB | Top-3 kỳ vọng | Top-3 hệ thống | Số trùng $x/m$ |
-|:---:|:---|:---|:---:|
-| KB01 | `GS-G01 > GS-G10 > GS-T06` | `GS-G01 > GS-G10 > GS-T06` | 3/3 |
-| KB02 | `GS-G11 > GS-G12 > GS-T07` | `GS-G11 > GS-G12 > GS-T07` | 3/3 |
-| KB03 | `GS-G12 > GS-G11 > GS-T07` | `GS-G12 > GS-G11 > GS-T07` | 3/3 |
-| KB04 | `GS006 > GS020` | `GS006 > GS020` | 2/2 |
-| KB05 | `[]` (`no_match`) | `[]` (`no_match`) | 0/0 |
-| KB06 | `GS-G04` | `GS-G04` | 1/1 |
-| KB07 | `GS-G05` | `GS-G05` | 1/1 |
-| KB08 | `GS-G07` | `GS-G07` | 1/1 |
-| KB09 | `GS-G08` | `GS-G08` | 1/1 |
-| KB10 | `GS-G10 > GS-G01 > GS-G09` | `GS-G10 > GS-G01 > GS-G09` | 3/3 |
-| KB11 | `GS-G06 > GS-T06` | `GS-G06 > GS-T06` | 2/2 |
-| KB12 | `GS-T07 > GS-G11 > GS-G12` | `GS-T07 > GS-G11 > GS-G12` | 3/3 |
-| KB13 | `GS-G10 > GS-G01 > GS-T06` | `GS-G10 > GS-G01 > GS-T06` | 3/3 |
-| KB14 | `GS-G03` | `GS-G03` | 1/1 |
+| Nhóm kịch bản thực nghiệm | Các kịch bản | Số kịch bản | Tỷ lệ khớp tập hợp & thứ tự Top-3 | Độ lệch điểm tuyệt đối lớn nhất $\max \lvert \Delta S \rvert$ | Ghi chú kỹ thuật |
+|:---|:---|:---:|:---:|:---:|:---|
+| Đủ $\ge 3$ ứng viên, điểm khớp hoàn toàn (đến 3 chữ số thập phân) | KB01, KB03, KB10, KB13 | 4 | 4/4 (100%) | $\le 0{,}0005$ | Khớp cả thứ tự lẫn giá trị điểm hiển thị |
+| Đủ $\ge 3$ ứng viên, có đồng điểm tuyệt đối trong Top-3 | KB02, KB12 | 2 | 2/2 (100%) | $\le 0{,}00025$ | `GS-G11` và `GS-G12` đồng điểm ($0{,}88125$ ở KB02; $0{,}63125$ ở KB12), phá hòa tất định theo mã `tutor_id` |
+| Môn hoặc điều kiện hiếm, chỉ có 1–2 ứng viên qua lọc | KB06, KB07, KB08, KB11, KB14 | 5 | 5/5 (100%) | $\le 0{,}00025$ | Khớp toàn bộ ứng viên qua lọc ($1/1$ hoặc $2/2$) |
+| Có sai lệch giữa điểm chạy máy và điểm tính tay đề cương nhưng bảo toàn thứ tự | KB04, KB09 | 2 | 2/2 (100%) | $0{,}07125$ (KB04); $0{,}0005$ (KB09) | KB04: tính tay bỏ sót $s_{\text{availability}}$; KB09: khác quy tắc làm tròn tại biên $0{,}9275$ |
+| Không có ứng viên thỏa điều kiện bắt buộc (`no_match`) | KB05 | 1 | 1/1 (100%) | Không áp dụng | Trả về `status = "no_match"`, `results = []` (khớp quy ước `0/0`) |
+| **Tổng hợp toàn bộ tập kịch bản** | **KB01–KB14** | **14** | **14/14 (100%)** | **$0{,}07125$** | **Bảo toàn 100% tập hợp và thứ tự Top-3 kỳ vọng** |
 
-*Nguồn: `docs/thesis/report/muc-5.2-ket-qua-tho.json`, khối `baseline`; quy ước chấm khớp tại `backend/tests/scenarios/README.md` mục 3.*
+*Nguồn: Tổng hợp từ `docs/thesis/report/muc-5.2-ket-qua-tho.json` (khối `baseline`) và `backend/tests/scenarios/scenarios.json`.*
 
 **Tổng kết và phân tích ba trường hợp kỹ thuật đặc thù:**
 

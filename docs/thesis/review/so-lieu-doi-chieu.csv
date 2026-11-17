@@ -14,31 +14,31 @@ SL-KB-KB12,chuong-05:117,"1. GS-T07 (0,8125)<br/>2. GS-G11 (0,631)<br/>3. GS-G12
 SL-KB-KB13,chuong-05:118,"1. GS-G10 (0,993)<br/>2. GS-G01 (0,783)<br/>3. GS-T06 (0,500) [3/3]",GS-G10 (0.9933); GS-G01 (0.7833); GS-T06 (0.5000),"score_and_rank(tutors.json, scenarios.json)",KHỚP
 SL-KB-KB14,chuong-05:119,"1. GS-G03 (0,700) [1/1]",GS-G03 (0.7000),"score_and_rank(tutors.json, scenarios.json)",KHỚP
 SL-KB04-DIFF,"chuong-05:109,150-154","kỳ vọng=(0,848; 0,715); hệ thống=(0,886; 0,786)",GS006=0.88625; GS020=0.78625,ranker.py KB04 (4 tiêu chí kể cả lịch rảnh),KHỚP
-SL-KB01-R1,chuong-05:257,"GS-G01: S=0,9375; C=0,2500; 0,2500; 0,1875; 0,2500; null","GS-G01: S=0.9375; sumC=0.9375; C=0,2500; 0,2500; 0,1875; 0,2500; null",POST /api/recommend KB01,KHỚP
-SL-KB01-R2,chuong-05:258,"GS-G10: S=0,7450; C=0,2500; 0,0000; 0,2500; 0,2450; null","GS-G10: S=0.7450; sumC=0.7450; C=0,2500; 0,0000; 0,2500; 0,2450; null",POST /api/recommend KB01,KHỚP
-SL-KB01-R3,chuong-05:259,"GS-T06: S=0,6250; C=0,0000; 0,2500; 0,2500; 0,1250; null","GS-T06: S=0.6250; sumC=0.6250; C=0,0000; 0,2500; 0,2500; 0,1250; null",POST /api/recommend KB01,KHỚP
-SL-SEN-DELTA-0.25,chuong-05:177,đổi=0,tính lại=0 ([]); json=0,run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
-SL-SEN-DELTA-0.3,chuong-05:178,đổi=0,tính lại=0 ([]); json=0,run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
-SL-SEN-DELTA-0.5,chuong-05:179,đổi=0,tính lại=0 ([]); json=0,run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
-SL-SEN-DELTA-0.7,chuong-05:180,đổi=0,tính lại=0 ([]); json=0,run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
-SL-SEN-DELTA-0.75,chuong-05:181,đổi=0,tính lại=0 ([]); json=0,run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
-SL-SEN-DELTA-1,chuong-05:182,đổi=0,tính lại=0 ([]); json=0,run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
-SL-SEN-EMAX-5,chuong-05:192,"đổi=0, KB10=['GS-G10', 'GS-G01', 'GS-G09']","tính lại=0 ([]), KB10=['GS-G10', 'GS-G01', 'GS-G09']",run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
-SL-SEN-EMAX-6,chuong-05:193,"đổi=0, KB10=['GS-G10', 'GS-G01', 'GS-G09']","tính lại=0 ([]), KB10=['GS-G10', 'GS-G01', 'GS-G09']",run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
-SL-SEN-EMAX-8,chuong-05:194,"đổi=0, KB10=['GS-G10', 'GS-G01', 'GS-G09']","tính lại=0 ([]), KB10=['GS-G10', 'GS-G01', 'GS-G09']",run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
-SL-SEN-EMAX-10,chuong-05:195,"đổi=1, KB10=['GS-G10', 'GS-G09', 'GS-T06']","tính lại=1 (['KB10']), KB10=['GS-G10', 'GS-G09', 'GS-T06']",run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
-SL-SEN-EMAX-12,chuong-05:196,"đổi=1, KB10=['GS-G10', 'GS-T06', 'GS-G09']","tính lại=1 (['KB10']), KB10=['GS-G10', 'GS-T06', 'GS-G09']",run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
-SL-SEN-BUDGET--20%,chuong-05:209,"áp dụng=11, đổi=0","tính lại: áp dụng=11, đổi=0; json=11/0",run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
-SL-SEN-BUDGET--10%,chuong-05:210,"áp dụng=11, đổi=0","tính lại: áp dụng=11, đổi=0; json=11/0",run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
-SL-SEN-BUDGET--5%,chuong-05:211,"áp dụng=11, đổi=0","tính lại: áp dụng=11, đổi=0; json=11/0",run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
-SL-SEN-BUDGET-0%,chuong-05:212,"áp dụng=11, đổi=0","tính lại: áp dụng=11, đổi=0; json=11/0",run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
-SL-SEN-BUDGET-+5%,chuong-05:213,"áp dụng=11, đổi=0","tính lại: áp dụng=11, đổi=0; json=11/0",run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
-SL-SEN-BUDGET-+10%,chuong-05:214,"áp dụng=11, đổi=0","tính lại: áp dụng=11, đổi=0; json=11/0",run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
-SL-SEN-BUDGET-+20%,chuong-05:215,"áp dụng=11, đổi=0","tính lại: áp dụng=11, đổi=0; json=11/0",run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
-SL-SEN-PRIO-default,chuong-05:237,"đổi=1, KB=['KB10']","tính lại=1 ({'KB10': ['GS-G10', 'GS-G09', 'GS-G01']}); json=['KB10']",run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
-SL-SEN-PRIO-prioritize_district,chuong-05:238,"đổi=2, KB=['KB01', 'KB10']","tính lại=2 ({'KB01': ['GS-G01', 'GS-T06', 'GS-G02'], 'KB10': ['GS-G10', 'GS-G09', 'GS-G01']}); json=['KB01', 'KB10']",run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
-SL-SEN-PRIO-prioritize_fee,chuong-05:239,"đổi=1, KB=['KB10']","tính lại=1 ({'KB10': ['GS-G10', 'GS-G09', 'GS-G01']}); json=['KB10']",run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
-SL-SEN-PRIO-prioritize_experience_rating,chuong-05:240,"đổi=1, KB=['KB10']","tính lại=1 ({'KB10': ['GS-G10', 'GS-G01', 'GS-T06']}); json=['KB10']",run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
+SL-KB01-R1,chuong-05:249,"GS-G01: S=0,9375; C=0,2500; 0,2500; 0,1875; 0,2500; null","GS-G01: S=0.9375; sumC=0.9375; C=0,2500; 0,2500; 0,1875; 0,2500; null",POST /api/recommend KB01,KHỚP
+SL-KB01-R2,chuong-05:250,"GS-G10: S=0,7450; C=0,2500; 0,0000; 0,2500; 0,2450; null","GS-G10: S=0.7450; sumC=0.7450; C=0,2500; 0,0000; 0,2500; 0,2450; null",POST /api/recommend KB01,KHỚP
+SL-KB01-R3,chuong-05:251,"GS-T06: S=0,6250; C=0,0000; 0,2500; 0,2500; 0,1250; null","GS-T06: S=0.6250; sumC=0.6250; C=0,0000; 0,2500; 0,2500; 0,1250; null",POST /api/recommend KB01,KHỚP
+SL-SEN-DELTA-0.25,chuong-05:169,đổi=0,tính lại=0 ([]); json=0,run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
+SL-SEN-DELTA-0.3,chuong-05:170,đổi=0,tính lại=0 ([]); json=0,run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
+SL-SEN-DELTA-0.5,chuong-05:171,đổi=0,tính lại=0 ([]); json=0,run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
+SL-SEN-DELTA-0.7,chuong-05:172,đổi=0,tính lại=0 ([]); json=0,run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
+SL-SEN-DELTA-0.75,chuong-05:173,đổi=0,tính lại=0 ([]); json=0,run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
+SL-SEN-DELTA-1,chuong-05:174,đổi=0,tính lại=0 ([]); json=0,run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
+SL-SEN-EMAX-5,chuong-05:184,"đổi=0, KB10=['GS-G10', 'GS-G01', 'GS-G09']","tính lại=0 ([]), KB10=['GS-G10', 'GS-G01', 'GS-G09']",run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
+SL-SEN-EMAX-6,chuong-05:185,"đổi=0, KB10=['GS-G10', 'GS-G01', 'GS-G09']","tính lại=0 ([]), KB10=['GS-G10', 'GS-G01', 'GS-G09']",run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
+SL-SEN-EMAX-8,chuong-05:186,"đổi=0, KB10=['GS-G10', 'GS-G01', 'GS-G09']","tính lại=0 ([]), KB10=['GS-G10', 'GS-G01', 'GS-G09']",run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
+SL-SEN-EMAX-10,chuong-05:187,"đổi=1, KB10=['GS-G10', 'GS-G09', 'GS-T06']","tính lại=1 (['KB10']), KB10=['GS-G10', 'GS-G09', 'GS-T06']",run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
+SL-SEN-EMAX-12,chuong-05:188,"đổi=1, KB10=['GS-G10', 'GS-T06', 'GS-G09']","tính lại=1 (['KB10']), KB10=['GS-G10', 'GS-T06', 'GS-G09']",run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
+SL-SEN-BUDGET--20%,chuong-05:201,"áp dụng=11, đổi=0","tính lại: áp dụng=11, đổi=0; json=11/0",run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
+SL-SEN-BUDGET--10%,chuong-05:202,"áp dụng=11, đổi=0","tính lại: áp dụng=11, đổi=0; json=11/0",run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
+SL-SEN-BUDGET--5%,chuong-05:203,"áp dụng=11, đổi=0","tính lại: áp dụng=11, đổi=0; json=11/0",run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
+SL-SEN-BUDGET-0%,chuong-05:204,"áp dụng=11, đổi=0","tính lại: áp dụng=11, đổi=0; json=11/0",run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
+SL-SEN-BUDGET-+5%,chuong-05:205,"áp dụng=11, đổi=0","tính lại: áp dụng=11, đổi=0; json=11/0",run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
+SL-SEN-BUDGET-+10%,chuong-05:206,"áp dụng=11, đổi=0","tính lại: áp dụng=11, đổi=0; json=11/0",run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
+SL-SEN-BUDGET-+20%,chuong-05:207,"áp dụng=11, đổi=0","tính lại: áp dụng=11, đổi=0; json=11/0",run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
+SL-SEN-PRIO-default,chuong-05:229,"đổi=1, KB=['KB10']","tính lại=1 ({'KB10': ['GS-G10', 'GS-G09', 'GS-G01']}); json=['KB10']",run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
+SL-SEN-PRIO-prioritize_district,chuong-05:230,"đổi=2, KB=['KB01', 'KB10']","tính lại=2 ({'KB01': ['GS-G01', 'GS-T06', 'GS-G02'], 'KB10': ['GS-G10', 'GS-G09', 'GS-G01']}); json=['KB01', 'KB10']",run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
+SL-SEN-PRIO-prioritize_fee,chuong-05:231,"đổi=1, KB=['KB10']","tính lại=1 ({'KB10': ['GS-G10', 'GS-G09', 'GS-G01']}); json=['KB10']",run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
+SL-SEN-PRIO-prioritize_experience_rating,chuong-05:232,"đổi=1, KB=['KB10']","tính lại=1 ({'KB10': ['GS-G10', 'GS-G01', 'GS-T06']}); json=['KB10']",run_sensitivity_pipeline + muc-5.2-ket-qua-tho.json,KHỚP
 SL-DATA-01,chuong-06:121-136,16 hồ sơ trong Bảng A.1,"16 hồ sơ trong tutors.json, sai lệch=[]",data/processed/tutors.json,KHỚP
 SL-DATA-02,chuong-06:144-145,16 quận/huyện trùng khớp 16/16,"JSON=16, UI=16, diff=[]",tutors.json vs frontend/src/services/api.js,KHỚP
 SL-VER-CH4-FastAPI,chuong-04:18-34,FastAPI 0.162.0 hiện diện,0.162.0,requirements*.txt / package-lock.json,KHỚP
@@ -72,4 +72,4 @@ SL-CH5-TESTS-PERFILE,chuong-05:16-18,12 tệp = 200 bài,"collected=200, diffs={
 SL-CH5-COV,"chuong-05:20,29","340/351 câu lệnh (97%), 11 chưa phủ, 200 passed",TOTAL                             351     11    97%,pytest --cov=app,KHỚP
 SL-CH5-UNIT-COV,chuong-05:26,Bảng 5.1 hàng Unit Tests ghi '84% (294/351 câu lệnh khi chạy riêng)',TOTAL                             351     57    84%,pytest tests/unit tests/test_environment.py --cov=app,KHỚP
 SL-CH5-ZERO-KB01,chuong-05:72,5 ứng viên trong unranked_candidates,"5 (['GS-T06', 'GS-G01', 'GS-G02', 'GS-G09', 'GS-G10'])",filter_mandatory KB01,KHỚP
-SL-CH5-LATENCY,chuong-05:44,"140 lượt: TB 3,54 ms, max 7,97 ms; 700 lượt: TB 3,72 ms, max 26,64 ms","Không có script benchmark lưu trong repo (đo kiểm tra trên máy hiện tại: 140 lượt TB 4,06 ms, 700 lượt TB 3,69 ms)",FastAPI TestClient ad-hoc (không có script cố định trong repo),KHÔNG CÓ SCRIPT TÁI LẬP (cùng bậc độ lớn)
+SL-CH5-LATENCY,chuong-05:44-48,"Phiên đo chuẩn: 140 lượt TB 3,54 ms (max 7,97 ms); 700 lượt TB 3,72 ms (max 26,64 ms); SLA < 1.000 ms",140 lượt TB 5.43 ms (max 7.46 ms); 700 lượt TB 5.47 ms (max 29.36 ms); SLA=PASS,scripts/thesis/benchmark_latency.py (TestClient in-process),KHỚP

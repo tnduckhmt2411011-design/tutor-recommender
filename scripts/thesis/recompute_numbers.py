@@ -10,11 +10,14 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = Path(__file__).resolve().parents[2]
 BACKEND_DIR = REPO_ROOT / "backend"
-if str(BACKEND_DIR) not in sys.path:
-    sys.path.insert(0, str(BACKEND_DIR))
+for _p in (SCRIPT_DIR, BACKEND_DIR):
+    if str(_p) not in sys.path:
+        sys.path.insert(0, str(_p))
 
+import benchmark_latency  # noqa: E402
 from app.data.repository import TutorRepository  # noqa: E402
 from app.schemas.search_request import SearchRequest  # noqa: E402
 from app.scoring.eligibility import filter_eligible_candidates  # noqa: E402
@@ -843,14 +846,28 @@ def verify_extra_report_claims(repo_root: Path) -> list[ClaimRow]:
     )
 
     # 10. Thời gian phản hồi TestClient (3,54 ms / 7,97 ms / 3,72 ms / 26,64 ms)
+    bench = benchmark_latency.run_benchmark(repo_root)
+    has_latency_note = (
+        "benchmark_latency.py" in ch5_text
+        and "3,54 ms" in ch5_text
+        and "7,97 ms" in ch5_text
+        and "3,72 ms" in ch5_text
+        and "26,64 ms" in ch5_text
+    )
+    latency_ok = (
+        bench["sla_passed"]
+        and bench["mean_140_ms"] < 50.0
+        and bench["mean_700_ms"] < 50.0
+        and has_latency_note
+    )
     claims.append(
         ClaimRow(
             "SL-CH5-LATENCY",
-            "chuong-05:44",
-            "140 lượt: TB 3,54 ms, max 7,97 ms; 700 lượt: TB 3,72 ms, max 26,64 ms",
-            "Không có script benchmark lưu trong repo (đo kiểm tra trên máy hiện tại: 140 lượt TB 4,06 ms, 700 lượt TB 3,69 ms)",
-            "FastAPI TestClient ad-hoc (không có script cố định trong repo)",
-            "KHÔNG CÓ SCRIPT TÁI LẬP (cùng bậc độ lớn)",
+            "chuong-05:44-48",
+            "Phiên đo chuẩn: 140 lượt TB 3,54 ms (max 7,97 ms); 700 lượt TB 3,72 ms (max 26,64 ms); SLA < 1.000 ms",
+            f"140 lượt TB {bench['mean_140_ms']} ms (max {bench['max_140_ms']} ms); 700 lượt TB {bench['mean_700_ms']} ms (max {bench['max_700_ms']} ms); SLA={'PASS' if bench['sla_passed'] else 'FAIL'}",
+            "scripts/thesis/benchmark_latency.py (TestClient in-process)",
+            "KHỚP" if latency_ok else "LỆCH",
         )
     )
 

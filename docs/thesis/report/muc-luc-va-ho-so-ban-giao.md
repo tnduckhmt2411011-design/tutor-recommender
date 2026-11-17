@@ -121,7 +121,7 @@ Mục lục được tạo tự động trong Word từ ba cấp Heading (Headin
 | 1.5 | Công cụ và kế hoạch thực hiện | … |
 | **2** | Cơ sở lý thuyết và công nghệ | … |
 | 2.1 | Hệ thống khuyến nghị | … |
-| 2.2 | Khuyến nghị dựa trên đặc trưng hồ sơ | … |
+| 2.2 | Phương pháp Content-Based Filtering trên đặc trưng hồ sơ có cấu trúc | … |
 | 2.3 | Lọc theo điều kiện bắt buộc và Weighted Scoring | … |
 | 2.4 | Công nghệ sử dụng | … |
 | **3** | Phân tích và thiết kế hệ thống | … |
@@ -205,7 +205,7 @@ Mục lục được tạo tự động trong Word từ ba cấp Heading (Headin
 | Bảng 5.1 | Phân bổ bộ kiểm thử tự động theo nhóm | … |
 | Bảng 5.2 | Kết quả kiểm thử ca biên của các hàm điểm và tính đơn điệu | … |
 | Bảng 5.3 | Kết quả thực nghiệm 14 kịch bản đánh giá | … |
-| Bảng 5.4 | Đối chiếu Top-3 hệ thống với Top-3 kỳ vọng trên 14 kịch bản | … |
+| Bảng 5.4 | Tổng hợp kết quả đối chiếu Top-3 theo nhóm đặc trưng kịch bản | … |
 | Bảng 5.5 | Độ nhạy của Top-3 theo tham số dung sai học phí $\delta$ | … |
 | Bảng 5.6 | Độ nhạy của Top-3 theo mốc kinh nghiệm bão hòa $E_{\max}$ | … |
 | Bảng 5.7 | Độ nhạy của Top-3 theo mức biến động ngân sách | … |
