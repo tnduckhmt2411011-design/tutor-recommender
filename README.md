@@ -11,7 +11,7 @@ Repository mã nguồn và tài liệu của đồ án tốt nghiệp đại h�
 
 - **Lê Thị Bích Chuyền** (KHMT2411037)
 - **Trần Nguyễn Đức** (KHMT2411011)
-- **Cao Khánh Ngọc** (KHMT2411025) - *Nhóm trưởng*
+- **Cao Khánh Ngọc** (KHMT2411025)
 
 ---
 
