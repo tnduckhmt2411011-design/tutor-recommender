@@ -65,6 +65,12 @@ PRINTABLE_WIDTH_TWIPS = 9072  # 16.0 cm (21.0 - 3.0 - 2.0 cm)
 CENTER_TAB_TWIPS = 4536  # 8.0 cm
 MAX_IMAGE_WIDTH_EMU = int(Cm(15.2))
 MAX_IMAGE_HEIGHT_EMU = int(Cm(19.0))
+LIST_LEFT_BASE_CM = 1.30
+LIST_HANGING_CM = 0.45
+LIST_DEPTH_STEP_CM = 0.45
+LIST_LINE_SPACING = 1.3
+LIST_SPACE_BEFORE_PT = 3.0
+LIST_SPACE_AFTER_PT = 3.0
 
 
 def preprocess_markdown(md_text: str, base_dir: Path | None = None) -> str:
@@ -251,26 +257,20 @@ def split_front_matter(front_matter_md: str) -> dict[str, Any]:
     sec8_clean = re.sub(r"^###\s+8\.2\.\s+", "### 2. ", sec8_clean, flags=re.M)
 
     tables_list: list[tuple[str, str]] = []
-    tables_note = ""
     for line in sections.get("9", "").splitlines():
         s = line.strip()
         if s.startswith("|"):
             cells = [c.strip() for c in s.strip("|").split("|")]
             if len(cells) >= 2 and (m := re.match(r"^(Bảng\s+[A-D0-9]+\.\d+)\s*[-–:]?$", cells[0])):
                 tables_list.append((m.group(1), cells[1]))
-        elif s.startswith("**Tổng:"):
-            tables_note = s
 
     figures_list: list[tuple[str, str]] = []
-    figures_note = ""
     for line in sections.get("10", "").splitlines():
         s = line.strip()
         if s.startswith("|"):
             cells = [c.strip() for c in s.strip("|").split("|")]
             if len(cells) >= 2 and (m := re.match(r"^(Hình\s+[A-D0-9]+\.\d+)\s*[-–:]?$", cells[0])):
                 figures_list.append((m.group(1), cells[1]))
-        elif s.startswith("**Tổng:"):
-            figures_note = s
 
     return {
         "cover_main_blocks": cover_main_blocks,
@@ -282,9 +282,7 @@ def split_front_matter(front_matter_md: str) -> dict[str, Any]:
         "abstract_en": preprocess_markdown(abstract_en),
         "ky_hieu_viet_tat": preprocess_markdown(sec8_clean),
         "tables_list": tables_list,
-        "tables_note": tables_note,
         "figures_list": figures_list,
-        "figures_note": figures_note,
     }
 
 
@@ -411,9 +409,9 @@ def _apply_standard_styles(doc: docx.document.Document) -> None:
             base_style_name="Normal",
             size_pt=13.0,
             align=WD_ALIGN_PARAGRAPH.JUSTIFY,
-            line_spacing=1.25,
-            space_before_pt=2.0,
-            space_after_pt=3.0,
+            line_spacing=LIST_LINE_SPACING,
+            space_before_pt=LIST_SPACE_BEFORE_PT,
+            space_after_pt=LIST_SPACE_AFTER_PT,
             first_indent_cm=0.0,
         )
     if "Block Text" in doc.styles:
@@ -1272,31 +1270,9 @@ def _populate_toc_and_lists(doc: docx.document.Document, fm_parts: dict[str, Any
             p._element.getparent().remove(p._element)
         elif t == SENTINEL_LOT_SLOT:
             _emit_dotted_toc_field(doc, p, 'TOC \\h \\z \\t "Caption Table,1"', lot_entries)
-            if fm_parts.get("tables_note"):
-                note_p = p.insert_paragraph_before("")
-                note_p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-                note_p.paragraph_format.first_line_indent = Cm(0)
-                note_p.paragraph_format.space_before = Pt(6)
-                note_p.paragraph_format.space_after = Pt(6)
-                rn = note_p.add_run(fm_parts["tables_note"].replace("**", ""))
-                rn.font.name = FONT_NAME
-                rn.font.size = Pt(11.5)
-                rn.font.bold = True
-                _strip_theme_fonts_and_set(rn._element, FONT_NAME, size_pt=11.5)
             p._element.getparent().remove(p._element)
         elif t == SENTINEL_LOF_SLOT:
             _emit_dotted_toc_field(doc, p, 'TOC \\h \\z \\t "Caption Figure,1"', lof_entries)
-            if fm_parts.get("figures_note"):
-                note_p = p.insert_paragraph_before("")
-                note_p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-                note_p.paragraph_format.first_line_indent = Cm(0)
-                note_p.paragraph_format.space_before = Pt(6)
-                note_p.paragraph_format.space_after = Pt(6)
-                rn = note_p.add_run(fm_parts["figures_note"].replace("**", ""))
-                rn.font.name = FONT_NAME
-                rn.font.size = Pt(11.5)
-                rn.font.bold = True
-                _strip_theme_fonts_and_set(rn._element, FONT_NAME, size_pt=11.5)
             p._element.getparent().remove(p._element)
 
 
@@ -1584,9 +1560,86 @@ def _apply_display_equation_tabs(doc: docx.document.Document) -> None:
         p._element.getparent().remove(p._element)
 
 
+def _cm_to_twips(cm_val: float) -> int:
+    """Quy đổi khoảng cách theo cm sang đơn vị twips (1 inch = 1440 twips)."""
+    return round(cm_val * 1440.0 / 2.54)
+
+
+def _normalize_list_numbering(doc: docx.document.Document) -> None:
+    """Chuyển danh sách bullet sang dấu '-' (Times New Roman 13 pt) và đồng bộ thụt lề trong numbering.xml."""
+    try:
+        numbering_root = doc.part.numbering_part.numbering_definitions._numbering
+    except (AttributeError, NotImplementedError):
+        return
+
+    for lvl in numbering_root.findall(f".//{qn('w:lvl')}"):
+        depth = int(lvl.get(qn("w:ilvl"), "0"))
+        left_twips = _cm_to_twips(LIST_LEFT_BASE_CM + LIST_DEPTH_STEP_CM * depth)
+        hanging_twips = _cm_to_twips(LIST_HANGING_CM)
+
+        num_fmt = lvl.find(qn("w:numFmt"))
+        lvl_text = lvl.find(qn("w:lvlText"))
+        if (
+            num_fmt is not None
+            and num_fmt.get(qn("w:val")) == "bullet"
+            and lvl_text is not None
+            and (lvl_text.get(qn("w:val")) or "").strip() != ""
+        ):
+            lvl_text.set(qn("w:val"), "-")
+
+        suff = lvl.find(qn("w:suff"))
+        if suff is None:
+            suff = OxmlElement("w:suff")
+            suff.set(qn("w:val"), "tab")
+            if lvl_text is not None:
+                lvl.insert(list(lvl).index(lvl_text), suff)
+            else:
+                lvl.insert(0, suff)
+        elif suff.get(qn("w:val")) != "tab":
+            suff.set(qn("w:val"), "tab")
+
+        ppr = lvl.find(qn("w:pPr"))
+        if ppr is None:
+            ppr = OxmlElement("w:pPr")
+            rpr_existing = lvl.find(qn("w:rPr"))
+            if rpr_existing is not None:
+                lvl.insert(list(lvl).index(rpr_existing), ppr)
+            else:
+                lvl.append(ppr)
+        for old_tabs in ppr.findall(qn("w:tabs")):
+            ppr.remove(old_tabs)
+        ind = ppr.find(qn("w:ind"))
+        if ind is None:
+            ind = OxmlElement("w:ind")
+            ppr.append(ind)
+        for stale_attr in ("w:leftChars", "w:hangingChars", "w:firstLine"):
+            ind.attrib.pop(qn(stale_attr), None)
+        ind.set(qn("w:left"), str(left_twips))
+        ind.set(qn("w:hanging"), str(hanging_twips))
+
+        rpr = lvl.find(qn("w:rPr"))
+        if rpr is None:
+            rpr = OxmlElement("w:rPr")
+            lvl.append(rpr)
+        color_el = rpr.find(qn("w:color"))
+        if color_el is None:
+            color_el = OxmlElement("w:color")
+            sz_el = rpr.find(qn("w:sz"))
+            if sz_el is not None:
+                rpr.insert(list(rpr).index(sz_el), color_el)
+            else:
+                rpr.append(color_el)
+        color_el.set(qn("w:val"), "000000")
+        _strip_theme_fonts_and_set(lvl, FONT_NAME, size_pt=13.0)
+        rfonts = rpr.find(qn("w:rFonts"))
+        if rfonts is not None:
+            rfonts.attrib.pop(qn("w:hint"), None)
+
+
 def _scale_images_and_style_paragraphs(doc: docx.document.Document) -> None:
     """Chuẩn hóa phông Times New Roman, caption Bảng/Hình, chú thích bảng, ảnh và danh sách."""
     _apply_display_equation_tabs(doc)
+    _normalize_list_numbering(doc)
 
     in_references = False
     paras = doc.paragraphs
@@ -1600,16 +1653,18 @@ def _scale_images_and_style_paragraphs(doc: docx.document.Document) -> None:
         elif txt == "PHỤ LỤC":
             in_references = False
 
-        # Bỏ thụt đầu dòng trong các đoạn danh sách có numPr
+        # Chuẩn hóa thụt lề, giãn dòng và khoảng cách các đoạn danh sách có numPr
         ppr = p._p.pPr
         num_pr = ppr.find(qn("w:numPr")) if ppr is not None else None
         if num_pr is not None:
             ilvl_el = num_pr.find(qn("w:ilvl"))
             depth = int(ilvl_el.get(qn("w:val"), "0")) if ilvl_el is not None else 0
-            p.paragraph_format.left_indent = Cm(0.8 * depth + 0.5)
-            p.paragraph_format.first_line_indent = Cm(-0.45)
-            p.paragraph_format.space_before = Pt(2)
-            p.paragraph_format.space_after = Pt(3)
+            p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+            p.paragraph_format.left_indent = Cm(LIST_LEFT_BASE_CM + LIST_DEPTH_STEP_CM * depth)
+            p.paragraph_format.first_line_indent = Cm(-LIST_HANGING_CM)
+            p.paragraph_format.line_spacing = LIST_LINE_SPACING
+            p.paragraph_format.space_before = Pt(LIST_SPACE_BEFORE_PT)
+            p.paragraph_format.space_after = Pt(LIST_SPACE_AFTER_PT)
 
         # Heading 1 / Heading 2 / Heading 3: đồng bộ khoảng cách và giữ trang
         if sname == "Heading 1":

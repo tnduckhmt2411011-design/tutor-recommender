@@ -47,6 +47,8 @@ FORBIDDEN_STRINGS: tuple[str, ...] = (
     "TBD",
     "FIXME",
     "…",
+    "Tổng: 31 bảng",
+    "Tổng: 9 hình",
 )
 
 
@@ -164,6 +166,11 @@ def verify_docx(docx_path: Path, repo_root: Path = REPO_ROOT) -> tuple[list[str]
         doc_xml = ET.fromstring(zf.read("word/document.xml"))
         settings_xml = ET.fromstring(zf.read("word/settings.xml"))
         styles_xml = ET.fromstring(zf.read("word/styles.xml"))
+        numbering_xml = (
+            ET.fromstring(zf.read("word/numbering.xml"))
+            if "word/numbering.xml" in zf.namelist()
+            else None
+        )
 
     m_ns = "{http://schemas.openxmlformats.org/officeDocument/2006/math}"
     w_ns = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
@@ -172,6 +179,24 @@ def verify_docx(docx_path: Path, repo_root: Path = REPO_ROOT) -> tuple[list[str]
     omath_nodes = doc_xml.findall(f".//{m_ns}oMath")
     stats["media_count"] = len(media_files)
     stats["omath_count"] = len(omath_nodes)
+
+    if numbering_xml is not None:
+        for lvl in numbering_xml.findall(f".//{w_ns}lvl"):
+            nf = lvl.find(f"{w_ns}numFmt")
+            if nf is None or nf.attrib.get(f"{w_ns}val") != "bullet":
+                continue
+            lt = lvl.find(f"{w_ns}lvlText")
+            lt_val = lt.attrib.get(f"{w_ns}val", "") if lt is not None else ""
+            if lt_val in ("\uf0b7", "o", "\uf0a7", "•"):
+                issues.append(f"Danh sách bullet vẫn dùng ký hiệu tròn/ô '{repr(lt_val)}' trong word/numbering.xml.")
+            rf = lvl.find(f"{w_ns}rPr/{w_ns}rFonts")
+            if rf is not None:
+                for attr in ("ascii", "hAnsi"):
+                    fval = rf.attrib.get(f"{w_ns}{attr}", "")
+                    if fval in ("Symbol", "Courier New", "Wingdings"):
+                        issues.append(
+                            f"Danh sách trong word/numbering.xml vẫn dùng phông ký hiệu '{fval}'."
+                        )
 
     if len(media_files) != 11:
         issues.append(

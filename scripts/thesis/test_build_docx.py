@@ -3,9 +3,13 @@
 from __future__ import annotations
 
 from pathlib import Path
+import struct
+import xml.etree.ElementTree as ET
+import zipfile
 
 import docx
 import pytest
+from docx.oxml.ns import qn
 
 from build_docx import (
     EQ_NUM_MARKER_PREFIX,
@@ -198,3 +202,115 @@ def test_verify_docx_passes_on_generated_report() -> None:
     assert int(stats["data_tables"]) == 33
     assert int(stats["omath_count"]) > 100
     assert float(stats["word_diff_pct"]) < 3.0
+
+
+def test_generated_report_uses_dash_lists_standard_spacing_and_no_list_totals() -> None:
+    repo_root = Path(__file__).resolve().parents[2]
+    out_docx = repo_root.parent / "BAO_CAO_DO_AN_KHMT1_HOAN_CHINH.docx"
+    assert out_docx.exists(), "Cần chạy build_docx.py trước khi kiểm định tệp đích."
+
+    doc = docx.Document(str(out_docx))
+    all_texts = [p.text for p in doc.paragraphs]
+    assert not any("Tổng: 31 bảng" in t for t in all_texts)
+    assert not any("Tổng: 9 hình" in t for t in all_texts)
+
+    with zipfile.ZipFile(out_docx) as zf:
+        numbering_xml = ET.fromstring(zf.read("word/numbering.xml"))
+    w_ns = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
+    for lvl in numbering_xml.findall(f".//{w_ns}lvl"):
+        nf = lvl.find(f"{w_ns}numFmt")
+        lt = lvl.find(f"{w_ns}lvlText")
+        if nf is not None and nf.attrib.get(f"{w_ns}val") == "bullet" and lt is not None:
+            lt_val = lt.attrib.get(f"{w_ns}val", "")
+            if lt_val.strip() != "":
+                assert lt_val == "-"
+                rf = lvl.find(f"{w_ns}rPr/{w_ns}rFonts")
+                assert rf is not None
+                assert rf.attrib.get(f"{w_ns}ascii") == "Times New Roman"
+                assert rf.attrib.get(f"{w_ns}hAnsi") == "Times New Roman"
+
+    level0_list_paras = []
+    for p in doc.paragraphs:
+        ppr = p._p.pPr
+        num_pr = ppr.find(qn("w:numPr")) if ppr is not None else None
+        if num_pr is not None:
+            ilvl = num_pr.find(qn("w:ilvl"))
+            depth = int(ilvl.get(qn("w:val"), "0")) if ilvl is not None else 0
+            if depth == 0:
+                level0_list_paras.append(p)
+    assert level0_list_paras
+    for p in level0_list_paras:
+        pf = p.paragraph_format
+        assert pf.line_spacing == pytest.approx(1.3, abs=0.01)
+        assert pf.space_before is not None and pf.space_before.pt == pytest.approx(3.0, abs=0.1)
+        assert pf.space_after is not None and pf.space_after.pt == pytest.approx(3.0, abs=0.1)
+        assert pf.left_indent is not None and pf.left_indent.cm == pytest.approx(1.30, abs=0.05)
+        assert pf.first_line_indent is not None and pf.first_line_indent.cm == pytest.approx(-0.45, abs=0.05)
+
+
+def test_chapter3_drawio_sources_and_rendered_pngs_are_valid() -> None:
+    repo_root = Path(__file__).resolve().parents[2]
+    figures_dir = repo_root / "docs" / "thesis" / "figures"
+    src_dir = figures_dir / "src"
+
+    stems = (
+        "hinh-3-1-luong-xu-ly-khuyen-nghi",
+        "hinh-3-2-kien-truc-ba-lop",
+        "hinh-3-3-so-do-trinh-tu",
+        "hinh-3-5-phac-thao-ket-qua",
+    )
+    parsed_xmls: dict[str, ET.Element] = {}
+    for stem in stems:
+        drawio_path = src_dir / f"{stem}.drawio"
+        png_path = figures_dir / f"{stem}.png"
+        assert drawio_path.exists(), f"Thiếu tệp nguồn draw.io: {drawio_path}"
+        assert png_path.exists(), f"Thiếu tệp ảnh xuất PNG: {png_path}"
+
+        root = ET.fromstring(drawio_path.read_text(encoding="utf-8"))
+        assert root.tag == "mxfile"
+        assert root.find(".//mxGraphModel/root") is not None
+        parsed_xmls[stem] = root
+
+        png_header = png_path.read_bytes()[:24]
+        assert png_header[:8] == b"\x89PNG\r\n\x1a\n"
+        width, height = struct.unpack(">II", png_header[16:24])
+        assert width >= 1600 and height >= 1200
+
+    # Hình 3.3: chuẩn UML 2.5 và đúng thứ tự thực thi của recommend.py
+    h33_xml = ET.tostring(parsed_xmls["hinh-3-3-so-do-trinh-tu"], encoding="unicode")
+    for token in (
+        "umlActor",
+        "umlFrame",
+        "filter_mandatory",
+        "compute_effective_weights",
+        "filter_eligible_candidates",
+        "score_and_rank",
+    ):
+        assert token in h33_xml
+
+    def _msg_y(root: ET.Element, needle: str) -> float:
+        for cell in root.findall(".//mxCell"):
+            if needle in cell.get("value", ""):
+                pt = cell.find(".//mxGeometry/mxPoint[@as='sourcePoint']")
+                if pt is not None:
+                    return float(pt.get("y", "0"))
+                geom = cell.find("mxGeometry")
+                if geom is not None and geom.get("y") is not None:
+                    return float(geom.get("y", "0"))
+        raise AssertionError(f"Không tìm thấy phần tử '{needle}'")
+
+    h33_root = parsed_xmls["hinh-3-3-so-do-trinh-tu"]
+    y_get_all = _msg_y(h33_root, "get_all()")
+    y_mandatory = _msg_y(h33_root, "filter_mandatory")
+    y_weights = _msg_y(h33_root, "compute_effective_weights")
+    y_eligible = _msg_y(h33_root, "filter_eligible_candidates")
+    y_rank = _msg_y(h33_root, "score_and_rank")
+    assert y_get_all < y_mandatory < y_weights < y_eligible < y_rank
+
+    # Hình 3.1: đúng chuẩn ISO 5807 (rhombus) và zero_weight đứng trước ngưỡng Bảng 3.7
+    h31_root = parsed_xmls["hinh-3-1-luong-xu-ly-khuyen-nghi"]
+    diamonds = [c for c in h31_root.findall(".//mxCell") if "rhombus" in c.get("style", "")]
+    assert len(diamonds) == 5
+    y_zero = _msg_y(h31_root, "zero_weight")
+    y_thresh = _msg_y(h31_root, "Bảng 3.7")
+    assert y_zero < y_thresh

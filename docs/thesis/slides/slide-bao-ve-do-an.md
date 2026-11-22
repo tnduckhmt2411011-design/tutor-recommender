@@ -73,7 +73,7 @@
 
 - Giao diện ReactJS: `SearchPage`, `ResultPage`, `api.js`.
 - API FastAPI: `POST /api/recommend`, bốn trạng thái phản hồi.
-- Module tính điểm: `filters`, `eligibility`, `weights`, `criteria`, `ranker`.
+- Module tính điểm: `filters`, `weights`, `eligibility`, `criteria`, `ranker`.
 - Module không tự đọc dữ liệu; lớp API nạp qua `TutorRepository` rồi truyền vào.
 
 **Lời thoại**
@@ -87,13 +87,13 @@
 **Trên slide**
 
 - (1) nhập nhu cầu → (2) kiểm tra, chuẩn hóa → (3) lọc điều kiện bắt buộc.
-- (4) kiểm tra ngưỡng dữ liệu tối thiểu → (5) tính điểm thành phần.
-- (6) kiểm tra tổng trọng số → (7) tổng hợp, xếp hạng, phá hòa → (8) trả Top-k kèm lý do.
-- Bốn nhánh thông báo: 422, `no_match`, `zero_weight`, thiếu dữ liệu.
+- (4) tính trọng số hiệu dụng & kiểm tra $\sum w_i > 0$ → (5) kiểm tra ngưỡng dữ liệu tối thiểu → (6) tính điểm thành phần.
+- (7) tổng hợp, xếp hạng, phá hòa → (8) hiển thị Top-k kèm lý do (hỗ trợ lặp CN03).
+- Bốn nhánh thông báo: 422, `no_match` (biến thể 1 & 2), `zero_weight`.
 
 **Lời thoại**
 
-“Hai bước dễ bị bỏ qua là bước 4 và bước 6. Bước 4 loại hồ sơ thiếu dữ liệu thay vì tính điểm trên vài ô còn lại. Bước 6 xử lý trường hợp người học đặt cả năm tiêu chí về không quan tâm, khi đó không có cơ sở để xếp hạng.”
+“Hai bước kiểm tra biên quan trọng là bước 4 và bước 5. Bước 4 xử lý trường hợp người học đặt cả năm tiêu chí về không quan tâm ($\sum w_i = 0$), khi đó không có cơ sở để xếp hạng nên trả về trạng thái `zero_weight`. Bước 5 đối chiếu ngưỡng dữ liệu tối thiểu ở Bảng 3.7 để loại các hồ sơ thiếu quá nhiều thông tin thay vì tính điểm trên vài ô còn lại.”
 
 **Hình/bảng:** Hình 3.1, Bảng 3.7.
 

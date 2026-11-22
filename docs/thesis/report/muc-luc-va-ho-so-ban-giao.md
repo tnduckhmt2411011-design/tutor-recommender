@@ -243,8 +243,6 @@ Mục lục được tạo tự động trong `.docx` từ kiểu `Front Title` 
 | Bảng C.1: | Danh mục sơ đồ thiết kế và hình ảnh giao diện của hệ thống | … |
 | Bảng D.1: | Yêu cầu đầy đủ của 14 kịch bản thực nghiệm | … |
 
-**Tổng: 31 bảng** (Chương 1: 2; Chương 2: 2; Chương 3: 7; Chương 4: 6; Chương 5: 9; Chương 6: 1; Phụ lục: 4).
-
 ## 10. Danh mục hình ảnh
 
 | Số hiệu | Tên hình | Trang |
@@ -258,8 +256,6 @@ Mục lục được tạo tự động trong `.docx` từ kiểu `Front Title` 
 | Hình 4.2: | Màn hình kết quả gợi ý Top-3 kịch bản KB01 (CN02) | … |
 | Hình 4.3: | Điều chỉnh mức ưu tiên trực tiếp (CN03) làm đổi hạng | … |
 | Hình 4.4: | Trạng thái biên tổng trọng số bằng 0 ($\sum w_i = 0$) | … |
-
-**Tổng: 9 hình** (Chương 3: 5; Chương 4: 4). Hai hình 3.4 và 3.5 là phác thảo bố cục; giao diện hiện thực tương ứng nằm ở Hình 4.1–4.4.
 
 ## 11. Hồ sơ bàn giao
 
@@ -275,7 +271,7 @@ Mục lục được tạo tự động trong `.docx` từ kiểu `Front Title` 
 | `chuong-06-ket-luan-va-huong-phat-trien.md` | Chương 6 và Phụ lục A–D | Hoàn thành |
 | `tai-lieu-tham-khao.md` | 5 tài liệu theo IEEE | Hoàn thành (đã kiểm chứng DOI/URL và tinh gọn còn 5 nguồn cốt lõi) |
 | `muc-luc-va-ho-so-ban-giao.md` | Phần mở đầu theo chuẩn báo cáo ML + danh mục bàn giao | Hoàn thành |
-| `docs/thesis/figures/*.png` | 9 hình của báo cáo + `khung_trang_bia.png` + `logo_ctut.png` | Đủ 11 tệp ảnh |
+| `docs/thesis/figures/*.png` | 9 hình của báo cáo + `khung_trang_bia.png` + `logo_ctut.png` (kèm 4 tệp nguồn `docs/thesis/figures/src/*.drawio`) | Đủ 11 tệp ảnh |
 | `docs/thesis/outline/dac-ta-hinh-3-1-3-5.md` | Đặc tả 5 hình Chương 3 (tài liệu làm việc) | Lưu nội bộ |
 
 ### 11.2. Việc còn lại trước khi nộp
@@ -289,6 +285,6 @@ Mục lục được tạo tự động trong `.docx` từ kiểu `Front Title` 
 
 ### 11.3. Ghi chú còn treo
 
-- Bảng “Khung đối chiếu” ở Mục 6.1.1 giữ dạng tiêu đề, không cấp số Bảng 6.x, để không phá số hiệu Bảng 6.1 của đề cương.
+- Mục 6.1.1 trình bày phần đối chiếu với 4 mục tiêu đề tài bằng danh sách đánh số `1–4` theo chuẩn báo cáo Học máy (không dùng bảng không đánh số, giữ nguyên 31 bảng được cấp số `Bảng X.Y:`).
 - Nhãn `public_collected` của `GS-T06`, `GS-T07` được giữ nguyên; phần học phí và lịch rảnh ước tính đã ghi chú ở Chương 4, Chương 5 và Phụ lục A.
 - Bản Abstract tiếng Anh giữ dấu chấm thập phân (`3.54 ms`) theo quy ước tiếng Anh; thân bài tiếng Việt dùng dấu phẩy (`3,54 ms`).

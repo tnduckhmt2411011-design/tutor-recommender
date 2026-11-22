@@ -1,0 +1,174 @@
+<mxfile host="next-ai-draw-io" version="24.7.17">
+  <diagram id="hinh-3-2" name="Hình 3.2 - Kiến trúc hệ thống ba lớp">
+    <mxGraphModel dx="1420" dy="960" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- LỚP 1: GIAO DIỆN REACTJS -->
+        <mxCell id="layer_ui" value="" style="rounded=1;arcSize=6;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#234063;strokeWidth=1.6;" vertex="1" parent="1">
+          <mxGeometry x="20" y="20" width="900" height="200" as="geometry"/>
+        </mxCell>
+        <mxCell id="badge_ui" value="&lt;b&gt;Lớp giao diện — ReactJS (&lt;font face=&quot;Consolas&quot; style=&quot;font-size:12px&quot;&gt;frontend/src/&lt;/font&gt;)&lt;/b&gt;" style="rounded=1;arcSize=50;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=13;fillColor=#234063;strokeColor=#234063;fontColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="44" y="4" width="310" height="32" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="ui_app" value="&lt;b&gt;&lt;font face=&quot;Consolas&quot;&gt;App.jsx&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px;color:#334155&quot;&gt;Điều phối trạng thái,&lt;br&gt;chống ghi đè &lt;font face=&quot;Consolas&quot; style=&quot;font-size:11px&quot;&gt;requestSeqRef&lt;/font&gt;&lt;/font&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=13;fillColor=#FFFFFF;strokeColor=#475569;strokeWidth=1.4;" vertex="1" parent="1">
+          <mxGeometry x="44" y="64" width="198" height="122" as="geometry"/>
+        </mxCell>
+        <mxCell id="ui_search" value="&lt;b&gt;&lt;font face=&quot;Consolas&quot;&gt;SearchPage.jsx&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px;color:#334155&quot;&gt;Nhập nhu cầu học tập &amp;amp;&lt;br&gt;mức ưu tiên (CN01)&lt;/font&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=13;fillColor=#FFFFFF;strokeColor=#475569;strokeWidth=1.4;" vertex="1" parent="1">
+          <mxGeometry x="262" y="64" width="198" height="122" as="geometry"/>
+        </mxCell>
+        <mxCell id="ui_result" value="&lt;b&gt;&lt;font face=&quot;Consolas&quot;&gt;ResultPage.jsx&lt;/font&gt; &amp;amp; thẻ&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px;color:#334155&quot;&gt;&lt;font face=&quot;Consolas&quot; style=&quot;font-size:11px&quot;&gt;TutorCard, StackedBarScore&lt;/font&gt;&lt;br&gt;Hiển thị Top-k &amp;amp; sửa ưu tiên (CN02–03)&lt;/font&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=13;fillColor=#FFFFFF;strokeColor=#475569;strokeWidth=1.4;" vertex="1" parent="1">
+          <mxGeometry x="480" y="64" width="216" height="122" as="geometry"/>
+        </mxCell>
+        <mxCell id="ui_api" value="&lt;b&gt;&lt;font face=&quot;Consolas&quot;&gt;services/api.js&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px;color:#334155&quot;&gt;&lt;font face=&quot;Consolas&quot; style=&quot;font-size:11px&quot;&gt;fetchRecommendations()&lt;/font&gt;&lt;br&gt;Chuẩn hóa payload, xử lý lỗi HTTP&lt;/font&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=13;fillColor=#FFFFFF;strokeColor=#475569;strokeWidth=1.4;" vertex="1" parent="1">
+          <mxGeometry x="716" y="64" width="184" height="122" as="geometry"/>
+        </mxCell>
+
+        <!-- LỚP 2: DỊCH VỤ API FASTAPI -->
+        <mxCell id="layer_api" value="" style="rounded=1;arcSize=6;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#234063;strokeWidth=1.6;" vertex="1" parent="1">
+          <mxGeometry x="20" y="302" width="900" height="186" as="geometry"/>
+        </mxCell>
+        <mxCell id="badge_api" value="&lt;b&gt;Lớp dịch vụ API — FastAPI (&lt;font face=&quot;Consolas&quot; style=&quot;font-size:12px&quot;&gt;backend/app/&lt;/font&gt;)&lt;/b&gt;" style="rounded=1;arcSize=50;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=13;fillColor=#234063;strokeColor=#234063;fontColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="44" y="286" width="310" height="32" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="api_main" value="&lt;b&gt;&lt;font face=&quot;Consolas&quot;&gt;main.py&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px;color:#334155&quot;&gt;Khởi tạo FastAPI, &lt;font face=&quot;Consolas&quot; style=&quot;font-size:11px&quot;&gt;CORSMiddleware&lt;/font&gt;,&lt;br&gt;&lt;font face=&quot;Consolas&quot; style=&quot;font-size:11px&quot;&gt;GET /health&lt;/font&gt;, Swagger &lt;font face=&quot;Consolas&quot; style=&quot;font-size:11px&quot;&gt;/docs&lt;/font&gt;&lt;/font&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=13;fillColor=#FFFFFF;strokeColor=#475569;strokeWidth=1.4;" vertex="1" parent="1">
+          <mxGeometry x="44" y="340" width="268" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="api_rec" value="&lt;b&gt;&lt;font face=&quot;Consolas&quot;&gt;api/recommend.py&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px;color:#334155&quot;&gt;Endpoint &lt;font face=&quot;Consolas&quot; style=&quot;font-size:11px&quot;&gt;POST /api/recommend&lt;/font&gt;,&lt;br&gt;&lt;font face=&quot;Consolas&quot; style=&quot;font-size:11px&quot;&gt;recommend_tutors()&lt;/font&gt;, &lt;font face=&quot;Consolas&quot; style=&quot;font-size:11px&quot;&gt;Depends(get_tutor_repository)&lt;/font&gt;&lt;/font&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=13;fillColor=#FFFFFF;strokeColor=#475569;strokeWidth=1.4;" vertex="1" parent="1">
+          <mxGeometry x="334" y="340" width="316" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="api_flow" value="&lt;b&gt;Điều phối 5 bước (Mục 4.4.1)&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:11.5px;color:#334155&quot;&gt;1. Pydantic (422) → 2. Lọc (&lt;font face=&quot;Consolas&quot; style=&quot;font-size:11px&quot;&gt;no_match&lt;/font&gt;)&lt;br&gt;→ 3. Trọng số (&lt;font face=&quot;Consolas&quot; style=&quot;font-size:11px&quot;&gt;zero_weight&lt;/font&gt;) → 4. Ngưỡng 3.7 → 5. Rank&lt;/font&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=13;fillColor=#DCEAF7;strokeColor=#234063;strokeWidth=1.4;" vertex="1" parent="1">
+          <mxGeometry x="672" y="340" width="228" height="120" as="geometry"/>
+        </mxCell>
+
+        <!-- LỚP 3: NGHIỆP VỤ TÍNH ĐIỂM -->
+        <mxCell id="layer_score" value="" style="rounded=1;arcSize=6;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#234063;strokeWidth=1.6;" vertex="1" parent="1">
+          <mxGeometry x="20" y="576" width="900" height="304" as="geometry"/>
+        </mxCell>
+        <mxCell id="badge_score" value="&lt;b&gt;Lớp nghiệp vụ — Module tính điểm (&lt;font face=&quot;Consolas&quot; style=&quot;font-size:12px&quot;&gt;backend/app/scoring/&lt;/font&gt;)&lt;/b&gt;" style="rounded=1;arcSize=50;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=13;fillColor=#234063;strokeColor=#234063;fontColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="44" y="560" width="380" height="32" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="sc_filters" value="&lt;b&gt;&lt;font face=&quot;Consolas&quot;&gt;filters.py&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px;color:#334155&quot;&gt;Lọc điều kiện&lt;br&gt;bắt buộc (Bảng 3.2)&lt;/font&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=13;fillColor=#FFFFFF;strokeColor=#475569;strokeWidth=1.4;" vertex="1" parent="1">
+          <mxGeometry x="44" y="618" width="150" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="sc_weights" value="&lt;b&gt;&lt;font face=&quot;Consolas&quot;&gt;weights.py&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px;color:#334155&quot;&gt;Trọng số hiệu dụng,&lt;br&gt;kiểm tra Σw_i = 0&lt;/font&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=13;fillColor=#FFFFFF;strokeColor=#475569;strokeWidth=1.4;" vertex="1" parent="1">
+          <mxGeometry x="220" y="618" width="150" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="sc_elig" value="&lt;b&gt;&lt;font face=&quot;Consolas&quot;&gt;eligibility.py&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px;color:#334155&quot;&gt;Ngưỡng dữ liệu&lt;br&gt;tối thiểu (Bảng 3.7)&lt;/font&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=13;fillColor=#FFFFFF;strokeColor=#475569;strokeWidth=1.4;" vertex="1" parent="1">
+          <mxGeometry x="396" y="618" width="150" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="sc_crit" value="&lt;b&gt;&lt;font face=&quot;Consolas&quot;&gt;criteria.py&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px;color:#334155&quot;&gt;5 hàm thuần tính&lt;br&gt;điểm thành phần s_i&lt;/font&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=13;fillColor=#FFFFFF;strokeColor=#475569;strokeWidth=1.4;" vertex="1" parent="1">
+          <mxGeometry x="572" y="618" width="150" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="sc_rank" value="&lt;b&gt;&lt;font face=&quot;Consolas&quot;&gt;ranker.py&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px;color:#334155&quot;&gt;Tổng hợp S(g),&lt;br&gt;xếp hạng, phá hòa,&lt;br&gt;sinh lý do &amp;amp; ghi chú&lt;/font&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=13;fillColor=#FFFFFF;strokeColor=#475569;strokeWidth=1.4;" vertex="1" parent="1">
+          <mxGeometry x="748" y="618" width="152" height="130" as="geometry"/>
+        </mxCell>
+
+        <!-- Mũi tên luồng tuần tự bên trong module scoring/ -->
+        <mxCell id="e_sc1" style="endArrow=classic;strokeColor=#234063;strokeWidth=1.4;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="sc_filters" target="sc_weights"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_sc2" style="endArrow=classic;strokeColor=#234063;strokeWidth=1.4;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="sc_weights" target="sc_elig"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_sc3" style="endArrow=classic;strokeColor=#234063;strokeWidth=1.4;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="sc_elig" target="sc_crit"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_sc4" style="endArrow=classic;strokeColor=#234063;strokeWidth=1.4;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="sc_crit" target="sc_rank"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="sc_note" value="&lt;b&gt;Nguyên tắc tách rời:&lt;/b&gt; Module tính điểm dùng Python thuần, không &lt;font face=&quot;Consolas&quot; style=&quot;font-size:11.5px&quot;&gt;import&lt;/font&gt; FastAPI và không tự đọc tệp dữ liệu; danh sách hồ sơ do lớp API nạp qua &lt;font face=&quot;Consolas&quot; style=&quot;font-size:11.5px&quot;&gt;TutorRepository&lt;/font&gt; và truyền qua tham số." style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=12.5;fillColor=#DCEAF7;strokeColor=#234063;strokeWidth=1.2;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="44" y="778" width="856" height="76" as="geometry"/>
+        </mxCell>
+
+        <!-- CỘT PHẢI: SHARED CORE + REPOSITORY + DATA STORE -->
+        <mxCell id="shared_box" value="&lt;b&gt;Khối dùng chung (&lt;font face=&quot;Consolas&quot; style=&quot;font-size:12px&quot;&gt;Shared Core&lt;/font&gt;)&lt;/b&gt;&lt;br&gt;&lt;hr style=&quot;border:0;border-top:1px solid #CBD5E1;margin:6px 0&quot;&gt;&lt;div style=&quot;text-align:left;padding:0 10px;font-size:12px;line-height:1.45&quot;&gt;&lt;b&gt;&lt;font face=&quot;Consolas&quot;&gt;core/config.py&lt;/font&gt;:&lt;/b&gt; DELTA = 0,5, E_MAX = 8, RATING_DEFAULT = 0,5, PRIORITY_WEIGHTS&lt;br&gt;&lt;b&gt;&lt;font face=&quot;Consolas&quot;&gt;schemas/&lt;/font&gt;:&lt;/b&gt; TutorProfile, SearchRequest, RecommendationResponse&lt;/div&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=13;fillColor=#EFF6FF;strokeColor=#234063;strokeWidth=1.6;fontColor=#0F172A;verticalAlign=top;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="1075" y="96" width="320" height="196" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="repo_box" value="&lt;b&gt;&lt;font face=&quot;Consolas&quot;&gt;TutorRepository&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font face=&quot;Consolas&quot; style=&quot;font-size:11.5px;color:#475569&quot;&gt;backend/app/data/repository.py&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px;color:#334155&quot;&gt;&lt;font face=&quot;Consolas&quot; style=&quot;font-size:11.5px&quot;&gt;get_all() → list[TutorProfile]&lt;/font&gt;&lt;br&gt;Kiểm tra hợp lệ Pydantic; tiêm qua &lt;font face=&quot;Consolas&quot; style=&quot;font-size:11px&quot;&gt;Depends()&lt;/font&gt;&lt;/font&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=13;fillColor=#FDF8F0;strokeColor=#9A6B2F;strokeWidth=1.6;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="1075" y="346" width="320" height="114" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="store_json" value="&lt;b&gt;&lt;font face=&quot;Consolas&quot;&gt;data/processed/tutors.json&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px;color:#57534E&quot;&gt;16 hồ sơ gia sư ẩn danh&lt;br&gt;(nạp ở runtime khi gọi API)&lt;/font&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=14;fontFamily=Times New Roman;fontSize=12.5;fillColor=#FDF8F0;strokeColor=#9A6B2F;strokeWidth=1.6;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="1110" y="542" width="250" height="122" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="store_csv" value="&lt;b&gt;Dữ liệu đối chiếu ngoại tuyến&lt;/b&gt;&lt;br&gt;&lt;font face=&quot;Consolas&quot; style=&quot;font-size:11.5px&quot;&gt;tutors.csv&lt;/font&gt; &amp;amp; &lt;font face=&quot;Consolas&quot; style=&quot;font-size:11.5px&quot;&gt;scripts/validate_tutors.py&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size:11.5px;color:#475569&quot;&gt;Đối chiếu bảng Phụ lục A; API không đọc CSV ở runtime&lt;/font&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;dashed=1;dashPattern=5 4;fontFamily=Times New Roman;fontSize=12;fillColor=#F8FAFC;strokeColor=#64748B;strokeWidth=1.3;fontColor=#334155;" vertex="1" parent="1">
+          <mxGeometry x="1075" y="726" width="320" height="90" as="geometry"/>
+        </mxCell>
+
+        <!-- KẾT NỐI CHÍNH GIỮA CÁC LỚP -->
+        <!-- React <-> FastAPI -->
+        <mxCell id="c_ui_api_req" value="&lt;b&gt;POST /api/recommend (JSON)&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#234063;strokeWidth=1.7;endArrow=block;endFill=1;fontFamily=Times New Roman;fontSize=12;fontColor=#0F172A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="320" y="220" as="sourcePoint"/>
+            <mxPoint x="320" y="302" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c_api_ui_res" value="&lt;b&gt;JSON (HTTP 200 / 422)&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#8A4B08;strokeWidth=1.6;dashed=1;dashPattern=6 4;endArrow=open;endFill=0;fontFamily=Times New Roman;fontSize=12;fontColor=#8A4B08;labelBackgroundColor=#FFFFFF;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="620" y="302" as="sourcePoint"/>
+            <mxPoint x="620" y="220" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- FastAPI <-> Scoring -->
+        <mxCell id="c_api_sc_req" value="&lt;b&gt;Gọi hàm, truyền (tutors, SearchRequest)&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#234063;strokeWidth=1.7;endArrow=block;endFill=1;fontFamily=Times New Roman;fontSize=12;fontColor=#0F172A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="320" y="488" as="sourcePoint"/>
+            <mxPoint x="320" y="576" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c_sc_api_res" value="&lt;b&gt;Top-k đã xếp hạng (RankedTutor)&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#8A4B08;strokeWidth=1.6;dashed=1;dashPattern=6 4;endArrow=open;endFill=0;fontFamily=Times New Roman;fontSize=12;fontColor=#8A4B08;labelBackgroundColor=#FFFFFF;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="620" y="576" as="sourcePoint"/>
+            <mxPoint x="620" y="488" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- API <-> TutorRepository -->
+        <mxCell id="c_api_repo_req" value="get_all()" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#9A6B2F;strokeWidth=1.6;endArrow=block;endFill=1;fontFamily=Consolas;fontSize=11.5;fontColor=#8A4B08;labelBackgroundColor=#FFFFFF;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="920" y="382" as="sourcePoint"/>
+            <mxPoint x="1075" y="382" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c_repo_api_res" value="list[TutorProfile]" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#9A6B2F;strokeWidth=1.5;dashed=1;dashPattern=6 4;endArrow=open;endFill=0;fontFamily=Consolas;fontSize=11.5;fontColor=#8A4B08;labelBackgroundColor=#FFFFFF;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1075" y="428" as="sourcePoint"/>
+            <mxPoint x="920" y="428" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- tutors.json -> TutorRepository -->
+        <mxCell id="c_json_repo" value="đọc &amp;amp; xác thực" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#9A6B2F;strokeWidth=1.6;endArrow=block;endFill=1;exitX=0.5;exitY=0;entryX=0.5;entryY=1;fontFamily=Times New Roman;fontSize=12;fontColor=#8A4B08;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="store_json" target="repo_box">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Import dependencies into Shared Core (clean paths at x=995 & x=1445!) -->
+        <mxCell id="c_api_shared" value="import" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#475569;strokeWidth=1.3;dashed=1;dashPattern=5 4;endArrow=open;endFill=0;fontFamily=Consolas;fontSize=11;fontColor=#475569;labelBackgroundColor=#FFFFFF;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="920" y="330" as="sourcePoint"/>
+            <mxPoint x="1075" y="160" as="targetPoint"/>
+            <Array as="points">
+              <mxPoint x="995" y="330"/>
+              <mxPoint x="995" y="160"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c_score_shared" value="import (không phụ thuộc API)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#475569;strokeWidth=1.3;dashed=1;dashPattern=5 4;endArrow=open;endFill=0;fontFamily=Times New Roman;fontSize=11.5;fontColor=#475569;labelBackgroundColor=#FFFFFF;" edge="1" parent="1">
+          <mxGeometry x="-0.55" relative="1" as="geometry">
+            <mxPoint x="920" y="852" as="sourcePoint"/>
+            <mxPoint x="1395" y="194" as="targetPoint"/>
+            <Array as="points">
+              <mxPoint x="1445" y="852"/>
+              <mxPoint x="1445" y="194"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c_repo_shared" value="import" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#475569;strokeWidth=1.3;dashed=1;dashPattern=5 4;endArrow=open;endFill=0;exitX=0.5;exitY=0;entryX=0.5;entryY=1;fontFamily=Consolas;fontSize=11;fontColor=#475569;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="repo_box" target="shared_box">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

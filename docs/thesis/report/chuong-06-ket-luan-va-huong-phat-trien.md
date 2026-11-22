@@ -180,9 +180,9 @@ Chín sơ đồ và ảnh chụp giao diện chính thức trong báo cáo đư�
 
 | STT | Số hiệu hình | Tệp hình ảnh (`docs/thesis/figures/`) | Nội dung và chức năng thể hiện | Mục tham chiếu |
 |:---:|:---:|:---|:---|:---:|
-| 1 | Hình 3.1 | `hinh-3-1-luong-xu-ly-khuyen-nghi.png` | Sơ đồ luồng xử lý khuyến nghị 8 bước kết hợp kiểm tra ngưỡng dữ liệu tối thiểu và các nhánh phản hồi biên. | Mục 3.7.1 |
+| 1 | Hình 3.1 | `hinh-3-1-luong-xu-ly-khuyen-nghi.png` | Sơ đồ luồng xử lý khuyến nghị 8 bước theo chuẩn ISO 5807, thể hiện kiểm tra $\sum w_i > 0$, ngưỡng dữ liệu tối thiểu và các nhánh phản hồi biên. | Mục 3.7.1 |
 | 2 | Hình 3.2 | `hinh-3-2-kien-truc-ba-lop.png` | Sơ đồ kiến trúc ba lớp tách biệt giữa Giao diện (React), Dịch vụ API (FastAPI) và Module tính điểm (`scoring`). | Mục 3.7.2 |
-| 3 | Hình 3.3 | `hinh-3-3-so-do-trinh-tu.png` | Sơ đồ trình tự tương tác giữa giao diện người dùng, tầng API, `TutorRepository` và gói hàm tính điểm. | Mục 3.7.2 |
+| 3 | Hình 3.3 | `hinh-3-3-so-do-trinh-tu.png` | Sơ đồ trình tự UML 2.5 mô tả tương tác giữa người học, giao diện React, tầng API FastAPI, `TutorRepository` và gói hàm tính điểm. | Mục 3.7.2 |
 | 4 | Hình 3.4 | `hinh-3-4-phac-thao-nhap-nhu-cau.png` | Phác thảo bố cục (*wireframe*) màn hình nhập nhu cầu tìm kiếm và chọn mức ưu tiên (CN01). | Mục 3.8 |
 | 5 | Hình 3.5 | `hinh-3-5-phac-thao-ket-qua.png` | Phác thảo bố cục (*wireframe*) màn hình kết quả gợi ý kèm thanh xếp chồng và khung điều chỉnh trọng số (CN02, CN03). | Mục 3.8 |
 | 6 | Hình 4.1 | `hinh-ui-01-cn01-nhap-nhu-cau.png` | Giao diện thực tế màn hình nhập nhu cầu (CN01), thanh nạp nhanh 14 kịch bản và ô chọn “Mục tiêu học tập”. | Mục 4.5 |

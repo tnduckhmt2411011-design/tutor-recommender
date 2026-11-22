@@ -102,7 +102,7 @@ Quy trình lọc và xếp hạng gia sư chạy qua bốn bước tuần tự:
 
 - **Bước 1.** Kiểm tra và chuẩn hóa dữ liệu đầu vào (phải có môn học, ngân sách không âm, các lựa chọn phân loại hợp lệ).
 - **Bước 2.** Lọc các gia sư đạt điều kiện bắt buộc theo Bảng 3.2. Nếu không còn ai, hệ thống dừng lại và báo không tìm thấy gia sư phù hợp.
-- **Bước 3.** Kiểm tra ngưỡng dữ liệu tối thiểu (Bảng 3.7), sau đó chấm điểm thành phần $s_i(g) \in [0, 1]$ cho từng tiêu chí ưu tiên đang áp dụng theo Bảng 3.6.
+- **Bước 3.** Xác định trọng số hiệu dụng theo Bảng 3.5 (kiểm tra $\sum w_i > 0$), áp ngưỡng dữ liệu tối thiểu (Bảng 3.7), sau đó chấm điểm thành phần $s_i(g) \in [0, 1]$ cho từng tiêu chí ưu tiên đang áp dụng theo Bảng 3.6.
 - **Bước 4.** Tính tổng điểm phù hợp $S(g)$ theo công thức Weighted Scoring (2.1) và sắp xếp giảm dần. Nếu hai gia sư bằng điểm, hệ thống xếp theo mã gia sư tăng dần để thứ tự luôn cố định qua mỗi lần chạy. Cuối cùng, hệ thống lấy Top-$k$ kèm điểm thành phần $s_i(g)$ và mức đóng góp $C_i = w_i \times s_i(g) \div \sum w_j$ của từng tiêu chí.
 
 **Bảng 3.6: Công thức điểm thành phần**
@@ -145,17 +145,17 @@ Quy trình lọc và xếp hạng gia sư chạy qua bốn bước tuần tự:
 
 ### 3.7.1. Luồng xử lý ở mức logic bài toán
 
-Về mặt nghiệp vụ, luồng xử lý chính gồm tám bước:
-1. Người học nhập nhu cầu tìm kiếm và chọn mức ưu tiên.
-2. Hệ thống kiểm tra hợp lệ và chuẩn hóa dữ liệu đầu vào.
-3. Lọc bỏ các hồ sơ gia sư không thỏa điều kiện bắt buộc.
-4. Tính điểm thành phần cho từng tiêu chí ưu tiên.
-5. Tính tổng điểm phù hợp theo trọng số hiệu dụng.
-6. Xếp hạng các gia sư đủ điều kiện.
-7. Trả danh sách Top-$k$ kèm điểm thành phần, mức đóng góp và lý do gợi ý.
-8. Người học chỉnh lại mức ưu tiên và xem thứ hạng cập nhật ngay trên màn hình.
+Về mặt nghiệp vụ, luồng xử lý chính gồm tám bước tuần tự:
+1. Người học nhập nhu cầu tìm kiếm và chọn mức ưu tiên (CN01).
+2. Hệ thống kiểm tra hợp lệ và chuẩn hóa dữ liệu đầu vào (`SearchRequest`).
+3. Đọc tập hồ sơ và lọc bỏ các gia sư không thỏa điều kiện bắt buộc (Bảng 3.2).
+4. Quy đổi mức ưu tiên sang trọng số hiệu dụng theo Bảng 3.5 và kiểm tra điều kiện $\sum w_i > 0$.
+5. Kiểm tra ngưỡng dữ liệu tối thiểu theo Bảng 3.7 để tách các hồ sơ thiếu dữ liệu.
+6. Tính điểm thành phần $s_i(g) \in [0, 1]$ cho từng tiêu chí ưu tiên đang áp dụng (Bảng 3.6).
+7. Tổng hợp điểm phù hợp $S(g)$ theo công thức Weighted Scoring (2.1), xếp hạng giảm dần (phá hòa theo mã gia sư) và trích xuất Top-$k$.
+8. Hiển thị danh sách Top-$k$ kèm điểm thành phần, mức đóng góp $C_i$ và lý do gợi ý (CN02); nếu người học điều chỉnh mức ưu tiên (CN03), hệ thống cập nhật ưu tiên và lặp lại từ bước 2.
 
-Hình 3.1 vẽ lại luồng tám bước trên, có thêm bước kiểm tra ngưỡng dữ liệu tối thiểu (Bảng 3.7) ngay sau bước lọc bắt buộc. Sơ đồ cũng chỉ rõ các nhánh rẽ khi đầu vào sai, khi không có gia sư nào qua lọc hoặc khi tổng trọng số bằng $0$.
+Hình 3.1 trình bày đầy đủ tám bước trên theo quy chuẩn lưu đồ ISO 5807, làm rõ năm điểm rẽ nhánh khi đầu vào sai (HTTP 422), khi không còn ứng viên qua lọc (`no_match`), khi tổng trọng số bằng $0$ (`zero_weight`), khi toàn bộ ứng viên thiếu dữ liệu và khi người học điều chỉnh lại mức ưu tiên (CN03).
 
 ![Hình 3.1: Sơ đồ luồng xử lý khuyến nghị](../figures/hinh-3-1-luong-xu-ly-khuyen-nghi.png)
 
