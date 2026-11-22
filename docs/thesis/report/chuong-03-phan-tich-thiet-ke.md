@@ -1,43 +1,39 @@
 # CHƯƠNG 3. PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG
 
-Chương này chuyển yêu cầu ở Chương 1–2 thành thiết kế cụ thể: phát biểu bài toán (Mục 3.1), yêu cầu chức năng (Mục 3.2) và phi chức năng (Mục 3.3), mô hình hóa mức độ phù hợp (Mục 3.4), thiết kế dữ liệu (Mục 3.5), thiết kế thuật toán (Mục 3.6), kiến trúc và luồng xử lý (Mục 3.7), thiết kế giao diện (Mục 3.8).
-
----
-
 ## 3.1. Phát biểu bài toán
 
-Trong báo cáo này, “người học” chỉ học sinh hoặc phụ huynh thay mặt học sinh; thuật ngữ này được dùng thống nhất cho tác nhân duy nhất của hệ thống (không có tác nhân quản trị hay tác nhân hệ thống ngoài).
+Dựa trên cơ sở lý thuyết ở Chương 1 và Chương 2, nhóm em phát biểu bài toán khuyến nghị gia sư từ phía người học. Trong báo cáo này, “người học” là học sinh hoặc phụ huynh thay mặt học sinh. Đây là tác nhân duy nhất tương tác với hệ thống, nên nhóm em không đưa quản trị viên hay hệ thống thanh toán bên ngoài vào mô hình.
 
-**Đầu vào:** nhu cầu của người học gồm môn học cần tìm, hình thức học, khu vực mong muốn, ngân sách tối đa theo giờ, khung thời gian rảnh, cùng mức ưu tiên cho từng tiêu chí.
+**Đầu vào.** Người học cho hệ thống biết môn học cần tìm, hình thức học, khu vực mong muốn, ngân sách tối đa theo giờ và khung thời gian rảnh. Ngoài ra, họ chọn mức ưu tiên cho từng tiêu chí.
 
-**Đầu ra:** danh sách Top-$k$ gia sư thỏa các điều kiện bắt buộc, xếp hạng giảm dần theo điểm phù hợp, kèm điểm thành phần và lý do gợi ý. Trường hợp không có gia sư nào thỏa điều kiện bắt buộc, hệ thống thông báo rõ thay vì trả về danh sách rỗng không giải thích.
+**Đầu ra.** Hệ thống trả về danh sách Top-$k$ gia sư thỏa các điều kiện bắt buộc, xếp giảm dần theo điểm phù hợp, kèm điểm thành phần và lý do khuyến nghị. Nếu không có gia sư nào thỏa điều kiện bắt buộc, hệ thống nói rõ nguyên nhân thay vì trả về một danh sách rỗng không giải thích.
 
 ## 3.2. Yêu cầu chức năng
 
-Ở quy mô đồ án học phần, hệ thống tập trung vào ba chức năng cốt lõi (Bảng 3.1).
+Với quy mô đồ án học phần, nhóm em chỉ làm ba chức năng chính, tóm tắt ở Bảng 3.1.
 
-**Bảng 3.1 - Danh sách chức năng chính**
+**Bảng 3.1: Danh sách chức năng chính**
 
 | Mã | Tên chức năng | Mô tả |
 |:---:|:---|:---|
 | CN01 | Nhập nhu cầu và mức ưu tiên | Người học nhập môn học, hình thức học, khu vực, ngân sách, khung thời gian rảnh và chọn mức ưu tiên cho từng tiêu chí |
-| CN02 | Xem danh sách gợi ý kèm điểm | Hệ thống trả về Top-$k$ gia sư xếp hạng theo điểm phù hợp, kèm điểm từng tiêu chí thành phần và lý do gợi ý; thông báo rõ khi không có gia sư thỏa điều kiện bắt buộc |
+| CN02 | Xem danh sách gợi ý kèm điểm | Hệ thống trả về Top-$k$ gia sư xếp hạng theo điểm phù hợp, kèm điểm từng tiêu chí thành phần và lý do khuyến nghị; thông báo rõ khi không có gia sư thỏa điều kiện bắt buộc |
 | CN03 | Điều chỉnh mức ưu tiên minh họa | Người học thay đổi mức ưu tiên của từng tiêu chí và quan sát danh sách xếp hạng lại tương ứng |
-
-*Nguồn: thiết kế chức năng của nhóm (Mục 3.2).*
 
 ## 3.3. Yêu cầu phi chức năng
 
-- **Hiệu năng:** API phản hồi dưới một giây với tập dữ liệu mẫu quy mô vài trăm bản ghi. Đây là ngưỡng phù hợp cho minh họa thuật toán, không phải chỉ tiêu vận hành của hệ thống thực tế; mức đạt được khi chạy thực tế trình bày ở Mục 5.1.2.
-- **Khả năng mở rộng:** module tính điểm tách rời phần API và giao diện để có thể thêm tiêu chí mới hoặc thay công thức (ví dụ chuyển sang hướng Hybrid) mà không viết lại toàn bộ hệ thống.
-- **Khả năng giải thích:** mọi kết quả phải kèm điểm thành phần và đóng góp của từng tiêu chí vào điểm tổng.
-- **Khả năng tái lập:** tham số của các hàm điểm (Mục 3.6) và bộ trọng số mặc định lưu ở một nơi cấu hình riêng để lặp lại được các kịch bản đánh giá.
+Nhóm em đặt ra bốn yêu cầu phi chức năng.
+
+- **Hiệu năng:** API phải phản hồi dưới một giây với tập dữ liệu mẫu cỡ vài trăm bản ghi. Ngưỡng này đủ cho việc minh họa thuật toán tương tác trực tiếp. Kết quả đo thực tế nằm ở Mục 5.1.2.
+- **Khả năng mở rộng:** module tính điểm tách khỏi tầng API và giao diện. Nhờ vậy, khi cần thêm tiêu chí mới hoặc đổi hàm điểm (chẳng hạn nâng cấp lên mô hình Hybrid), nhóm em không phải làm lại toàn bộ hệ thống.
+- **Khả năng giải thích:** mọi kết quả xếp hạng đều kèm điểm thành phần và mức đóng góp của từng tiêu chí vào tổng điểm.
+- **Khả năng tái lập:** tham số của các hàm điểm (Mục 3.6) và bảng quy đổi trọng số mặc định đều nằm trong một tệp cấu hình chung, để chạy lại đúng các kịch bản đánh giá.
 
 ## 3.4. Mô hình hóa mức độ phù hợp
 
-Mỗi tiêu chí được phân vào một trong ba loại: bắt buộc (không thỏa thì loại), ưu tiên (tính điểm để xếp hạng) và tùy chọn (chỉ tính khi người học thực sự quan tâm). Bảng 3.2 nêu cách phân loại và cách xử lý.
+Nhóm em chia tiêu chí thành ba loại. Tiêu chí bắt buộc: gia sư không thỏa thì bị loại khỏi tập ứng viên. Tiêu chí ưu tiên: dùng để chấm điểm xếp hạng. Tiêu chí tùy chọn: chỉ đưa vào công thức khi người học quan tâm. Bảng 3.2 cho biết từng tiêu chí thuộc loại nào và được xử lý ra sao.
 
-**Bảng 3.2 - Phân loại tiêu chí**
+**Bảng 3.2: Phân loại tiêu chí**
 
 | Tiêu chí | Loại | Cách xử lý | Lý do |
 |:---|:---|:---|:---|
@@ -49,75 +45,67 @@ Mỗi tiêu chí được phân vào một trong ba loại: bắt buộc (không
 | Kinh nghiệm | Ưu tiên | Càng nhiều năm càng tốt, có mức trần; người học không nhập yêu cầu tối thiểu | Giữ đầu vào đơn giản |
 | Đánh giá | Ưu tiên | Điểm trung bình càng cao càng tốt; người học không nhập yêu cầu tối thiểu | Giữ đầu vào đơn giản |
 
-*Nguồn: thiết kế của nhóm (Mục 3.4).*
-
-Tiêu chí tùy chọn trong đồ án là các tiêu chí ưu tiên mà người học đặt mức “Không quan tâm” (trọng số $0$) — khi đó tiêu chí bị bỏ qua hoàn toàn. Các quy tắc ở Bảng 3.2 là quyết định thiết kế của nhóm, không phải quy luật có sẵn; nếu thay đổi (ví dụ chuyển ngân sách thành ràng buộc cứng), Mục 3.6 và các kịch bản ở Chương 5 phải được cập nhật tương ứng.
+Trong đồ án, tiêu chí tùy chọn thực ra là tiêu chí ưu tiên mà người học đặt mức “Không quan tâm” (trọng số $w_i = 0$). Lúc đó tiêu chí này bị loại khỏi phép tổng hợp điểm. Các quy tắc ở Bảng 3.2 là quyết định thiết kế của nhóm em. Nếu giả định nghiệp vụ đổi, chẳng hạn học phí thành ràng buộc lọc cứng, thì công thức ở Mục 3.6 và bộ kịch bản ở Chương 5 cũng phải chỉnh theo.
 
 ## 3.5. Thiết kế dữ liệu
 
-Vì dữ liệu chỉ lưu dạng JSON và CSV, không có quan hệ khóa ngoại giữa nhiều bảng, đồ án không xây dựng sơ đồ ER; cấu trúc bản ghi của hai đối tượng dữ liệu chính được mô tả trực tiếp ở Bảng 3.3 và Bảng 3.4.
+Bộ dữ liệu mẫu lưu dưới dạng tệp phẳng JSON và CSV, không có quan hệ khóa ngoại giữa nhiều bảng. Vì vậy nhóm em không vẽ sơ đồ thực thể – kết hợp (ERD) mà mô tả thẳng cấu trúc bản ghi của hai thực thể chính ở Bảng 3.3 và Bảng 3.4.
 
-**Bảng 3.3 - Cấu trúc bản ghi hồ sơ gia sư**
+**Bảng 3.3: Cấu trúc bản ghi hồ sơ gia sư**
 
 | Trường dữ liệu | Ý nghĩa |
 |:---|:---|
-| `id` | Mã gia sư (dạng `GS001`), thay cho họ tên để tránh dùng thông tin cá nhân không cần thiết |
+| `id` | Mã định danh gia sư (như `GS-T06`, `GS-G01`, `GS006`), thay cho họ tên để bảo vệ thông tin cá nhân |
 | `môn_dạy` | Một hoặc nhiều môn học gia sư đảm nhận |
 | `khu_vực` | Danh sách khu vực gia sư dạy trực tiếp; để trống nếu chỉ dạy trực tuyến |
-| `học_phí_giờ` | Đơn giá theo giờ (VNĐ) |
-| `số_năm_kinh_nghiệm` | Số năm kinh nghiệm, dùng để tính điểm kinh nghiệm |
+| `học_phí_giờ` | Đơn giá học phí theo giờ (VNĐ/giờ) |
+| `số_năm_kinh_nghiệm` | Số năm kinh nghiệm giảng dạy, dùng để tính điểm kinh nghiệm |
 | `hình_thức_dạy` | Trực tiếp / Trực tuyến / Cả hai |
 | `lịch_rảnh` | Tập khung giờ rảnh trong tuần; mỗi khung là một ô (ngày trong tuần × buổi sáng/chiều/tối) |
-| `điểm_đánh_giá_tb` | Điểm đánh giá trung bình (thang 5); có thể trống nếu gia sư chưa có đánh giá |
-| `nguồn_dữ_liệu` | Thu thập công khai / Giả lập — tách rõ dữ liệu thật và dữ liệu giả lập |
+| `điểm_đánh_giá_tb` | Điểm đánh giá trung bình (thang 5); có thể để trống nếu gia sư chưa có đánh giá |
+| `nguồn_dữ_liệu` | Thu thập công khai / Giả lập (mô phỏng) — tách rõ dữ liệu thu thập thực tế và dữ liệu mô phỏng |
 
-*Nguồn: thiết kế của nhóm (Mục 3.5); ánh xạ sang định danh mã nguồn tại `docs/design/data-dictionary.md`.*
-
-**Bảng 3.4 - Cấu trúc bản ghi nhu cầu của người học**
+**Bảng 3.4: Cấu trúc bản ghi nhu cầu của người học**
 
 | Trường dữ liệu | Ý nghĩa |
 |:---|:---|
 | `môn_học` | Môn học cần tìm gia sư (chọn một môn) |
 | `hình_thức_học` | Trực tiếp / Trực tuyến / Không yêu cầu |
 | `khu_vực_mong_muốn` | Một khu vực, hoặc để trống nếu không yêu cầu |
-| `ngân_sách_tối_đa` | Mức học phí tối đa mỗi giờ người học mong muốn (VNĐ), hoặc để trống |
+| `ngân_sách_tối_đa` | Mức học phí tối đa mỗi giờ người học mong muốn (VNĐ/giờ), hoặc để trống |
 | `khung_thời_gian` | Tập khung giờ rảnh của người học (cùng cách chia ô như `lịch_rảnh`), hoặc để trống |
 | `mức_ưu_tiên` | Mức ưu tiên của năm tiêu chí: học phí, khu vực, kinh nghiệm, đánh giá, lịch rảnh |
 
-*Nguồn: thiết kế của nhóm (Mục 3.5); ánh xạ sang định danh mã nguồn tại `docs/design/data-dictionary.md`.*
+**Mức ưu tiên và trọng số.** Nhóm em không bắt người học tự nhập năm tỷ lệ phần trăm có tổng bằng 100%. Thay vào đó, hệ thống đưa ra bốn mức ưu tiên rời rạc và đổi sang trọng số nguyên theo Bảng 3.5. Mặc định cả năm tiêu chí đều ở mức “Trung bình” ($w_i = 2$), một cấu hình xuất phát trung lập để minh họa thuật toán.
 
-**Mức ưu tiên và trọng số.** Thay vì yêu cầu người học tự chỉnh năm tỷ lệ phần trăm, mỗi tiêu chí được chọn một trong bốn mức và quy đổi thành trọng số theo Bảng 3.5. Mặc định mọi tiêu chí ở mức “Trung bình” (trọng số bằng nhau); đây chỉ là giá trị khởi tạo để minh họa, không phải bộ cấu hình đã được kiểm chứng.
-
-**Bảng 3.5 - Quy đổi mức ưu tiên sang trọng số**
+**Bảng 3.5: Quy đổi mức ưu tiên sang trọng số**
 
 | Mức ưu tiên | Trọng số $w_i$ |
 |:---|---:|
-| Không quan tâm | 0 |
+| Không quan tâm (hiển thị “Bỏ qua” trên giao diện tinh chỉnh) | 0 |
 | Thấp | 1 |
 | Trung bình (mặc định) | 2 |
 | Cao | 3 |
 
-*Nguồn: thiết kế của nhóm (Mục 3.5); hiện thực tại `backend/app/core/config.py` (`PRIORITY_WEIGHTS`).*
+**Nguyên tắc thiết kế dữ liệu mẫu.** Nhóm em thiết kế bộ dữ liệu mẫu có chủ đích, để chạm được mọi nhánh của thuật toán. Bản ghi thu thập từ nguồn công khai và bản ghi giả lập (mô phỏng) được phân biệt qua trường `nguồn_dữ_liệu`, và tất cả đã được ẩn danh. Bộ dữ liệu theo năm nguyên tắc sau:
+- Có các cặp hồ sơ xung đột tiêu chí, ví dụ gia sư học phí thấp nhưng ít kinh nghiệm đặt cạnh gia sư học phí cao nhưng giàu kinh nghiệm và đánh giá cao.
+- Có các cặp hồ sơ chỉ khác nhau đúng một tiêu chí, để kiểm tra riêng từng hàm tính điểm thành phần.
+- Có ít nhất một truy vấn mà không gia sư nào thỏa điều kiện bắt buộc.
+- Có hồ sơ gia sư thiếu điểm đánh giá trung bình, để kiểm tra cơ chế gán điểm trung tính.
+- Không sắp đặt dữ liệu theo hướng làm thuật toán dễ đạt kết quả tốt một cách giả tạo.
 
-**Nguyên tắc thiết kế dữ liệu mẫu.** Dữ liệu mẫu được thiết kế để kiểm thử thuật toán chứ không chỉ để hệ thống chạy được. Bản ghi thu thập từ hồ sơ công khai và bản ghi giả lập được đánh dấu riêng qua trường `nguồn_dữ_liệu`, không lưu họ tên hay thông tin liên hệ. Tập dữ liệu phải bảo đảm năm yêu cầu:
-- Có các trường hợp xung đột tiêu chí (ví dụ gia sư rẻ nhưng ít kinh nghiệm so với gia sư đắt nhưng đánh giá cao).
-- Có các cặp gia sư chỉ khác nhau ở đúng một tiêu chí để kiểm tra từng hàm điểm.
-- Có ít nhất một tình huống không có gia sư nào thỏa điều kiện bắt buộc.
-- Có một số gia sư chưa có điểm đánh giá.
-- Không tạo dữ liệu theo cách vô tình làm thuật toán luôn cho kết quả thuận lợi một cách giả tạo.
-
-Danh mục khu vực do nhóm tự quy ước và ghi rõ trong Phụ lục A, vì phân chia đơn vị hành chính cấp dưới tỉnh/thành đã có thay đổi trong thời gian gần đây và đồ án không cần phụ thuộc vào cách phân chia đó.
+Danh mục quận/huyện dùng để so khớp khu vực được quy ước thống nhất và liệt kê ở Phụ lục A, để các kịch bản thực nghiệm cho kết quả ổn định.
 
 ## 3.6. Thiết kế thuật toán
 
-Quy trình tính điểm gồm bốn bước:
+Quy trình lọc và xếp hạng gia sư chạy qua bốn bước tuần tự:
 
-- **Bước 1.** Kiểm tra và chuẩn hóa đầu vào (ví dụ ngân sách không âm, bắt buộc có môn học).
-- **Bước 2.** Lọc điều kiện bắt buộc theo Bảng 3.2; nếu không còn gia sư nào, trả về thông báo “không có gia sư thỏa điều kiện”.
-- **Bước 3.** Tính điểm thành phần $s_i \in [0, 1]$ cho các tiêu chí ưu tiên theo Bảng 3.6.
-- **Bước 4.** Gộp bằng công thức Weighted Scoring (2.1), sắp xếp giảm dần theo $S$ (đồng điểm thì xếp theo mã gia sư để kết quả ổn định), lấy Top-$k$ và trả kèm điểm thành phần cùng đóng góp $w_i \times s_i \div \sum w_i$ của từng tiêu chí.
+- **Bước 1.** Kiểm tra và chuẩn hóa dữ liệu đầu vào (phải có môn học, ngân sách không âm, các lựa chọn phân loại hợp lệ).
+- **Bước 2.** Lọc các gia sư đạt điều kiện bắt buộc theo Bảng 3.2. Nếu không còn ai, hệ thống dừng lại và báo không tìm thấy gia sư phù hợp.
+- **Bước 3.** Kiểm tra ngưỡng dữ liệu tối thiểu (Bảng 3.7), sau đó chấm điểm thành phần $s_i(g) \in [0, 1]$ cho từng tiêu chí ưu tiên đang áp dụng theo Bảng 3.6.
+- **Bước 4.** Tính tổng điểm phù hợp $S(g)$ theo công thức Weighted Scoring (2.1) và sắp xếp giảm dần. Nếu hai gia sư bằng điểm, hệ thống xếp theo mã gia sư tăng dần để thứ tự luôn cố định qua mỗi lần chạy. Cuối cùng, hệ thống lấy Top-$k$ kèm điểm thành phần $s_i(g)$ và mức đóng góp $C_i = w_i \times s_i(g) \div \sum w_j$ của từng tiêu chí.
 
-**Bảng 3.6 - Công thức điểm thành phần**
+**Bảng 3.6: Công thức điểm thành phần**
 
 | Tiêu chí | Đầu vào | Công thức điểm $s_i$ | Tham số | Ví dụ |
 |:---|:---|:---|:---|:---|
@@ -127,21 +115,19 @@ Quy trình tính điểm gồm bốn bước:
 | Đánh giá | $R$: điểm trung bình (thang 5) | $s = R \div 5$; nếu chưa có đánh giá thì $s = 0{,}5$ (giá trị trung tính) | Giá trị trung tính $0{,}5$ | $R = 5 \rightarrow 1{,}00$; $R = 4{,}5 \rightarrow 0{,}90$; $R = 3 \rightarrow 0{,}60$ |
 | Lịch rảnh | $L$: khung giờ người học; $T$: khung giờ gia sư | $s = \lvert L \cap T \rvert \div \lvert L \rvert$ (Bước 2 đã bảo đảm $\lvert L \cap T \rvert \ge 1$) | Không áp dụng nếu người học không nhập $L$ | $L$ có 3 khung, giao 2 khung $\rightarrow 2/3 \approx 0{,}67$; $L$ có 7 khung, giao 6 khung $\rightarrow 6/7 \approx 0{,}86$; $L$ có 4 khung, giao 1 khung $\rightarrow 1/4 = 0{,}25$ |
 
-*Nguồn: thiết kế của nhóm (Mục 3.6); hiện thực tại `backend/app/scoring/criteria.py`, đối chiếu chi tiết trong `docs/design/scoring-spec.md` mục 4.*
-
-**Cơ sở của các tham số.** Các tham số $\delta = 0{,}5$ và $E_{\max} = 8$ là giá trị khởi tạo do nhóm thiết lập để minh họa, được khảo sát độ nhạy ở Mục 5.2. Các hàm điểm được thiết kế đơn điệu: học phí tăng thì điểm không tăng; kinh nghiệm, đánh giá và số khung giờ giao tăng thì điểm không giảm. Tính chất này được kiểm tra bằng các ca biên ở Mục 5.1.
+**Cơ sở của các tham số.** Nhóm em chọn hai tham số khởi đầu là $\delta = 0{,}5$ và $E_{\max} = 8$, sau đó khảo sát độ nhạy ở Mục 5.2.3. Các hàm điểm trong Bảng 3.6 đều giữ tính đơn điệu: học phí tăng thì điểm giảm hoặc giữ nguyên, còn kinh nghiệm, điểm đánh giá và số khung giờ trùng tăng thì điểm tăng hoặc giữ nguyên. Tính chất này được kiểm tra tự động bằng bộ ca biên ở Mục 5.1.3.
 
 **Các trường hợp đặc biệt:**
 
 - Người học chọn học Trực tuyến: tiêu chí khu vực không áp dụng, bị loại khỏi cả tử số và mẫu số của công thức tổng hợp.
-- Người học không nhập ngân sách, khu vực hoặc khung giờ: tiêu chí tương ứng không áp dụng, xử lý như trên.
-- Tiêu chí có mức “Không quan tâm” ($w = 0$): không được tính.
-- Tổng trọng số của các tiêu chí đang áp dụng bằng 0: không thể xếp hạng. Khi đó, hệ thống hiển thị danh sách gia sư thỏa điều kiện bắt buộc kèm thông báo yêu cầu người học chọn ít nhất một tiêu chí ưu tiên.
-- Gia sư chưa có điểm đánh giá: dùng giá trị trung tính $0{,}5$ và ghi chú “chưa có đánh giá” trên giao diện; đây là giải pháp tạm, được ghi nhận ở Mục 5.3.
+- Người học bỏ trống ngân sách, khu vực hoặc khung giờ rảnh: tiêu chí tương ứng không áp dụng và cũng bị loại khỏi tổng trọng số.
+- Tiêu chí đặt mức “Không quan tâm” ($w_i = 0$): không tính vào tổng điểm.
+- Tổng trọng số của các tiêu chí đang áp dụng bằng 0 ($\sum w_i = 0$): hệ thống không chia cho 0, mà trả về danh sách các gia sư đã qua lọc bắt buộc. Kèm theo đó là thông báo nhắc người học bật lại ít nhất một tiêu chí ưu tiên.
+- Hồ sơ gia sư chưa có điểm đánh giá: nhận điểm trung tính $0{,}5$ kèm ghi chú “chưa có đánh giá” trên kết quả trả về.
 
-**Điều kiện đủ dữ liệu để được xếp hạng.** Sau bước lọc điều kiện bắt buộc và trước bước tính điểm có trọng số, hệ thống đếm số tiêu chí ưu tiên mà gia sư có dữ liệu trong số các tiêu chí ưu tiên đang áp dụng của truy vấn đó (ký hiệu $n$). Tiêu chí Đánh giá không tính vào $n$ vì luôn dùng được nhờ giá trị trung tính $0{,}5$. Nếu số tiêu chí có dữ liệu nhỏ hơn ngưỡng tối thiểu tương ứng với $n$ (Bảng 3.7), gia sư bị loại khỏi kết quả xếp hạng của truy vấn này với ghi chú “Không đủ dữ liệu để xếp hạng”, không tính điểm trên phần dữ liệu thiếu hụt. Công thức tính điểm của từng tiêu chí giữ nguyên.
+**Điều kiện đủ dữ liệu để xếp hạng.** Sau bước lọc bắt buộc và trước khi chấm điểm, hệ thống đếm xem trong $n$ tiêu chí ưu tiên mà người học đang dùng, hồ sơ gia sư có dữ liệu cho bao nhiêu tiêu chí. Tiêu chí Đánh giá không tính vào $n$ vì gia sư chưa có đánh giá vẫn nhận sẵn điểm trung tính $0{,}5$. Nếu số tiêu chí có dữ liệu ít hơn ngưỡng ở Bảng 3.7, hồ sơ đó được tách sang danh sách thiếu dữ liệu và không đưa vào bảng xếp hạng.
 
-**Bảng 3.7 - Ngưỡng dữ liệu tối thiểu để được xếp hạng**
+**Bảng 3.7: Ngưỡng dữ liệu tối thiểu để được xếp hạng**
 
 | Số tiêu chí ưu tiên đang áp dụng ($n$) | Ngưỡng tối thiểu phải có dữ liệu |
 |:---:|:---:|
@@ -151,69 +137,55 @@ Quy trình tính điểm gồm bốn bước:
 | 4 | 3 |
 | 5 | 4 |
 
-*Nguồn: thiết kế của nhóm (Mục 3.6); hiện thực tại `backend/app/scoring/eligibility.py` (`MIN_DATA_THRESHOLD`, kèm hàng $n = 0 \rightarrow$ ngưỡng $0$), đối chiếu `docs/design/scoring-spec.md` mục 3 và 7.*
+*(Tiêu chí Đánh giá luôn xác định nhờ giá trị trung tính $0{,}5$ nên không tính vào $n$; do đó với năm tiêu chí hiện tại, $n$ nhận giá trị từ $0$ đến $4$, còn mốc $n = 5$ được dự phòng khi mở rộng thêm tiêu chí mới. Khi $n = 0$, ngưỡng tối thiểu bằng $0$ và không loại hồ sơ nào vì thiếu dữ liệu.)*
 
-*Ghi chú:* hàng $n = 5$ được giữ nguyên nhưng không kích hoạt, vì tiêu chí Đánh giá không tính vào $n$ nên $n$ tối đa là $4$. Khi $n = 0$ (chỉ tiêu chí Đánh giá có trọng số lớn hơn $0$), ngưỡng tối thiểu là $0$, tức là không loại gia sư nào vì thiếu dữ liệu.
-
-**Ví dụ tính điểm đầy đủ** (ví dụ minh họa công thức, không phải dữ liệu thực). Người học cần môn Toán, học Trực tiếp, khu vực KV1, ngân sách $200.000$ đồng/giờ, khung giờ $L = \{\text{T2-tối}, \text{T4-tối}, \text{T7-sáng}\}$, mọi mức ưu tiên là “Trung bình” ($w = 2$). Xét một gia sư dạy Toán, hình thức “Cả hai”, dạy tại KV1, học phí $230.000$ đồng/giờ, kinh nghiệm $4$ năm, đánh giá $4{,}5$ và giao được $2$ trong $3$ khung giờ. Gia sư này vượt qua bước lọc và nhận các điểm thành phần: học phí $0{,}70$; khu vực $1{,}00$; kinh nghiệm $0{,}50$; đánh giá $0{,}90$; lịch rảnh $0{,}67$. Điểm tổng hợp là $S = (0{,}70 + 1{,}00 + 0{,}50 + 0{,}90 + 0{,}67) \div 5 \approx 0{,}75$ (khi không làm tròn từng thành phần, $S = 113/150 \approx 0{,}753$ — cùng kết luận xếp hạng).
+**Ví dụ tính điểm đầy đủ.** Giả sử người học tìm gia sư môn Toán, học Trực tiếp tại KV1, ngân sách $200.000$ VNĐ/giờ, khung giờ $L = \{\text{T2-tối}, \text{T4-tối}, \text{T7-sáng}\}$ và để mọi mức ưu tiên ở “Trung bình” ($w_i = 2$). Xét một gia sư dạy Toán, hình thức “Cả hai”, nhận dạy tại KV1, học phí $230.000$ VNĐ/giờ, $4$ năm kinh nghiệm, đánh giá $4{,}5/5$ và trùng $2$ trên $3$ khung giờ. Gia sư này qua bước lọc bắt buộc và đạt năm điểm thành phần: học phí $0{,}70$, khu vực $1{,}00$, kinh nghiệm $0{,}50$, đánh giá $0{,}90$, lịch rảnh $2/3 \approx 0{,}67$. Điểm tổng hợp là $S = (0{,}70 + 1{,}00 + 0{,}50 + 0{,}90 + 0{,}67) \div 5 \approx 0{,}75$. Nếu giữ nguyên phân số $2/3$ không làm tròn giữa chừng, $S = 113/150 \approx 0{,}753$, vẫn cho cùng thứ tự xếp hạng.
 
 ## 3.7. Kiến trúc hệ thống và luồng xử lý
 
 ### 3.7.1. Luồng xử lý ở mức logic bài toán
 
-Luồng xử lý độc lập với công nghệ triển khai và gồm tám bước:
-1. Người học nhập nhu cầu và mức ưu tiên.
-2. Kiểm tra, chuẩn hóa tiêu chí đầu vào.
-3. Lọc các gia sư không thỏa điều kiện bắt buộc.
-4. Tính điểm phù hợp theo từng tiêu chí ưu tiên.
-5. Tổng hợp điểm theo trọng số.
-6. Xếp hạng các gia sư còn lại.
-7. Trả Top-$k$ kèm điểm thành phần và lý do gợi ý.
-8. Người học điều chỉnh mức ưu tiên và xem thứ hạng thay đổi.
+Về mặt nghiệp vụ, luồng xử lý chính gồm tám bước:
+1. Người học nhập nhu cầu tìm kiếm và chọn mức ưu tiên.
+2. Hệ thống kiểm tra hợp lệ và chuẩn hóa dữ liệu đầu vào.
+3. Lọc bỏ các hồ sơ gia sư không thỏa điều kiện bắt buộc.
+4. Tính điểm thành phần cho từng tiêu chí ưu tiên.
+5. Tính tổng điểm phù hợp theo trọng số hiệu dụng.
+6. Xếp hạng các gia sư đủ điều kiện.
+7. Trả danh sách Top-$k$ kèm điểm thành phần, mức đóng góp và lý do gợi ý.
+8. Người học chỉnh lại mức ưu tiên và xem thứ hạng cập nhật ngay trên màn hình.
 
-Hình 3.1 minh họa luồng tám bước này cùng bước kiểm tra ngưỡng dữ liệu tối thiểu (Bảng 3.7) sau bước (3). Sơ đồ cũng thể hiện các nhánh thông báo khi không còn gia sư thỏa điều kiện bắt buộc, khi tổng trọng số bằng $0$ và khi đầu vào không hợp lệ.
+Hình 3.1 vẽ lại luồng tám bước trên, có thêm bước kiểm tra ngưỡng dữ liệu tối thiểu (Bảng 3.7) ngay sau bước lọc bắt buộc. Sơ đồ cũng chỉ rõ các nhánh rẽ khi đầu vào sai, khi không có gia sư nào qua lọc hoặc khi tổng trọng số bằng $0$.
 
-![Hình 3.1 - Sơ đồ luồng xử lý khuyến nghị](../figures/hinh-3-1-luong-xu-ly-khuyen-nghi.png)
+![Hình 3.1: Sơ đồ luồng xử lý khuyến nghị](../figures/hinh-3-1-luong-xu-ly-khuyen-nghi.png)
 
-**Hình 3.1 - Sơ đồ luồng xử lý khuyến nghị**
-
-*Nguồn: thiết kế của nhóm (Mục 3.7.1); đối chiếu mã nguồn `backend/app/api/recommend.py` và `backend/app/scoring/`.*
+**Hình 3.1: Sơ đồ luồng xử lý khuyến nghị**
 
 ### 3.7.2. Kiến trúc ba lớp
 
-Hệ thống được tổ chức thành ba lớp tách biệt:
-- Giao diện ReactJS nhận nhu cầu từ người học và gửi yêu cầu đến API.
-- Lớp API (FastAPI) tiếp nhận yêu cầu, kiểm tra hợp lệ, nạp danh sách gia sư mẫu từ `TutorRepository` rồi truyền cho module tính điểm.
-- Module tính điểm thực hiện quy trình ở Mục 3.6 và trả danh sách đã xếp hạng để API phản hồi lại giao diện.
+Nhóm em chia hệ thống thành ba lớp tách biệt nhau (Hình 3.2):
+- **Lớp giao diện (React):** nhận nhu cầu từ người học, hiển thị danh sách xếp hạng và biểu đồ đóng góp điểm.
+- **Lớp dịch vụ API (FastAPI):** kiểm tra dữ liệu đầu vào, đọc danh sách gia sư qua `TutorRepository` và gọi sang module tính điểm.
+- **Lớp tính điểm và xếp hạng (`scoring`):** chạy thuật toán bốn bước và trả kết quả về lại tầng API.
 
-Hình 3.2 mô tả kiến trúc ba lớp này.
+![Hình 3.2: Kiến trúc hệ thống ba lớp](../figures/hinh-3-2-kien-truc-ba-lop.png)
 
-![Hình 3.2 - Kiến trúc hệ thống ba lớp](../figures/hinh-3-2-kien-truc-ba-lop.png)
+**Hình 3.2: Kiến trúc hệ thống ba lớp**
 
-**Hình 3.2 - Kiến trúc hệ thống ba lớp**
+Vì hệ thống chỉ xoay quanh một luồng tìm kiếm và xếp hạng duy nhất, nhóm em không tách theo mô hình BCE (*Boundary-Control-Entity*) mà mô tả thẳng tương tác giữa các lớp qua sơ đồ trình tự ở Hình 3.3.
 
-*Nguồn: thiết kế của nhóm (Mục 3.7.2); đối chiếu `backend/app/main.py`, `backend/app/data/repository.py` và thư mục `frontend/src/`.*
+![Hình 3.3: Sơ đồ trình tự xử lý yêu cầu khuyến nghị](../figures/hinh-3-3-so-do-trinh-tu.png)
 
-Vì hệ thống chỉ có một luồng xử lý đi qua một module tính điểm và không có nhiều đối tượng nghiệp vụ tương tác qua nhiều lớp điều khiển, nhóm không áp dụng mô hình BCE (*Boundary-Control-Entity*). Thay vào đó, tương tác giữa các thành phần được mô tả trực tiếp qua sơ đồ trình tự: client → API → module tính điểm → kết quả (Hình 3.3).
-
-![Hình 3.3 - Sơ đồ trình tự: client → API → module tính điểm → kết quả](../figures/hinh-3-3-so-do-trinh-tu.png)
-
-**Hình 3.3 - Sơ đồ trình tự: client → API → module tính điểm → kết quả**
-
-*Nguồn: thiết kế của nhóm (Mục 3.7.2); tên hàm theo mã nguồn tại thời điểm viết báo cáo.*
+**Hình 3.3: Sơ đồ trình tự xử lý yêu cầu khuyến nghị**
 
 ## 3.8. Thiết kế giao diện
 
-Giao diện demo gồm hai màn hình. Màn hình nhập nhu cầu cho phép chọn môn học, hình thức học, khu vực, ngân sách, khung thời gian rảnh và chọn mức ưu tiên (Không quan tâm / Thấp / Trung bình / Cao) cho từng tiêu chí (Hình 3.4). Màn hình kết quả hiển thị mã định danh của Top-$k$ gia sư, kèm điểm tổng, điểm từng tiêu chí và biểu đồ thanh xếp chồng thể hiện đóng góp của từng tiêu chí để người học hiểu vì sao một gia sư được xếp cao. Người học có thể đổi mức ưu tiên ngay tại màn hình kết quả để xem danh sách xếp hạng lại (CN03, Hình 3.5). Hai hình dưới đây là phác thảo bố cục; giao diện hiện thực của hệ thống được trình bày ở Hình 4.1–4.4.
+Giao diện minh họa gồm hai màn hình chính. Ở màn hình nhập nhu cầu (Hình 3.4), người học chọn môn học, hình thức học, khu vực, ngân sách, khung giờ rảnh và mức ưu tiên cho năm tiêu chí (Không quan tâm / Thấp / Trung bình / Cao). Ở màn hình kết quả (Hình 3.5), hệ thống liệt kê Top-$k$ gia sư kèm tổng điểm, điểm từng tiêu chí và thanh xếp chồng biểu diễn mức đóng góp $C_i$. Ngay trên màn hình này có khung chỉnh nhanh mức ưu tiên (CN03) để người học đổi trọng số và xem lại thứ hạng ngay. Hình 3.4 và Hình 3.5 mới là bản phác thảo (*wireframe*), còn ảnh màn hình chạy thật nằm ở Hình 4.1–4.4 trong Chương 4.
 
-![Hình 3.4 - Phác thảo màn hình nhập nhu cầu](../figures/hinh-3-4-phac-thao-nhap-nhu-cau.png)
+![Hình 3.4: Phác thảo màn hình nhập nhu cầu](../figures/hinh-3-4-phac-thao-nhap-nhu-cau.png)
 
-**Hình 3.4 - Phác thảo màn hình nhập nhu cầu**
+**Hình 3.4: Phác thảo màn hình nhập nhu cầu**
 
-*Nguồn: thiết kế của nhóm (Mục 3.8); bố cục theo Bảng 3.4 và Bảng 3.5.*
+![Hình 3.5: Phác thảo màn hình kết quả](../figures/hinh-3-5-phac-thao-ket-qua.png)
 
-![Hình 3.5 - Phác thảo màn hình kết quả](../figures/hinh-3-5-phac-thao-ket-qua.png)
-
-**Hình 3.5 - Phác thảo màn hình kết quả**
-
-*Nguồn: thiết kế của nhóm (Mục 3.8); số liệu trong hình là ví dụ minh họa bố cục, không phải kết quả thực nghiệm (xem Chương 5).*
+**Hình 3.5: Phác thảo màn hình kết quả**

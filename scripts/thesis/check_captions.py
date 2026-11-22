@@ -80,10 +80,10 @@ def extract_front_matter_lists(
         if len(cells) < 2:
             continue
         if section == "tables":
-            if match := re.match(r"^Bảng\s+([A-D0-9]+\.\d+)$", cells[0]):
+            if match := re.match(r"^Bảng\s+([A-D0-9]+\.\d+)\s*[-–:]?$", cells[0]):
                 tables.append((match.group(1), cells[1]))
         elif section == "figures":
-            if match := re.match(r"^Hình\s+([A-D0-9]+\.\d+)$", cells[0]):
+            if match := re.match(r"^Hình\s+([A-D0-9]+\.\d+)\s*[-–:]?$", cells[0]):
                 figures.append((match.group(1), cells[1]))
 
     return tables, figures

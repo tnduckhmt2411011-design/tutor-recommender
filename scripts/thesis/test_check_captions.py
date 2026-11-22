@@ -51,9 +51,9 @@ def _write_sample_repo(tmp_path: Path, *, break_table_seq: bool = False) -> Path
 def test_extract_captions_distinguishes_caption_from_reference(tmp_path: Path) -> None:
     md = (
         "Theo Bảng 1.1 và Hình 1.1 cho thấy kết quả.\n\n"
-        "**Bảng 1.1 - Bảng đầu tiên**\n\n"
+        "**Bảng 1.1: Bảng đầu tiên**\n\n"
         "| Cột |\n|---|\n| 1 |\n\n"
-        "**Hình 1.1 - Sơ đồ**\n"
+        "**Hình 1.1: Sơ đồ**\n"
     )
     tables, figures = extract_captions(md)
     assert tables == [("1.1", "Bảng đầu tiên", 3)]

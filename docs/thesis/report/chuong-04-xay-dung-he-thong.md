@@ -1,52 +1,42 @@
 # CHƯƠNG 4. XÂY DỰNG HỆ THỐNG
 
-Chương này trình bày quá trình hiện thực hệ thống khuyến nghị gia sư thuộc đề tài “Hệ thống khuyến nghị gia sư dựa trên phương pháp Content-Base Filtering” theo sáu mục của kế hoạch hiện thực trong đề cương: chuẩn bị môi trường phát triển (Mục 4.1), xây dựng tập dữ liệu mẫu (Mục 4.2), cài đặt module tính điểm (Mục 4.3), xây dựng API khuyến nghị (Mục 4.4), xây dựng giao diện demo (Mục 4.5) và tích hợp giao diện với API cùng kiểm tra luồng end-to-end (Mục 4.6). Mô tả trong chương phản ánh đúng phần mềm đã hiện thực trong kho mã nguồn. Mọi tên tệp, tên hàm và phiên bản phần mềm nêu dưới đây đều truy ngược được về tệp cấu hình hoặc kết quả kiểm chứng trực tiếp. Những điểm mà hiện thực khác với kế hoạch dự kiến trong đề cương (ví dụ cơ sở dữ liệu SQLite) được nêu thẳng tại từng mục. Số liệu kiểm thử định lượng không lặp lại trong chương này mà trình bày tại Chương 5.
-
----
-
 ## 4.1. Chuẩn bị môi trường phát triển
 
-Nhóm tách hệ thống thành hai thư mục độc lập: `backend/` (dịch vụ API) và `frontend/` (giao diện), cùng thư mục dữ liệu dùng chung `data/processed/`. Phiên bản các thư viện được ghim tĩnh: phía Python bằng tệp `backend/requirements.txt` và `backend/requirements-dev.txt` (phiên bản ghim từ `pip freeze` của môi trường Python 3.12), phía JavaScript bằng `frontend/package.json` và `frontend/package-lock.json`.
+Nhóm em xây dựng hệ thống bám sát thiết kế ở Chương 3. Mã nguồn chia làm hai phần tách biệt: `backend/` chứa dịch vụ API và lõi tính điểm, còn `frontend/` chứa giao diện người dùng. Dữ liệu gia sư mẫu đặt chung trong thư mục `data/processed/`. Để máy nào kéo mã nguồn về cũng chạy giống nhau, nhóm em khóa rõ phiên bản từng thư viện trong `requirements.txt` (Python 3.12) và `package-lock.json` (JavaScript).
 
-Bảng 4.1 tóm tắt thành phần và phiên bản của từng công nghệ tại thời điểm hiện thực.
+Bảng 4.1 tổng hợp các thành phần công nghệ và phiên bản sử dụng trong hệ thống.
 
-**Bảng 4.1 - Thành phần và công nghệ của hệ thống tại thời điểm hiện thực**
+**Bảng 4.1: Thành phần và công nghệ của hệ thống tại thời điểm hiện thực**
 
 | Thành phần | Công nghệ (phiên bản) | Vai trò |
 |:---|:---|:---|
-| Nền tảng backend | Python 3.12.7 (môi trường ảo `.venv`; đo bằng `python --version`) | Nền tảng chạy dịch vụ và kiểm thử |
-| Khung API | FastAPI 0.162.0 | Định nghĩa endpoint, sinh tài liệu OpenAPI |
+| Nền tảng backend | Python 3.12.7 (môi trường ảo `.venv`) | Nền tảng thực thi dịch vụ và bộ kiểm thử |
+| Khung dịch vụ API | FastAPI 0.162.0 | Định nghĩa điểm cuối (*endpoint*), tự sinh tài liệu OpenAPI |
 | Xác thực dữ liệu | Pydantic 2.14.2 | Mô hình hóa hồ sơ, yêu cầu và phản hồi; kiểm tra ràng buộc đầu vào |
-| Máy chủ ASGI | Uvicorn 0.54.0 (gói `uvicorn[standard]`) | Khởi chạy dịch vụ HTTP |
-| Nền tảng frontend | Node.js (yêu cầu `^20.19.0 \|\| >=22.12.0` theo README; máy nhóm chạy Node v24.19.0, npm 11.17.0) | Môi trường dựng và đóng gói |
-| Thư viện giao diện | React 19.3.1, React DOM 19.3.1 | Giao diện Single Page Application hai màn hình |
-| Công cụ dựng | Vite 8.3.5, `@vitejs/plugin-react` 6.1.2 | Build và phát triển cục bộ (sinh thư mục `dist/`) |
-| Hiệu ứng chuyển cảnh | motion 14.9.0 | Chuyển động giữa hai màn hình, thanh xếp chồng, huy hiệu biến động hạng |
-| Lưu trữ dữ liệu | Tệp `data/processed/tutors.json` và `tutors.csv` | 16 hồ sơ gia sư chuẩn hóa (không dùng cơ sở dữ liệu, xem Mục 4.2) |
+| Máy chủ ASGI | Uvicorn 0.54.0 (`uvicorn[standard]`) | Khởi chạy dịch vụ HTTP bất đồng bộ |
+| Nền tảng frontend | Node.js v24.19.0, npm 11.17.0 | Môi trường phát triển và đóng gói giao diện |
+| Thư viện giao diện | React 19.3.1, React DOM 19.3.1 | Xây dựng ứng dụng web một trang (SPA) gồm hai màn hình |
+| Công cụ đóng gói | Vite 8.3.5, `@vitejs/plugin-react` 6.1.2 | Biên dịch và đóng gói tài sản tĩnh (`dist/`) |
+| Hiệu ứng và phụ trợ giao diện | motion 14.9.0, `boring-avatars` 2.0.4 | Hiệu ứng chuyển cảnh, thanh xếp chồng, huy hiệu biến động hạng và gói phụ trợ ảnh đại diện |
+| Lưu trữ dữ liệu | Tệp `data/processed/tutors.json` và `tutors.csv` | Lưu trữ 16 hồ sơ gia sư chuẩn hóa (Mục 4.2) |
 
-*Ghi chú:* `frontend/package.json` còn khai báo thư viện `boring-avatars` 2.0.4 nhưng trong mã nguồn `frontend/src/` không có tệp nào import thư viện này; thành phần avatar `TutorAvatar.jsx` tự dựng ảnh chân dung WebP kèm fallback (Mục 4.5).
+Để kiểm tra chất lượng mã nguồn, phía backend dùng `pytest` 9.2.0 và `pytest-cov` 7.1.0 để chạy test tự động và đo độ bao phủ. Giao tiếp API được thử bằng `httpx` 0.28.1 qua `TestClient`, còn định dạng mã Python được rà bằng `ruff` 0.17.3. Phía frontend dùng `oxlint` 1.90.0 (`npm run lint`) để kiểm tra tĩnh mã React trước khi đóng gói bằng `npm run build`.
 
-*Nguồn: `backend/requirements.txt`, `backend/requirements-dev.txt`, `frontend/package.json`, `frontend/package-lock.json` (`lockfileVersion` 3; `react` 19.3.1, `vite` 8.3.5, `@vitejs/plugin-react` 6.1.2, `motion` 14.9.0, `oxlint` 1.90.0); đo lường môi trường bằng lệnh `python --version`, `node --version`, `npm --version`.*
-
-Về công cụ chất lượng, phía backend dùng `pytest` 9.2.0 (cấu hình tại `backend/pytest.ini` với `testpaths = tests` và `pythonpath = .`) và `pytest-cov` 7.1.0 để đo độ bao phủ. Backend cũng dùng `httpx` 0.28.1 (cung cấp `TestClient` cho kiểm thử tích hợp API) và `ruff` 0.17.3 để kiểm tra định dạng mã nguồn. Phía frontend dùng `oxlint` 1.90.0 với cấu hình `frontend/.oxlintrc.json` (kích hoạt quy tắc `react/rules-of-hooks` ở mức error) và hai script `npm run lint`, `npm run build`.
-
-Trình tự kiểm tra chất lượng được tự động hóa bằng GitHub Actions tại `.github/workflows/ci.yml` (workflow `CI backend`) cho mỗi `push` vào nhánh `main` và mỗi pull request. Workflow dựng môi trường `ubuntu-latest`, cài Python 3.12 (có cache pip theo hai tệp requirements), cài phụ thuộc, rồi chạy `ruff check .` và `pytest` trong thư mục `backend/`. Giới hạn hiện tại là CI chỉ bao phủ backend; frontend chưa có job riêng trong CI (`oxlint` và `vite build` chạy từ terminal theo `README.md` mục 7). Cấu trúc thư mục chi tiết và ánh xạ vào đề cương đã trình bày ở `README.md` mục 3 nên chương này không lặp lại.
+Mỗi lần đẩy mã lên nhánh chính hoặc mở pull request, GitHub Actions (`.github/workflows/ci.yml`) tự động dựng môi trường Ubuntu với Python 3.12, cài thư viện rồi chạy lần lượt `ruff check .` và `pytest`.
 
 ## 4.2. Xây dựng tập dữ liệu mẫu
 
 ### 4.2.1. Định dạng lưu trữ
 
-Dữ liệu được lưu bằng hai tệp đồng bộ: `data/processed/tutors.json` (nạp cho chương trình) và `data/processed/tutors.csv` (đối chiếu bằng mắt, phục vụ Phụ lục A). Đề cương thiết kế cho phép lưu bằng “JSON/CSV hoặc SQLite”; hiện thực cuối cùng chỉ dùng JSON và CSV vì bộ dữ liệu gồm bản ghi phẳng 9 trường theo Bảng 3.3, không có quan hệ nhiều bảng cần cơ sở dữ liệu quan hệ (theo Mục 3.5). Phương án chuyển sang “bảng SQLite đơn” được xếp ở mức ưu tiên thấp (*Could Have*) trong lộ trình dự án nên chưa triển khai; hai docstring ở `backend/app/data/repository.py` và `backend/app/core/config.py` vẫn nhắc tên SQLite như phương án dự kiến, còn lớp `TutorRepository` mới đọc tệp JSON.
+Bộ dữ liệu mẫu lưu đồng thời trên hai tệp: `data/processed/tutors.json` để nạp vào bộ nhớ khi chạy dịch vụ, và `data/processed/tutors.csv` để mở xem hoặc đối chiếu nhanh ở Phụ lục A. Mỗi hồ sơ gia sư là một bản ghi phẳng gồm 9 thuộc tính theo Bảng 3.3, không có khóa ngoại nối bảng. Vì vậy định dạng JSON và CSV đủ gọn để phục vụ bộ máy khuyến nghị, còn việc chuyển sang cơ sở dữ liệu như SQLite sẽ để ở phần mở rộng sau này.
 
 ### 4.2.2. Cấu trúc dữ liệu
 
-Cấu trúc bản ghi được mã hóa thành các mô hình Pydantic tại `backend/app/schemas/`, ánh xạ từ Bảng 3.3 và Bảng 3.4 của đề cương theo `docs/design/data-dictionary.md`. Từ điển dữ liệu này chuyển tên trường tiếng Việt sang định danh tiếng Anh thống nhất trong toàn bộ hệ thống.
+Hai cấu trúc dữ liệu thiết kế ở Bảng 3.3 và Bảng 3.4 được nhóm em chuyển thành hai lớp mô hình Pydantic trong thư mục `backend/app/schemas/`. Bảng 4.2 liệt kê tên trường tương ứng giữa bản thiết kế và mã nguồn.
 
-Bảng 4.2 trích rút gọn các ánh xạ chính; từ điển đầy đủ nằm tại `docs/design/data-dictionary.md`.
+**Bảng 4.2: Ánh xạ trường dữ liệu thiết kế sang định danh trong mã nguồn**
 
-**Bảng 4.2 - Ánh xạ trường dữ liệu đề cương sang định danh trong code (rút gọn từ data-dictionary.md)**
-
-| Nhóm | Trường trong đề cương | Định danh trong code | Kiểu trong code |
+| Nhóm | Trường thiết kế (Chương 3) | Định danh trong mã nguồn | Kiểu dữ liệu và ràng buộc |
 |:---|:---|:---|:---|
 | Hồ sơ gia sư (Bảng 3.3) | `id` | `tutor_id` | `string` |
 | | `môn_dạy` | `subjects` | `list[string]` |
@@ -57,34 +47,32 @@ Bảng 4.2 trích rút gọn các ánh xạ chính; từ điển đầy đủ n�
 | | `lịch_rảnh` | `availability` | `list[string]` |
 | | `điểm_đánh_giá_tb` | `avg_rating` | `float \| None` (`null` nếu chưa có đánh giá) |
 | | `nguồn_dữ_liệu` | `data_source` | enum `public_collected`, `simulated`, `estimated` |
-| Nhu cầu người học (Bảng 3.4) | `môn_học` | `subject` | `string` (bắt buộc, không chỉ khoảng trắng) |
+| Nhu cầu người học (Bảng 3.4) | `môn_học` | `subject` | `string` (bắt buộc, không chỉ gồm khoảng trắng) |
 | | `hình_thức_học` | `learning_mode` | enum `in_person`, `online`, `any` |
 | | `khu_vực_mong_muốn` | `preferred_district` | `string \| None` |
 | | `ngân_sách_tối_đa` | `max_budget_vnd` | `StrictInt \| None` (`ge = 0`) |
 | | `khung_thời_gian` | `time_slots` | `list[string] \| None` |
 | | `mức_ưu_tiên` | `priorities` | `dict[enum tiêu chí, enum none/low/medium/high]` |
-| | (thêm so với đề cương) | `top_k` | `StrictInt`, mặc định 3, ràng buộc $1 \le \text{top\_k} \le 20$ |
+| | *(tham số truy vấn bổ sung)* | `top_k` | `StrictInt`, mặc định 3, ràng buộc $1 \le \text{top\_k} \le 20$ |
 
-Hai mô hình đều đặt `extra="forbid"` — bản ghi chứa trường thừa sẽ bị từ chối, giúp phát hiện sớm sai lệch cấu trúc dữ liệu. Trường `top_k` là bổ sung so với Bảng 3.4, thuộc hợp đồng API (giới hạn 1–20, trả về mã HTTP 422 khi vi phạm).
-
-*Nguồn: `docs/design/data-dictionary.md`; `backend/app/schemas/tutor.py`, `backend/app/schemas/search_request.py` (các ràng buộc `Field`, `StrictInt`, `field_validator`).*
+Cả hai mô hình đều bật `extra="forbid"` để báo lỗi ngay nếu dữ liệu có thêm trường lạ ngoài đặc tả. Trong mô hình truy vấn `SearchRequest`, nhóm em thêm tham số `top_k` để người gọi API chọn số kết quả muốn nhận (từ 1 đến 20, mặc định là 3). Nếu truyền ngoài khoảng này, API trả về mã lỗi HTTP 422.
 
 ### 4.2.3. Nguồn và nhãn dữ liệu
 
-Tập dữ liệu gồm đúng 16 hồ sơ: 2 hồ sơ thu thập công khai `GS-T06`, `GS-T07` (nhãn `public_collected`) và 14 hồ sơ mô phỏng `GS006`, `GS020`, `GS-G01` đến `GS-G12` (nhãn `simulated`). Theo `data/README.md` mục 3, môn dạy, khu vực và số năm kinh nghiệm của hai hồ sơ thu thập là số liệu thật đã ẩn danh. Học phí và lịch rảnh là ước tính của nhóm (nội suy theo số năm kinh nghiệm từ khoảng giá khảo sát tại daythem.com 130.000–400.000 VNĐ/giờ; lịch rảnh giả định theo các khung giờ phổ biến), được đánh dấu hoa thị `(*)` ở Phụ lục A. Điểm đánh giá trung bình của hai hồ sơ này để trống và nhận giá trị trung tính $0{,}5$ khi tính điểm. Tài liệu `data/README.md` mục 3 cũng ghi nhận rằng nhãn `estimated` chưa được áp dụng cho hai hồ sơ ước tính; trường `data_source` giữ nguyên `public_collected` theo Phụ lục A.
+Tập dữ liệu mẫu có 16 hồ sơ gia sư. Hai hồ sơ lấy từ nguồn công khai là `GS-T06` và `GS-T07` (nhãn `public_collected`, ghi “Thu thập công khai” ở Phụ lục A). Số còn lại gồm 14 hồ sơ mô phỏng mang mã `GS006`, `GS020` và `GS-G01` đến `GS-G12` (nhãn `simulated`, ghi “Giả lập” ở Phụ lục A). Với hai hồ sơ công khai, môn dạy, khu vực và số năm kinh nghiệm là thông tin thực tế đã được ẩn danh. Học phí và lịch rảnh không có sẵn đầy đủ trên trang gốc nên nhóm em ước tính theo mặt bằng khảo sát trên `daythem.com` (130.000–400.000 VNĐ/giờ, nội suy theo số năm kinh nghiệm) và đánh dấu `(*)` ở Bảng A.1. Điểm đánh giá trung bình của hai hồ sơ này để trống (`null`), nên khi chấm điểm sẽ nhận giá trị trung tính $0{,}5$.
 
-Tài liệu `data/README.md` mục 4 ghi nhận một hiệu chỉnh dữ liệu ngày 01/11/2026: nhãn môn dạy của `GS-G03` sửa từ “Tiếng Anh” thành “Anh Văn” để đồng nhất với các hồ sơ tiếng Anh khác và giúp kịch bản KB14 có ứng viên. Kiểm tra trực tiếp tệp `tutors.json` xác nhận `GS-G03` mang giá trị `subjects: ["Anh Văn"]`.
+Tên môn học trong cả 16 hồ sơ được đặt thống nhất theo danh mục của hệ thống. Chẳng hạn tiếng Anh dùng nhãn `"Anh Văn"`, riêng hồ sơ `GS-T07` có dạy thêm tiếng Anh giao tiếp nên ghi `"Anh Văn GT"`. Cách đặt chuẩn này giúp dữ liệu khớp hoàn toàn với 14 kịch bản đánh giá KB01–KB14 (Bảng 5.3).
 
 ### 4.2.4. Kiểm tra toàn vẹn dữ liệu
 
-Script `scripts/validate_tutors.py` (chỉ đọc, không chứa công thức tính điểm) kiểm tra năm nhóm điều kiện trên bộ dữ liệu mẫu:
-- Số lượng bản ghi và tỷ lệ nguồn dữ liệu.
-- Tính duy nhất của `tutor_id` trong cả JSON và CSV.
-- Đủ 9 trường với kiểu dữ liệu và enum hợp lệ.
-- Không chứa thông tin định danh cá nhân (số điện thoại, email, từ khóa liên hệ) theo nguyên tắc ẩn danh ở Mục 3.5.
-- Khớp từng ô giữa tệp JSON và CSV.
+Nhóm em viết riêng kịch bản `scripts/validate_tutors.py` để tự động kiểm tra năm điều kiện toàn vẹn dữ liệu:
+- Đủ 16 bản ghi với đúng cơ cấu nguồn (`public_collected` và `simulated`).
+- Mã `tutor_id` không trùng lặp trên cả JSON và CSV.
+- Đủ 9 trường dữ liệu, đúng kiểu và đúng giá trị phân loại (*enum*).
+- Không lẫn thông tin liên hệ cá nhân như số điện thoại hay địa chỉ email.
+- Dữ liệu từng ô trên `tutors.json` và `tutors.csv` khớp nhau hoàn toàn.
 
-Kết quả chạy kiểm tra (Python 3.12.7):
+Kết quả thực thi chương trình kiểm tra trên môi trường Python 3.12.7:
 
 ```text
 ĐẠT: 16 bản ghi (2 public_collected, 14 simulated); id duy nhất; enum hợp lệ;
@@ -93,50 +81,49 @@ Kết quả chạy kiểm tra (Python 3.12.7):
 
 ### 4.2.5. Nguyên tắc thiết kế dữ liệu và minh chứng trong 16 hồ sơ
 
-Bốn nguyên tắc thiết kế dữ liệu được thể hiện cụ thể qua 16 hồ sơ trong `data/processed/tutors.json`:
+Năm nguyên tắc thiết kế dữ liệu ở Mục 3.5 được nhóm em cài cụ thể vào 16 hồ sơ trong `data/processed/tutors.json`:
 
-1. **Tạo xung đột tiêu chí:** cặp `GS-G09` (học phí 350.000, kinh nghiệm 2 năm, đánh giá 3,5) và `GS-G10` (130.000, 12 năm, 4,9) cùng dạy Toán, nhận Quận 7 và rảnh T2-tối, T4-tối. Người học ưu tiên học phí và người ưu tiên kinh nghiệm sẽ chọn khác nhau; cặp `GS-G01` (180.000, 6 năm, 5,0) và `GS-G02` (300.000, 3 năm, 3,0) tại Bình Thạnh có cấu trúc tương tự.
-2. **Cặp chỉ khác một tiêu chí:** `GS006` và `GS020` giống nhau ở mọi trường, chỉ khác học phí (190.000 so với 240.000). Cặp `GS-G11` và `GS-G12` cũng chỉ khác nhau ở khu vực (Quận 2 + Bình Thạnh so với Quận 2 + Thủ Đức), được dùng trực tiếp trong KB02 (đồng điểm, phá hòa theo `tutor_id`) và KB03 (tách hạng nhờ khớp khu vực Thủ Đức).
-3. **Tình huống không ai thỏa điều kiện bắt buộc:** không hồ sơ nào dạy môn Tiếng Trung trong khi danh sách môn trên giao diện có lựa chọn này. Khi gọi API thật với `subject = "Tiếng Trung"`, hệ thống trả về trạng thái `no_match` (Mục 4.4), tương ứng kịch bản KB05.
-4. **Gia sư chưa có đánh giá:** `GS-T06` và `GS-T07` có `avg_rating = null`, được gán điểm trung tính $0{,}5$ kèm ghi chú “chưa có đánh giá” trong phản hồi API (xác nhận trong output ở Mục 4.3 và Mục 4.4).
+1. **Tạo xung đột giữa các tiêu chí:** cặp `GS-G09` (350.000 VNĐ/giờ, 2 năm kinh nghiệm, đánh giá 3,5/5) và `GS-G10` (130.000 VNĐ/giờ, 12 năm kinh nghiệm, đánh giá 4,9/5) cùng dạy Toán ở Quận 7 và rảnh T2-tối, T4-tối. Tương tự là cặp `GS-G01` (180.000 VNĐ/giờ, 6 năm, 5,0/5) và `GS-G02` (300.000 VNĐ/giờ, 3 năm, 3,0/5) ở Bình Thạnh. Những cặp này giúp thấy rõ thứ hạng đổi khi thay đổi trọng số.
+2. **Cặp hồ sơ chỉ khác một tiêu chí:** `GS006` và `GS020` giống hệt nhau trừ học phí (190.000 so với 240.000 VNĐ/giờ). Cặp `GS-G11` và `GS-G12` chỉ khác khu vực (Quận 2, Bình Thạnh so với Quận 2, Thủ Đức). Cặp này dùng cho kịch bản KB02 (đồng điểm để kiểm tra xếp hạng theo `tutor_id`) và KB03 (tách hạng khi tìm ở Thủ Đức).
+3. **Tình huống không có ứng viên đạt điều kiện:** không có gia sư nào dạy môn Tiếng Trung trong 16 hồ sơ, dù giao diện vẫn cho chọn môn này. Khi chạy kịch bản KB05 (`subject = "Tiếng Trung"`), hệ thống trả về trạng thái `no_match`.
+4. **Hồ sơ chưa có điểm đánh giá:** `GS-T06` và `GS-T07` có `avg_rating = null`. Khi chấm điểm, hệ thống gán điểm trung tính $0{,}5$ và thêm ghi chú `"chưa có đánh giá"`.
+5. **Tránh thiên lệch dữ liệu dễ:** các hồ sơ được gài ưu thế đan xen thay vì sắp sẵn một người giỏi toàn diện. Ví dụ ở KB01 (Bình Thạnh), `GS-T06` đúng quận và 20 năm kinh nghiệm nhưng học phí vượt trần, còn `GS-G10` học phí rẻ và đánh giá cao nhưng lại ở Quận 7. Nhờ vậy thuật toán buộc phải cân bằng nhiều tiêu chí theo trọng số.
 
 ## 4.3. Cài đặt module tính điểm
 
-Module tính điểm nằm trong gói `backend/app/scoring/` và được thiết kế tách rời khỏi tầng API. Bảng 4.3 ánh xạ từng tệp với hàm/lớp chính và bước tương ứng trong quy trình tính điểm 4 bước của Mục 3.6.
+Module tính điểm nằm trong gói `backend/app/scoring/`, tách riêng khỏi tầng API. Bảng 4.3 đối chiếu từng tệp mã nguồn với các bước xử lý ở Mục 3.6.
 
-**Bảng 4.3 - Tệp, hàm/lớp chính và bước quy trình tương ứng (Mục 3.6)**
+**Bảng 4.3: Tệp, hàm/lớp chính và bước quy trình tương ứng (Mục 3.6)**
 
 | Tệp | Hàm / lớp chính | Vai trò trong quy trình Mục 3.6 |
 |:---|:---|:---|
-| `app/data/repository.py` | `TutorRepository.get_all`, `_parse_record`, ngoại lệ `TutorDataError` | Truy xuất 16 hồ sơ JSON, xác thực từng bản ghi theo `TutorProfile` |
-| `app/scoring/filters.py` | `filter_mandatory`, `_matches_subject`, `_matches_mode`, `_matches_availability` | Bước 2 — lọc điều kiện bắt buộc (môn học, hình thức, $\lvert L \cap T \rvert \ge 1$) |
-| `app/scoring/weights.py` | `compute_effective_weights`, `priority_to_weight`, `_applicable_criteria`, `EffectiveWeights` | Quy đổi mức ưu tiên sang trọng số theo Bảng 3.5; xác định tiêu chí áp dụng (loại tiêu chí không nhập dữ liệu và $w = 0$) |
-| `app/scoring/eligibility.py` | `check_tutor_eligibility`, `count_available_criteria`, `filter_eligible_candidates`, `MIN_DATA_THRESHOLD` | Kiểm tra ngưỡng dữ liệu tối thiểu để xếp hạng (bảng ngưỡng theo $n = 1\text{–}5$), giữa Bước 2 và Bước 4 |
-| `app/scoring/criteria.py` | `score_fee`, `score_location`, `score_experience`, `score_rating`, `score_schedule` | Bước 3 — năm hàm thuần tính điểm thành phần $s_i \in [0, 1]$ theo Bảng 3.6 |
-| `app/scoring/ranker.py` | `score_and_rank`, `_compute_single_criterion_score`, `build_reason`, `build_notes` | Bước 4 — tổng hợp $S = \sum w_i \cdot s_i / \sum w_i$, đóng góp $C_i$, sắp xếp giảm dần (phá hòa theo `tutor_id`), trích Top-$k$ |
-| `app/core/config.py` | `DELTA = 0.5`, `E_MAX = 8`, `RATING_DEFAULT = 0.5`, `PRIORITY_WEIGHTS = {"none": 0, "low": 1, "medium": 2, "high": 3}`, `DEFAULT_PRIORITY = "medium"`, `CRITERIA_KEYS` | Tham số thuật toán theo Mục 3.6 và Bảng 3.5 |
+| `app/data/repository.py` | `TutorRepository.get_all`, ngoại lệ `TutorDataError` | Đọc 16 hồ sơ từ tệp JSON và xác thực cấu trúc theo mô hình `TutorProfile` |
+| `app/scoring/filters.py` | `filter_mandatory` và các hàm kiểm tra môn, hình thức, lịch rảnh | Bước 2 — lọc điều kiện bắt buộc (môn học, hình thức học, $\lvert L \cap T \rvert \ge 1$) |
+| `app/scoring/weights.py` | `compute_effective_weights`, `priority_to_weight`, `EffectiveWeights` | Quy đổi mức ưu tiên sang trọng số theo Bảng 3.5; xác định tập tiêu chí áp dụng (loại tiêu chí khuyết đầu vào hoặc có $w_i = 0$) |
+| `app/scoring/eligibility.py` | `check_tutor_eligibility`, `count_available_criteria`, `filter_eligible_candidates`, `MIN_DATA_THRESHOLD` | Kiểm tra ngưỡng dữ liệu tối thiểu theo Bảng 3.7 ($n = 1\text{–}5$), thực hiện trước khi chấm điểm xếp hạng |
+| `app/scoring/criteria.py` | `score_fee`, `score_location`, `score_experience`, `score_rating`, `score_schedule` | Bước 3 — năm hàm thuần tính điểm thành phần $s_i \in [0, 1]$ theo công thức tại Bảng 3.6 |
+| `app/scoring/ranker.py` | `score_and_rank`, `build_reason`, `build_notes` | Bước 4 — tổng hợp điểm $S(g) = \sum w_i \cdot s_i / \sum w_i$, tính mức đóng góp $C_i$, sắp xếp giảm dần (xử lý đồng điểm theo `tutor_id`) và trích Top-$k$ |
+| `app/core/config.py` | `DELTA = 0.5`, `E_MAX = 8`, `RATING_DEFAULT = 0.5`, `PRIORITY_WEIGHTS`, `DEFAULT_PRIORITY = "medium"`, `CRITERIA_KEYS` | Quản lý tập trung các tham số thuật toán và bảng ánh xạ trọng số theo Mục 3.6 và Bảng 3.5 |
 
-Ba bước trong quy trình (Bước 2, Bước 3, Bước 4) được gọi bằng đúng hàm của module scoring. Bước 1 (kiểm tra và chuẩn hóa đầu vào) do mô hình `SearchRequest` của Pydantic đảm nhận, kèm các ngoại lệ `ValueError` trong hàm thuần (quyết định QĐ-B dưới đây); lớp `repository.py` cung cấp dữ liệu đầu vào cho Bước 2.
-
-*Nguồn: docstring đầu mỗi tệp trong `backend/app/scoring/`, `backend/app/core/config.py`, `backend/app/data/repository.py`; đối chiếu quy trình 4 bước tại `docs/design/scoring-spec.md` mục 1.*
+Khi chạy, Bước 1 (kiểm tra đầu vào) do `SearchRequest` xử lý, còn `TutorRepository` đọc và xác thực danh sách hồ sơ gia sư. Ba bước tiếp theo được thực thi tuần tự bởi các hàm trong `app/scoring/`.
 
 ### 4.3.1. Các quyết định triển khai QĐ-A đến QĐ-E
 
-Năm quyết định triển khai phát sinh khi Bảng 3.6 chưa nêu tường minh các trường hợp biên; nội dung năm quyết định này được ghi nhận trong docstring, bộ kiểm thử và biên bản sprint như sau:
+Khi viết mã cho các công thức ở Bảng 3.6, nhóm em gặp vài tình huống biên cần quy ước rõ để tránh lỗi khi chạy:
 
-- **QĐ-A — Ngân sách bằng 0:** khi $B = 0$, học phí $P = 0$ nhận điểm $1$, $P > 0$ nhận điểm $0$, tránh phép chia cho $\delta \times B = 0$. Nguồn: docstring `score_fee` (`criteria.py` dòng 24), `backend/tests/unit/test_criteria.py` (hai test QĐ-A với $B = 0$), `docs/scrum/sprints/sprint-02/planning.md`.
-- **QĐ-B — Kiểm tra miền đầu vào bằng ngoại lệ `ValueError`:** `score_fee` ném lỗi khi $P < 0$ hoặc $B < 0$, còn `score_experience` ném lỗi khi $E < 0$. Tương tự, `score_rating` chặn $R$ ngoài đoạn $[0, 5]$ và `score_schedule` chặn tập khung giờ người học rỗng. Nguồn: docstring và thân hàm trong `criteria.py`, nhóm test “Đầu vào ngoài miền hợp lệ (QĐ-B)” trong `test_criteria.py`.
-- **QĐ-C — Loại bỏ tiêu chí khu vực khi học trực tuyến tại `weights.py`:** `score_location` chỉ chấm $1$ hoặc $0$. Tiêu chí khu vực bị loại khỏi tập áp dụng do `_applicable_criteria` trong `weights.py` (khi `learning_mode = "online"` hoặc không nhập khu vực). Nguồn: docstring `score_location` (`criteria.py` dòng 40–41) và thân `weights.py`.
-- **QĐ-D — So khớp chuỗi chính xác, phân biệt hoa/thường:** so khớp môn học, khu vực và khung giờ dùng phép so chuỗi chính xác (`subject in tutor.subjects`, phép giao tập khung giờ), không chuẩn hóa hoa/thường. Nguồn: docstring `score_location`, `test_criteria.py` (test QĐ-D “không chuẩn hóa hoa/thường”), `test_filters.py`.
-- **QĐ-E — Không làm tròn trung gian:** phép tính giữ giá trị số thực đầy đủ; làm tròn chỉ thực hiện khi hiển thị (3 chữ số thập phân). Nguồn: `docs/design/api-contract.md` mục 5.2, `docs/thesis/report/discrepancy_analysis.md`, `docs/scrum/sprints/sprint-02/retrospective.md` (nhóm quyết định QĐ-A–QĐ-E).
+- **QĐ-A (Khi ngân sách bằng 0):** nếu người học nhập $B = 0$, hàm `score_fee` trả về $1{,}0$ khi học phí $P = 0$ và $0{,}0$ khi $P > 0$. Cách này tránh được phép chia cho $\delta \times B = 0$.
+- **QĐ-B (Tự kiểm tra miền giá trị trong hàm thuần):** các hàm tính điểm thành phần đều kiểm tra đầu vào. Nếu gặp số sai miền ($P < 0$ hoặc $B < 0$ ở `score_fee`; $E < 0$ ở `score_experience`; $R \notin [0, 5]$ ở `score_rating`; lịch rỗng ở `score_schedule`), hàm tự ném `ValueError`. Nhờ vậy hàm vẫn an toàn khi gọi trực tiếp ngoài API.
+- **QĐ-C (Tắt tiêu chí khu vực ở bước tính trọng số):** hàm `score_location` chỉ làm một việc là kiểm tra khớp khu vực ($1$ hoặc $0$). Việc bỏ tiêu chí khu vực khi học trực tuyến (`learning_mode = "online"`) hoặc khi không chọn quận do `compute_effective_weights` xử lý.
+- **QĐ-D (So khớp chuỗi chính xác):** môn học, khu vực và khung giờ đều so khớp chính xác theo nhãn đã chuẩn hóa (ví dụ `subject in tutor.subjects` hay giao hai tập khung giờ).
+- **QĐ-E (Không làm tròn trung gian khi tính điểm):** điểm thành phần, mức đóng góp $C_i$ và tổng điểm $S(g)$ giữ nguyên dạng số thực dấu phẩy động chuẩn IEEE 754 suốt lúc xếp hạng. Hệ thống chỉ làm tròn 3 chữ số thập phân khi đưa ra giao diện.
 
 ### 4.3.2. Tính tách rời khỏi tầng API
 
-Module scoring không phụ thuộc khung web: tra cứu từ khóa (`fastapi|starlette|uvicorn`) trên toàn bộ `backend/app/scoring/` trả về rỗng. Toàn bộ khối `import` trong năm tệp của gói này chỉ gồm thư viện chuẩn (`collections.abc`, `dataclasses`) và các mô-đun nội bộ (`app.core.config`, `app.schemas.*`, `app.scoring.*`), nhờ đó module tính điểm chạy được độc lập qua lời gọi hàm trực tiếp mà không cần HTTP.
+Gói `backend/app/scoring/` không `import` bất kỳ thành phần nào của FastAPI, Starlette hay Uvicorn. Năm tệp mã nguồn bên trong chỉ dùng thư viện chuẩn Python (`collections.abc`, `dataclasses`) và các mô hình dữ liệu nội bộ (`app.core.config`, `app.schemas.*`). Nhờ vậy nhóm em có thể gọi thẳng các hàm Python để viết test đơn vị mà không cần bật máy chủ web.
 
-### 4.3.3. Ví dụ chạy thật: kịch bản KB01
+### 4.3.3. Minh họa thực thi kịch bản KB01
 
-Chạy kiểm chứng trực tiếp pipeline tính điểm (gọi lần lượt `filter_mandatory` → `compute_effective_weights` → `filter_eligible_candidates` → `score_and_rank` trên 16 hồ sơ) cho kịch bản KB01 (Toán, trực tiếp, Bình Thạnh, ngân sách 200.000 VNĐ/giờ, mọi mức ưu tiên Trung bình, `top_k = 3`), kết quả rút gọn như sau:
+Nhóm em chạy thử chuỗi hàm tính điểm (`filter_mandatory` → `compute_effective_weights` → `filter_eligible_candidates` → `score_and_rank`) trên 16 hồ sơ mẫu. Đầu vào là kịch bản KB01: môn Toán, học trực tiếp ở Bình Thạnh, ngân sách 200.000 VNĐ/giờ, mọi ưu tiên Trung bình, `top_k = 3`. Kết quả thu được như sau:
 
 ```text
 total_candidates: 16
@@ -154,27 +141,25 @@ rank=3 tutor_id=GS-T06 total_score=0.625
   notes: ['chưa có đánh giá']
 ```
 
-Kết quả minh họa các cơ chế đã cài đặt: tiêu chí lịch rảnh không áp dụng vì KB01 không nhập khung giờ (giá trị `null`). Hồ sơ `GS-T06` có học phí ước tính 400.000 nên `s_fee = 0` nhưng không bị loại cứng; việc thiếu đánh giá nhận điểm trung tính $0{,}5$ kèm ghi chú. Dãy điểm này khớp đúng với Bảng 5.9 của Chương 5.
+Kết quả này chạy đúng theo thiết kế. Vì KB01 không nhập lịch rảnh nên tiêu chí này mang giá trị `None`. Hồ sơ `GS-T06` có học phí ước tính 400.000 VNĐ/giờ nên nhận $s_{\text{fee}} = 0$, nhưng vẫn được giữ lại xếp hạng nhờ cơ chế ngân sách mềm và nhận điểm đánh giá trung tính $0{,}5$ kèm ghi chú `"chưa có đánh giá"`. Các con số này khớp hoàn toàn với phân tích ở Bảng 5.9 (Chương 5).
 
 ## 4.4. Xây dựng API khuyến nghị
 
 ### 4.4.1. Endpoint và cấu trúc ứng dụng
 
-Dịch vụ được khai báo trong `backend/app/main.py`: khởi tạo ứng dụng FastAPI, đăng ký `CORSMiddleware` (mở mọi origin và phương thức cho frontend từ Vercel) và gắn router từ `backend/app/api/recommend.py`. Dịch vụ kèm endpoint kiểm tra sức khỏe `GET /health` trả về `{"status": "ok"}`, cùng tài liệu tương tác Swagger UI tự sinh tại `/docs`.
+Dịch vụ web khởi tạo tại `backend/app/main.py`: cấu hình FastAPI, bật `CORSMiddleware` để trình duyệt gọi chéo miền được và gắn bộ định tuyến từ `recommend.py`. Ngoài API chính, máy chủ có đường dẫn `GET /health` trả về `{"status": "ok"}` và trang `/docs` (Swagger UI) để thử trực tiếp.
 
-Endpoint chính `POST /api/recommend` (hàm `recommend_tutors`) nhận `SearchRequest` và trả về `RecommendationResponse` — kiểu hợp (*union*) của ba mô hình `RecommendationSuccessResponse`, `NoMatchResponse`, `ZeroWeightResponse` trong `backend/app/schemas/recommendation.py`. Quy trình xử lý theo đúng thứ tự 5 bước của `docs/design/api-contract.md` mục 6:
+Điểm cuối chính `POST /api/recommend` nhận `SearchRequest` và trả về một trong ba kiểu phản hồi (`RecommendationSuccessResponse`, `NoMatchResponse`, `ZeroWeightResponse`). Hàm `recommend_tutors` chạy qua năm bước:
 
-1. Kiểm tra đầu vào bằng ràng buộc Pydantic trên `SearchRequest` (môn học không chỉ gồm khoảng trắng, `max_budget_vnd` nguyên không âm, `top_k` từ 1 đến 20, giá trị enum hợp lệ, từ chối khóa `priorities` lạ và trường thừa) — vi phạm trả về mã HTTP 422.
-2. Lọc bắt buộc qua `filter_mandatory`; nếu rỗng trả về trạng thái `no_match` với thông báo “Không có gia sư thỏa điều kiện bắt buộc”.
-3. Kiểm tra tổng trọng số qua `compute_effective_weights`; nếu tổng bằng $0$ trả về trạng thái `zero_weight` kèm `unranked_candidates`.
-4. Áp ngưỡng dữ liệu qua `filter_eligible_candidates`; nếu mọi ứng viên bị loại trả về biến thể `no_match` với thông báo “Có gia sư thỏa điều kiện bắt buộc nhưng không đủ dữ liệu để xếp hạng” kèm `insufficient_data_candidates`.
-5. Tính điểm, xếp hạng, lấy Top-$k$ bằng `score_and_rank` với `top_k` của yêu cầu.
+1. Kiểm tra đầu vào bằng Pydantic (môn học không được trống, `max_budget_vnd` không âm, `top_k` từ $1$ đến $20$, đúng các giá trị phân loại, không có trường thừa). Nếu sai, API trả ngay mã HTTP 422.
+2. Gọi `filter_mandatory` để lọc điều kiện bắt buộc. Nếu không còn gia sư nào, trả về `no_match` (HTTP 200) kèm thông báo “Không có gia sư thỏa điều kiện bắt buộc”.
+3. Gọi `compute_effective_weights` để tính trọng số hiệu dụng. Nếu tổng trọng số bằng $0$, trả về `zero_weight` (HTTP 200) kèm danh sách ứng viên qua lọc trong `unranked_candidates`.
+4. Gọi `filter_eligible_candidates` để kiểm tra ngưỡng dữ liệu tối thiểu. Nếu tất cả ứng viên đều thiếu dữ liệu, trả về biến thể thứ hai của `no_match` (HTTP 200) kèm danh sách mã gia sư trong `insufficient_data_candidates`.
+5. Gọi `score_and_rank` để chấm điểm, xếp hạng và lấy Top-$k$ ứng viên, trả về `success` (HTTP 200).
 
-Lớp truy xuất dữ liệu được cấp qua cơ chế *dependency injection* của FastAPI: hàm `get_tutor_repository()` trả về `TutorRepository()`, gắn vào endpoint bằng `Annotated[TutorRepository, Depends(get_tutor_repository)]`. Cách làm này cho phép thay thế nguồn dữ liệu bằng dependency override trong bộ test API mà không sửa mã endpoint.
+Nguồn dữ liệu được truyền vào API qua cơ chế tiêm phụ thuộc (`Depends(get_tutor_repository)`). Nhờ vậy khi chạy test tự động, nhóm em có thể thay dữ liệu mẫu mà không phải sửa mã API. Bảng 4.4 tóm tắt các trạng thái phản hồi của `POST /api/recommend`.
 
-Bốn trạng thái phản hồi cùng điều kiện phát sinh tương ứng được tổng hợp ở Bảng 4.4.
-
-**Bảng 4.4 - Các trạng thái phản hồi của `POST /api/recommend`**
+**Bảng 4.4: Các trạng thái phản hồi của `POST /api/recommend`**
 
 | Trạng thái | Điều kiện phát sinh | Mã HTTP |
 |:---|:---|:---:|
@@ -184,11 +169,9 @@ Bốn trạng thái phản hồi cùng điều kiện phát sinh tương ứng �
 | `zero_weight` | Tổng trọng số các tiêu chí đang áp dụng bằng 0 (kèm `unranked_candidates`) | 200 |
 | Lỗi xác thực dữ liệu | Vi phạm ràng buộc `SearchRequest` (thiếu `subject`, ngân sách âm, `top_k` ngoài khoảng, enum sai, khóa lạ, trường thừa) | 422 |
 
-*Nguồn: `backend/app/api/recommend.py` (4 nhánh trả về trong hàm `recommend_tutors`); `docs/design/api-contract.md` mục 4–6; `backend/app/schemas/recommendation.py`, `backend/app/schemas/search_request.py`.*
+### 4.4.2. Minh họa yêu cầu và phản hồi thực tế của API
 
-### 4.4.2. Ví dụ request/response thật
-
-Khởi chạy dịch vụ cục bộ bằng `python -m uvicorn app.main:app` (Python 3.12.7) và gọi `POST /api/recommend` với thân yêu cầu KB01 (Mục 4.3.3); phần phản hồi thực tế nhận được cho hạng 1 (HTTP 200, các hạng 2–3 rút gọn trường chi tiết) như sau:
+Khi bật máy chủ bằng lệnh `python -m uvicorn app.main:app` (Python 3.12.7) và gửi yêu cầu kịch bản KB01, API trả về JSON (HTTP 200) như đoạn trích hạng 1 dưới đây:
 
 ```json
 {
@@ -210,109 +193,99 @@ Khởi chạy dịch vụ cục bộ bằng `python -m uvicorn app.main:app` (Py
 }
 ```
 
-Trong cùng lần kiểm chứng đó, hai phần tử tiếp theo trong `results` là `GS-G10` (`total_score: 0.745`, `notes: []`) và `GS-T06` (`total_score: 0.625`, `notes: ["chưa có đánh giá"]`). Các ca biên trả về đúng thiết kế:
-- Thiếu `subject` trả về HTTP 422 với chi tiết lỗi `missing` tại `["body", "subject"]` (`"Field required"`).
-- `max_budget_vnd = -5` trả về HTTP 422 (`greater_than_equal`).
-- Môn Tiếng Trung trả về trạng thái `no_match` (HTTP 200).
-- Toàn bộ mức ưu tiên `none` trả về trạng thái `zero_weight` (HTTP 200) với 5 mã gia sư qua lọc trong `unranked_candidates`.
-
-Số liệu hiệu năng và kết quả bộ kiểm thử tự động được trình bày tại Chương 5; chương này không lặp lại.
+Hai vị trí tiếp theo trong mảng `results` là `GS-G10` (`total_score: 0.745`, `notes: []`) và `GS-T06` (`total_score: 0.625`, `notes: ["chưa có đánh giá"]`). Các tình huống biên khi gọi qua HTTP đều trả về đúng như Bảng 4.4:
+- Bỏ trống `subject`: API trả về mã HTTP 422 với lỗi thiếu trường bắt buộc tại `["body", "subject"]`.
+- Truyền `max_budget_vnd = -5`: API trả về mã HTTP 422 do vi phạm ràng buộc số nguyên không âm (`greater_than_equal`).
+- Tìm môn Tiếng Trung: API trả về trạng thái `no_match` (HTTP 200).
+- Đặt cả 5 mức ưu tiên về `none`: API trả về trạng thái `zero_weight` (HTTP 200) kèm 5 mã gia sư qua lọc trong mảng `unranked_candidates`.
 
 ## 4.5. Xây dựng giao diện demo
 
-Giao diện là một Single Page Application React 19 (Vite), CSS thuần trong `frontend/src/App.css` (2.089 dòng) và `index.css` — không dùng TailwindCSS và không dùng thư viện biểu đồ; thanh xếp chồng được tự dựng bằng HTML/CSS. Quản lý trạng thái dùng các hook chuẩn React trong `App.jsx`.
+Phần giao diện được nhóm em làm thành ứng dụng web một trang (SPA) bằng React 19 và Vite, viết CSS thuần ở `frontend/src/App.css` (2.089 dòng) và `index.css`. Thanh xếp chồng phân rã điểm đóng góp được vẽ thẳng bằng HTML và CSS chứ không cài thêm thư viện biểu đồ ngoài. Bảng 4.5 tóm tắt các tệp giao diện theo ba chức năng CN01–CN03.
 
-Bảng 4.5 liệt kê các tệp giao diện theo từng chức năng CN01–CN03.
-
-**Bảng 4.5 - Thành phần giao diện và chức năng theo CN01–CN03**
+**Bảng 4.5: Thành phần giao diện và chức năng theo CN01–CN03**
 
 | Tệp | Vai trò | Chức năng |
 |:---|:---|:---|
-| `src/App.jsx` | Điều phối trung tâm | Điều hướng 2 bước (tab CN01 và tab CN02+CN03); lưu trạng thái chung (`searchForm`, `recommendationResult`, `isLoading`, `apiError`, `latencyMs`, `rankDeltas`); `executeRecommendationRequest` gọi API; chống chồng lấn request bằng `requestSeqRef` (Mục 4.6) |
-| `src/pages/SearchPage.jsx` | Màn hình nhập nhu cầu (CN01) | Biểu mẫu theo Bảng 3.4 (môn học, hình thức, khu vực, ngân sách kèm dòng quy đổi bằng chữ, Top-$k$); bảng chọn lịch 7 ngày × 3 buổi và 3 mẫu chọn nhanh; kiểm tra hợp lệ phía client (môn học, khu vực bắt buộc khi học Trực tiếp, ngân sách không âm); thanh chip “Nạp nhanh” 14 kịch bản KB01–KB14 (nhãn giao diện “Kịch bản thực nghiệm (Bảng 5.1 · KB01 - KB14)”, tương ứng Bảng 5.3 của báo cáo) kèm tùy chọn “Tự động chuyển kết quả” |
-| `src/pages/ResultPage.jsx` | Màn hình kết quả (CN02 + CN03) | Dải KPI (kịch bản, môn, hình thức, khu vực, ngân sách, lịch) và phễu “Kho → Hợp lệ → Top-$k$”; rail CN03 với 5 tiêu chí và 4 nút “Nạp nhanh trọng số” (“Mặc định (w=2)”, “Ưu tiên Học phí”, “Ưu tiên KN & Đánh giá”, “Thử ∑w_i = 0”); hiển thị 3 trạng thái `success`/`no_match`/`zero_weight`; chip độ trễ đo tại trình duyệt |
-| `src/components/TutorCard.jsx` | Thẻ gia sư | Avatar, huy hiệu hạng, huy hiệu “Khuyến nghị tốt nhất” cho hạng 1, nhãn nguồn dữ liệu (“Dữ liệu thực tế” cho `public_collected`, “Dữ liệu đối chứng” cho `simulated`), lưới thuộc tính 4 ô và hàng lịch rảnh, lý do gợi ý và ghi chú dữ liệu |
-| `src/components/StackedBarScore.jsx` | Thanh xếp chồng tự dựng | Vẽ phân đoạn theo đóng góp $C_i = w_i \cdot s_i / \sum w_i$; tooltip hiển thị `s_i`, `w_i`, `C_i` và tỷ trọng; chú giải đếm cả tiêu chí “Không áp dụng” (`null` bị ẩn khỏi thanh) |
-| `src/components/TutorAvatar.jsx` | Ảnh đại diện | Ảnh chân dung `/avatars/{tutor_id}.webp` (16 tệp WebP trong `frontend/public/avatars/`), fallback sang monogram gradient khi ảnh thiếu |
-| `src/components/CriteriaIcon.jsx`, `SubjectIcon.jsx`, `SkeletonLoader.jsx` | Phụ trợ | Biểu tượng tiêu chí/môn học; khung xương chờ khi đang tính điểm |
-| `src/services/api.js` | Dịch vụ gọi API | Chọn `API_BASE_URL` theo tên miền và biến `VITE_API_URL`; `buildRecommendationPayload` chuẩn hóa biểu mẫu theo hợp đồng API; `fetchRecommendations` xử lý lỗi mạng/HTTP |
-| `src/data/scenariosCatalog.js` | Dữ liệu kịch bản | 14 kịch bản KB01–KB14 đồng bộ từ `backend/tests/scenarios/scenarios.json` (kèm `expected_raw` để hiển thị kỳ vọng) |
-| `src/data/goalPresets.js` | Mục tiêu học tập (US-41) | 3 preset điền sẵn 5 mức ưu tiên: “Không nêu mục tiêu” (mặc định), “Điểm cao / luyện thi chuyên – học sinh giỏi” (Kinh nghiệm và Đánh giá mức Cao), “Đủ điểm đậu / lấy lại kiến thức căn bản” (Học phí mức Cao) |
-| `src/data/tutorsCatalog.js` | Tra cứu hồ sơ | Bản sao chuẩn hóa 16 hồ sơ theo `tutor_id` để hiển thị thẻ mà không đổi hợp đồng API; bảng màu 5 tiêu chí; các hàm định dạng số dùng dấu phẩy (`formatScoreVi`) |
+| `src/App.jsx` | Điều phối trung tâm | Quản lý chuyển đổi giữa màn hình nhập nhu cầu (CN01) và màn hình kết quả (CN02, CN03); lưu trữ trạng thái truy vấn, kết quả khuyến nghị, độ trễ phản hồi và độ lệch thứ hạng khi người học điều chỉnh trọng số; đồng bộ thứ tự yêu cầu bất đồng bộ (Mục 4.6) |
+| `src/pages/SearchPage.jsx` | Màn hình nhập nhu cầu (CN01) | Biểu mẫu nhập tiêu chí theo Bảng 3.4 (môn học, hình thức, khu vực, ngân sách kèm dòng quy đổi bằng chữ, Top-$k$); lưới chọn lịch rảnh 7 ngày × 3 buổi; kiểm tra hợp lệ phía trình duyệt; thanh nút nạp nhanh 14 kịch bản thực nghiệm KB01–KB14 (Bảng 5.3) |
+| `src/pages/ResultPage.jsx` | Màn hình kết quả (CN02 + CN03) | Hiển thị dải thông tin tóm tắt truy vấn và thống kê số lượng ứng viên (“Kho → Hợp lệ → Top-$k$”); khung điều chỉnh mức ưu tiên trực tiếp (CN03) cho 5 tiêu chí kèm 4 nút cấu hình trọng số mẫu; hiển thị ba trạng thái nghiệp vụ `success`, `no_match`, `zero_weight` |
+| `src/components/TutorCard.jsx` | Thẻ thông tin gia sư | Hiển thị ảnh đại diện, huy hiệu thứ hạng, nhãn nguồn dữ liệu (“Dữ liệu thực tế” cho `public_collected`, “Dữ liệu đối chứng” cho `simulated`), các thuộc tính hồ sơ, lịch rảnh, chuỗi lý do khuyến nghị và ghi chú dữ liệu |
+| `src/components/StackedBarScore.jsx` | Thanh xếp chồng điểm đóng góp | Trực quan hóa các phân đoạn theo mức đóng góp $C_i = w_i \cdot s_i / \sum w_i$; hộp thông tin chi tiết hiển thị $s_i$, $w_i$, $C_i$ và tỷ trọng phần trăm của từng tiêu chí áp dụng |
+| `src/components/TutorAvatar.jsx` | Ảnh đại diện gia sư | Hiển thị ảnh chân dung `/avatars/{tutor_id}.webp` (16 tệp ảnh WebP trong `frontend/public/avatars/`), tự động chuyển sang biểu tượng chữ cái viết tắt nếu thiếu tệp ảnh |
+| `src/components/CriteriaIcon.jsx`, `SubjectIcon.jsx`, `SkeletonLoader.jsx` | Thành phần phụ trợ | Biểu tượng trực quan cho từng tiêu chí và môn học; hiệu ứng khung chờ trong thời gian gọi API |
+| `src/services/api.js` | Dịch vụ giao tiếp API | Xác định địa chỉ máy chủ API theo biến môi trường `VITE_API_URL` hoặc tên miền hiện hành; chuẩn hóa dữ liệu biểu mẫu và xử lý lỗi kết nối HTTP |
+| `src/data/scenariosCatalog.js` | Danh mục kịch bản mẫu | Dữ liệu 14 kịch bản KB01–KB14 đồng bộ từ `backend/tests/scenarios/scenarios.json` phục vụ thao tác nạp nhanh trên giao diện |
+| `src/data/goalPresets.js` | Bộ mức ưu tiên mẫu theo mục tiêu học tập | Ba bộ cấu hình gợi ý sẵn 5 mức ưu tiên: “Không nêu mục tiêu” (mặc định), “Điểm cao / luyện thi chuyên – học sinh giỏi” (Kinh nghiệm và Đánh giá mức Cao), “Đủ điểm đậu / lấy lại kiến thức căn bản” (Học phí mức Cao) |
+| `src/data/tutorsCatalog.js` | Danh mục hồ sơ tra cứu | Bản sao chuẩn hóa của 16 hồ sơ theo `tutor_id` giúp hiển thị đầy đủ thuộc tính trên thẻ gia sư; bảng màu 5 tiêu chí và hàm định dạng số thập phân theo quy ước dấu phẩy tiếng Việt |
 
-*Nguồn: các tệp `frontend/src/` liệt kê trong bảng; `frontend/src/App.css`; `frontend/package.json`.*
+Ở màn hình CN01, phía trên bảng chọn 5 tiêu chí có thêm ô “Mục tiêu học tập (gợi ý mức ưu tiên)”. Khi người học chọn một mục tiêu gợi ý, giao diện điền sẵn bộ 5 mức ưu tiên tương ứng. Nếu sau đó người học chỉnh tay lại từng tiêu chí thì ô này tự đổi thành “Tùy chỉnh”. Đây chỉ là tiện ích ở tầng giao diện, nên dữ liệu JSON gửi lên API vẫn giữ nguyên 7 trường tiêu chuẩn.
 
-Ô “Mục tiêu học tập” được đặt trên khối 5 tiêu chí ở CN01 (theo `docs/design/de-xuat-mo-rong-cap-lop-muc-tieu.md`). Preset chỉ sinh bộ mức ưu tiên khởi tạo ở tầng giao diện; ô không có state riêng mà suy ra giá trị hiển thị từ 5 mức ưu tiên hiện tại (không khớp preset nào thì hiện “Tùy chỉnh”). Payload gửi API giữ nguyên 7 trường và 5 khóa ưu tiên; cấp lớp nhận dạy chưa hiện thực vì `TutorProfile` chỉ có 9 trường, không có dữ liệu cấp lớp.
+Bốn ảnh chụp dưới đây ghi lại các màn hình hoạt động thực tế. Hình 4.1 và Hình 4.2 là màn hình nhập nhu cầu và kết quả Top-3 của kịch bản KB01. Hình 4.3 và Hình 4.4 minh họa lúc đổi mức ưu tiên và trạng thái cảnh báo khi tổng trọng số bằng 0.
 
-Bốn ảnh giao diện sau minh họa lần lượt bốn trạng thái của luồng sử dụng: nhập nhu cầu (Hình 4.1), kết quả Top-3 của KB01 (Hình 4.2), xếp hạng lại sau khi đổi mức ưu tiên (Hình 4.3) và trạng thái biên khi tổng trọng số bằng 0 (Hình 4.4). Các ảnh được chụp trực tiếp từ hệ thống chạy cục bộ và lưu tại `docs/thesis/figures/`.
+![Hình 4.1: Màn hình nhập nhu cầu học tập (CN01)](../figures/hinh-ui-01-cn01-nhap-nhu-cau.png)
 
-![Hình 4.1 - Màn hình nhập nhu cầu học tập (CN01)](../figures/hinh-ui-01-cn01-nhap-nhu-cau.png)
+**Hình 4.1: Màn hình nhập nhu cầu học tập (CN01)**
 
-**Hình 4.1 - Màn hình nhập nhu cầu học tập (CN01)**
+Hình 4.1 là màn hình nhập nhu cầu (CN01) khi nhấn nạp nhanh kịch bản KB01 (Toán, học trực tiếp ở Bình Thạnh, ngân sách 200.000 VNĐ/giờ). Bên phải là bảng chọn mức ưu tiên cho 5 tiêu chí, với ô “Mục tiêu học tập” ở mức mặc định “Không nêu mục tiêu” ($w_i = 2$ cho cả năm tiêu chí).
 
-Hình 4.1 minh họa giao diện chế độ tối với thanh chip 14 kịch bản KB01–KB14 (KB01 đang được chọn) và biểu mẫu “Thông tin nhu cầu học tập (Bảng 3.4)”. Các trường đã điền gồm môn Toán, hình thức Trực tiếp, khu vực Bình Thạnh, ngân sách `200000` (200.000 VNĐ/giờ kèm dòng quy đổi bằng chữ). Cột phải “Mức độ ưu tiên cho 5 tiêu chí (Bảng 3.5)” hiển thị ô “Mục tiêu học tập (gợi ý mức ưu tiên)” ở giá trị “Không nêu mục tiêu” cùng bốn nút mức ưu tiên $w = 0, 1, 2, 3$ (mặc định Trung bình, $w = 2$).
+![Hình 4.2: Màn hình kết quả gợi ý Top-3 kịch bản KB01 (CN02)](../figures/hinh-ui-02-cn02-ket-qua-kb01.png)
 
-![Hình 4.2 - Màn hình kết quả gợi ý Top-3 kịch bản KB01 (CN02)](../figures/hinh-ui-02-cn02-ket-qua-kb01.png)
+**Hình 4.2: Màn hình kết quả gợi ý Top-3 kịch bản KB01 (CN02)**
 
-**Hình 4.2 - Màn hình kết quả gợi ý Top-3 kịch bản KB01 (CN02)**
+Hình 4.2 là màn hình kết quả của kịch bản KB01 (CN02). Top-3 trả về khớp kỳ vọng: hạng 1 `GS-G01` ($S(g) = 0{,}938$), hạng 2 `GS-G10` ($0{,}745$) và hạng 3 `GS-T06` ($0{,}625$), kèm dòng thống kê “Kho: 16 hồ sơ → Hợp lệ: 5 ứng viên → Top-3: 3 gợi ý”. Trên thẻ của `GS-G01`, thanh xếp chồng chia bốn đoạn `0,25 / 0,25 / 0,19 / 0,25` (vì không chọn lịch rảnh) và hiện lý do “Học phí trong ngân sách, khu vực khớp, đánh giá 5,0/5”. Độ trễ ở góc giao diện là thời gian phản hồi thực tế đo trên trình duyệt lúc chụp màn hình.
 
-Trên Hình 4.2, dải KPI hiển thị đúng kỳ vọng “1. GS-G01 (0,938) 2. GS-G10 (0,745) 3. GS-T06 (0,625)”, kèm phễu “Kho: 16 hồ sơ → Hợp lệ: 5 ứng viên → Top-3: 3 gợi ý” và rail CN03 bên trái. Thẻ hạng 1 `GS-G01` hiển thị huy hiệu `#1`, “Khuyến nghị tốt nhất”, nhãn “Dữ liệu đối chứng”, điểm tổng hợp $S(g) = 0{,}938$ (93,8%) và thanh xếp chồng bốn phân đoạn `0,25 / 0,25 / 0,19 / 0,25` (riêng Lịch rảnh không áp dụng) cùng dòng “Lý do gợi ý: Học phí trong ngân sách, khu vực khớp, đánh giá 5,0/5”. Chip `651,5 ms` là độ trễ đo tại trình duyệt ở lần chụp ảnh, không phải số liệu benchmark có hệ thống để so sánh với Chương 5.
+![Hình 4.3: Điều chỉnh mức ưu tiên trực tiếp (CN03) làm đổi hạng](../figures/hinh-ui-03-cn03-dieu-chinh-uu-tien.png)
 
-![Hình 4.3 - Điều chỉnh mức ưu tiên trực tiếp (CN03) làm đổi hạng](../figures/hinh-ui-03-cn03-dieu-chinh-uu-tien.png)
+**Hình 4.3: Điều chỉnh mức ưu tiên trực tiếp (CN03) làm đổi hạng**
 
-**Hình 4.3 - Điều chỉnh mức ưu tiên trực tiếp (CN03) làm đổi hạng**
+Hình 4.3 minh họa thao tác chỉnh mức ưu tiên trực tiếp trên trang kết quả (CN03). Khi hạ Học phí và Khu vực xuống “Bỏ qua (w=0)”, đồng thời nâng Kinh nghiệm và Đánh giá lên “Cao (w=3)”, gia sư `GS-G10` (12 năm kinh nghiệm, đánh giá 4,9/5) nhảy lên hạng 1 với $0{,}990$ điểm. Trên thẻ `GS-G10` hiện huy hiệu tăng 1 bậc, còn thẻ tụt hạng phía dưới hiện huy hiệu giảm 1 bậc. Thanh xếp chồng lúc này chỉ còn hai phần là Kinh nghiệm ($0{,}50$) và Đánh giá ($0{,}49$).
 
-Hình 4.3 cho thấy trạng thái sau khi đưa Học phí và Khu vực về “Bỏ qua (w=0)”, đồng thời tăng Kinh nghiệm và Đánh giá lên “Cao (w=3)”. Gia sư `GS-G10` (130.000 VNĐ/giờ, 12 năm, 4,9/5) lên hạng 1 với điểm $0{,}990$ (99,0%) kèm huy hiệu “↑ Tăng 1 bậc sau khi điều chỉnh mức ưu tiên (CN03)”, trong khi thẻ tụt hạng phía dưới gắn huy hiệu “↓ Giảm 1 bậc sau khi điều chỉnh mức ưu tiên (CN03)”. Thanh xếp chồng lúc này chỉ còn hai phân đoạn Kinh nghiệm ($0{,}50$) và Đánh giá ($0{,}49$), ba tiêu chí còn lại hiển thị “Không áp dụng”.
+![Hình 4.4: Trạng thái biên tổng trọng số bằng 0 ($\sum w_i = 0$)](../figures/hinh-ui-04-zero-weight.png)
 
-![Hình 4.4 - Trạng thái biên tổng trọng số bằng 0 ($\sum w_i = 0$)](../figures/hinh-ui-04-zero-weight.png)
+**Hình 4.4: Trạng thái biên tổng trọng số bằng 0 ($\sum w_i = 0$)**
 
-**Hình 4.4 - Trạng thái biên tổng trọng số bằng 0 ($\sum w_i = 0$)**
-
-Hình 4.4 trình bày trạng thái biên khi đặt cả 5 tiêu chí về “Bỏ qua (w=0)”: chip kịch bản chuyển thành “KB01 (Tùy chỉnh: ∑w=0)”, phễu kết quả ghi “Top-3: 0 gợi ý” và rail CN03 hiện cảnh báo “Tổng trọng số ∑w_i = 0”. Giữa trang hiển thị thẻ trạng thái “Không thể xếp hạng do tổng trọng số bằng 0” kèm nút “Khôi phục trọng số mặc định (w = 2)”.
+Hình 4.4 cho thấy trạng thái biên khi người học đặt cả 5 tiêu chí về “Bỏ qua (w=0)” ($\sum w_i = 0$). Hệ thống chuyển sang trạng thái `zero_weight`, hiện thẻ báo “Không thể xếp hạng do tổng trọng số bằng 0” kèm danh sách các gia sư đã đạt điều kiện bắt buộc và nút khôi phục nhanh về trọng số mặc định ($w_i = 2$).
 
 ## 4.6. Tích hợp giao diện với API và kiểm tra luồng end-to-end
 
 ### 4.6.1. Luồng xử lý end-to-end
 
-Luồng xử lý chính từ giao diện đến API diễn ra theo bốn bước:
-1. Người học nhập nhu cầu tại `SearchPage` (CN01) hoặc nạp nhanh một kịch bản, kích hoạt `App.jsx` gọi `executeRecommendationRequest` và `buildRecommendationPayload` để chuẩn hóa dữ liệu gửi đi.
-2. `fetchRecommendations` gửi `POST /api/recommend` đến backend; kết quả (thuộc một trong ba trạng thái) được `ResultPage` (CN02) hiển thị kèm thanh xếp chồng và lý do gợi ý.
-3. Khi người học đổi mức ưu tiên trên rail CN03, `onUpdatePriorities` gọi lại API với `trackDeltaFrom` là kết quả trước đó, đối chiếu thứ hạng cũ và mới để tạo dữ liệu `rankDeltas` cho huy hiệu “Tăng/Giảm $n$ bậc”.
-4. Nút “Thử ∑w_i = 0” trên rail đưa cả 5 tiêu chí về `none` và kích hoạt hiển thị trạng thái `zero_weight` của backend (Hình 4.4).
+Luồng chạy xuyên suốt (*end-to-end*) giữa giao diện và API gồm bốn bước:
+1. Người học điền nhu cầu ở màn hình `SearchPage` (CN01) hoặc bấm nạp nhanh kịch bản mẫu; `App.jsx` gom dữ liệu thành JSON đúng chuẩn `SearchRequest`.
+2. Giao diện gửi `POST /api/recommend` lên backend, nhận kết quả (`success`, `no_match` hoặc `zero_weight`) rồi chuyển sang `ResultPage` (CN02) để vẽ thẻ gia sư và thanh xếp chồng.
+3. Khi người học kéo chỉnh mức ưu tiên ngay trên màn hình kết quả (CN03), giao diện tự gửi lại yêu cầu mới và so sánh thứ hạng trước – sau để gắn huy hiệu “Tăng/Giảm $n$ bậc”.
+4. Khi người học bấm nút thử tổng trọng số bằng $0$ ($\sum w_i = 0$), cả năm tiêu chí được đưa về `none` và màn hình hiện trạng thái `zero_weight` (Hình 4.4).
 
-Trong `frontend/src/services/api.js`, `API_BASE_URL` nhận lần lượt biến môi trường `VITE_API_URL` rồi `VITE_API_BASE_URL`; nếu không đặt cả hai, mô-đun chọn URL theo tên miền hiện hành rồi cắt dấu gạch chéo cuối. Khi hostname khác `localhost`/`127.0.0.1` (triển khai trên Vercel), URL mặc định là `https://tutor-recommender-api.onrender.com`; khi chạy cục bộ là `http://localhost:8000`. Kho mã nguồn không lưu tệp `.env*` của frontend, nên việc đặt biến `VITE_API_URL` trên bảng điều khiển Vercel theo `docs/deployment/deploy-vercel-render.md` (phần B3) nằm ngoài phạm vi kiểm chứng trực tiếp từ tệp mã nguồn; hành vi mặc định khi không có biến môi trường do cơ chế chọn URL theo tên miền trong `api.js` đảm nhiệm.
+Địa chỉ máy chủ API ưu tiên đọc từ biến môi trường `VITE_API_URL` (hoặc `VITE_API_BASE_URL`). Nếu không cấu hình, ứng dụng tự chọn theo tên miền đang chạy: dùng `http://localhost:8000` khi chạy dưới máy cá nhân (`localhost` / `127.0.0.1`) và dùng `https://tutor-recommender-api.onrender.com` khi mở bản triển khai trực tuyến.
 
 ### 4.6.2. Xử lý lỗi cơ bản ở cả hai phía
 
-Bảng 4.6 tổng hợp các tình huống lỗi đã gặp và nơi xử lý tương ứng ở cả hai phía.
+Bảng 4.6 liệt kê các lỗi thường gặp ở đầu vào hoặc kết nối cùng cách xử lý ở cả frontend lẫn backend.
 
-**Bảng 4.6 - Các tình huống lỗi và nơi xử lý**
+**Bảng 4.6: Các tình huống lỗi và nơi xử lý**
 
 | Tình huống | Nơi xử lý (tệp) | Hành vi quan sát được |
 |:---|:---|:---|
-| Thiếu môn học | `frontend/src/pages/SearchPage.jsx` (chặn trước khi gửi); `backend/app/schemas/search_request.py` (chặn lần hai) | Client hiển thị “Vui lòng chọn môn học mong muốn.”; nếu gọi API trực tiếp, backend trả về HTTP 422 với thông báo “Môn học (subject) không được để trống.” |
-| Ngân sách âm hoặc không nguyên | `SearchPage.jsx`; `api.js` (`parseInt`); `search_request.py` (`StrictInt`, `ge = 0`) | Client hiển thị “Ngân sách tối đa phải là một số không âm hợp lệ.”; yêu cầu vượt qua client (gọi trực tiếp) trả về HTTP 422 `greater_than_equal` |
-| Không có gia sư thỏa điều kiện bắt buộc | `backend/app/api/recommend.py`; `frontend/src/pages/ResultPage.jsx` | Backend trả về `no_match`; giao diện hiển thị thẻ “Không tìm thấy gia sư thỏa mãn điều kiện” kèm danh sách ứng viên qua lọc nhưng thiếu dữ liệu (nếu có) |
-| Tổng trọng số bằng 0 | `recommend.py`; `ResultPage.jsx`; `App.jsx` (tính `totalActiveWeight` hiển thị cảnh báo ở rail) | Backend trả về `zero_weight` kèm `unranked_candidates`; giao diện hiển thị thẻ cảnh báo và nút khôi phục trọng số mặc định (Hình 4.4) |
-| Backend không phản hồi | `frontend/src/services/api.js` | Bắt lỗi `fetch` và hiển thị “Không thể kết nối tới máy chủ gợi ý gia sư. Vui lòng kiểm tra dịch vụ Backend đang chạy.” trên cả hai màn hình |
-| Phản hồi HTTP lỗi / không phải JSON | `frontend/src/services/api.js` | Hiển thị “Phản hồi từ máy chủ không hợp lệ (HTTP `<mã trạng thái>`).”; khi backend trả về 422, dùng chuỗi `detail` nếu là chuỗi, ngược lại hiển thị “Dữ liệu đầu vào không hợp lệ (HTTP 422). Vui lòng kiểm tra lại các trường đã nhập.” |
-| Đổi mức ưu tiên liên tiếp (CN03) | `frontend/src/App.jsx` (`requestSeqRef`) | Mỗi yêu cầu nhận một số thứ tự; phản hồi của yêu cầu không còn là yêu cầu mới nhất bị bỏ qua, không ghi đè kết quả hiển thị |
+| Thiếu môn học | `frontend/src/pages/SearchPage.jsx` (kiểm tra trước khi gửi); `backend/app/schemas/search_request.py` (xác thực tầng API) | Giao diện nhắc “Vui lòng chọn môn học mong muốn.”; nếu gửi yêu cầu trực tiếp tới API, backend trả về mã HTTP 422 với thông báo “Môn học (subject) không được để trống.” |
+| Ngân sách âm hoặc không nguyên | `SearchPage.jsx`; `api.js`; `search_request.py` (`StrictInt`, `ge = 0`) | Giao diện nhắc “Ngân sách tối đa phải là một số không âm hợp lệ.”; nếu gọi API trực tiếp với số âm, backend trả về mã HTTP 422 (`greater_than_equal`) |
+| Không có gia sư thỏa điều kiện bắt buộc | `backend/app/api/recommend.py`; `frontend/src/pages/ResultPage.jsx` | Backend trả về trạng thái `no_match`; giao diện hiển thị thông báo “Không tìm thấy gia sư thỏa mãn điều kiện” kèm danh sách ứng viên thiếu dữ liệu (nếu có) |
+| Tổng trọng số bằng 0 | `recommend.py`; `ResultPage.jsx`; `App.jsx` | Backend trả về trạng thái `zero_weight` kèm `unranked_candidates`; giao diện hiển thị thẻ cảnh báo và nút khôi phục trọng số mặc định (Hình 4.4) |
+| Máy chủ API không phản hồi | `frontend/src/services/api.js` | Bắt ngoại lệ kết nối mạng và hiển thị thông báo “Không thể kết nối tới máy chủ gợi ý gia sư. Vui lòng kiểm tra dịch vụ Backend đang chạy.” |
+| Phản hồi HTTP lỗi / sai định dạng | `frontend/src/services/api.js` | Trích xuất thông điệp từ trường `detail` khi nhận mã lỗi HTTP 422 hoặc hiển thị thông báo lỗi dữ liệu đầu vào tương ứng |
+| Thay đổi mức ưu tiên liên tiếp (CN03) | `frontend/src/App.jsx` | Gắn số thứ tự tăng dần cho mỗi lượt gọi API; chỉ cập nhật giao diện theo phản hồi của yêu cầu mới nhất để tránh hiện tượng phản hồi cũ ghi đè kết quả mới |
 
-*Nguồn: `frontend/src/App.jsx` (`executeRecommendationRequest`, `requestSeqRef` tại dòng 52, kiểm tra `seq !== requestSeqRef.current` tại dòng 77, 104, 113), `frontend/src/pages/SearchPage.jsx` (`handleSubmit`, dòng 231, 241, 248), `frontend/src/pages/ResultPage.jsx` (dòng 216, 442, 459), `frontend/src/services/api.js` (`fetchRecommendations`, dòng 164, 172, 179), `backend/app/schemas/search_request.py` (dòng 90), `backend/app/api/recommend.py`.*
-
-Luồng end-to-end được kiểm tra theo hai lớp: kiểm thử tự động phía backend (41 bài test API và ca biên trong `backend/tests/api/`, gồm cả luồng đổi ưu tiên CN03) và kiểm tra thủ công trên giao diện khi demo. Phía frontend chưa có bộ kiểm thử tự động — `frontend/package.json` chỉ định nghĩa bốn script `dev`, `build`, `lint`, `preview`.
+Nhóm em kiểm tra luồng tích hợp qua hai cách: chạy 41 test tự động cho tầng API và ca biên (gồm cả kịch bản đổi trọng số liên tiếp của CN03), rồi bấm thử trực tiếp toàn bộ luồng trên trình duyệt.
 
 ### 4.6.3. Triển khai công khai
 
-Hệ thống được triển khai lên nền tảng đám mây theo `docs/deployment/deploy-vercel-render.md`. Frontend (thư mục `frontend`, build `npm run build`, định tuyến SPA qua `vercel.json`) chạy trên Vercel tại `https://tutor-recommender.vercel.app`. Backend chạy trên Render Web Service (cấu hình trong `render.yaml`: runtime Python 3.12.7, `rootDir: backend`, lệnh khởi chạy `uvicorn app.main:app --host 0.0.0.0 --port $PORT`, kiểm tra sức khỏe tại `/health`) tại `https://tutor-recommender-api.onrender.com`, kèm Swagger UI tại `/docs`.
+Hệ thống được đưa lên mạng qua hai dịch vụ đám mây riêng. Phần giao diện frontend đóng gói bằng `npm run build` (kèm định tuyến SPA trong `vercel.json`) chạy trên Vercel tại `https://tutor-recommender.vercel.app`. Phần backend chạy trên Render Web Service với Python 3.12.7 (`uvicorn app.main:app --host 0.0.0.0 --port $PORT`) tại `https://tutor-recommender-api.onrender.com`, kèm trang Swagger UI ở `/docs` và `/health`.
 
-Tài liệu triển khai mô tả hiện tượng khởi động nguội (*cold start*) khoảng 30–40 giây trên gói miễn phí của Render sau thời gian không có lưu lượng; đây là thông số kỹ thuật từ tài liệu triển khai và chưa được đo đạc độc lập. Độ trễ mạng toàn trình giữa trình duyệt và hai dịch vụ đám mây cũng chưa được đo đạc; kết quả kiểm thử định lượng của hệ thống được trình bày tại Chương 5.
-
----
+Vì backend dùng gói miễn phí của Render, máy chủ sẽ tự nghỉ sau một lúc không có người truy cập. Khi có người mở lại sau thời gian nghỉ, lượt gọi đầu tiên cần khoảng 30–40 giây để máy chủ khởi động lại (*cold start*).
 
 ## 4.7. Giới hạn của việc hiện thực
 
-- **Cơ sở dữ liệu chưa hiện thực:** lưu trữ chỉ dùng JSON/CSV; phương án SQLite xếp mức ưu tiên thấp (*Could Have*), chưa đưa vào sprint nào.
-- **CI chỉ bao phủ backend:** frontend chưa có job trong GitHub Actions và chưa có bộ kiểm thử tự động riêng (chỉ chạy `oxlint` và `vite build` từ terminal).
+- **Lưu trữ dữ liệu:** hệ thống đang đọc dữ liệu từ tệp JSON và CSV, chưa dùng cơ sở dữ liệu quan hệ như SQLite vì phần này nằm ở nhóm ưu tiên thấp (*Could Have*).
+- **Kiểm thử tự động trên CI:** GitHub Actions hiện chạy kiểm tra tự động cho backend (`ruff` và `pytest`). Với frontend, nhóm em chạy kiểm tra tĩnh (`oxlint`) và đóng gói (`vite build`) bằng lệnh tay, chưa có bộ test giao diện tự động.
 
-Các giới hạn còn lại được trình bày tại Mục 5.3 (Chương 5) và Mục 6.2 (Chương 6) để tránh lặp, bao gồm quy mô bộ dữ liệu 16 hồ sơ, tham số ấn định thủ công, phạm vi hiện thực Phương án 1 cho “Mục tiêu học tập”, cùng việc chưa đo độ trễ mạng toàn trình.
+Các hạn chế về dữ liệu mẫu 16 hồ sơ, bộ tham số đặt tay hay độ trễ mạng qua Internet được nhóm em phân tích tiếp ở Mục 5.3 và Mục 6.2.
