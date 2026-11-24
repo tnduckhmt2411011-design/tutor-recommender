@@ -2,7 +2,7 @@
 
 ## 4.1. Chuẩn bị môi trường phát triển
 
-Nhóm em xây dựng hệ thống bám sát thiết kế ở Chương 3. Mã nguồn chia làm hai phần tách biệt: `backend/` chứa dịch vụ API và lõi tính điểm, còn `frontend/` chứa giao diện người dùng. Dữ liệu gia sư mẫu đặt chung trong thư mục `data/processed/`. Để máy nào kéo mã nguồn về cũng chạy giống nhau, nhóm em khóa rõ phiên bản từng thư viện trong `requirements.txt` (Python 3.12) và `package-lock.json` (JavaScript).
+Nhóm em xây dựng hệ thống bám sát thiết kế ở Chương 3. Mã nguồn chia làm hai phần tách biệt: `backend/` chứa dịch vụ API và lõi tính điểm, còn `frontend/` chứa giao diện người dùng. Dữ liệu gia sư mẫu đặt chung trong thư mục `data/processed/`. Để máy nào kéo mã nguồn về cũng chạy giống nhau, nhóm em khóa rõ phiên bản từng thư viện trong `requirements.txt`, `requirements-dev.txt` (Python 3.12) và `package-lock.json` (JavaScript).
 
 Bảng 4.1 tổng hợp các thành phần công nghệ và phiên bản sử dụng trong hệ thống.
 
@@ -17,7 +17,7 @@ Bảng 4.1 tổng hợp các thành phần công nghệ và phiên bản sử d�
 | Nền tảng frontend | Node.js v24.19.0, npm 11.17.0 | Môi trường phát triển và đóng gói giao diện |
 | Thư viện giao diện | React 19.3.1, React DOM 19.3.1 | Xây dựng ứng dụng web một trang (SPA) gồm hai màn hình |
 | Công cụ đóng gói | Vite 8.3.5, `@vitejs/plugin-react` 6.1.2 | Biên dịch và đóng gói tài sản tĩnh (`dist/`) |
-| Hiệu ứng và phụ trợ giao diện | motion 14.9.0, `boring-avatars` 2.0.4 | Hiệu ứng chuyển cảnh, thanh xếp chồng, huy hiệu biến động hạng và gói phụ trợ ảnh đại diện |
+| Hiệu ứng và phụ trợ giao diện | motion 14.9.0 (kèm `boring-avatars` 2.0.4 khai báo dự phòng trong `package.json`) | Hiệu ứng chuyển cảnh, thanh xếp chồng và huy hiệu biến động hạng (ảnh đại diện thực tế dùng tệp `.webp` tĩnh và khung chữ viết tắt CSS) |
 | Lưu trữ dữ liệu | Tệp `data/processed/tutors.json` và `tutors.csv` | Lưu trữ 16 hồ sơ gia sư chuẩn hóa (Mục 4.2) |
 
 Để kiểm tra chất lượng mã nguồn, phía backend dùng `pytest` 9.2.0 và `pytest-cov` 7.1.0 để chạy test tự động và đo độ bao phủ. Giao tiếp API được thử bằng `httpx` 0.28.1 qua `TestClient`, còn định dạng mã Python được rà bằng `ruff` 0.17.3. Phía frontend dùng `oxlint` 1.90.0 (`npm run lint`) để kiểm tra tĩnh mã React trước khi đóng gói bằng `npm run build`.
@@ -194,7 +194,7 @@ Khi bật máy chủ bằng lệnh `python -m uvicorn app.main:app` (Python 3.12
 ```
 
 Hai vị trí tiếp theo trong mảng `results` là `GS-G10` (`total_score: 0.745`, `notes: []`) và `GS-T06` (`total_score: 0.625`, `notes: ["chưa có đánh giá"]`). Các tình huống biên khi gọi qua HTTP đều trả về đúng như Bảng 4.4:
-- Bỏ trống `subject`: API trả về mã HTTP 422 với lỗi thiếu trường bắt buộc tại `["body", "subject"]`.
+- Không gửi trường `subject`: API trả về mã HTTP 422 với lỗi thiếu trường bắt buộc tại `["body", "subject"]` (trường hợp gửi chuỗi rỗng hoặc toàn khoảng trắng cũng bị chặn với mã HTTP 422).
 - Truyền `max_budget_vnd = -5`: API trả về mã HTTP 422 do vi phạm ràng buộc số nguyên không âm (`greater_than_equal`).
 - Tìm môn Tiếng Trung: API trả về trạng thái `no_match` (HTTP 200).
 - Đặt cả 5 mức ưu tiên về `none`: API trả về trạng thái `zero_weight` (HTTP 200) kèm 5 mã gia sư qua lọc trong mảng `unranked_candidates`.
@@ -233,7 +233,7 @@ Hình 4.1 là màn hình nhập nhu cầu (CN01) khi nhấn nạp nhanh kịch b
 
 **Hình 4.2: Màn hình kết quả gợi ý Top-3 kịch bản KB01 (CN02)**
 
-Hình 4.2 là màn hình kết quả của kịch bản KB01 (CN02). Top-3 trả về khớp kỳ vọng: hạng 1 `GS-G01` ($S(g) = 0{,}938$), hạng 2 `GS-G10` ($0{,}745$) và hạng 3 `GS-T06` ($0{,}625$), kèm dòng thống kê “Kho: 16 hồ sơ → Hợp lệ: 5 ứng viên → Top-3: 3 gợi ý”. Trên thẻ của `GS-G01`, thanh xếp chồng chia bốn đoạn `0,25 / 0,25 / 0,19 / 0,25` (vì không chọn lịch rảnh) và hiện lý do “Học phí trong ngân sách, khu vực khớp, đánh giá 5,0/5”. Độ trễ ở góc giao diện là thời gian phản hồi thực tế đo trên trình duyệt lúc chụp màn hình.
+Hình 4.2 là màn hình kết quả của kịch bản KB01 (CN02). Top-3 trả về khớp kỳ vọng: hạng 1 `GS-G01` ($S(g) = 0{,}938$), hạng 2 `GS-G10` ($0{,}745$) và hạng 3 `GS-T06` ($0{,}625$), kèm dòng thống kê “Kho: 16 hồ sơ → Hợp lệ: 5 ứng viên → Top-3: 3 gợi ý”. Trên thẻ của `GS-G01`, thanh xếp chồng chia bốn đoạn `0,25 / 0,25 / 0,19 / 0,25` (vì không chọn lịch rảnh) và hiện lý do “Học phí trong ngân sách, khu vực khớp, đánh giá 5,0/5”. Con số thời gian ở góc giao diện lúc mới chuyển từ màn hình tìm kiếm sang kết quả đã bao gồm khoảng dừng 650 ms dành cho hiệu ứng chuyển trang của giao diện (`App.jsx`), còn các lượt bấm đổi mức ưu tiên tiếp theo (Hình 4.3) đo trực tiếp thời gian gọi API.
 
 ![Hình 4.3: Điều chỉnh mức ưu tiên trực tiếp (CN03) làm đổi hạng](../figures/hinh-ui-03-cn03-dieu-chinh-uu-tien.png)
 
@@ -245,7 +245,7 @@ Hình 4.3 minh họa thao tác chỉnh mức ưu tiên trực tiếp trên trang
 
 **Hình 4.4: Trạng thái biên tổng trọng số bằng 0 ($\sum w_i = 0$)**
 
-Hình 4.4 cho thấy trạng thái biên khi người học đặt cả 5 tiêu chí về “Bỏ qua (w=0)” ($\sum w_i = 0$). Hệ thống chuyển sang trạng thái `zero_weight`, hiện thẻ báo “Không thể xếp hạng do tổng trọng số bằng 0” kèm danh sách các gia sư đã đạt điều kiện bắt buộc và nút khôi phục nhanh về trọng số mặc định ($w_i = 2$).
+Hình 4.4 cho thấy trạng thái biên khi người học đặt cả 5 tiêu chí về “Bỏ qua (w=0)” ($\sum w_i = 0$). Hệ thống chuyển sang trạng thái `zero_weight` (API trả danh sách ứng viên đạt lọc bắt buộc trong trường JSON `unranked_candidates`), còn giao diện hiển thị thống kê “Hợp lệ: 5 ứng viên” ở thanh trên cùng thẻ cảnh báo “Không thể xếp hạng do tổng trọng số bằng 0” và nút khôi phục nhanh về trọng số mặc định ($w_i = 2$).
 
 ## 4.6. Tích hợp giao diện với API và kiểm tra luồng end-to-end
 
@@ -254,7 +254,7 @@ Hình 4.4 cho thấy trạng thái biên khi người học đặt cả 5 tiêu 
 Luồng chạy xuyên suốt (*end-to-end*) giữa giao diện và API gồm bốn bước:
 1. Người học điền nhu cầu ở màn hình `SearchPage` (CN01) hoặc bấm nạp nhanh kịch bản mẫu; `App.jsx` gom dữ liệu thành JSON đúng chuẩn `SearchRequest`.
 2. Giao diện gửi `POST /api/recommend` lên backend, nhận kết quả (`success`, `no_match` hoặc `zero_weight`) rồi chuyển sang `ResultPage` (CN02) để vẽ thẻ gia sư và thanh xếp chồng.
-3. Khi người học kéo chỉnh mức ưu tiên ngay trên màn hình kết quả (CN03), giao diện tự gửi lại yêu cầu mới và so sánh thứ hạng trước – sau để gắn huy hiệu “Tăng/Giảm $n$ bậc”.
+3. Khi người học bấm chọn lại mức ưu tiên ngay trên màn hình kết quả (CN03), giao diện tự gửi lại yêu cầu mới và so sánh thứ hạng trước – sau để gắn huy hiệu “Tăng/Giảm $n$ bậc”.
 4. Khi người học bấm nút thử tổng trọng số bằng $0$ ($\sum w_i = 0$), cả năm tiêu chí được đưa về `none` và màn hình hiện trạng thái `zero_weight` (Hình 4.4).
 
 Địa chỉ máy chủ API ưu tiên đọc từ biến môi trường `VITE_API_URL` (hoặc `VITE_API_BASE_URL`). Nếu không cấu hình, ứng dụng tự chọn theo tên miền đang chạy: dùng `http://localhost:8000` khi chạy dưới máy cá nhân (`localhost` / `127.0.0.1`) và dùng `https://tutor-recommender-api.onrender.com` khi mở bản triển khai trực tuyến.
@@ -267,12 +267,12 @@ Bảng 4.6 liệt kê các lỗi thường gặp ở đầu vào hoặc kết n�
 
 | Tình huống | Nơi xử lý (tệp) | Hành vi quan sát được |
 |:---|:---|:---|
-| Thiếu môn học | `frontend/src/pages/SearchPage.jsx` (kiểm tra trước khi gửi); `backend/app/schemas/search_request.py` (xác thực tầng API) | Giao diện nhắc “Vui lòng chọn môn học mong muốn.”; nếu gửi yêu cầu trực tiếp tới API, backend trả về mã HTTP 422 với thông báo “Môn học (subject) không được để trống.” |
+| Thiếu hoặc bỏ trống môn học | `frontend/src/pages/SearchPage.jsx` (kiểm tra trước khi gửi); `backend/app/schemas/search_request.py` (xác thực tầng API) | Giao diện nhắc “Vui lòng chọn môn học mong muốn.”; nếu gọi thẳng API mà thiếu khóa, gửi chuỗi rỗng hoặc toàn khoảng trắng, backend trả về mã HTTP 422 (với chuỗi toàn khoảng trắng là thông báo “Môn học (subject) không được để trống.”) |
 | Ngân sách âm hoặc không nguyên | `SearchPage.jsx`; `api.js`; `search_request.py` (`StrictInt`, `ge = 0`) | Giao diện nhắc “Ngân sách tối đa phải là một số không âm hợp lệ.”; nếu gọi API trực tiếp với số âm, backend trả về mã HTTP 422 (`greater_than_equal`) |
 | Không có gia sư thỏa điều kiện bắt buộc | `backend/app/api/recommend.py`; `frontend/src/pages/ResultPage.jsx` | Backend trả về trạng thái `no_match`; giao diện hiển thị thông báo “Không tìm thấy gia sư thỏa mãn điều kiện” kèm danh sách ứng viên thiếu dữ liệu (nếu có) |
-| Tổng trọng số bằng 0 | `recommend.py`; `ResultPage.jsx`; `App.jsx` | Backend trả về trạng thái `zero_weight` kèm `unranked_candidates`; giao diện hiển thị thẻ cảnh báo và nút khôi phục trọng số mặc định (Hình 4.4) |
+| Tổng trọng số bằng 0 | `recommend.py`; `ResultPage.jsx`; `App.jsx` | Backend trả về trạng thái `zero_weight` kèm mảng JSON `unranked_candidates`; giao diện hiện số ứng viên hợp lệ trên thanh thống kê cùng thẻ cảnh báo và nút khôi phục trọng số mặc định (Hình 4.4) |
 | Máy chủ API không phản hồi | `frontend/src/services/api.js` | Bắt ngoại lệ kết nối mạng và hiển thị thông báo “Không thể kết nối tới máy chủ gợi ý gia sư. Vui lòng kiểm tra dịch vụ Backend đang chạy.” |
-| Phản hồi HTTP lỗi / sai định dạng | `frontend/src/services/api.js` | Trích xuất thông điệp từ trường `detail` khi nhận mã lỗi HTTP 422 hoặc hiển thị thông báo lỗi dữ liệu đầu vào tương ứng |
+| Phản hồi HTTP lỗi / sai định dạng | `frontend/src/services/api.js` | Hiển thị thông báo lỗi dữ liệu đầu vào mặc định khi nhận mã lỗi HTTP 422 (hoặc trích xuất thông điệp lỗi dạng chuỗi từ trường `detail` đối với các lỗi HTTP khác) |
 | Thay đổi mức ưu tiên liên tiếp (CN03) | `frontend/src/App.jsx` | Gắn số thứ tự tăng dần cho mỗi lượt gọi API; chỉ cập nhật giao diện theo phản hồi của yêu cầu mới nhất để tránh hiện tượng phản hồi cũ ghi đè kết quả mới |
 
 Nhóm em kiểm tra luồng tích hợp qua hai cách: chạy 41 test tự động cho tầng API và ca biên (gồm cả kịch bản đổi trọng số liên tiếp của CN03), rồi bấm thử trực tiếp toàn bộ luồng trên trình duyệt.

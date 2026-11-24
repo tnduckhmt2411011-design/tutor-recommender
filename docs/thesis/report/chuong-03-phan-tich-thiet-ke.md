@@ -124,8 +124,9 @@ Quy trình lọc và xếp hạng gia sư chạy qua bốn bước tuần tự:
 - Tiêu chí đặt mức “Không quan tâm” ($w_i = 0$): không tính vào tổng điểm.
 - Tổng trọng số của các tiêu chí đang áp dụng bằng 0 ($\sum w_i = 0$): hệ thống không chia cho 0, mà trả về danh sách các gia sư đã qua lọc bắt buộc. Kèm theo đó là thông báo nhắc người học bật lại ít nhất một tiêu chí ưu tiên.
 - Hồ sơ gia sư chưa có điểm đánh giá: nhận điểm trung tính $0{,}5$ kèm ghi chú “chưa có đánh giá” trên kết quả trả về.
+- Hồ sơ đủ ngưỡng dữ liệu ở Bảng 3.7 nhưng để trống học phí hoặc số năm kinh nghiệm: tiêu chí bị thiếu dữ liệu nhận điểm $s_i = 0$ (trọng số $w_i$ vẫn giữ ở mẫu số).
 
-**Điều kiện đủ dữ liệu để xếp hạng.** Sau bước lọc bắt buộc và trước khi chấm điểm, hệ thống đếm xem trong $n$ tiêu chí ưu tiên mà người học đang dùng, hồ sơ gia sư có dữ liệu cho bao nhiêu tiêu chí. Tiêu chí Đánh giá không tính vào $n$ vì gia sư chưa có đánh giá vẫn nhận sẵn điểm trung tính $0{,}5$. Nếu số tiêu chí có dữ liệu ít hơn ngưỡng ở Bảng 3.7, hồ sơ đó được tách sang danh sách thiếu dữ liệu và không đưa vào bảng xếp hạng.
+**Điều kiện đủ dữ liệu để xếp hạng.** Sau bước lọc bắt buộc và trước khi chấm điểm, hệ thống đếm trong $n$ tiêu chí ưu tiên có hiệu lực ($w_i > 0$, đủ đầu vào truy vấn và không tính Đánh giá) xem hồ sơ gia sư có dữ liệu cho bao nhiêu tiêu chí. Tiêu chí Đánh giá không tính vào $n$ vì gia sư chưa có đánh giá vẫn nhận sẵn điểm trung tính $0{,}5$. Nếu số tiêu chí có dữ liệu ít hơn ngưỡng ở Bảng 3.7, hồ sơ đó được tách sang danh sách thiếu dữ liệu và không đưa vào bảng xếp hạng.
 
 **Bảng 3.7: Ngưỡng dữ liệu tối thiểu để được xếp hạng**
 
@@ -137,7 +138,7 @@ Quy trình lọc và xếp hạng gia sư chạy qua bốn bước tuần tự:
 | 4 | 3 |
 | 5 | 4 |
 
-*(Tiêu chí Đánh giá luôn xác định nhờ giá trị trung tính $0{,}5$ nên không tính vào $n$; do đó với năm tiêu chí hiện tại, $n$ nhận giá trị từ $0$ đến $4$, còn mốc $n = 5$ được dự phòng khi mở rộng thêm tiêu chí mới. Khi $n = 0$, ngưỡng tối thiểu bằng $0$ và không loại hồ sơ nào vì thiếu dữ liệu.)*
+*(Tiêu chí Đánh giá luôn xác định nhờ giá trị trung tính $0{,}5$ nên không tính vào $n$, và các tiêu chí đặt $w_i = 0$ hoặc bỏ trống đầu vào cũng không tính vào $n$; do đó với năm tiêu chí hiện tại, $n$ nhận giá trị từ $0$ đến $4$, còn mốc $n = 5$ được dự phòng khi mở rộng thêm tiêu chí mới. Khi $n = 0$, ngưỡng tối thiểu bằng $0$ và không loại hồ sơ nào vì thiếu dữ liệu.)*
 
 **Ví dụ tính điểm đầy đủ.** Giả sử người học tìm gia sư môn Toán, học Trực tiếp tại KV1, ngân sách $200.000$ VNĐ/giờ, khung giờ $L = \{\text{T2-tối}, \text{T4-tối}, \text{T7-sáng}\}$ và để mọi mức ưu tiên ở “Trung bình” ($w_i = 2$). Xét một gia sư dạy Toán, hình thức “Cả hai”, nhận dạy tại KV1, học phí $230.000$ VNĐ/giờ, $4$ năm kinh nghiệm, đánh giá $4{,}5/5$ và trùng $2$ trên $3$ khung giờ. Gia sư này qua bước lọc bắt buộc và đạt năm điểm thành phần: học phí $0{,}70$, khu vực $1{,}00$, kinh nghiệm $0{,}50$, đánh giá $0{,}90$, lịch rảnh $2/3 \approx 0{,}67$. Điểm tổng hợp là $S = (0{,}70 + 1{,}00 + 0{,}50 + 0{,}90 + 0{,}67) \div 5 \approx 0{,}75$. Nếu giữ nguyên phân số $2/3$ không làm tròn giữa chừng, $S = 113/150 \approx 0{,}753$, vẫn cho cùng thứ tự xếp hạng.
 
@@ -166,7 +167,7 @@ Hình 3.1 trình bày đầy đủ tám bước trên theo quy chuẩn lưu đ�
 Nhóm em chia hệ thống thành ba lớp tách biệt nhau (Hình 3.2):
 - **Lớp giao diện (React):** nhận nhu cầu từ người học, hiển thị danh sách xếp hạng và biểu đồ đóng góp điểm.
 - **Lớp dịch vụ API (FastAPI):** kiểm tra dữ liệu đầu vào, đọc danh sách gia sư qua `TutorRepository` và gọi sang module tính điểm.
-- **Lớp tính điểm và xếp hạng (`scoring`):** chạy thuật toán bốn bước và trả kết quả về lại tầng API.
+- **Lớp tính điểm và xếp hạng (`scoring`):** thực thi các bước lọc bắt buộc, kiểm tra ngưỡng dữ liệu, chấm điểm và xếp hạng rồi trả kết quả về lại tầng API.
 
 ![Hình 3.2: Kiến trúc hệ thống ba lớp](../figures/hinh-3-2-kien-truc-ba-lop.png)
 

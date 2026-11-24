@@ -21,7 +21,12 @@ from build_docx import (
     split_appendix,
     split_front_matter,
 )
-from verify_docx import verify_docx
+from verify_docx import (
+    _load_style_bold_map,
+    _load_style_id_map,
+    _toc_run_bold_flags,
+    verify_docx,
+)
 
 
 def test_order_contains_all_expected_report_files() -> None:
@@ -199,6 +204,7 @@ def test_verify_docx_passes_on_generated_report() -> None:
     assert stats["media_count"] == 11
     assert stats["body_tables"] == 31
     assert stats["body_figures"] == 9
+    assert int(stats["toc_level1_count"]) == 16
     assert int(stats["data_tables"]) == 33
     assert int(stats["omath_count"]) > 100
     assert float(stats["word_diff_pct"]) < 3.0
@@ -314,3 +320,74 @@ def test_chapter3_drawio_sources_and_rendered_pngs_are_valid() -> None:
     y_zero = _msg_y(h31_root, "zero_weight")
     y_thresh = _msg_y(h31_root, "Bảng 3.7")
     assert y_zero < y_thresh
+
+
+def test_generated_report_bolds_only_level1_toc_entries() -> None:
+    repo_root = Path(__file__).resolve().parents[2]
+    out_docx = repo_root.parent / "BAO_CAO_DO_AN_KHMT1_HOAN_CHINH.docx"
+    assert out_docx.exists(), "Cần chạy build_docx.py trước khi kiểm định tệp đích."
+
+    w_ns = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
+    with zipfile.ZipFile(out_docx) as zf:
+        doc_xml = ET.fromstring(zf.read("word/document.xml"))
+        styles_xml = ET.fromstring(zf.read("word/styles.xml"))
+
+    style_id_to_canon = _load_style_id_map(styles_xml, w_ns)
+    style_id_to_bold = _load_style_bold_map(styles_xml, w_ns)
+
+    body_el = doc_xml.find(f"{w_ns}body")
+    assert body_el is not None
+
+    front_section = ""
+    bold_lvl1_titles: list[str] = []
+    expected_lvl1_titles = [
+        "LỜI CẢM ƠN",
+        "LỜI CAM ĐOAN",
+        "TÓM TẮT",
+        "ABSTRACT",
+        "MỤC LỤC",
+        "DANH MỤC KÝ HIỆU VÀ CHỮ VIẾT TẮT",
+        "DANH MỤC BẢNG BIỂU",
+        "DANH MỤC HÌNH ẢNH",
+        "CHƯƠNG 1. TỔNG QUAN VỀ ĐỀ TÀI",
+        "CHƯƠNG 2. CƠ SỞ LÝ THUYẾT VÀ CÔNG NGHỆ",
+        "CHƯƠNG 3. PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG",
+        "CHƯƠNG 4. XÂY DỰNG HỆ THỐNG",
+        "CHƯƠNG 5. KIỂM THỬ VÀ ĐÁNH GIÁ",
+        "CHƯƠNG 6. KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN",
+        "TÀI LIỆU THAM KHẢO",
+        "PHỤ LỤC",
+    ]
+
+    for p_el in body_el.findall(f"{w_ns}p"):
+        p_style_el = p_el.find(f"{w_ns}pPr/{w_ns}pStyle")
+        sid = p_style_el.attrib.get(f"{w_ns}val", "") if p_style_el is not None else ""
+        canon = style_id_to_canon.get(sid, sid.lower())
+        txt = "".join(t.text for t in p_el.iter(f"{w_ns}t") if t.text).strip()
+        if canon in ("heading 1", "heading1") and txt.startswith("CHƯƠNG 1."):
+            break
+        if canon in ("front title", "fronttitle") and txt:
+            front_section = txt
+            continue
+        if canon not in ("toc 1", "toc1", "toc 2", "toc2", "toc 3", "toc3") or not txt:
+            continue
+
+        flags = _toc_run_bold_flags(p_el, sid, style_id_to_bold, w_ns)
+        assert flags, f"Dòng mục lục thiếu run hiển thị trong '{front_section}'."
+        if front_section == "MỤC LỤC" and canon in ("toc 1", "toc1"):
+            assert all(flags), f"Mục cấp 1 chưa được in đậm: {txt}"
+            title_only = "".join(
+                t.text
+                for r_el in p_el.iter(f"{w_ns}r")
+                if r_el.find(f"{w_ns}instrText") is None
+                for t in r_el.findall(f"{w_ns}t")
+                if t.text
+            )
+            for exp in expected_lvl1_titles:
+                if exp in title_only:
+                    bold_lvl1_titles.append(exp)
+                    break
+        else:
+            assert not any(flags), f"Dòng không phải cấp 1 trong '{front_section}' bị in đậm: {txt}"
+
+    assert bold_lvl1_titles == expected_lvl1_titles

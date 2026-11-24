@@ -42,14 +42,14 @@
 > **HỆ THỐNG KHUYẾN NGHỊ GIA SƯ**
 > **DỰA TRÊN PHƯƠNG PHÁP CONTENT-BASE FILTERING**
 
-> **GVHD: TS. Lê Anh Nhã Uyên**
+> **GVHD:** TS. Lê Anh Nhã Uyên
 >
 > **Sinh viên thực hiện:**
 > Lê Thị Bích Chuyền — KHMT2411037
 > Trần Nguyễn Đức — KHMT2411011
 > Cao Khánh Ngọc (Nhóm trưởng) — KHMT2411025
 >
-> **LỚP:** Khoa học máy tính 2024
+> **Lớp:** Khoa học máy tính 2024
 
 > Cần Thơ, tháng 11 năm 2026
 
@@ -172,14 +172,14 @@ Mục lục được tạo tự động trong `.docx` từ kiểu `Front Title` 
 | :--- | :--- | :--- |
 | API | Application Programming Interface — giao diện lập trình ứng dụng | Mục 1.4 |
 | ASGI | Asynchronous Server Gateway Interface — chuẩn máy chủ bất đồng bộ cho Python | Bảng 4.1 (Mục 4.1) |
-| CI | Continuous Integration — tích hợp và kiểm thử tự động liên tục | Mục 4.1 |
+| CI | Continuous Integration — tích hợp và kiểm thử tự động liên tục | Mục 4.7 |
 | CN01–CN03 | Ba chức năng chính: nhập nhu cầu, xem gợi ý, điều chỉnh mức ưu tiên | Bảng 3.1 (Mục 3.2) |
-| CORS | Cross-Origin Resource Sharing — cơ chế chia sẻ tài nguyên khác nguồn | Mục 4.4.1 |
+| CORS | Cross-Origin Resource Sharing — cơ chế chia sẻ tài nguyên khác nguồn (trong `CORSMiddleware`) | Hình 3.2 (Mục 3.7.2); Mục 4.4.1 |
 | CSV | Comma-Separated Values — định dạng tệp văn bản phân tách bằng dấu phẩy | Mục 1.5 |
 | GS | Tiền tố mã hồ sơ gia sư trong bộ dữ liệu mẫu (như `GS-T06`, `GS-G01`, `GS006`) | Bảng 3.3 (Mục 3.5) |
 | GVHD | Giảng viên hướng dẫn | Trang bìa |
-| HTTP | Hypertext Transfer Protocol — giao thức truyền tải siêu văn bản | Mục 4.1 |
-| IEEE | Institute of Electrical and Electronics Engineers — Viện Kỹ sư Điện và Điện tử (chuẩn trích dẫn tài liệu và chuẩn số thực dấu phẩy động IEEE 754) | Lời cam đoan; Mục 5.2.1 |
+| HTTP | Hypertext Transfer Protocol — giao thức truyền tải siêu văn bản | Mục 3.7.1 |
+| IEEE | Institute of Electrical and Electronics Engineers — Viện Kỹ sư Điện và Điện tử (chuẩn trích dẫn tài liệu và chuẩn số thực dấu phẩy động IEEE 754) | Lời cam đoan; Mục 4.3.1 |
 | JSON | JavaScript Object Notation — định dạng trao đổi dữ liệu có cấu trúc | Mục 1.5 |
 | KB01–KB14 | Mã định danh 14 kịch bản kiểm thử thực nghiệm cố định | Mục 4.2.3 |
 | SPA | Single Page Application — ứng dụng web một trang | Bảng 4.1 (Mục 4.1) |
@@ -198,7 +198,7 @@ Mục lục được tạo tự động trong `.docx` từ kiểu `Front Title` 
 | $E_{\max}$ | Mốc kinh nghiệm bão hòa (mặc định $8$ năm) dùng trong hàm điểm kinh nghiệm | Bảng 3.6 (Mục 3.6) |
 | $K$ | Khu vực dạy học mong muốn của người học | Bảng 3.6 (Mục 3.6) |
 | $L$ | Tập khung giờ rảnh do người học yêu cầu | Bảng 3.6 (Mục 3.6) |
-| $n$ | Số tiêu chí ưu tiên đang áp dụng trong một truy vấn (không tính Đánh giá) | Mục 3.6; Bảng 3.7 |
+| $n$ | Số tiêu chí ưu tiên có hiệu lực ($w_i > 0$) trong một truy vấn, không tính Đánh giá | Mục 3.6; Bảng 3.7 |
 | $P$ | Học phí theo giờ trong hồ sơ gia sư (VNĐ) | Bảng 3.6 (Mục 3.6) |
 | $R$ | Điểm đánh giá trung bình của gia sư theo thang $5$ | Bảng 3.6 (Mục 3.6) |
 | $S(g)$ | Điểm phù hợp tổng hợp của gia sư $g$, thuộc đoạn $[0, 1]$ | Công thức (2.1) (Mục 2.3) |

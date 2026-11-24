@@ -7,6 +7,7 @@ import os
 import re
 import shutil
 import subprocess
+import sys
 import tempfile
 import zipfile
 from pathlib import Path
@@ -574,22 +575,25 @@ def _apply_standard_styles(doc: docx.document.Document) -> None:
             if st.font.color and st.font.color.rgb not in (None, RGBColor(0x00, 0x00, 0x00)):
                 st.font.color.rgb = RGBColor(0x00, 0x00, 0x00)
             _strip_theme_fonts_and_set(st._element, FONT_NAME)
-        elif st.name.startswith("TOC "):
-            lvl = int(st.name.split()[-1]) if st.name.split()[-1].isdigit() else 1
-            sz = 12.0 if lvl == 1 else (11.5 if lvl == 2 else 11.0)
-            _ensure_paragraph_style(
-                doc,
-                st.name,
-                base_style_name="Normal",
-                size_pt=sz,
-                bold=(lvl == 1),
-                align=WD_ALIGN_PARAGRAPH.LEFT,
-                line_spacing=1.15,
-                space_before_pt=2.0 if lvl == 1 else 1.0,
-                space_after_pt=2.0 if lvl == 1 else 1.0,
-                first_indent_cm=0.0,
-                left_indent_cm=0.0 if lvl == 1 else (0.5 * (lvl - 1)),
-            )
+
+    for lvl in (1, 2, 3):
+        toc_name = next(
+            (s.name for s in doc.styles if s.name.lower() == f"toc {lvl}"),
+            f"toc {lvl}",
+        )
+        _ensure_paragraph_style(
+            doc,
+            toc_name,
+            base_style_name="Normal",
+            size_pt=12.0 if lvl == 1 else (11.5 if lvl == 2 else 11.0),
+            bold=(lvl == 1),
+            align=WD_ALIGN_PARAGRAPH.LEFT,
+            line_spacing=1.15,
+            space_before_pt=2.0 if lvl == 1 else 1.0,
+            space_after_pt=2.0 if lvl == 1 else 1.0,
+            first_indent_cm=0.0,
+            left_indent_cm=0.0 if lvl == 1 else (0.5 * (lvl - 1)),
+        )
 
 
 def create_reference_docx(out_path: Path) -> Path:
@@ -953,7 +957,7 @@ def _insert_cover_pages_before_first_paragraph(
                         continue
                 if s_strip.startswith("**GVHD:"):
                     _add_cover_line(anchor_p, line, size_pt=13.0, space_after=10.0)
-                elif s_strip.startswith("**LỚP:"):
+                elif s_strip.startswith(("**LỚP:", "**Lớp:")):
                     _add_cover_line(anchor_p, line, size_pt=13.0, space_before=10.0, space_after=36.0)
                 elif s_strip:
                     _add_cover_line(anchor_p, line, size_pt=13.0, space_after=3.0)
@@ -1111,8 +1115,12 @@ def _emit_dotted_toc_field(
     for idx, (level, title, bm_name) in enumerate(entries):
         is_first = idx == 0
         is_last = idx == len(entries) - 1
-        toc_style = f"TOC {min(max(level, 1), 3)}"
-        p = anchor_p.insert_paragraph_before("", style=doc.styles[toc_style] if toc_style in doc.styles else None)
+        lvl = min(max(level, 1), 3)
+        toc_style = next(
+            (s.name for s in doc.styles if s.name.lower() == f"toc {lvl}"),
+            None,
+        )
+        p = anchor_p.insert_paragraph_before("", style=doc.styles[toc_style] if toc_style else None)
         p.alignment = WD_ALIGN_PARAGRAPH.LEFT
         pf = p.paragraph_format
         pf.first_line_indent = Cm(0)
@@ -1177,8 +1185,13 @@ def _emit_dotted_toc_field(
             col = OxmlElement("w:color")
             col.set(qn("w:val"), "000000")
             rPr.append(col)
-            if is_bold:
-                rPr.append(OxmlElement("w:b"))
+            b_el = OxmlElement("w:b")
+            b_cs_el = OxmlElement("w:bCs")
+            if not is_bold:
+                b_el.set(qn("w:val"), "0")
+                b_cs_el.set(qn("w:val"), "0")
+            rPr.append(b_el)
+            rPr.append(b_cs_el)
             r.append(rPr)
             if is_tab:
                 r.append(OxmlElement("w:tab"))
@@ -1839,6 +1852,7 @@ try {{
             $st = $doc.Styles.Item($sid)
             $st.Font.Name = 'Times New Roman'
             $st.Font.Size = 12
+            $st.Font.Bold = $(if ($sid -eq -20) {{ 1 }} else {{ 0 }})
             $st.ParagraphFormat.RightIndent = 36.85
         }} catch {{}}
     }}
@@ -1850,6 +1864,25 @@ try {{
         $r = $doc.TablesOfContents.Item($i).Range
         $r.Font.Name = 'Times New Roman'
         $r.Font.Size = 11
+        $r.Font.Bold = 0
+        $r.ParagraphFormat.RightIndent = 36.85
+    }}
+    $doc.Repaginate()
+    foreach ($toc in $doc.TablesOfContents) {{ $toc.UpdatePageNumbers() }}
+    if ($doc.TablesOfContents.Count -ge 1) {{
+        foreach ($p in $doc.TablesOfContents.Item(1).Range.Paragraphs) {{
+            $sname = [string]$p.Style.NameLocal
+            $isLvl1 = ($sname -match '(^|\\s)1$')
+            $p.Range.Font.Name = 'Times New Roman'
+            $p.Range.Font.Size = 12
+            $p.Range.Font.Bold = $(if ($isLvl1) {{ 1 }} else {{ 0 }})
+        }}
+    }}
+    for ($i = 2; $i -le $doc.TablesOfContents.Count; $i++) {{
+        $r = $doc.TablesOfContents.Item($i).Range
+        $r.Font.Name = 'Times New Roman'
+        $r.Font.Size = 11
+        $r.Font.Bold = 0
         $r.ParagraphFormat.RightIndent = 36.85
     }}
     $doc.Repaginate()
@@ -1875,14 +1908,23 @@ try {{
             ["powershell", "-NoProfile", "-Command", ps_script],
             capture_output=True,
             text=True,
-            timeout=60,
+            timeout=180,
             check=False,
         )
         ok = proc.returncode == 0 and "WPS_COM_OK" in proc.stdout
         if ok:
             _reinject_update_fields_in_docx(work_docx, docx_path)
+        else:
+            print(
+                f"[WPS COM] Thất bại (returncode={proc.returncode}): {proc.stderr.strip()}",
+                file=sys.stderr,
+            )
         return ok
-    except Exception:
+    except subprocess.TimeoutExpired as exc:
+        print(f"[WPS COM] Quá thời gian chờ ({exc.timeout}s).", file=sys.stderr)
+        return False
+    except Exception as exc:
+        print(f"[WPS COM] Lỗi không mong đợi: {exc}", file=sys.stderr)
         return False
     finally:
         try:
@@ -2018,7 +2060,10 @@ def build(
             tmp_docx.unlink()
 
     if try_wps_com:
-        _try_update_fields_with_wps(out_file, export_pdf_path=export_pdf_path)
+        if not _try_update_fields_with_wps(out_file, export_pdf_path=export_pdf_path):
+            raise RuntimeError(
+                "WPS Writer COM không cập nhật được trường TOC/PAGEREF hoặc xuất PDF thất bại."
+            )
 
     if mirror_output_path is not None:
         mirror_output_path.parent.mkdir(parents=True, exist_ok=True)

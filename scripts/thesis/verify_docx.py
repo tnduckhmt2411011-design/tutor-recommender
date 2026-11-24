@@ -148,6 +148,43 @@ def _load_style_id_map(styles_xml: ET.Element, w_ns: str) -> dict[str, str]:
     return mapping
 
 
+def _load_style_bold_map(styles_xml: ET.Element, w_ns: str) -> dict[str, bool]:
+    """Ánh xạ `styleId` về trạng thái in đậm mặc định của style."""
+    mapping: dict[str, bool] = {}
+    for st in styles_xml.findall(f"{w_ns}style"):
+        sid = st.attrib.get(f"{w_ns}styleId", "")
+        b_el = st.find(f"{w_ns}rPr/{w_ns}b")
+        mapping[sid] = b_el is not None and b_el.attrib.get(f"{w_ns}val", "1").lower() not in (
+            "0",
+            "false",
+        )
+    return mapping
+
+
+def _toc_run_bold_flags(
+    p_el: ET.Element,
+    p_style_id: str,
+    style_bold_map: dict[str, bool],
+    w_ns: str,
+) -> list[bool]:
+    """Trả về danh sách trạng thái in đậm cho từng run văn bản hiển thị trong một dòng mục lục."""
+    style_bold = style_bold_map.get(p_style_id, False)
+    flags: list[bool] = []
+    for r_el in p_el.iter(f"{w_ns}r"):
+        if r_el.find(f"{w_ns}instrText") is not None:
+            continue
+        txt_parts = [t.text for t in r_el.findall(f"{w_ns}t") if t.text]
+        if not "".join(txt_parts).strip():
+            continue
+        b_el = r_el.find(f"{w_ns}rPr/{w_ns}b")
+        if b_el is not None:
+            is_b = b_el.attrib.get(f"{w_ns}val", "1").lower() not in ("0", "false")
+        else:
+            is_b = style_bold
+        flags.append(is_b)
+    return flags
+
+
 def verify_docx(docx_path: Path, repo_root: Path = REPO_ROOT) -> tuple[list[str], dict[str, object]]:
     """Kiểm định toàn diện tệp DOCX theo chuẩn báo cáo Học máy; trả về (danh sách lỗi, thống kê)."""
     issues: list[str] = []
@@ -176,6 +213,7 @@ def verify_docx(docx_path: Path, repo_root: Path = REPO_ROOT) -> tuple[list[str]
     w_ns = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
     wp_ns = "{http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing}"
     style_id_to_canon = _load_style_id_map(styles_xml, w_ns)
+    style_id_to_bold = _load_style_bold_map(styles_xml, w_ns)
     omath_nodes = doc_xml.findall(f".//{m_ns}oMath")
     stats["media_count"] = len(media_files)
     stats["omath_count"] = len(omath_nodes)
@@ -335,7 +373,12 @@ def verify_docx(docx_path: Path, repo_root: Path = REPO_ROOT) -> tuple[list[str]
     stats["data_tables"] = data_table_idx
 
     # Kiểm tra caption Bảng/Hình (phong cách + dấu `:`), vị trí kề bảng/ảnh, phông run, chuỗi cấm và `$`
+    # Đồng thời kiểm tra định dạng in đậm của Mục lục (chỉ cấp 1 trong MỤC LỤC in đậm; cấp 2-3 và danh mục bảng/hình thường)
     in_main = False
+    front_section = ""
+    toc_lvl1_count = 0
+    lot_toc_count = 0
+    lof_toc_count = 0
     found_tbl_caps: list[str] = []
     found_fig_caps: list[str] = []
     main_words = 0
@@ -348,6 +391,27 @@ def verify_docx(docx_path: Path, repo_root: Path = REPO_ROOT) -> tuple[list[str]
             txt = _paragraph_text_xml(el).strip()
             if p_style_canon in ("heading 1", "heading1") and txt.startswith("CHƯƠNG 1."):
                 in_main = True
+                front_section = ""
+            elif not in_main and p_style_canon in ("front title", "fronttitle") and txt:
+                front_section = txt
+
+            if not in_main and p_style_canon in ("toc 1", "toc1", "toc 2", "toc2", "toc 3", "toc3"):
+                flags = _toc_run_bold_flags(el, p_style_id, style_id_to_bold, w_ns)
+                if flags:
+                    if front_section == "MỤC LỤC":
+                        if p_style_canon in ("toc 1", "toc1"):
+                            toc_lvl1_count += 1
+                            if not all(flags):
+                                issues.append(f"Mục cấp 1 trong MỤC LỤC chưa in đậm đầy đủ: '{txt[:60]}'.")
+                        elif any(flags):
+                            issues.append(f"Mục cấp 2/3 trong MỤC LỤC bị in đậm ngoài ý muốn: '{txt[:60]}'.")
+                    elif front_section in ("DANH MỤC BẢNG BIỂU", "DANH MỤC HÌNH ẢNH"):
+                        if front_section == "DANH MỤC BẢNG BIỂU":
+                            lot_toc_count += 1
+                        else:
+                            lof_toc_count += 1
+                        if any(flags):
+                            issues.append(f"Mục trong {front_section} bị in đậm ngoài ý muốn: '{txt[:60]}'.")
             if in_main:
                 main_words += len(re.findall(r"\S+", txt))
 
@@ -397,6 +461,14 @@ def verify_docx(docx_path: Path, repo_root: Path = REPO_ROOT) -> tuple[list[str]
                     issues.append(f"Phát hiện run mang phông '{asc}' != '{FONT_NAME}' tại đoạn '{txt[:60]}'.")
                     break
 
+    if toc_lvl1_count != 16:
+        issues.append(f"Số mục cấp 1 trong MỤC LỤC là {toc_lvl1_count} (kỳ vọng 16).")
+    if lot_toc_count != 31:
+        issues.append(f"Số mục trong DANH MỤC BẢNG BIỂU là {lot_toc_count} (kỳ vọng 31).")
+    if lof_toc_count != 9:
+        issues.append(f"Số mục trong DANH MỤC HÌNH ẢNH là {lof_toc_count} (kỳ vọng 9).")
+
+    stats["toc_level1_count"] = toc_lvl1_count
     stats["body_tables"] = len(found_tbl_caps)
     stats["body_figures"] = len(found_fig_caps)
 
