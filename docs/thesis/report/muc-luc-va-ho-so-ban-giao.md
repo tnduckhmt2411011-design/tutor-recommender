@@ -1,4 +1,4 @@
-# PHẦN MỞ ĐẦU VÀ HỒ SƠ BÀN GIAO (US-36)
+# PHẦN MỞ ĐẦU VÀ HỒ SƠ BÀN GIAO
 
 > [!NOTE]
 > Tài liệu này chứa nội dung các trang bìa, phần mở đầu (đánh số La Mã `i–xiii`) và hồ sơ bàn giao của báo cáo đồ án. Khi xuất sang Word (`.docx`) bằng `scripts/thesis/build_docx.py`, phần Mục lục, Danh mục bảng biểu và Danh mục hình ảnh được sinh kèm trường động `TOC` và `PAGEREF` dạng chấm dẫn.
@@ -47,7 +47,7 @@
 > **Sinh viên thực hiện:**
 > Lê Thị Bích Chuyền — KHMT2411037
 > Trần Nguyễn Đức — KHMT2411011
-> Cao Khánh Ngọc (Nhóm trưởng) — KHMT2411025
+> Cao Khánh Ngọc — KHMT2411025
 >
 > **Lớp:** Khoa học máy tính 2024
 
@@ -59,14 +59,14 @@
 > **HỆ THỐNG KHUYẾN NGHỊ GIA SƯ**
 > **DỰA TRÊN PHƯƠNG PHÁP CONTENT-BASE FILTERING**
 >
-> **Môn:** Khoa học máy tính 1 - Học kỳ 1, năm học 2026-2027
+> **Học kỳ:** Học kỳ 1, năm học 2026-2027
 > **Lớp:** Khoa học máy tính 2024
 > **GVHD:** TS. Lê Anh Nhã Uyên
 >
 > **Sinh viên thực hiện:**
 > Lê Thị Bích Chuyền — KHMT2411037
 > Trần Nguyễn Đức — KHMT2411011
-> Cao Khánh Ngọc (Nhóm trưởng) — KHMT2411025
+> Cao Khánh Ngọc — KHMT2411025
 >
 > Cần Thơ, tháng 11 năm 2026
 
@@ -76,7 +76,7 @@ Chúng em xin gửi lời cảm ơn đến TS. Lê Anh Nhã Uyên, giảng viên
 
 Chúng em cũng xin cảm ơn quý thầy cô Khoa Công nghệ Thông tin, Trường Đại học Kỹ thuật - Công nghệ Cần Thơ đã tạo điều kiện về tài liệu và môi trường học tập. Cảm ơn gia đình, bạn bè đã động viên, và cảm ơn các thành viên trong nhóm đã phối hợp để hoàn thành các hạng mục đúng tiến độ.
 
-Học phần chỉ có hai tín chỉ và kéo dài 12 tuần, nên đề tài còn những giới hạn về quy mô dữ liệu mẫu và phạm vi đánh giá thực tế. Chúng em trình bày các hạn chế này ở Chương 5 và Chương 6.
+Trong khuôn khổ học phần hai tín chỉ kéo dài 12 tuần, đề tài tập trung hoàn thiện mô hình lõi trên bộ dữ liệu mẫu gồm 16 hồ sơ gia sư và 14 kịch bản kiểm thử; các giới hạn về quy mô dữ liệu và đánh giá thực tế được trình bày cụ thể ở Chương 5 và Chương 6.
 
 ## 5. Lời cam đoan
 
@@ -85,18 +85,22 @@ Chúng em là ba thành viên thực hiện đề tài, lớp Khoa học máy t�
 1. Nội dung báo cáo là kết quả làm việc của cả nhóm. Mọi tài liệu tham khảo đều được trích dẫn theo chuẩn IEEE và liệt kê trong mục Tài liệu tham khảo.
 2. Số liệu thực nghiệm trong Chương 5 được lấy trực tiếp từ bộ kiểm thử tự động và từ phản hồi của dịch vụ API khuyến nghị, chạy trên bộ dữ liệu mẫu 16 hồ sơ. Các số liệu ước tính trong dữ liệu mẫu đều được đánh dấu và giải thích.
 3. Bộ dữ liệu mẫu tách riêng nhóm hồ sơ thu thập công khai và nhóm hồ sơ giả lập. Hai hồ sơ thu thập công khai là GS-T06 và GS-T07 có học phí và lịch rảnh là số ước tính, được đánh dấu hoa thị (*), còn điểm đánh giá để trống. Chương 4, Chương 5 và Phụ lục A có giải thích thêm.
-4. Báo cáo không sao chép nội dung từ công trình khác. Chúng em chỉ tham khảo đồ án GS360 để đối chiếu phạm vi chức năng, không dùng lại mã nguồn hay giao diện của đồ án này.
+4. Báo cáo không sao chép nội dung từ công trình khác. Chúng em chỉ tham khảo đồ án GS360 [3] để đối chiếu phạm vi chức năng bài toán, không sử dụng lại mã nguồn hay giao diện của đồ án này.
 5. Chúng em chịu trách nhiệm trước giảng viên hướng dẫn và hội đồng đánh giá về tính trung thực của nội dung báo cáo.
+
+*Cần Thơ, tháng 11 năm 2026*
+
+**Nhóm sinh viên thực hiện:** Lê Thị Bích Chuyền — Trần Nguyễn Đức — Cao Khánh Ngọc
 
 ## 6. Tóm tắt
 
 ### 6.1. Tóm tắt tiếng Việt
 
-Khi số hồ sơ gia sư tăng lên, người học phải cân nhắc cùng lúc môn học, khu vực, học phí, hình thức học và thời gian rảnh. Các tiêu chí này hay mâu thuẫn nhau, nên chỉ lọc nhị phân theo từng tiêu chí thì khó ra được danh sách gia sư phù hợp. Đồ án xây dựng một bộ máy khuyến nghị gia sư theo phương pháp lọc dựa trên nội dung (*Content-Based Filtering*), dùng các đặc trưng có cấu trúc của hồ sơ. Đầu tiên, hệ thống lọc theo các điều kiện bắt buộc là môn học, hình thức học và khung giờ giao nhau. Tiếp theo, hệ thống kiểm tra ngưỡng dữ liệu tối thiểu của hồ sơ. Sau đó, hệ thống chấm điểm năm tiêu chí ưu tiên gồm học phí, khu vực, kinh nghiệm, đánh giá và lịch rảnh, rồi tổng hợp bằng tính tổng có trọng số (*Weighted Scoring*). Mỗi tiêu chí có một trong bốn mức ưu tiên, tương ứng trọng số nguyên từ 0 đến 3. Nhờ vậy người học chỉnh được thứ hạng gợi ý mà không phải tự chia tỷ lệ phần trăm.
+Khi số hồ sơ gia sư tăng lên, người học phải cân nhắc cùng lúc môn học, khu vực, học phí, hình thức học và thời gian rảnh. Các tiêu chí này thường xung đột nhau, nên chỉ lọc nhị phân theo từng tiêu chí thì khó xác định được danh sách gia sư phù hợp. Đồ án xây dựng một bộ máy khuyến nghị gia sư theo phương pháp lọc dựa trên nội dung (*Content-Based Filtering*), dùng các đặc trưng có cấu trúc của hồ sơ. Đầu tiên, hệ thống lọc theo các điều kiện bắt buộc là môn học, hình thức học và khung giờ giao nhau. Tiếp theo, hệ thống kiểm tra ngưỡng dữ liệu tối thiểu của hồ sơ. Sau đó, hệ thống chấm điểm năm tiêu chí ưu tiên gồm học phí, khu vực, kinh nghiệm, đánh giá và lịch rảnh, rồi tổng hợp bằng tính tổng có trọng số (*Weighted Scoring*). Mỗi tiêu chí có một trong bốn mức ưu tiên, tương ứng trọng số nguyên từ 0 đến 3. Nhờ vậy người học chỉnh được thứ hạng gợi ý mà không phải tự chia tỷ lệ phần trăm.
 
-Nhóm em cài đặt phần dịch vụ API bằng FastAPI (Python 3.12) và phần giao diện minh họa bằng React. Hệ thống chạy trên bộ dữ liệu mẫu gồm 16 hồ sơ gia sư và 14 kịch bản đánh giá cố định. Kết quả cho thấy 200/200 bài kiểm thử tự động đạt, độ bao phủ câu lệnh trên khối mã nghiệp vụ là 97%. Cả 14/14 kịch bản đều trả về danh sách Top-3 khớp với kỳ vọng, và thời gian xử lý trung bình phía máy chủ là 3,54 ms. Khi khảo sát độ nhạy, thứ hạng ổn định nếu thay đổi hệ số dung sai học phí và mốc kinh nghiệm bão hòa trong dải hợp lý. Thứ hạng chỉ đổi rõ khi đổi bộ mức ưu tiên, điều này đúng với thiết kế vì trọng số là đầu vào do người học tự điều khiển.
+Phần dịch vụ API được cài đặt bằng FastAPI (Python 3.12) và phần giao diện minh họa bằng React. Hệ thống chạy trên bộ dữ liệu mẫu gồm 16 hồ sơ gia sư và 14 kịch bản đánh giá cố định. Kết quả cho thấy 200/200 bài kiểm thử tự động đạt, độ bao phủ câu lệnh trên khối mã nghiệp vụ là 97%. Cả 14/14 kịch bản đều trả về danh sách Top-3 khớp với kỳ vọng, và thời gian xử lý trung bình phía máy chủ là 3,54 ms. Khi khảo sát độ nhạy, thứ hạng ổn định nếu thay đổi hệ số dung sai học phí và mốc kinh nghiệm bão hòa trong dải hợp lý. Thứ hạng chỉ đổi rõ khi đổi bộ mức ưu tiên, điều này đúng với thiết kế vì trọng số là đầu vào do người học tự điều khiển.
 
-Hạn chế chính là bộ dữ liệu mẫu còn nhỏ, chưa có dữ liệu tương tác lịch sử, và nhóm em chưa đánh giá trên người học thực tế ngoài nhóm. Hướng phát triển tiếp theo là mở rộng dữ liệu, thu thập phản hồi sau khuyến nghị, và thêm tiêu chí cấp lớp cùng mục tiêu học tập vào mô hình tính điểm.
+Hạn chế chính là bộ dữ liệu mẫu còn nhỏ, chưa có dữ liệu tương tác lịch sử, và chưa tiến hành đánh giá trên người học thực tế ngoài nhóm. Hướng phát triển tiếp theo là mở rộng dữ liệu, thu thập phản hồi sau khuyến nghị, và thêm tiêu chí cấp lớp cùng mục tiêu học tập vào mô hình tính điểm.
 
 ### 6.2. Abstract (English)
 
@@ -172,31 +176,48 @@ Mục lục được tạo tự động trong `.docx` từ kiểu `Front Title` 
 | :--- | :--- | :--- |
 | API | Application Programming Interface — giao diện lập trình ứng dụng | Mục 1.4 |
 | ASGI | Asynchronous Server Gateway Interface — chuẩn máy chủ bất đồng bộ cho Python | Bảng 4.1 (Mục 4.1) |
+| BCE | Boundary-Control-Entity — mô hình kiến trúc Biên – Điều khiển – Thực thể | Mục 3.7.2 |
 | CI | Continuous Integration — tích hợp và kiểm thử tự động liên tục | Mục 4.7 |
 | CN01–CN03 | Ba chức năng chính: nhập nhu cầu, xem gợi ý, điều chỉnh mức ưu tiên | Bảng 3.1 (Mục 3.2) |
 | CORS | Cross-Origin Resource Sharing — cơ chế chia sẻ tài nguyên khác nguồn (trong `CORSMiddleware`) | Hình 3.2 (Mục 3.7.2); Mục 4.4.1 |
+| CSS | Cascading Style Sheets — ngôn ngữ định kiểu trình bày giao diện web | Mục 4.5 |
 | CSV | Comma-Separated Values — định dạng tệp văn bản phân tách bằng dấu phẩy | Mục 1.5 |
+| ERD | Entity-Relationship Diagram — sơ đồ thực thể – kết hợp | Mục 3.5 |
 | GS | Tiền tố mã hồ sơ gia sư trong bộ dữ liệu mẫu (như `GS-T06`, `GS-G01`, `GS006`) | Bảng 3.3 (Mục 3.5) |
 | GVHD | Giảng viên hướng dẫn | Trang bìa |
+| HTML | HyperText Markup Language — ngôn ngữ đánh dấu siêu văn bản | Mục 4.5 |
 | HTTP | Hypertext Transfer Protocol — giao thức truyền tải siêu văn bản | Mục 3.7.1 |
 | IEEE | Institute of Electrical and Electronics Engineers — Viện Kỹ sư Điện và Điện tử (chuẩn trích dẫn tài liệu và chuẩn số thực dấu phẩy động IEEE 754) | Lời cam đoan; Mục 4.3.1 |
+| ISO | International Organization for Standardization — Tổ chức Tiêu chuẩn hóa Quốc tế (quy chuẩn lưu đồ ISO 5807) | Mục 3.7.1; Phụ lục C |
 | JSON | JavaScript Object Notation — định dạng trao đổi dữ liệu có cấu trúc | Mục 1.5 |
-| KB01–KB14 | Mã định danh 14 kịch bản kiểm thử thực nghiệm cố định | Mục 4.2.3 |
+| KB01–KB14 | Mã định danh 14 kịch bản kiểm thử thực nghiệm cố định | Mục 3.5 (KB05); Mục 4.2.3 |
+| KV | Khu vực (ký hiệu các khu vực giả định KV1, KV2, KV3 trong ví dụ minh họa) | Bảng 3.6 (Mục 3.6) |
+| LTR | Learning-to-Rank — nhóm thuật toán học máy học xếp hạng | Mục 6.2.2 |
+| OpenAPI | Đặc tả giao diện lập trình ứng dụng RESTful chuẩn hóa (hiển thị qua Swagger UI) | Mục 2.4; Mục 4.1 |
+| PA1 | Phương án 1 — ánh xạ mục tiêu học tập sang bộ mức ưu tiên khởi tạo | Mục 6.1.2 |
+| QĐ-A–QĐ-E | Năm quyết định triển khai xử lý tình huống biên của mô-đun tính điểm | Mục 4.3.1 |
+| RESTful | Kiến trúc dịch vụ web theo phong cách Representational State Transfer | Mục 4.4 |
 | SPA | Single Page Application — ứng dụng web một trang | Bảng 4.1 (Mục 4.1) |
 | TDD | Test-Driven Development — phương pháp phát triển hướng kiểm thử | Mục 5.1.1 |
 | Top-$k$ | Danh sách $k$ gia sư có điểm phù hợp cao nhất sau khi xếp hạng | Mục 1.3.2 |
+| TQ1–TQ5 | Năm truy vấn bổ sung dùng trong thực nghiệm mở rộng Phương án 1 | Mục 6.1.2 |
 | UI | User Interface — giao diện người dùng (trong Swagger UI) | Mục 2.4 |
-| VNĐ | Việt Nam đồng | Bảng 3.3 (Mục 3.5) |
+| UML | Unified Modeling Language — ngôn ngữ mô hình hóa thống nhất (sơ đồ trình tự UML 2.5) | Phụ lục C |
+| URL | Uniform Resource Locator — địa chỉ định vị tài nguyên thống nhất | Mục 1.2 |
+| VNĐ | Việt Nam đồng | Mục 2.2 |
 
 ### 8.2. Ký hiệu toán học
 
 | Ký hiệu | Nghĩa | Xuất hiện đầu |
 | :--- | :--- | :--- |
+| $A$ | Tập các tiêu chí ưu tiên đang áp dụng trong một truy vấn ($w_i > 0$ và có đủ đầu vào hợp lệ) | Công thức (2.1) (Mục 2.3) |
 | $B$ | Ngân sách học phí tối đa theo giờ do người học nhập (VNĐ) | Bảng 3.6 (Mục 3.6) |
-| $C_i$ | Điểm đóng góp có trọng số của tiêu chí $i$, $C_i = w_i \cdot s_i / \sum w_j$ | Mục 3.6 |
+| $C_i$ | Điểm đóng góp có trọng số của tiêu chí $i$ cho gia sư $g$, $C_i(g) = \frac{w_i \cdot s_i(g)}{\sum_{j \in A} w_j}$ | Mục 3.6 |
 | $E$ | Số năm kinh nghiệm giảng dạy của gia sư | Bảng 3.6 (Mục 3.6) |
 | $E_{\max}$ | Mốc kinh nghiệm bão hòa (mặc định $8$ năm) dùng trong hàm điểm kinh nghiệm | Bảng 3.6 (Mục 3.6) |
+| $g$ | Một hồ sơ ứng viên gia sư trong tập dữ liệu được xem xét chấm điểm và xếp hạng | Công thức (2.1) (Mục 2.3) |
 | $K$ | Khu vực dạy học mong muốn của người học | Bảng 3.6 (Mục 3.6) |
+| $k$ | Số lượng gia sư tối đa trả về trong danh sách kết quả Top-$k$ (mặc định $k = 3$, miền $[1, 20]$) | Mục 1.3.2; Bảng 3.4 |
 | $L$ | Tập khung giờ rảnh do người học yêu cầu | Bảng 3.6 (Mục 3.6) |
 | $n$ | Số tiêu chí ưu tiên có hiệu lực ($w_i > 0$) trong một truy vấn, không tính Đánh giá | Mục 3.6; Bảng 3.7 |
 | $P$ | Học phí theo giờ trong hồ sơ gia sư (VNĐ) | Bảng 3.6 (Mục 3.6) |
@@ -204,8 +225,9 @@ Mục lục được tạo tự động trong `.docx` từ kiểu `Front Title` 
 | $S(g)$ | Điểm phù hợp tổng hợp của gia sư $g$, thuộc đoạn $[0, 1]$ | Công thức (2.1) (Mục 2.3) |
 | $s_i(g)$ | Điểm thành phần của gia sư $g$ theo tiêu chí thứ $i$, thuộc đoạn $[0, 1]$ | Công thức (2.1) (Mục 2.3) |
 | $T$ | Tập khung giờ rảnh của gia sư trong tuần | Bảng 3.6 (Mục 3.6) |
-| $w_i$ | Trọng số của tiêu chí thứ $i$, quy đổi từ mức ưu tiên thuộc $\{0, 1, 2, 3\}$ | Công thức (2.1) (Mục 2.3) |
+| $w_i$ | Trọng số của tiêu chí thứ $i$, quy đổi từ mức ưu tiên thuộc $\{0, 1, 2, 3\}$ | Mục 1.1; Công thức (2.1) (Mục 2.3) |
 | $\delta$ | Hệ số dung sai học phí vượt ngân sách (mặc định $0{,}5$) | Bảng 3.6 (Mục 3.6) |
+| $\Delta S$ | Độ lệch điểm tổng hợp giữa kết quả hệ thống và tính tay ban đầu, $\Delta S = S_{\text{hệ thống}} - S_{\text{tính tay}}$ | Bảng 5.4 (Mục 5.2.1) |
 
 ## 9. Danh mục bảng biểu
 
@@ -269,8 +291,8 @@ Mục lục được tạo tự động trong `.docx` từ kiểu `Front Title` 
 | `chuong-04-xay-dung-he-thong.md` | Chương 4 | Hoàn thành (4 ảnh giao diện) |
 | `chuong-05-thuc-nghiem-va-danh-gia.md` | Chương 5 | Hoàn thành (9 bảng) |
 | `chuong-06-ket-luan-va-huong-phat-trien.md` | Chương 6 và Phụ lục A–D | Hoàn thành |
-| `tai-lieu-tham-khao.md` | 5 tài liệu theo IEEE | Hoàn thành (đã kiểm chứng DOI/URL và tinh gọn còn 5 nguồn cốt lõi) |
-| `muc-luc-va-ho-so-ban-giao.md` | Phần mở đầu theo chuẩn báo cáo ML + danh mục bàn giao | Hoàn thành |
+| `tai-lieu-tham-khao.md` | 7 tài liệu theo chuẩn IEEE | Hoàn thành (đã kiểm chứng DOI/URL gồm 7 nguồn trích dẫn tuần tự [1]–[7]) |
+| `muc-luc-va-ho-so-ban-giao.md` | Phần mở đầu theo chuẩn báo cáo đồ án CTUT (KHMT 1) + danh mục bàn giao | Hoàn thành |
 | `docs/thesis/figures/*.png` | 9 hình của báo cáo + `khung_trang_bia.png` + `logo_ctut.png` (kèm 4 tệp nguồn `docs/thesis/figures/src/*.drawio`) | Đủ 11 tệp ảnh |
 | `docs/thesis/outline/dac-ta-hinh-3-1-3-5.md` | Đặc tả 5 hình Chương 3 (tài liệu làm việc) | Lưu nội bộ |
 
@@ -278,13 +300,13 @@ Mục lục được tạo tự động trong `.docx` từ kiểu `Front Title` 
 
 | # | Việc | Người phụ trách | Trạng thái |
 | :-: | :--- | :--- | :--- |
-| 1 | Ghép 6 chương + tài liệu tham khảo + phụ lục thành một tệp Word theo chuẩn báo cáo Học máy | Nhóm | Tự động qua `scripts/thesis/build_docx.py` (`BAO_CAO_DO_AN_KHMT1_HOAN_CHINH.docx`) |
+| 1 | Ghép 6 chương + tài liệu tham khảo + phụ lục thành một tệp Word theo chuẩn báo cáo đồ án CTUT (KHMT 1) | Nhóm | Tự động qua `scripts/thesis/build_docx.py` (`BAO_CAO_DO_AN_KHMT1_HOAN_CHINH.docx`) |
 | 2 | Điền số trang cho mục lục, danh mục bảng, danh mục hình | Nhóm | Nhúng trường động `TOC` và `PAGEREF` kèm `<w:updateFields w:val="true"/>` và dòng chấm dẫn |
 | 3 | Rà từ cấm, chuẩn hóa số liệu và kiểm định tệp DOCX | Nhóm | `check_captions.py`, `recompute_numbers.py` (74/74 KHỚP), `verify_docx.py` |
-| 4 | Slide thuyết trình và kịch bản demo (US-35) | Nhóm | Đã soạn (`docs/thesis/slides/`) |
+| 4 | Slide thuyết trình và kịch bản bảo vệ (40 slide) | Nhóm | Đã hoàn thiện (`docs/thesis/slides/`, `SLIDE_BAO_VE_DO_AN_KHMT1.pptx/.pdf`) |
 
 ### 11.3. Ghi chú còn treo
 
-- Mục 6.1.1 trình bày phần đối chiếu với 4 mục tiêu đề tài bằng danh sách đánh số `1–4` theo chuẩn báo cáo Học máy (không dùng bảng không đánh số, giữ nguyên 31 bảng được cấp số `Bảng X.Y:`).
+- Mục 6.1.1 trình bày phần đối chiếu với 4 mục tiêu đề tài bằng danh sách đánh số `1–4` theo quy chuẩn báo cáo đồ án CTUT (không dùng bảng không đánh số, giữ nguyên 31 bảng được cấp số `Bảng X.Y:`).
 - Nhãn `public_collected` của `GS-T06`, `GS-T07` được giữ nguyên; phần học phí và lịch rảnh ước tính đã ghi chú ở Chương 4, Chương 5 và Phụ lục A.
 - Bản Abstract tiếng Anh giữ dấu chấm thập phân (`3.54 ms`) theo quy ước tiếng Anh; thân bài tiếng Việt dùng dấu phẩy (`3,54 ms`).

@@ -53,9 +53,9 @@ Hai cấu trúc dữ liệu thiết kế ở Bảng 3.3 và Bảng 3.4 được 
 | | `ngân_sách_tối_đa` | `max_budget_vnd` | `StrictInt \| None` (`ge = 0`) |
 | | `khung_thời_gian` | `time_slots` | `list[string] \| None` |
 | | `mức_ưu_tiên` | `priorities` | `dict[enum tiêu chí, enum none/low/medium/high]` |
-| | *(tham số truy vấn bổ sung)* | `top_k` | `StrictInt`, mặc định 3, ràng buộc $1 \le \text{top\_k} \le 20$ |
+| | `số_kết_quả` | `top_k` | `StrictInt`, mặc định 3, ràng buộc $1 \le \text{top\_k} \le 20$ |
 
-Cả hai mô hình đều bật `extra="forbid"` để báo lỗi ngay nếu dữ liệu có thêm trường lạ ngoài đặc tả. Trong mô hình truy vấn `SearchRequest`, nhóm em thêm tham số `top_k` để người gọi API chọn số kết quả muốn nhận (từ 1 đến 20, mặc định là 3). Nếu truyền ngoài khoảng này, API trả về mã lỗi HTTP 422.
+Cả hai mô hình đều bật `extra="forbid"` để báo lỗi ngay nếu dữ liệu có thêm trường lạ ngoài đặc tả. Trong mô hình truy vấn `SearchRequest`, tham số `top_k` ánh xạ từ trường `số_kết_quả` ở Bảng 3.4 để người gọi API chọn số kết quả muốn nhận (từ 1 đến 20, mặc định là 3). Nếu truyền ngoài khoảng này, API trả về mã lỗi HTTP 422.
 
 ### 4.2.3. Nguồn và nhãn dữ liệu
 
@@ -85,7 +85,7 @@ Năm nguyên tắc thiết kế dữ liệu ở Mục 3.5 được nhóm em cài
 
 1. **Tạo xung đột giữa các tiêu chí:** cặp `GS-G09` (350.000 VNĐ/giờ, 2 năm kinh nghiệm, đánh giá 3,5/5) và `GS-G10` (130.000 VNĐ/giờ, 12 năm kinh nghiệm, đánh giá 4,9/5) cùng dạy Toán ở Quận 7 và rảnh T2-tối, T4-tối. Tương tự là cặp `GS-G01` (180.000 VNĐ/giờ, 6 năm, 5,0/5) và `GS-G02` (300.000 VNĐ/giờ, 3 năm, 3,0/5) ở Bình Thạnh. Những cặp này giúp thấy rõ thứ hạng đổi khi thay đổi trọng số.
 2. **Cặp hồ sơ chỉ khác một tiêu chí:** `GS006` và `GS020` giống hệt nhau trừ học phí (190.000 so với 240.000 VNĐ/giờ). Cặp `GS-G11` và `GS-G12` chỉ khác khu vực (Quận 2, Bình Thạnh so với Quận 2, Thủ Đức). Cặp này dùng cho kịch bản KB02 (đồng điểm để kiểm tra xếp hạng theo `tutor_id`) và KB03 (tách hạng khi tìm ở Thủ Đức).
-3. **Tình huống không có ứng viên đạt điều kiện:** không có gia sư nào dạy môn Tiếng Trung trong 16 hồ sơ, dù giao diện vẫn cho chọn môn này. Khi chạy kịch bản KB05 (`subject = "Tiếng Trung"`), hệ thống trả về trạng thái `no_match`.
+3. **Tình huống không có ứng viên đạt điều kiện:** 16 hồ sơ mẫu bao phủ 9 môn học (`Toán`, `Lý`, `Hóa`, `Sinh`, `Văn`, `Anh Văn`, `Anh Văn GT`, `Tin học`, `Tiếng Nhật`), trong khi danh sách lựa chọn trên giao diện cung cấp 10 môn bao gồm `Tiếng Trung` để người đánh giá kiểm thử tình huống rỗng. Khi chạy kịch bản KB05 (`subject = "Tiếng Trung"`), hệ thống trả về trạng thái `no_match`.
 4. **Hồ sơ chưa có điểm đánh giá:** `GS-T06` và `GS-T07` có `avg_rating = null`. Khi chấm điểm, hệ thống gán điểm trung tính $0{,}5$ và thêm ghi chú `"chưa có đánh giá"`.
 5. **Tránh thiên lệch dữ liệu dễ:** các hồ sơ được gài ưu thế đan xen thay vì sắp sẵn một người giỏi toàn diện. Ví dụ ở KB01 (Bình Thạnh), `GS-T06` đúng quận và 20 năm kinh nghiệm nhưng học phí vượt trần, còn `GS-G10` học phí rẻ và đánh giá cao nhưng lại ở Quận 7. Nhờ vậy thuật toán buộc phải cân bằng nhiều tiêu chí theo trọng số.
 
@@ -102,7 +102,7 @@ Module tính điểm nằm trong gói `backend/app/scoring/`, tách riêng khỏ
 | `app/scoring/weights.py` | `compute_effective_weights`, `priority_to_weight`, `EffectiveWeights` | Quy đổi mức ưu tiên sang trọng số theo Bảng 3.5; xác định tập tiêu chí áp dụng (loại tiêu chí khuyết đầu vào hoặc có $w_i = 0$) |
 | `app/scoring/eligibility.py` | `check_tutor_eligibility`, `count_available_criteria`, `filter_eligible_candidates`, `MIN_DATA_THRESHOLD` | Kiểm tra ngưỡng dữ liệu tối thiểu theo Bảng 3.7 ($n = 1\text{–}5$), thực hiện trước khi chấm điểm xếp hạng |
 | `app/scoring/criteria.py` | `score_fee`, `score_location`, `score_experience`, `score_rating`, `score_schedule` | Bước 3 — năm hàm thuần tính điểm thành phần $s_i \in [0, 1]$ theo công thức tại Bảng 3.6 |
-| `app/scoring/ranker.py` | `score_and_rank`, `build_reason`, `build_notes` | Bước 4 — tổng hợp điểm $S(g) = \sum w_i \cdot s_i / \sum w_i$, tính mức đóng góp $C_i$, sắp xếp giảm dần (xử lý đồng điểm theo `tutor_id`) và trích Top-$k$ |
+| `app/scoring/ranker.py` | `score_and_rank`, `build_reason`, `build_notes` | Bước 4 — tổng hợp điểm $S(g) = \sum_{i \in A} w_i \cdot s_i / \sum_{j \in A} w_j$, tính mức đóng góp $C_i$, sắp xếp giảm dần (xử lý đồng điểm theo `tutor_id`) và trích Top-$k$ |
 | `app/core/config.py` | `DELTA = 0.5`, `E_MAX = 8`, `RATING_DEFAULT = 0.5`, `PRIORITY_WEIGHTS`, `DEFAULT_PRIORITY = "medium"`, `CRITERIA_KEYS` | Quản lý tập trung các tham số thuật toán và bảng ánh xạ trọng số theo Mục 3.6 và Bảng 3.5 |
 
 Khi chạy, Bước 1 (kiểm tra đầu vào) do `SearchRequest` xử lý, còn `TutorRepository` đọc và xác thực danh sách hồ sơ gia sư. Ba bước tiếp theo được thực thi tuần tự bởi các hàm trong `app/scoring/`.
@@ -210,8 +210,8 @@ Phần giao diện được nhóm em làm thành ứng dụng web một trang (S
 | `src/App.jsx` | Điều phối trung tâm | Quản lý chuyển đổi giữa màn hình nhập nhu cầu (CN01) và màn hình kết quả (CN02, CN03); lưu trữ trạng thái truy vấn, kết quả khuyến nghị, độ trễ phản hồi và độ lệch thứ hạng khi người học điều chỉnh trọng số; đồng bộ thứ tự yêu cầu bất đồng bộ (Mục 4.6) |
 | `src/pages/SearchPage.jsx` | Màn hình nhập nhu cầu (CN01) | Biểu mẫu nhập tiêu chí theo Bảng 3.4 (môn học, hình thức, khu vực, ngân sách kèm dòng quy đổi bằng chữ, Top-$k$); lưới chọn lịch rảnh 7 ngày × 3 buổi; kiểm tra hợp lệ phía trình duyệt; thanh nút nạp nhanh 14 kịch bản thực nghiệm KB01–KB14 (Bảng 5.3) |
 | `src/pages/ResultPage.jsx` | Màn hình kết quả (CN02 + CN03) | Hiển thị dải thông tin tóm tắt truy vấn và thống kê số lượng ứng viên (“Kho → Hợp lệ → Top-$k$”); khung điều chỉnh mức ưu tiên trực tiếp (CN03) cho 5 tiêu chí kèm 4 nút cấu hình trọng số mẫu; hiển thị ba trạng thái nghiệp vụ `success`, `no_match`, `zero_weight` |
-| `src/components/TutorCard.jsx` | Thẻ thông tin gia sư | Hiển thị ảnh đại diện, huy hiệu thứ hạng, nhãn nguồn dữ liệu (“Dữ liệu thực tế” cho `public_collected`, “Dữ liệu đối chứng” cho `simulated`), các thuộc tính hồ sơ, lịch rảnh, chuỗi lý do khuyến nghị và ghi chú dữ liệu |
-| `src/components/StackedBarScore.jsx` | Thanh xếp chồng điểm đóng góp | Trực quan hóa các phân đoạn theo mức đóng góp $C_i = w_i \cdot s_i / \sum w_i$; hộp thông tin chi tiết hiển thị $s_i$, $w_i$, $C_i$ và tỷ trọng phần trăm của từng tiêu chí áp dụng |
+| `src/components/TutorCard.jsx` | Thẻ thông tin gia sư | Hiển thị ảnh đại diện, huy hiệu thứ hạng, nhãn nguồn dữ liệu (“Thực tế (ước tính *)” kèm chú giải chi tiết (tooltip) cho `public_collected`, “Dữ liệu đối chứng” cho `simulated`), các thuộc tính hồ sơ, lịch rảnh, chuỗi lý do khuyến nghị và ghi chú dữ liệu |
+| `src/components/StackedBarScore.jsx` | Thanh xếp chồng điểm đóng góp | Trực quan hóa các phân đoạn theo mức đóng góp $C_i = w_i \cdot s_i / \sum_{j \in A} w_j$; hộp thông tin chi tiết hiển thị $s_i$, $w_i$, $C_i$ và tỷ trọng phần trăm của từng tiêu chí áp dụng |
 | `src/components/TutorAvatar.jsx` | Ảnh đại diện gia sư | Hiển thị ảnh chân dung `/avatars/{tutor_id}.webp` (16 tệp ảnh WebP trong `frontend/public/avatars/`), tự động chuyển sang biểu tượng chữ cái viết tắt nếu thiếu tệp ảnh |
 | `src/components/CriteriaIcon.jsx`, `SubjectIcon.jsx`, `SkeletonLoader.jsx` | Thành phần phụ trợ | Biểu tượng trực quan cho từng tiêu chí và môn học; hiệu ứng khung chờ trong thời gian gọi API |
 | `src/services/api.js` | Dịch vụ giao tiếp API | Xác định địa chỉ máy chủ API theo biến môi trường `VITE_API_URL` hoặc tên miền hiện hành; chuẩn hóa dữ liệu biểu mẫu và xử lý lỗi kết nối HTTP |
@@ -227,13 +227,13 @@ Bốn ảnh chụp dưới đây ghi lại các màn hình hoạt động thực
 
 **Hình 4.1: Màn hình nhập nhu cầu học tập (CN01)**
 
-Hình 4.1 là màn hình nhập nhu cầu (CN01) khi nhấn nạp nhanh kịch bản KB01 (Toán, học trực tiếp ở Bình Thạnh, ngân sách 200.000 VNĐ/giờ). Bên phải là bảng chọn mức ưu tiên cho 5 tiêu chí, với ô “Mục tiêu học tập” ở mức mặc định “Không nêu mục tiêu” ($w_i = 2$ cho cả năm tiêu chí).
+Hình 4.1 là màn hình nhập nhu cầu (CN01) ở trạng thái khởi tạo mặc định (trùng bộ tham số kịch bản KB01: Toán, học trực tiếp ở Bình Thạnh, ngân sách 200.000 VNĐ/giờ) kèm thanh nạp nhanh `Bảng 5.3 · KB01 - KB14`. Bên phải là bảng chọn mức ưu tiên cho 5 tiêu chí, với ô “Mục tiêu học tập” ở mức mặc định “Không nêu mục tiêu” ($w_i = 2$ cho cả năm tiêu chí).
 
 ![Hình 4.2: Màn hình kết quả gợi ý Top-3 kịch bản KB01 (CN02)](../figures/hinh-ui-02-cn02-ket-qua-kb01.png)
 
 **Hình 4.2: Màn hình kết quả gợi ý Top-3 kịch bản KB01 (CN02)**
 
-Hình 4.2 là màn hình kết quả của kịch bản KB01 (CN02). Top-3 trả về khớp kỳ vọng: hạng 1 `GS-G01` ($S(g) = 0{,}938$), hạng 2 `GS-G10` ($0{,}745$) và hạng 3 `GS-T06` ($0{,}625$), kèm dòng thống kê “Kho: 16 hồ sơ → Hợp lệ: 5 ứng viên → Top-3: 3 gợi ý”. Trên thẻ của `GS-G01`, thanh xếp chồng chia bốn đoạn `0,25 / 0,25 / 0,19 / 0,25` (vì không chọn lịch rảnh) và hiện lý do “Học phí trong ngân sách, khu vực khớp, đánh giá 5,0/5”. Con số thời gian ở góc giao diện lúc mới chuyển từ màn hình tìm kiếm sang kết quả đã bao gồm khoảng dừng 650 ms dành cho hiệu ứng chuyển trang của giao diện (`App.jsx`), còn các lượt bấm đổi mức ưu tiên tiếp theo (Hình 4.3) đo trực tiếp thời gian gọi API.
+Hình 4.2 là màn hình kết quả của kịch bản KB01 (CN02). Top-3 trả về khớp kỳ vọng: hạng 1 `GS-G01` ($S(g) = 0{,}938$), hạng 2 `GS-G10` ($0{,}745$) và hạng 3 `GS-T06` ($0{,}625$), kèm dòng thống kê “Kho: 16 hồ sơ → Hợp lệ: 5 ứng viên → Top-3: 3 gợi ý” (trên khung hình `1440×900`, thẻ `#3 GS-T06` hiển thị trong thanh tóm tắt phía trên và nằm ngay dưới nếp cuộn trang). Trên thẻ của `GS-G01`, thanh xếp chồng chia bốn đoạn `0,25 / 0,25 / 0,19 / 0,25` (vì không chọn lịch rảnh) và hiện lý do “Học phí trong ngân sách, khu vực khớp, đánh giá 5,0/5”. Con số thời gian ở góc giao diện lúc mới chuyển từ màn hình tìm kiếm sang kết quả đã bao gồm khoảng dừng 650 ms dành cho hiệu ứng chuyển trang của giao diện (`App.jsx`), còn các lượt bấm đổi mức ưu tiên tiếp theo (Hình 4.3) đo trực tiếp thời gian gọi API. Lưu ý rằng trên thanh tinh chỉnh CN03 của `ResultPage`, nút *Ưu tiên KN & Đánh giá* đặt các tiêu chí ngoài nhóm trọng tâm về Bỏ qua ($w_i = 0$, tạo nên mức điểm $0{,}990$ ở Hình 4.3), còn nút *Ưu tiên Học phí* đặt Kinh nghiệm và Đánh giá về Bỏ qua ($w_i = 0$) và giữ Khu vực cùng Lịch ở mức Thấp ($w_i = 1$) — khác với bốn bộ cấu hình thử nghiệm ở Bảng 5.8 vốn giữ toàn bộ tiêu chí ngoài trọng tâm ở mức Thấp ($w_i = 1$).
 
 ![Hình 4.3: Điều chỉnh mức ưu tiên trực tiếp (CN03) làm đổi hạng](../figures/hinh-ui-03-cn03-dieu-chinh-uu-tien.png)
 
@@ -268,7 +268,8 @@ Bảng 4.6 liệt kê các lỗi thường gặp ở đầu vào hoặc kết n�
 | Tình huống | Nơi xử lý (tệp) | Hành vi quan sát được |
 |:---|:---|:---|
 | Thiếu hoặc bỏ trống môn học | `frontend/src/pages/SearchPage.jsx` (kiểm tra trước khi gửi); `backend/app/schemas/search_request.py` (xác thực tầng API) | Giao diện nhắc “Vui lòng chọn môn học mong muốn.”; nếu gọi thẳng API mà thiếu khóa, gửi chuỗi rỗng hoặc toàn khoảng trắng, backend trả về mã HTTP 422 (với chuỗi toàn khoảng trắng là thông báo “Môn học (subject) không được để trống.”) |
-| Ngân sách âm hoặc không nguyên | `SearchPage.jsx`; `api.js`; `search_request.py` (`StrictInt`, `ge = 0`) | Giao diện nhắc “Ngân sách tối đa phải là một số không âm hợp lệ.”; nếu gọi API trực tiếp với số âm, backend trả về mã HTTP 422 (`greater_than_equal`) |
+| Ngân sách âm hoặc không nguyên | `SearchPage.jsx` (kiểm tra chuỗi chữ số nguyên); `api.js`; `search_request.py` (`StrictInt`, `ge = 0`) | Giao diện kiểm tra số nguyên không âm (không cắt phần thập phân) và nhắc “Ngân sách tối đa phải là số nguyên không âm hợp lệ (VNĐ).”; nếu gọi API trực tiếp với số âm hoặc số thực, backend trả mã HTTP 422 |
+| Bỏ trống khu vực khi học Trực tiếp | `SearchPage.jsx`; `api.js`; `backend/app/scoring/weights.py` (`QĐ-C`) | Giao diện cho phép để trống khu vực và gửi `preferred_district = null`; bộ tính trọng số tự tắt tiêu chí khu vực khỏi tổng trọng số đúng theo QĐ-C (Mục 4.3.1) |
 | Không có gia sư thỏa điều kiện bắt buộc | `backend/app/api/recommend.py`; `frontend/src/pages/ResultPage.jsx` | Backend trả về trạng thái `no_match`; giao diện hiển thị thông báo “Không tìm thấy gia sư thỏa mãn điều kiện” kèm danh sách ứng viên thiếu dữ liệu (nếu có) |
 | Tổng trọng số bằng 0 | `recommend.py`; `ResultPage.jsx`; `App.jsx` | Backend trả về trạng thái `zero_weight` kèm mảng JSON `unranked_candidates`; giao diện hiện số ứng viên hợp lệ trên thanh thống kê cùng thẻ cảnh báo và nút khôi phục trọng số mặc định (Hình 4.4) |
 | Máy chủ API không phản hồi | `frontend/src/services/api.js` | Bắt ngoại lệ kết nối mạng và hiển thị thông báo “Không thể kết nối tới máy chủ gợi ý gia sư. Vui lòng kiểm tra dịch vụ Backend đang chạy.” |
@@ -279,9 +280,9 @@ Nhóm em kiểm tra luồng tích hợp qua hai cách: chạy 41 test tự độ
 
 ### 4.6.3. Triển khai công khai
 
-Hệ thống được đưa lên mạng qua hai dịch vụ đám mây riêng. Phần giao diện frontend đóng gói bằng `npm run build` (kèm định tuyến SPA trong `vercel.json`) chạy trên Vercel tại `https://tutor-recommender.vercel.app`. Phần backend chạy trên Render Web Service với Python 3.12.7 (`uvicorn app.main:app --host 0.0.0.0 --port $PORT`) tại `https://tutor-recommender-api.onrender.com`, kèm trang Swagger UI ở `/docs` và `/health`.
+Hệ thống được lưu trữ mã nguồn công khai trên GitHub tại `https://github.com/tnduckhmt2411011-design/tutor-recommender` và đưa lên mạng qua hai dịch vụ đám mây riêng. Phần giao diện frontend React [5] đóng gói bằng `npm run build` (kèm định tuyến SPA trong `vercel.json`) chạy trên Vercel tại `https://tutor-recommender.vercel.app`. Phần backend FastAPI [4] chạy trên Render Web Service với Python 3.12.7 (`uvicorn app.main:app --host 0.0.0.0 --port $PORT`) tại `https://tutor-recommender-api.onrender.com`, kèm trang Swagger UI ở `/docs` và `/health`.
 
-Vì backend dùng gói miễn phí của Render, máy chủ sẽ tự nghỉ sau một lúc không có người truy cập. Khi có người mở lại sau thời gian nghỉ, lượt gọi đầu tiên cần khoảng 30–40 giây để máy chủ khởi động lại (*cold start*).
+Vì backend dùng gói miễn phí của Render, máy chủ sẽ tự nghỉ sau một lúc không có người truy cập. Khi có người mở lại sau thời gian nghỉ, theo tài liệu của gói Render Free Tier, lượt gọi đầu tiên ước tính cần khoảng 30–40 giây để máy chủ khởi động lại (*cold start*, đây là mức tham khảo từ tài liệu nền tảng, chưa được đo đạc định lượng riêng).
 
 ## 4.7. Giới hạn của việc hiện thực
 

@@ -55,7 +55,6 @@ function ResultPage({
     total_candidates: totalCandidates = 0,
     qualified_candidates: qualifiedCandidates = 0,
     results = [],
-    unranked_candidates: unrankedCandidates = [],
     insufficient_data_candidates: insufficientDataCandidates = [],
   } = recommendationResult || {}
 
@@ -179,7 +178,7 @@ function ResultPage({
           <span className="funnel-arrow">→</span>
           <span className="funnel-step">Hợp lệ: <strong>{qualifiedCandidates}</strong> ứng viên</span>
           <span className="funnel-arrow">→</span>
-          <span className="funnel-step funnel-highlight">Top-3: <strong>{results.length}</strong> gợi ý</span>
+          <span className="funnel-step funnel-highlight">Top-{topK}: <strong>{results.length}</strong> gợi ý</span>
         </div>
       </div>
 
@@ -214,7 +213,7 @@ function ResultPage({
                 <span className="warning-icon" aria-hidden="true">⚠️</span>
                 <div>
                   <strong>Tổng trọng số ∑w_i = 0</strong>
-                  <p>Tất cả tiêu chí đang ở mức w=0. Hệ thống phá hòa theo thứ tự mã hồ sơ gia sư.</p>
+                  <p>Không thể xếp hạng khi ∑w_i = 0; giữ nguyên các ứng viên đạt lọc bắt buộc để chọn lại mức ưu tiên.</p>
                 </div>
               </div>
             )}
@@ -361,9 +360,9 @@ function ResultPage({
               >
                 <div className="loading-badge" style={{ marginBottom: 8 }}>
                   <span className="spinner-icon" aria-hidden="true" />
-                  <span>Đang chuẩn hóa 5 tiêu chí & tính toán Top-3 tối ưu...</span>
+                  <span>Đang chuẩn hóa 5 tiêu chí & tính toán Top-{topK} tối ưu...</span>
                 </div>
-                <SkeletonLoader count={3} />
+                <SkeletonLoader count={Math.min(Math.max(1, Number(topK) || 3), 5)} />
               </motion.div>
             ) : status === 'success' && results.length > 0 ? (
               <motion.div
@@ -423,7 +422,7 @@ function ResultPage({
               </div>
               <h3 style={{ marginTop: 8, marginBottom: 8 }}>Không thể xếp hạng do tổng trọng số bằng 0</h3>
               <p className="state-message" style={{ maxWidth: 540, margin: '0 auto 16px' }}>
-                Tất cả tiêu chí đang ở mức &ldquo;Bỏ qua&rdquo; (w = 0). Vui lòng chọn mức ưu tiên cho ít nhất một tiêu chí ở bảng điều khiển bên trái để thuật toán tiến hành tính điểm và xếp hạng Top-3.
+                Tất cả tiêu chí đang ở mức &ldquo;Bỏ qua&rdquo; (w = 0). Vui lòng chọn mức ưu tiên cho ít nhất một tiêu chí ở bảng điều khiển bên trái để thuật toán tiến hành tính điểm và xếp hạng Top-{topK}.
               </p>
               <button
                 type="button"
@@ -491,19 +490,6 @@ function ResultPage({
             <div className="friendly-state-card state-error" role="alert">
               <h3>Đã xảy ra lỗi khi gợi ý</h3>
               <p>{message || 'Vui lòng kiểm tra lại thông số đầu vào và thử lại.'}</p>
-            </div>
-          )}
-
-          {status === 'success' && unrankedCandidates.length > 0 && (
-            <div className="unranked-summary">
-              <span className="summary-label">
-                Ứng viên hợp lệ khác trong kho nhưng ngoài Top-{topK}:
-              </span>{' '}
-              {unrankedCandidates.map((id) => (
-                <code key={id} className="candidate-tag">
-                  {id}
-                </code>
-              ))}
             </div>
           )}
         </main>

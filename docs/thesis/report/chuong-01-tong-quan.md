@@ -2,9 +2,9 @@
 
 ## 1.1. Lý do chọn đề tài
 
-Học sinh và phụ huynh ngày càng có nhu cầu tìm gia sư theo môn học và mục tiêu riêng. Đây là bài toán thực tế của đề tài “Hệ thống khuyến nghị gia sư dựa trên phương pháp Content-Base Filtering”. Khi chọn gia sư, người học (học sinh hoặc phụ huynh thay mặt học sinh) phải cân nhắc cùng lúc môn học, khu vực, học phí, hình thức học (trực tiếp hay trực tuyến) và khung thời gian rảnh. Số hồ sơ ít thì có thể tự đối chiếu. Danh sách càng dài thì việc duyệt từng hồ sơ để tìm phương án cân bằng giữa các tiêu chí càng tốn thời gian.
+Học sinh và phụ huynh ngày càng có nhu cầu tìm gia sư theo môn học và mục tiêu riêng. Đây là bài toán thực tế của đề tài “Hệ thống khuyến nghị gia sư dựa trên phương pháp Content-Base Filtering” (giữ nguyên tên đề tài đã đăng ký *Content-Base Filtering* ở tên chính thức; trong nội dung học thuật sử dụng thuật ngữ chuẩn tiếng Anh là *Content-Based Filtering*). Khi chọn gia sư, người học (học sinh hoặc phụ huynh thay mặt học sinh) phải cân nhắc cùng lúc môn học, khu vực, học phí, hình thức học (trực tiếp hay trực tuyến) và khung thời gian rảnh. Số hồ sơ ít thì có thể tự đối chiếu. Danh sách càng dài thì việc duyệt từng hồ sơ để tìm phương án cân bằng giữa các tiêu chí càng tốn thời gian.
 
-Lọc nhị phân theo từng tiêu chí riêng lẻ là chưa đủ. Điều người học cần là xếp hạng mức độ phù hợp tổng thể khi các tiêu chí xung đột nhau, đúng với bản chất của bài toán ra quyết định đa tiêu chí (*multi-criteria decision making*) [1]. Nhóm em chia các tiêu chí thành ba loại: điều kiện bắt buộc (như đúng môn cần học), tiêu chí ưu tiên có trọng số (như học phí, khu vực, kinh nghiệm) và tiêu chí tùy chọn. Tiêu chí tùy chọn chính là tiêu chí ưu tiên khi người học đặt trọng số bằng 0 để bỏ qua. Trong số gia sư đã đạt điều kiện bắt buộc, người có học phí vượt nhẹ ngân sách nhưng giàu kinh nghiệm và điểm đánh giá cao vẫn có thể phù hợp hơn người học phí thấp nhưng ít kinh nghiệm. Vì vậy nhóm em xây dựng một hệ thống khuyến nghị biết lọc điều kiện bắt buộc, chấm điểm phù hợp có trọng số, xếp hạng và giải thích trực quan cơ sở của thứ hạng cho người học.
+Lọc nhị phân theo từng tiêu chí riêng lẻ là chưa đủ. Điều người học cần là xếp hạng mức độ phù hợp tổng thể khi các tiêu chí xung đột nhau, đúng với bản chất của bài toán ra quyết định đa tiêu chí (*multi-criteria decision making*) [1]. Hệ thống phân chia các tiêu chí thành ba loại: điều kiện bắt buộc (như đúng môn cần học và hình thức dạy phù hợp), tiêu chí ưu tiên có trọng số (học phí, khu vực, kinh nghiệm, đánh giá, lịch rảnh) và tiêu chí tùy chọn. Tiêu chí tùy chọn thực chất là tiêu chí ưu tiên khi người học đặt trọng số $w_i = 0$ để bỏ qua khi xếp hạng. Trong số gia sư đã đạt điều kiện bắt buộc, người có học phí vượt nhẹ ngân sách nhưng giàu kinh nghiệm và điểm đánh giá cao vẫn có thể phù hợp hơn người học phí thấp nhưng ít kinh nghiệm. Vì vậy nhóm em xây dựng một hệ thống khuyến nghị biết lọc điều kiện bắt buộc, chấm điểm phù hợp có trọng số, xếp hạng và giải thích trực quan cơ sở của thứ hạng cho người học.
 
 ## 1.2. Khảo sát hiện trạng
 
@@ -48,12 +48,12 @@ Ngoài ba nền tảng trên, nhóm em có tham khảo báo cáo đồ án cơ s
 
 **Mục tiêu cụ thể.** Đồ án đặt ra bốn mục tiêu cụ thể:
 
-- Mô hình hóa mức độ phù hợp: phân loại tiêu chí (bắt buộc, ưu tiên, tùy chọn), thiết lập công thức chuẩn hóa điểm cho từng tiêu chí và xây dựng module lọc – tính điểm có trọng số.
+- Mô hình hóa mức độ phù hợp: phân loại tiêu chí (điều kiện bắt buộc, tiêu chí ưu tiên có trọng số và tiêu chí tùy chọn với $w_i = 0$), thiết lập công thức chuẩn hóa điểm cho từng tiêu chí và xây dựng module lọc – tính điểm có trọng số.
 - Xây dựng dịch vụ API khuyến nghị bằng FastAPI, nhận nhu cầu của người học và trả về danh sách gia sư đã xếp hạng kèm điểm thành phần và điểm đóng góp.
 - Xây dựng giao diện minh họa bằng React, cho phép nhập nhu cầu, chọn mức ưu tiên và quan sát kết quả xếp hạng thay đổi.
 - Đánh giá chất lượng xếp hạng bằng bộ kịch bản tìm gia sư có kết quả kỳ vọng xác định trước, kết hợp khảo sát độ nhạy tham số và ảnh hưởng của việc đổi mức ưu tiên đến thứ hạng.
 
-**Phạm vi.** Đồ án cài đặt bộ máy khuyến nghị kèm giao diện minh họa hai màn hình, chạy trên tập dữ liệu gia sư mẫu. Phạm vi kỹ thuật giới hạn ở ba điểm: mỗi truy vấn chỉ tìm một môn học; khu vực so khớp theo danh mục quận/huyện quy ước chứ chưa tính khoảng cách địa lý; và hệ thống chỉ phục vụ một tác nhân là người học. Đồ án không làm các phân hệ quản trị, đăng ký tài khoản, đặt lịch thanh toán hay đánh giá sau buổi học, và chưa thu thập dữ liệu vận hành quy mô lớn. Các hạng mục này thuộc hướng mở rộng khi phát triển thành đồ án tốt nghiệp.
+**Phạm vi.** Đồ án cài đặt bộ máy khuyến nghị kèm giao diện minh họa hai màn hình, chạy trên tập dữ liệu gia sư mẫu. Phạm vi kỹ thuật giới hạn ở ba điểm: mỗi truy vấn chỉ tìm một môn học; khu vực so khớp theo danh mục quận/huyện quy ước chứ chưa tính khoảng cách địa lý; và hệ thống chỉ phục vụ một tác nhân là người học. Trong phạm vi học phần hai tín chỉ, đồ án chưa xây dựng các phân hệ quản trị, đăng ký tài khoản, đặt lịch – thanh toán hay đánh giá sau buổi học, và chưa thu thập dữ liệu tương tác vận hành ở quy mô lớn. Các hạng mục này thuộc hướng mở rộng ở Mục 6.2 khi phát triển thành hệ thống hoàn chỉnh hoặc đồ án tốt nghiệp.
 
 ## 1.5. Công cụ và kế hoạch thực hiện
 
@@ -63,18 +63,18 @@ Nhóm em thiết kế đặc tả và kịch bản kiểm chứng trước khi l
 
 **Bảng 1.2: Phân bổ thời gian thực hiện theo chương**
 
-| Hạng mục | Số giờ dự kiến | Tỷ lệ |
-|:---|---:|---:|
-| Chương 1 - Tổng quan về đề tài | 8 giờ | 8% |
-| Chương 2 - Cơ sở lý thuyết và công nghệ | 10 giờ | 10% |
-| Chương 3 - Phân tích và thiết kế hệ thống | 30 giờ | 30% |
-| Chương 4 - Xây dựng hệ thống | 30 giờ | 30% |
-| Chương 5 - Kiểm thử và đánh giá | 16 giờ | 16% |
-| Chương 6 - Kết luận và hướng phát triển | 6 giờ | 6% |
-| **Tổng cộng** | **100 giờ** | **100%** |
+| Hạng mục | Số giờ dự kiến (1 SV) | Tỷ lệ | Tổng nhóm (3 SV) |
+|:---|---:|---:|---:|
+| Chương 1 - Tổng quan về đề tài | 8 giờ | 8% | 24 giờ |
+| Chương 2 - Cơ sở lý thuyết và công nghệ | 10 giờ | 10% | 30 giờ |
+| Chương 3 - Phân tích và thiết kế hệ thống | 30 giờ | 30% | 90 giờ |
+| Chương 4 - Xây dựng hệ thống | 30 giờ | 30% | 90 giờ |
+| Chương 5 - Kiểm thử và đánh giá | 16 giờ | 16% | 48 giờ |
+| Chương 6 - Kết luận và hướng phát triển | 6 giờ | 6% | 18 giờ |
+| **Tổng cộng** | **100 giờ** | **100%** | **300 giờ** |
 
 *(Định mức thời gian dự kiến 100 giờ cho mỗi thành viên theo quy mô học phần 2 tín chỉ; tổng quỹ thời gian của nhóm 3 thành viên là 300 giờ.)*
 
 ## 1.6. Cấu trúc báo cáo
 
-Báo cáo gồm sáu chương và bốn phụ lục. Chương 1 nêu bối cảnh, khảo sát hiện trạng, lý do chọn hướng tiếp cận, mục tiêu và phạm vi. Chương 2 trình bày cơ sở lý thuyết về hệ thống khuyến nghị, Content-Based Filtering trên dữ liệu hồ sơ có cấu trúc và Weighted Scoring. Chương 3 phân tích yêu cầu và thiết kế dữ liệu, công thức điểm thành phần, ngưỡng dữ liệu tối thiểu, kiến trúc ba lớp và giao diện. Chương 4 mô tả cách nhóm em cài đặt hệ thống bằng FastAPI và React. Chương 5 trình bày kết quả kiểm thử tự động, đối chiếu 14 kịch bản thực nghiệm, khảo sát độ nhạy tham số và các hạn chế. Chương 6 tổng kết theo bốn mục tiêu, nêu hướng phát triển và bảng phân công công việc. Bốn phụ lục trình bày bộ dữ liệu mẫu 16 hồ sơ (Phụ lục A) và cấu trúc mã nguồn module tính điểm (Phụ lục B). Phụ lục C liệt kê các sơ đồ thiết kế và ảnh giao diện, còn Phụ lục D đặc tả 14 kịch bản thực nghiệm.
+Báo cáo gồm sáu chương và bốn phụ lục. Chương 1 nêu bối cảnh, khảo sát hiện trạng, lý do chọn hướng tiếp cận, mục tiêu và phạm vi. Chương 2 trình bày cơ sở lý thuyết về hệ thống khuyến nghị, phương pháp Content-Based Filtering trên dữ liệu hồ sơ có cấu trúc, mô hình Weighted Scoring, cùng các công nghệ cài đặt được lựa chọn (Mục 2.4). Chương 3 phân tích yêu cầu và thiết kế dữ liệu, công thức điểm thành phần, ngưỡng dữ liệu tối thiểu, kiến trúc ba lớp và giao diện. Chương 4 mô tả cách nhóm em cài đặt hệ thống bằng FastAPI và React. Chương 5 trình bày kết quả kiểm thử tự động, đối chiếu 14 kịch bản thực nghiệm, khảo sát độ nhạy tham số và các hạn chế. Chương 6 tổng kết theo bốn mục tiêu, nêu hướng phát triển và bảng phân công công việc. Bốn phụ lục trình bày bộ dữ liệu mẫu 16 hồ sơ (Phụ lục A) và cấu trúc mã nguồn module tính điểm (Phụ lục B). Phụ lục C liệt kê các sơ đồ thiết kế và ảnh giao diện, còn Phụ lục D đặc tả 14 kịch bản thực nghiệm.

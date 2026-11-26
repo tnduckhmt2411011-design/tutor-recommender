@@ -1,4 +1,4 @@
-"""Kiểm định tự động cấu trúc, định dạng, công thức, ảnh, Booktabs và độ toàn vẹn của tệp DOCX chuẩn Báo cáo Học máy."""
+"""Kiểm định tự động cấu trúc, định dạng, công thức, ảnh, Booktabs và độ toàn vẹn của tệp DOCX chuẩn báo cáo đồ án CTUT (KHMT 1)."""
 
 from __future__ import annotations
 
@@ -49,6 +49,10 @@ FORBIDDEN_STRINGS: tuple[str, ...] = (
     "…",
     "Tổng: 31 bảng",
     "Tổng: 9 hình",
+    "XTHESISBRX",
+    "THESIS_BR",
+    "<br",
+    "Nhóm trưởng",
 )
 
 
@@ -84,6 +88,9 @@ def _paragraph_text_xml(p_el: ET.Element) -> str:
 
     def _walk(node: ET.Element) -> None:
         if node.tag.startswith(m_ns):
+            return
+        if node.tag == f"{w_ns}br":
+            texts.append("\n")
             return
         if node.tag == f"{w_ns}t" and node.text:
             texts.append(node.text)
@@ -133,6 +140,15 @@ def _verify_booktabs_table(tbl_el: ET.Element, idx: int, w_ns: str) -> list[str]
             if r_pr is None or r_pr.find(f"{w_ns}cantSplit") is None:
                 errs.append(f"Bảng #{idx} hàng {r_i} thiếu <w:cantSplit/>.")
                 break
+
+    m_ns = "{http://schemas.openxmlformats.org/officeDocument/2006/math}"
+    if tbl_el.findall(f".//{w_ns}tc//{m_ns}oMathPara"):
+        errs.append(f"Bảng #{idx} còn <m:oMathPara> căn giữa trong ô bảng.")
+    for p_cell in tbl_el.findall(f".//{w_ns}tc//{w_ns}p"):
+        for line in _paragraph_text_xml(p_cell).splitlines():
+            if re.search(r"\)\d+\.", line):
+                errs.append(f"Bảng #{idx} có chữ dính liền (cần <w:br/>): '{line[:80]}'.")
+                return errs
     return errs
 
 
@@ -186,7 +202,7 @@ def _toc_run_bold_flags(
 
 
 def verify_docx(docx_path: Path, repo_root: Path = REPO_ROOT) -> tuple[list[str], dict[str, object]]:
-    """Kiểm định toàn diện tệp DOCX theo chuẩn báo cáo Học máy; trả về (danh sách lỗi, thống kê)."""
+    """Kiểm định toàn diện tệp DOCX theo chuẩn báo cáo đồ án CTUT (KHMT 1); trả về (danh sách lỗi, thống kê)."""
     issues: list[str] = []
     stats: dict[str, object] = {}
 
@@ -270,7 +286,7 @@ def verify_docx(docx_path: Path, repo_root: Path = REPO_ROOT) -> tuple[list[str]
                 or abs(sec.right_margin.cm - 2.0) > 0.05
             ):
                 issues.append(
-                    f"Section {idx} sai lề chuẩn ML (2.0/2.0/3.0/2.0 cm): "
+                    f"Section {idx} sai lề chuẩn CTUT (2.0/2.0/3.0/2.0 cm): "
                     f"{sec.top_margin.cm:.2f}/{sec.bottom_margin.cm:.2f}/{sec.left_margin.cm:.2f}/{sec.right_margin.cm:.2f}."
                 )
             pg = sec._sectPr.find(qn("w:pgNumType"))
@@ -358,7 +374,6 @@ def verify_docx(docx_path: Path, repo_root: Path = REPO_ROOT) -> tuple[list[str]
     body_el = doc_xml.find(f"{w_ns}body")
     assert body_el is not None
     body_children = list(body_el)
-    top_level_ps = set(body_el.findall(f"{w_ns}p"))
 
     # Kiểm tra chuẩn Booktabs cho mọi bảng dữ liệu (sau trang bìa)
     data_table_idx = 0

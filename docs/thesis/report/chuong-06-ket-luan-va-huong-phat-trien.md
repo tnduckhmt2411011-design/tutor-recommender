@@ -15,12 +15,12 @@
 
 Trong lúc làm đồ án, giảng viên hướng dẫn (TS. Lê Anh Nhã Uyên) góp ý nên mở rộng mô hình nhu cầu theo bộ ba *(Môn học, Cấp lớp, Mục tiêu học tập)* thay vì chỉ chọn tên môn học. Nhóm em khảo sát hai phương án và đã cài ngay Phương án 1:
 
-- **Phương án 1 (Ánh xạ mục tiêu học tập sang bộ mức ưu tiên khởi tạo – đã cài đặt).** Ở màn hình nhập nhu cầu (Hình 4.1), nhóm em thêm ô “Mục tiêu học tập (gợi ý mức ưu tiên)”. Ô này có ba lựa chọn mẫu (*preset*):
+- **Phương án 1 (PA1 — Ánh xạ mục tiêu học tập sang bộ mức ưu tiên khởi tạo – đã cài đặt).** Ở màn hình nhập nhu cầu (Hình 4.1), nhóm em thêm ô “Mục tiêu học tập (gợi ý mức ưu tiên)”. Ô này có ba lựa chọn mẫu (*preset*):
   1. *Không nêu mục tiêu:* giữ cả năm tiêu chí ở mức Trung bình ($w_i = 2$).
   2. *Điểm cao / luyện thi chuyên – học sinh giỏi:* nâng Kinh nghiệm và Đánh giá lên mức Cao ($w_i = 3$), ba tiêu chí còn lại giữ Trung bình ($w_i = 2$).
   3. *Đủ điểm đậu / lấy lại kiến thức căn bản:* nâng Học phí lên mức Cao ($w_i = 3$), bốn tiêu chí còn lại giữ Trung bình ($w_i = 2$).
 
-  Sau khi chọn một gợi ý, người học vẫn chỉnh tay từng tiêu chí được; lúc đó ô mục tiêu tự chuyển sang “Tùy chỉnh”. Nhóm em thử ba bộ cấu hình trên 19 truy vấn, gồm 14 kịch bản KB01–KB14 và 5 truy vấn bổ sung TQ1–TQ5 (TQ1: Toán, trực tiếp Bình Thạnh, ngân sách 250.000 VNĐ; TQ2: Toán, trực tiếp Gò Vấp, 150.000 VNĐ; TQ3: Toán, trực tuyến, 300.000 VNĐ, lịch T2-tối & T4-tối; TQ4: Lý, trực tiếp Thủ Đức, 180.000 VNĐ; TQ5: Hóa, trực tiếp Quận 10, 220.000 VNĐ, lịch T7-sáng). Kết quả cho thấy 3/19 trường hợp đổi thứ hạng ở vị trí 2–3 (gồm KB10 và 2/5 truy vấn bổ sung TQ1, TQ2), còn hạng 1 không đổi (0/19).
+  Sau khi chọn một gợi ý, người học vẫn chỉnh tay từng tiêu chí được; lúc đó ô mục tiêu tự chuyển sang “Tùy chỉnh”. Nhóm em thử ba bộ cấu hình trên 19 truy vấn, gồm 14 kịch bản KB01–KB14 và 5 truy vấn bổ sung TQ1–TQ5 (TQ1: Toán, trực tiếp Bình Thạnh, ngân sách 250.000 VNĐ; TQ2: Toán, trực tiếp Gò Vấp, 150.000 VNĐ; TQ3: Toán, trực tuyến, 300.000 VNĐ, lịch T2-tối & T4-tối; TQ4: Lý, trực tiếp Thủ Đức, 180.000 VNĐ; TQ5: Hóa, trực tiếp Quận 10, 220.000 VNĐ, lịch T7-sáng). Kết quả cho thấy 3/19 trường hợp đổi thứ hạng ở vị trí 2–3 (gồm KB10 và 2/5 truy vấn bổ sung TQ1, TQ2), còn hạng 1 không đổi (0/19). Về phương pháp luận, cần lưu ý rằng kịch bản KB10 nguyên bản đặt tiêu chí Kinh nghiệm ở mức Cao ($w = 3$), nên việc áp preset *Không nêu mục tiêu* (cả 5 tiêu chí $w_i = 2$) sẽ ghi đè mức ưu tiên gốc của kịch bản này; ngoài ra, ba bộ trọng số PA1 đều là cấu hình khởi tạo theo phán đoán nghiệp vụ của nhóm, chưa phải trọng số học từ dữ liệu tương tác.
 - **Phương án 2 (Đưa Cấp lớp và độ hợp mục tiêu vào hàm điểm – để mở rộng sau).** Hồ sơ gia sư hiện tại (`TutorProfile`, Bảng 3.3) chỉ có 9 thuộc tính cơ bản. Hệ thống chưa có dữ liệu thật về cấp lớp nhận dạy, bằng cấp hay thế mạnh giảng dạy. Vì vậy nhóm em để Phương án 2 sang hướng phát triển tiếp theo ở Mục 6.2.3.
 
 ### 6.1.3. Môi trường triển khai thực tế
@@ -28,6 +28,7 @@ Trong lúc làm đồ án, giảng viên hướng dẫn (TS. Lê Anh Nhã Uyên)
 Nhóm em đã đưa hệ thống lên mạng để truy cập và thử trực tiếp (Mục 4.6.3):
 - **Giao diện người dùng (Frontend):** chạy trên Vercel tại `https://tutor-recommender.vercel.app`.
 - **Dịch vụ khuyến nghị (Backend API):** chạy trên Render tại `https://tutor-recommender-api.onrender.com`, kèm Swagger UI tại `https://tutor-recommender-api.onrender.com/docs` và đường dẫn `/health`.
+- **Kho mã nguồn (GitHub):** `https://github.com/tnduckhmt2411011-design/tutor-recommender`.
 
 Khi hoàn thành báo cáo này, cả giao diện lẫn API đều chạy bình thường và trả về mã trạng thái HTTP 200 OK.
 
@@ -46,8 +47,8 @@ Từ sáu hạn chế đã phân tích ở Mục 5.3, nhóm em gom lại thành 
 Nếu tiếp tục phát triển thành đồ án tốt nghiệp, nhóm em dự kiến làm theo ba hướng sau:
 
 1. **Ghép vào nền tảng quản lý gia sư hoàn chỉnh:** nối bộ máy khuyến nghị với cơ sở dữ liệu quan hệ để quản lý tài khoản người học và xác minh gia sư. Hệ thống cũng cần thêm các bước đăng ký học thử, đặt lịch dạy và nhận đánh giá thật sau khóa học.
-2. **Nâng cấp lên mô hình khuyến nghị lai (*Hybrid Recommender System*):** khi đã tích lũy đủ lịch sử tìm kiếm và chọn gia sư, có thể tạo ma trận tương tác người dùng – gia sư (*User-Item Interaction Matrix*). Kết hợp lọc cộng tác (*Collaborative Filtering*) với lọc theo đặc trưng hồ sơ hiện tại sẽ vừa gợi ý được cho gia sư mới (*cold-start*), vừa tận dụng được xu hướng lựa chọn từ cộng đồng người học.
-3. **Học trọng số tự động bằng Learning-to-Rank:** thay các tham số và bảng trọng số đặt tay bằng mô hình học máy có giám sát. Mô hình này tự chỉnh trọng số dựa trên phản hồi ngầm (lượt xem, lưu hồ sơ) và phản hồi trực tiếp (đánh giá sau buổi học).
+2. **Nâng cấp lên mô hình khuyến nghị lai (*Hybrid Recommender System*):** khi đã tích lũy đủ lịch sử tìm kiếm và chọn gia sư, có thể tạo ma trận tương tác người dùng – gia sư (*User-Item Interaction Matrix*). Kết hợp lọc cộng tác (*Collaborative Filtering*) với lọc theo đặc trưng hồ sơ hiện tại sẽ vừa gợi ý được cho gia sư mới (*cold-start*), vừa tận dụng được xu hướng lựa chọn từ cộng đồng người học [2], [6].
+3. **Học trọng số tự động bằng Learning-to-Rank (LTR):** thay các tham số và bảng trọng số đặt tay bằng mô hình học máy có giám sát [7]. Mô hình này tự chỉnh trọng số dựa trên phản hồi ngầm (lượt xem, lưu hồ sơ) và phản hồi trực tiếp (đánh giá sau buổi học).
 
 ### 6.2.3. Đề xuất mở rộng mô hình theo cấp lớp và mục tiêu học tập
 
@@ -63,11 +64,12 @@ Bảng 6.1 ghi lại công việc phụ trách và mức độ hoàn thành củ
 
 **Bảng 6.1: Phân công công việc và mức độ hoàn thành của các thành viên trong nhóm**
 
-| STT | Thành viên | Mã sinh viên | Công việc phụ trách | Mức độ hoàn thành |
-|:---:|:---|:---:|:---|:---:|
-| 1 | **Lê Thị Bích Chuyền** | KHMT2411037 | **Scrum Master các Sprint 2, 4, 6 kiêm Developer:** Điều phối quy trình Scrum ở các Sprint chẵn; phát triển giao diện React (Vite), tích hợp API và kiểm thử trải nghiệm người dùng; tham gia thiết kế dữ liệu và biên soạn báo cáo. | Hoàn thành |
-| 2 | **Trần Nguyễn Đức** | KHMT2411011 | **Scrum Master các Sprint 1, 3, 5 kiêm Developer:** Điều phối quy trình Scrum ở các Sprint lẻ và quản lý nhánh mã nguồn trên GitHub; phát triển lõi tính điểm backend FastAPI, thuật toán xếp hạng và bộ kiểm thử tự động. | Hoàn thành |
-| 3 | **Cao Khánh Ngọc** *(Nhóm trưởng)* | KHMT2411025 | **Product Owner kiêm Developer:** Phụ trách yêu cầu nghiệp vụ và trao đổi chuyên môn với GVHD (TS. Lê Anh Nhã Uyên), quản lý Product Backlog, nghiệm thu sản phẩm theo tiêu chí hoàn thành; tham gia thiết kế dữ liệu, kiểm thử kịch bản và biên soạn báo cáo. | Hoàn thành |
+| STT | Thành viên | Mã sinh viên | Công việc phụ trách | Quỹ giờ | Mức độ hoàn thành |
+|:---:|:---|:---:|:---|---:|:---:|
+| 1 | **Lê Thị Bích Chuyền** | KHMT2411037 | **Scrum Master các Sprint 2, 4, 6 kiêm Developer:** Điều phối quy trình Scrum ở các Sprint chẵn; phát triển giao diện React (Vite), tích hợp API và kiểm thử trải nghiệm người dùng; tham gia thiết kế dữ liệu và biên soạn báo cáo. | 100 giờ | Hoàn thành |
+| 2 | **Trần Nguyễn Đức** | KHMT2411011 | **Scrum Master các Sprint 1, 3, 5 kiêm Developer:** Điều phối quy trình Scrum ở các Sprint lẻ và quản lý nhánh mã nguồn trên GitHub; phát triển lõi tính điểm backend FastAPI, thuật toán xếp hạng và bộ kiểm thử tự động. | 100 giờ | Hoàn thành |
+| 3 | **Cao Khánh Ngọc** | KHMT2411025 | **Product Owner kiêm Developer:** Phụ trách yêu cầu nghiệp vụ và trao đổi chuyên môn với GVHD (TS. Lê Anh Nhã Uyên), quản lý Product Backlog, nghiệm thu sản phẩm theo tiêu chí hoàn thành; tham gia thiết kế dữ liệu, kiểm thử kịch bản và biên soạn báo cáo. | 100 giờ | Hoàn thành |
+| | **Tổng cộng** | | **6 Sprint (3 thành viên × 100 giờ theo định mức Bảng 1.2)** | **300 giờ** | **Hoàn thành 100%** |
 
 *(Phân công nhiệm vụ và mức độ hoàn thành do các thành viên trong nhóm thống nhất tự đánh giá qua 6 Sprint thực hiện đồ án.)*
 
@@ -155,9 +157,10 @@ Bảng B.1 liệt kê các tệp mã nguồn, lớp và hàm chính trong `backe
 | 6 | `backend/app/scoring/weights.py` | Lớp `EffectiveWeights`, hàm `compute_effective_weights()`, `priority_to_weight()`, `_applicable_criteria()` | Xác định tập tiêu chí ưu tiên áp dụng theo đầu vào và tính bộ trọng số hiệu dụng $w_i$; loại các tiêu chí có $w_i = 0$ khỏi tập trọng số dương. | Xác định tiêu chí áp dụng và tính trọng số hiệu dụng |
 | 7 | `backend/app/scoring/eligibility.py` | Hàm `filter_eligible_candidates()`, `check_tutor_eligibility()`, `count_available_criteria()`, `get_min_required_criteria()` | Tính số tiêu chí ưu tiên có hiệu lực $n$ ($w_i > 0$, không tính Đánh giá), đếm số tiêu chí có dữ liệu của gia sư và lọc theo bảng ngưỡng tối thiểu. | Điều kiện đủ dữ liệu để xếp hạng (Bảng 3.7) |
 | 8 | `backend/app/scoring/criteria.py` | `score_fee()`, `score_location()`, `score_experience()`, `score_rating()`, `score_schedule()` | Hiện thực 5 công thức tính điểm thành phần $s_i \in [0, 1]$ cho học phí, khu vực, kinh nghiệm, đánh giá và lịch rảnh. | Bước 3: Tính điểm thành phần $s_i$ (Bảng 3.6) |
-| 9 | `backend/app/scoring/ranker.py` | `score_and_rank()`, `_compute_single_criterion_score()`, `build_reason()`, `build_notes()` | Tổng hợp điểm Weighted Scoring $S(g) = \sum (w_i \cdot s_i) / \sum w_i$, sắp xếp giảm dần, xử lý đồng điểm theo `tutor_id`, trích xuất điểm đóng góp và lý do khuyến nghị. | Bước 4: Tổng hợp điểm Weighted Scoring và xếp hạng |
+| 9 | `backend/app/scoring/ranker.py` | `score_and_rank()`, `_compute_single_criterion_score()`, `build_reason()`, `build_notes()` | Tổng hợp điểm Weighted Scoring $S(g) = \sum_{i \in A} (w_i \cdot s_i) / \sum_{j \in A} w_j$, sắp xếp giảm dần, xử lý đồng điểm theo `tutor_id`, trích xuất điểm đóng góp và lý do khuyến nghị. | Bước 4: Tổng hợp điểm Weighted Scoring và xếp hạng |
 | 10 | `backend/app/schemas/recommendation.py` | `RankedTutor`, `RecommendationSuccessResponse`, `NoMatchResponse`, `ZeroWeightResponse` | Định nghĩa cấu trúc phản hồi JSON cho các trạng thái `success`, `no_match` và `zero_weight`. | Định dạng cấu trúc dữ liệu phản hồi |
 | 11 | `backend/app/api/recommend.py` | Điểm cuối `recommend_tutors()`, phụ trợ `get_tutor_repository()` | Tiếp nhận yêu cầu `POST /api/recommend`, điều phối chuỗi hàm tính điểm và trả kết quả chuẩn hóa. | Điều phối toàn bộ quy trình qua dịch vụ API FastAPI |
+| 12 | `backend/app/main.py` | Ứng dụng `app`, `health_check()`, `CORSMiddleware` | Điểm khởi chạy FastAPI, cấu hình CORS, gắn kết router khuyến nghị và cung cấp điểm cuối `/health`. | Khởi tạo và phục vụ dịch vụ RESTful API (Mục 3.7.2, Mục 4.4.1) |
 
 ### B.2. Hàm chấm điểm tổng hợp và kiểm tra ràng buộc
 
@@ -168,7 +171,7 @@ Các hàm tính điểm trong `backend/app/scoring/criteria.py` đều viết d�
 4. Kiểm tra ngưỡng dữ liệu qua `filter_eligible_candidates`, trả `no_match` kèm `insufficient_data_candidates` nếu không hồ sơ nào đủ dữ liệu.
 5. Chấm điểm và xếp hạng qua `score_and_rank` (giảm dần theo điểm, tăng dần theo mã gia sư).
 
-**Ghi chú nguồn Phụ lục B:** `backend/app/core/config.py`, `backend/app/data/repository.py`, `backend/app/schemas/`, `backend/app/scoring/`, `backend/app/api/recommend.py`.
+**Ghi chú nguồn Phụ lục B:** `backend/app/core/config.py`, `backend/app/data/repository.py`, `backend/app/schemas/`, `backend/app/scoring/`, `backend/app/api/recommend.py`, `backend/app/main.py`.
 
 ## Phụ lục C. Danh mục sơ đồ thiết kế và hình ảnh giao diện
 

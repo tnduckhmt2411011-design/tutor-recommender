@@ -1,4 +1,4 @@
-"""Chuyển đổi và ghép toàn bộ báo cáo Markdown thành tệp Word (.docx) theo chuẩn Báo cáo Học máy."""
+"""Chuyển đổi và ghép toàn bộ báo cáo Markdown thành tệp Word (.docx) theo chuẩn báo cáo đồ án CTUT (KHMT 1)."""
 
 from __future__ import annotations
 
@@ -16,7 +16,6 @@ from typing import Any
 import docx
 import pypandoc
 from lxml import etree
-from docx.enum.section import WD_SECTION
 from docx.enum.style import WD_STYLE_TYPE
 from docx.enum.table import WD_TABLE_ALIGNMENT
 from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK
@@ -43,6 +42,7 @@ SENTINEL_TOC_SLOT = "[[THESIS_TOC_SLOT]]"
 SENTINEL_LOT_SLOT = "[[THESIS_LOT_SLOT]]"
 SENTINEL_LOF_SLOT = "[[THESIS_LOF_SLOT]]"
 EQ_NUM_MARKER_PREFIX = "[[THESIS_EQ_NUM:"
+LINEBREAK_MARKER = "XTHESISBRX"
 
 ALERT_LABELS = {
     "NOTE": "Lưu ý:",
@@ -158,6 +158,10 @@ def preprocess_markdown(md_text: str, base_dir: Path | None = None) -> str:
                 return match.group(0)
 
             line = re.sub(r"!\[([^\]]*)\]\(([^)]+)\)", _resolve_img, line)
+
+        # Bảo toàn thẻ xuống dòng <br/> trong bảng Markdown để chuyển thành <w:br/> ở bước hậu xử lý
+        if stripped.startswith("|") and "<br" in line.lower():
+            line = re.sub(r"<br\s*/?>", LINEBREAK_MARKER, line, flags=re.IGNORECASE)
 
         out.append(line)
         i += 1
@@ -373,7 +377,7 @@ def _ensure_paragraph_style(
 
 
 def _apply_standard_styles(doc: docx.document.Document) -> None:
-    """Thiết lập đồng bộ toàn bộ hệ thống style chuẩn báo cáo Học máy trên Document."""
+    """Thiết lập đồng bộ toàn bộ hệ thống style chuẩn báo cáo đồ án CTUT (KHMT 1) trên Document."""
     styles_el = doc.styles.element
     for rpr_def in styles_el.xpath(".//w:docDefaults/w:rPrDefault"):
         _strip_theme_fonts_and_set(rpr_def, FONT_NAME, size_pt=13)
@@ -1330,15 +1334,18 @@ def _compute_smart_col_widths(tbl: Any, total_twips: int) -> list[int]:
             if c_idx >= len(tbl.rows[r_idx].cells):
                 continue
             cell = tbl.rows[r_idx].cells[c_idx]
-            p_texts = [
-                "".join(
-                    el.text
-                    for el in p_el.iter()
-                    if isinstance(el.tag, str) and el.tag.endswith("}t") and el.text
-                )
-                for p_el in cell._tc.findall(qn("w:p"))
-            ]
-            raw = "\n".join(p_texts).strip().replace("\\|", "|")
+            p_texts: list[str] = []
+            for p_el in cell._tc.findall(qn("w:p")):
+                pieces: list[str] = []
+                for el in p_el.iter():
+                    if not isinstance(el.tag, str):
+                        continue
+                    if el.tag.endswith("}br"):
+                        pieces.append("\n")
+                    elif el.tag.endswith("}t") and el.text:
+                        pieces.append(el.text)
+                p_texts.append("".join(pieces))
+            raw = "\n".join(p_texts).replace(LINEBREAK_MARKER, "\n").strip().replace("\\|", "|")
             cell_texts.append(raw)
             for tok in re.split(r"\s+", raw):
                 if tok:
@@ -1372,8 +1379,53 @@ def _compute_smart_col_widths(tbl: Any, total_twips: int) -> list[int]:
     return widths
 
 
+def _unwrap_table_omath_para_xml(root: Any) -> None:
+    """Hạ `<m:oMathPara>` trong ô bảng xuống `<m:oMath>` nội tuyến để tránh bị căn giữa lệch cột."""
+    m_ns = "http://schemas.openxmlformats.org/officeDocument/2006/math"
+    w_ns = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+    for p_el in root.findall(f".//{{{w_ns}}}tc//{{{w_ns}}}p"):
+        for omp in list(p_el.findall(f"{{{m_ns}}}oMathPara")):
+            pos = list(p_el).index(omp)
+            omaths = list(omp.findall(f"{{{m_ns}}}oMath"))
+            p_el.remove(omp)
+            for off, om in enumerate(omaths):
+                p_el.insert(pos + off, om)
+
+
+def _expand_table_linebreaks(doc: docx.document.Document) -> None:
+    """Chuyển marker `XTHESISBRX` trong các ô bảng thành ngắt dòng thật `<w:br/>` của Word."""
+    w_ns = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+    for tbl in doc.tables:
+        if _is_cover_student_table(tbl):
+            continue
+        for row in tbl.rows:
+            for cell in row.cells:
+                for p in cell.paragraphs:
+                    for r_el in list(p._p.findall(f"{{{w_ns}}}r")):
+                        t_nodes = list(r_el.findall(f"{{{w_ns}}}t"))
+                        if not t_nodes:
+                            continue
+                        full_text = "".join(tn.text or "" for tn in t_nodes)
+                        if LINEBREAK_MARKER not in full_text:
+                            continue
+                        parts = full_text.split(LINEBREAK_MARKER)
+                        for child in list(r_el):
+                            if child.tag in (f"{{{w_ns}}}t", f"{{{w_ns}}}br"):
+                                r_el.remove(child)
+                        for part_idx, part in enumerate(parts):
+                            if part_idx > 0:
+                                r_el.append(OxmlElement("w:br"))
+                            if part or part_idx == 0:
+                                t_new = OxmlElement("w:t")
+                                t_new.set(qn("xml:space"), "preserve")
+                                t_new.text = part
+                                r_el.append(t_new)
+
+
 def _format_all_tables(doc: docx.document.Document) -> None:
     """Định dạng toàn bộ bảng dữ liệu theo chuẩn Booktabs (nền trắng, không viền dọc, hàng tổng in đậm)."""
+    _expand_table_linebreaks(doc)
+    _unwrap_table_omath_para_xml(doc.element.body)
     border_xml = (
         f'<w:tblBorders {nsdecls("w")}>'
         '<w:top w:val="single" w:sz="12" w:space="0" w:color="000000"/>'
@@ -1457,12 +1509,14 @@ def _format_all_tables(doc: docx.document.Document) -> None:
                     _set_cell_border(cell, "top", "4", "000000")
 
                 for p in cell.paragraphs:
+                    if p.alignment in (None, WD_ALIGN_PARAGRAPH.JUSTIFY):
+                        p.alignment = WD_ALIGN_PARAGRAPH.LEFT
                     pf = p.paragraph_format
                     pf.first_line_indent = Cm(0)
                     pf.line_spacing = 1.15
                     pf.space_before = Pt(1)
                     pf.space_after = Pt(1)
-                    if is_header and nrows > 1:
+                    if (is_header or nrows <= 5) and (r_idx < nrows - 1):
                         pf.keep_with_next = True
                     for run in p.runs:
                         if "\\|" in run.text:
@@ -1814,6 +1868,10 @@ def _reinject_update_fields_in_docx(src_docx: Path, dst_docx: Path | None = None
                 upd.set(qn("w:val"), "true")
                 root.append(upd)
                 data = etree.tostring(root, xml_declaration=True, encoding="UTF-8", standalone="yes")
+            elif item.filename == "word/document.xml":
+                doc_root = etree.fromstring(data)
+                _unwrap_table_omath_para_xml(doc_root)
+                data = etree.tostring(doc_root, xml_declaration=True, encoding="UTF-8", standalone="yes")
             zout.writestr(item, data)
     for attempt in range(5):
         try:
@@ -1941,7 +1999,7 @@ def build(
     try_wps_com: bool = False,
     export_pdf_path: Path | None = None,
 ) -> Path:
-    """Ghép toàn bộ báo cáo Markdown và xuất tệp .docx hoàn chỉnh chuẩn báo cáo Học máy."""
+    """Ghép toàn bộ báo cáo Markdown và xuất tệp .docx hoàn chỉnh chuẩn báo cáo đồ án CTUT (KHMT 1)."""
     report_dir = repo_root / "docs" / "thesis" / "report"
     figures_dir = repo_root / "docs" / "thesis" / "figures"
     out_file = (
@@ -2073,7 +2131,7 @@ def build(
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Chuyển đổi báo cáo Markdown sang .docx chuẩn báo cáo Học máy.")
+    parser = argparse.ArgumentParser(description="Chuyển đổi báo cáo Markdown sang .docx chuẩn báo cáo đồ án CTUT (KHMT 1).")
     parser.add_argument("--wps", action="store_true", help="Cập nhật trường số trang qua WPS Writer COM nếu khả dụng.")
     parser.add_argument("--pdf-out", type=Path, default=None, help="Đường dẫn xuất thêm tệp PDF qua WPS Writer (tùy chọn).")
     args = parser.parse_args()

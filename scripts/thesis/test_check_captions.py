@@ -4,8 +4,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
-
 from check_captions import (
     audit_report,
     check_section_structure,

@@ -72,4 +72,4 @@ SL-CH5-TESTS-PERFILE,chuong-05:16-18,12 tệp = 200 bài,"collected=200, diffs={
 SL-CH5-COV,"chuong-05:20,29","340/351 câu lệnh (97%), 11 chưa phủ, 200 passed",TOTAL                             351     11    97%,pytest --cov=app,KHỚP
 SL-CH5-UNIT-COV,chuong-05:26,Bảng 5.1 hàng Unit Tests ghi '84% (294/351 câu lệnh khi chạy riêng)',TOTAL                             351     57    84%,pytest tests/unit tests/test_environment.py --cov=app,KHỚP
 SL-CH5-ZERO-KB01,chuong-05:72,5 ứng viên trong unranked_candidates,"5 (['GS-T06', 'GS-G01', 'GS-G02', 'GS-G09', 'GS-G10'])",filter_mandatory KB01,KHỚP
-SL-CH5-LATENCY,chuong-05:44-48,"Phiên đo chuẩn: 140 lượt TB 3,54 ms (max 7,97 ms); 700 lượt TB 3,72 ms (max 26,64 ms); SLA < 1.000 ms",140 lượt TB 2.13 ms (max 4.89 ms); 700 lượt TB 2.34 ms (max 20.84 ms); SLA=PASS,scripts/thesis/benchmark_latency.py (TestClient in-process),KHỚP
+SL-CH5-LATENCY,chuong-05:44-48,"Phiên đo chuẩn: 140 lượt TB 3,54 ms (max 7,97 ms); 700 lượt TB 3,72 ms (max 26,64 ms); SLA < 1.000 ms",140 lượt TB 2.19 ms (max 3.26 ms); 700 lượt TB 2.18 ms (max 18.95 ms); SLA=PASS,scripts/thesis/benchmark_latency.py (TestClient in-process),KHỚP

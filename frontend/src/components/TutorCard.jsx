@@ -79,13 +79,22 @@ function TutorCard({ item, priorities }) {
                   Khuyến nghị tốt nhất
                 </span>
               )}
-              {profile && (
-                <span
-                  className={`source-tag ${isRealData ? 'source-real' : 'source-sim'}`}
-                >
-                  {isRealData ? 'Dữ liệu thực tế' : 'Dữ liệu đối chứng'}
-                </span>
-              )}
+              {profile && (() => {
+                const badgeText = isRealData ? 'Thực tế (ước tính *)' : 'Dữ liệu đối chứng'
+                const badgeTitle = isRealData
+                  ? 'Hồ sơ thu thập công khai; học phí và lịch rảnh ước tính, đánh giá trung tính 0,5 (Bảng A.1)'
+                  : 'Hồ sơ giả lập dùng cho đối chứng (Bảng A.1)'
+                return (
+                  <span
+                    className={`source-tag ${isRealData ? 'source-real' : 'source-sim'}`}
+                    tabIndex={0}
+                    title={badgeTitle}
+                    aria-label={`${badgeText} — ${badgeTitle}`}
+                  >
+                    {badgeText}
+                  </span>
+                )
+              })()}
             </div>
             <p className="tutor-meta-line">
               <span className="meta-item subject-meta-item">

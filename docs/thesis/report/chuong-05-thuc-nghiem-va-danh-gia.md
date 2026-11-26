@@ -39,7 +39,7 @@ Nhóm em kiểm thử điểm cuối `POST /api/recommend` bằng `fastapi.testc
 3. **Đủ các trạng thái phản hồi:** bộ test kiểm tra cả ba trạng thái trả về mã HTTP 200 (`success`, `no_match` cho hai trường hợp không có người qua lọc hoặc thiếu dữ liệu, và `zero_weight` khi $\sum w_i = 0$ kèm `unranked_candidates`). Ngoài ra còn có mã lỗi HTTP 422 (`422 Unprocessable Entity`) khi đầu vào sai ràng buộc Pydantic. Các tình huống đặc biệt được giải thích thêm ở Mục 5.1.4.
 4. **Tốc độ xử lý nội tại:** nhóm em chạy kịch bản đo `scripts/thesis/benchmark_latency.py` trên 14 kịch bản KB01–KB14 với 140 lượt gọi API liên tiếp (10 lượt/kịch bản) qua `TestClient`. Thời gian xử lý trung bình là 3,54 ms và chậm nhất là 7,97 ms (sau lượt khởi tạo đầu). Khi tăng lên 700 lượt gọi liên tiếp, thời gian trung bình là 3,72 ms và chậm nhất là 26,64 ms. Mức này dư sức đáp ứng ngưỡng dưới 1.000 ms khi người học chỉnh mức ưu tiên trực tiếp trên giao diện (CN03).
 
-Cần nói rõ là phép đo trên chạy trực tiếp trong bộ nhớ qua `TestClient`, nên chưa tính độ trễ truyền qua mạng. Kết quả phản ánh riêng tốc độ tính toán của thuật toán và tầng FastAPI, thấp hơn ngưỡng 1.000 ms khoảng hai bậc độ lớn.
+Cần nói rõ là phép đo trên chạy trực tiếp trong bộ nhớ qua `TestClient`, nên chưa tính độ trễ truyền qua mạng. Trên các lần chạy cục bộ thực tế trên Windows (Python 3.12), giá trị trung bình có thể dao động nhẹ quanh `2,1–3,6 ms` tùy tải CPU tại thời điểm đo; cả hai đều phản ánh tốc độ xử lý thuần túy của thuật toán và tầng FastAPI, thấp hơn ngưỡng 1.000 ms khoảng hai bậc độ lớn.
 
 ### 5.1.3. Kiểm thử ca biên của hàm điểm và tính đơn điệu
 
@@ -72,7 +72,7 @@ Cần nói rõ là phép đo trên chạy trực tiếp trong bộ nhớ qua `Te
 
 Với bốn tình huống biên đặc biệt, hệ thống xử lý nhất quán như sau:
 
-1. **Không có gia sư thỏa điều kiện bắt buộc:** khi bộ lọc loại hết hồ sơ (ví dụ kịch bản KB05 tìm môn Tiếng Trung), API trả về `status = "no_match"`, `results = []` và `insufficient_data_candidates = []`. Giao diện hiện thông báo rõ lý do và gợi ý người học nới lỏng điều kiện.
+1. **Không có gia sư thỏa điều kiện bắt buộc:** khi bộ lọc loại hết hồ sơ (ví dụ kịch bản KB05 tìm môn Tiếng Trung), API trả về `status = "no_match"`, `results = []` và `insufficient_data_candidates = []`. Giao diện hiển thị thông báo rõ lý do (“Không tìm thấy gia sư thỏa mãn điều kiện” kèm thông điệp chi tiết từ API và nút quay lại màn hình nhập nhu cầu CN01).
 2. **Học trực tuyến (`learning_mode = "online"`):** vì học qua mạng không phụ thuộc quận/huyện, hệ thống tắt tiêu chí khu vực. Giao diện khóa ô chọn quận, bộ tính trọng số bỏ `district` khỏi tổng trọng số, còn API trả `criteria_scores["district"] = null` và `contributions["district"] = null` (như KB04, KB08, KB14).
 3. **Tổng trọng số bằng 0 ($\sum w_i = 0$):** khi người học chọn “Không quan tâm” (`none`) cho cả 5 tiêu chí, mẫu số công thức (2.1) bằng $0$. Hệ thống không chia cho 0 hay tự gán trọng số ngầm, mà trả về `zero_weight` kèm `unranked_candidates` là những gia sư đã qua lọc bắt buộc (Hình 4.4).
 4. **Bỏ trống các trường tùy chọn:** nếu người học không nhập ngân sách, khu vực hoặc lịch rảnh thì hệ thống bỏ tiêu chí đó khỏi phép tính:
@@ -127,7 +127,7 @@ Bảng 5.4 gom 14 kịch bản thành năm nhóm đặc trưng để dễ nhìn 
 | Không có ứng viên thỏa điều kiện bắt buộc (`no_match`) | KB05 | 1 | 1/1 (100%) | Không áp dụng | Trả về `status = "no_match"`, `results = []` (khớp quy ước `0/0`) |
 | **Tổng hợp toàn bộ tập kịch bản** | **KB01–KB14** | **14** | **14/14 (100%)** | **$0{,}07125$** | **Bảo toàn 100% tập hợp và thứ tự Top-3 kỳ vọng** |
 
-*(Tổng hợp từ kết quả chạy cấu hình gốc trên toàn bộ 14 kịch bản thực nghiệm.)*
+*(Tổng hợp từ kết quả chạy cấu hình gốc trên toàn bộ 14 kịch bản thực nghiệm, với độ lệch điểm tuyệt đối $\lvert \Delta S \rvert = \lvert S_{\text{hệ thống}} - S_{\text{tính tay}} \rvert$.)*
 
 Nhìn chung, hệ thống trả về Top-3 khớp 14/14 kịch bản (100%), không có ca nào bị đảo hạng hay gợi ý nhầm người. Khi rà lại từng con số giữa kết quả máy chạy và bảng tính tay ban đầu, nhóm em thấy ba điểm đáng chú ý:
 
@@ -214,7 +214,7 @@ Tiếp theo, nhóm em thử áp bốn bộ mức ưu tiên khác nhau lên toàn
 Từ Bảng 5.8, nhóm em rút ra ba nhận xét chính:
 - Ở KB01, khi bật bộ Ưu tiên Khu vực, gia sư `GS-G10` không dạy ở Bình Thạnh ($s_{\text{district}} = 0$) nên rớt khỏi Top-3. Hai gia sư dạy tại Bình Thạnh là `GS-T06` và `GS-G02` ($s_{\text{district}} = 1$) lên hạng 2 và hạng 3. Điều này cho thấy trọng số ưu tiên điều chỉnh thứ hạng đúng như người học mong muốn.
 - Ở KB10 (mặc định đặt Kinh nghiệm mức Cao, $w = 3$), khi chuyển sang bộ Mặc định hoặc Ưu tiên Học phí (mà KB10 lại không nhập ngân sách), trọng số Kinh nghiệm giảm xuống ngang Khu vực. Nhờ vậy `GS-G09` (khớp Quận 7) vượt `GS-G01` để lên hạng 2. Ngược lại, khi dùng bộ Ưu tiên Kinh nghiệm & Đánh giá, `GS-T06` (20 năm kinh nghiệm) vượt `GS-G09` (2 năm kinh nghiệm) để lọt vào Top-3.
-- Cả bốn lần thử đều giữ nguyên hạng 1 ở KB01 (`GS-G01`) và KB10 (`GS-G10`), vì hai gia sư này nổi trội hơn hẳn ở nhiều tiêu chí cùng lúc.
+- Cả bốn lần thử đều giữ nguyên hạng 1 ở KB01 (`GS-G01`) và KB10 (`GS-G10`), vì hai gia sư này nổi trội hơn hẳn ở nhiều tiêu chí cùng lúc. Đồng thời cần phân biệt bốn bộ cấu hình trong Bảng 5.8 (giữ toàn bộ tiêu chí ngoài trọng tâm ở mức Thấp $w = 1$) với các nút gợi ý nhanh trên màn hình kết quả CN03 (nút *Ưu tiên KN & Đánh giá* đặt các tiêu chí còn lại về Bỏ qua $w = 0$ như ở Hình 4.3, còn nút *Ưu tiên Học phí* đặt Kinh nghiệm và Đánh giá về $w = 0$ nhưng vẫn giữ Khu vực và Lịch ở mức Thấp $w = 1$).
 
 ### 5.2.5. Khả năng giải thích của kết quả gợi ý
 
@@ -249,6 +249,6 @@ Bên cạnh các kết quả đạt được, nhóm em nhận thấy hệ thốn
 3. **Tham số công thức đặt thủ công:** các mốc $\delta = 0{,}5$, $E_{\max} = 8$ năm, điểm trung tính $0{,}5$ và bộ trọng số $\{0, 1, 2, 3\}$ do nhóm em tự chọn ban đầu, chưa được học từ dữ liệu tương tác thực tế.
 4. **Chưa thử nghiệm với người dùng ngoài nhóm:** nhóm em chưa tổ chức khảo sát học sinh hay phụ huynh bên ngoài để xem họ có đồng ý với gợi ý của hệ thống hay không.
 5. **So khớp khu vực và môn học còn đơn giản:** khu vực chỉ so khớp đúng tên quận/huyện quy ước, chưa tính khoảng cách đường đi hay các quận giáp ranh. Mỗi lần tìm cũng chỉ chọn được một môn học.
-6. **Chưa đo độ trễ mạng thật qua Internet:** con số trung bình 3,54 ms ở Mục 5.1.2 đo nội bộ qua `TestClient`. Độ trễ thật khi người dùng gọi từ trình duyệt trên Vercel sang máy chủ Render (cộng thêm 30–40 giây khởi động lại của gói Render miễn phí sau 15 phút nghỉ) chưa được đo thành số liệu cụ thể.
+6. **Chưa đo độ trễ mạng thật qua Internet:** con số trung bình 3,54 ms ở Mục 5.1.2 đo nội bộ qua `TestClient`. Độ trễ thật khi người dùng gọi từ trình duyệt trên Vercel sang máy chủ Render (bao gồm thời gian khởi động lại *cold start* ước tính theo tài liệu Render Free Tier khoảng 30–40 giây sau 15 phút nghỉ) chưa được đo thành số liệu định lượng cụ thể.
 
 Tóm lại, thực nghiệm ở Chương 5 cho thấy bộ máy khuyến nghị chạy ổn định: đạt 200/200 bài kiểm thử tự động (độ bao phủ 97%), khớp 14/14 kịch bản Top-3 và tính toán nội tại chỉ mất vài phần nghìn giây. Sáu hạn chế vừa nêu cũng là cơ sở để nhóm em tổng kết và đề xuất hướng phát triển ở Chương 6.

@@ -8,9 +8,12 @@ import xml.etree.ElementTree as ET
 import zipfile
 
 import docx
+import pypandoc
 import pytest
 from docx.oxml.ns import qn
 
+import build_docx
+import verify_docx as verify_docx_mod
 from build_docx import (
     EQ_NUM_MARKER_PREFIX,
     ORDER,
@@ -391,3 +394,122 @@ def test_generated_report_bolds_only_level1_toc_entries() -> None:
             assert not any(flags), f"Dòng không phải cấp 1 trong '{front_section}' bị in đậm: {txt}"
 
     assert bold_lvl1_titles == expected_lvl1_titles
+
+
+def test_table_br_tags_render_as_word_linebreaks_without_smashing(tmp_path: Path) -> None:
+    raw = (
+        "| Mã | Điểm `criteria_scores`<br/>(`fee`; `district`) |\n"
+        "|---|---|\n"
+        "| KB01 | 1. GS-G01 (0,938)<br/>2. GS-G10 (0,745) |\n"
+    )
+    cleaned = preprocess_markdown(raw)
+    assert "XTHESISBRX" in cleaned
+
+    out = tmp_path / "br_test.docx"
+    pypandoc.convert_text(
+        cleaned,
+        to="docx",
+        format="markdown+tex_math_dollars+pipe_tables+raw_tex-implicit_figures",
+        outputfile=str(out),
+    )
+    doc = docx.Document(str(out))
+    build_docx._format_all_tables(doc)
+
+    w_ns = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
+    hdr_xml = ET.fromstring(doc.tables[0].rows[0].cells[1]._tc.xml)
+    assert len(hdr_xml.findall(f".//{w_ns}br")) >= 1
+    hdr_p = hdr_xml.find(f".//{w_ns}p")
+    assert hdr_p is not None
+    hdr_txt = verify_docx_mod._paragraph_text_xml(hdr_p)
+    assert "XTHESISBRX" not in hdr_txt
+    assert "THESIS_BR" not in hdr_txt
+
+    cell_xml = ET.fromstring(doc.tables[0].rows[1].cells[1]._tc.xml)
+    assert len(cell_xml.findall(f".//{w_ns}br")) >= 1
+    p_el = cell_xml.find(f".//{w_ns}p")
+    assert p_el is not None
+    txt = verify_docx_mod._paragraph_text_xml(p_el)
+    assert "XTHESISBRX" not in txt
+    assert ")2." not in txt
+    assert txt.splitlines() == ["1. GS-G01 (0,938)", "2. GS-G10 (0,745)"]
+
+
+def test_table_cells_unwrap_centered_omathpara(tmp_path: Path) -> None:
+    raw = "| Tham số | Công thức |\n|---|---|\n| KN | $E_{\\max} = 8$ |\n"
+    out = tmp_path / "math_test.docx"
+    pypandoc.convert_text(
+        raw,
+        to="docx",
+        format="markdown+tex_math_dollars+pipe_tables+raw_tex-implicit_figures",
+        outputfile=str(out),
+    )
+    doc = docx.Document(str(out))
+    # Wrap inline oMath into <m:oMathPara> (simulating WPS Writer promoting lone cell math)
+    p_el = doc.tables[0].rows[1].cells[1].paragraphs[0]._p
+    om_ns = "http://schemas.openxmlformats.org/officeDocument/2006/math"
+    omath = p_el.find(f"{{{om_ns}}}oMath")
+    assert omath is not None
+    omp = docx.oxml.OxmlElement("m:oMathPara")
+    pos = list(p_el).index(omath)
+    p_el.remove(omath)
+    omp.append(omath)
+    p_el.insert(pos, omp)
+
+    build_docx._format_all_tables(doc)
+
+    tbl_xml = ET.fromstring(doc.tables[0]._tbl.xml)
+    m_ns = f"{{{om_ns}}}"
+    assert len(tbl_xml.findall(f".//{m_ns}oMathPara")) == 0
+    assert len(tbl_xml.findall(f".//{m_ns}oMath")) >= 1
+
+
+def test_verify_docx_rejects_smashed_table_text_and_nhom_truong() -> None:
+    assert "XTHESISBRX" in verify_docx_mod.FORBIDDEN_STRINGS
+    assert "THESIS_BR" in verify_docx_mod.FORBIDDEN_STRINGS
+    assert "Nhóm trưởng" in verify_docx_mod.FORBIDDEN_STRINGS
+
+    w_ns = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
+    bad_tbl = ET.fromstring(
+        '<w:tbl xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" '
+        'xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math">'
+        '<w:tblPr><w:tblBorders>'
+        '<w:top w:val="single" w:sz="12"/><w:bottom w:val="single" w:sz="12"/><w:insideV w:val="none"/>'
+        '</w:tblBorders></w:tblPr>'
+        '<w:tr><w:trPr><w:tblHeader/><w:cantSplit/></w:trPr>'
+        '<w:tc><w:tcPr><w:tcBorders><w:bottom w:val="single" w:sz="6"/></w:tcBorders></w:tcPr>'
+        '<w:p><w:r><w:t>H</w:t></w:r></w:p></w:tc></w:tr>'
+        '<w:tr><w:trPr><w:cantSplit/></w:trPr><w:tc><w:p>'
+        '<w:r><w:t>1. A (0,9)2. B (0,8)</w:t></w:r>'
+        '<m:oMathPara><m:oMath><m:r><m:t>x</m:t></m:r></m:oMath></m:oMathPara>'
+        '</w:p></w:tc></w:tr>'
+        '</w:tbl>'
+    )
+    errs = verify_docx_mod._verify_booktabs_table(bad_tbl, 1, w_ns)
+    joined = " | ".join(errs)
+    assert "oMathPara" in joined
+    assert ")2." in joined or "dính" in joined
+
+
+def test_smart_col_widths_splits_tokens_at_word_br(tmp_path: Path) -> None:
+    fmt = "markdown+tex_math_dollars+pipe_tables+raw_tex-implicit_figures"
+    raw_br = (
+        "| Cột 1 | Cột 2 |\n"
+        "|---|---|\n"
+        "| alphatokenten<br/>betatokenten | ngắn gọn |\n"
+    )
+    raw_sp = (
+        "| Cột 1 | Cột 2 |\n"
+        "|---|---|\n"
+        "| alphatokenten betatokenten | ngắn gọn |\n"
+    )
+    p_br = tmp_path / "t_br.docx"
+    p_sp = tmp_path / "t_sp.docx"
+    pypandoc.convert_text(preprocess_markdown(raw_br), to="docx", format=fmt, outputfile=str(p_br))
+    pypandoc.convert_text(preprocess_markdown(raw_sp), to="docx", format=fmt, outputfile=str(p_sp))
+
+    d_br = docx.Document(str(p_br))
+    d_sp = docx.Document(str(p_sp))
+    build_docx._expand_table_linebreaks(d_br)
+    w_br = build_docx._compute_smart_col_widths(d_br.tables[0], build_docx.PRINTABLE_WIDTH_TWIPS)
+    w_sp = build_docx._compute_smart_col_widths(d_sp.tables[0], build_docx.PRINTABLE_WIDTH_TWIPS)
+    assert w_br == w_sp

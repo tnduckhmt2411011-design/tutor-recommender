@@ -31,7 +31,7 @@ Nhóm em đặt ra bốn yêu cầu phi chức năng.
 
 ## 3.4. Mô hình hóa mức độ phù hợp
 
-Nhóm em chia tiêu chí thành ba loại. Tiêu chí bắt buộc: gia sư không thỏa thì bị loại khỏi tập ứng viên. Tiêu chí ưu tiên: dùng để chấm điểm xếp hạng. Tiêu chí tùy chọn: chỉ đưa vào công thức khi người học quan tâm. Bảng 3.2 cho biết từng tiêu chí thuộc loại nào và được xử lý ra sao.
+Hệ thống phân chia các tiêu chí thành ba loại. Tiêu chí bắt buộc: gia sư không thỏa thì bị loại khỏi tập ứng viên. Tiêu chí ưu tiên: dùng để chấm điểm xếp hạng. Tiêu chí tùy chọn: chỉ đưa vào công thức khi người học quan tâm. Bảng 3.2 cho biết từng tiêu chí thuộc loại nào và được xử lý ra sao.
 
 **Bảng 3.2: Phân loại tiêu chí**
 
@@ -75,6 +75,7 @@ Bộ dữ liệu mẫu lưu dưới dạng tệp phẳng JSON và CSV, không c�
 | `ngân_sách_tối_đa` | Mức học phí tối đa mỗi giờ người học mong muốn (VNĐ/giờ), hoặc để trống |
 | `khung_thời_gian` | Tập khung giờ rảnh của người học (cùng cách chia ô như `lịch_rảnh`), hoặc để trống |
 | `mức_ưu_tiên` | Mức ưu tiên của năm tiêu chí: học phí, khu vực, kinh nghiệm, đánh giá, lịch rảnh |
+| `số_kết_quả` | Số lượng gia sư tối đa trả về trong danh sách Top-$k$ (`top_k`, số nguyên thuộc đoạn $[1, 20]$, mặc định $3$) |
 
 **Mức ưu tiên và trọng số.** Nhóm em không bắt người học tự nhập năm tỷ lệ phần trăm có tổng bằng 100%. Thay vào đó, hệ thống đưa ra bốn mức ưu tiên rời rạc và đổi sang trọng số nguyên theo Bảng 3.5. Mặc định cả năm tiêu chí đều ở mức “Trung bình” ($w_i = 2$), một cấu hình xuất phát trung lập để minh họa thuật toán.
 
@@ -90,7 +91,7 @@ Bộ dữ liệu mẫu lưu dưới dạng tệp phẳng JSON và CSV, không c�
 **Nguyên tắc thiết kế dữ liệu mẫu.** Nhóm em thiết kế bộ dữ liệu mẫu có chủ đích, để chạm được mọi nhánh của thuật toán. Bản ghi thu thập từ nguồn công khai và bản ghi giả lập (mô phỏng) được phân biệt qua trường `nguồn_dữ_liệu`, và tất cả đã được ẩn danh. Bộ dữ liệu theo năm nguyên tắc sau:
 - Có các cặp hồ sơ xung đột tiêu chí, ví dụ gia sư học phí thấp nhưng ít kinh nghiệm đặt cạnh gia sư học phí cao nhưng giàu kinh nghiệm và đánh giá cao.
 - Có các cặp hồ sơ chỉ khác nhau đúng một tiêu chí, để kiểm tra riêng từng hàm tính điểm thành phần.
-- Có ít nhất một truy vấn mà không gia sư nào thỏa điều kiện bắt buộc.
+- Bảo đảm trong bộ kiểm thử có ít nhất một truy vấn mà không gia sư nào thỏa điều kiện bắt buộc (ví dụ kịch bản KB05 với môn Tiếng Trung).
 - Có hồ sơ gia sư thiếu điểm đánh giá trung bình, để kiểm tra cơ chế gán điểm trung tính.
 - Không sắp đặt dữ liệu theo hướng làm thuật toán dễ đạt kết quả tốt một cách giả tạo.
 
@@ -109,11 +110,11 @@ Quy trình lọc và xếp hạng gia sư chạy qua bốn bước tuần tự:
 
 | Tiêu chí | Đầu vào | Công thức điểm $s_i$ | Tham số | Ví dụ |
 |:---|:---|:---|:---|:---|
-| Học phí | $P$: học phí gia sư; $B$: ngân sách | $s = 1$ nếu $P \le B$; $s = \max(0, 1 - (P - B) \div (\delta \times B))$ nếu $P > B$ | $\delta = 0{,}5$ (vượt 50% ngân sách thì điểm về 0) | $B = 200.000$: $P = 180.000 \rightarrow 1{,}00$; $P = 230.000 \rightarrow 0{,}70$; $P = 300.000 \rightarrow 0{,}00$ |
-| Khu vực | $K$: khu vực người học; tập khu vực của gia sư | $s = 1$ nếu $K$ thuộc khu vực dạy của gia sư; ngược lại $s = 0$ | Không áp dụng nếu học Trực tuyến hoặc không nhập $K$ | $K = \text{KV1}$: gia sư dạy $\{\text{KV1}, \text{KV2}\} \rightarrow 1$; gia sư dạy $\{\text{KV3}\} \rightarrow 0$; chỉ trực tuyến $\rightarrow 0$ |
-| Kinh nghiệm | $E$: số năm kinh nghiệm | $s = \min(E \div E_{\max}, 1)$ | $E_{\max} = 8$ | $E = 0 \rightarrow 0{,}00$; $E = 4 \rightarrow 0{,}50$; $E = 10 \rightarrow 1{,}00$ |
-| Đánh giá | $R$: điểm trung bình (thang 5) | $s = R \div 5$; nếu chưa có đánh giá thì $s = 0{,}5$ (giá trị trung tính) | Giá trị trung tính $0{,}5$ | $R = 5 \rightarrow 1{,}00$; $R = 4{,}5 \rightarrow 0{,}90$; $R = 3 \rightarrow 0{,}60$ |
-| Lịch rảnh | $L$: khung giờ người học; $T$: khung giờ gia sư | $s = \lvert L \cap T \rvert \div \lvert L \rvert$ (Bước 2 đã bảo đảm $\lvert L \cap T \rvert \ge 1$) | Không áp dụng nếu người học không nhập $L$ | $L$ có 3 khung, giao 2 khung $\rightarrow 2/3 \approx 0{,}67$; $L$ có 7 khung, giao 6 khung $\rightarrow 6/7 \approx 0{,}86$; $L$ có 4 khung, giao 1 khung $\rightarrow 1/4 = 0{,}25$ |
+| Học phí | $P \ge 0$: học phí gia sư; $B \ge 0$: ngân sách | $s = 1$ nếu $P \le B$; nếu $P > B$: $s = 0$ khi $B = 0$, ngược lại $s = \max\!\left(0,\, 1 - \frac{P - B}{\delta \cdot B}\right)$ | $\delta = 0{,}5$ (khi $B > 0$, vượt quá $50\%$ ngân sách thì điểm về $0$) | $B = 200.000$: $P = 180.000 \rightarrow 1{,}00$; $P = 230.000 \rightarrow 0{,}70$; $P = 300.000 \rightarrow 0{,}00$ |
+| Khu vực | $K$: khu vực người học; tập khu vực của gia sư | $s = 1$ nếu $K$ thuộc khu vực dạy của gia sư; ngược lại $s = 0$ | Không áp dụng nếu học Trực tuyến hoặc không nhập $K$ | Ký hiệu giả định KV1, KV2, KV3 đại diện các quận thuộc Phụ lục A; $K = \text{KV1}$: dạy $\{\text{KV1}, \text{KV2}\} \rightarrow 1$; $\{\text{KV3}\} \rightarrow 0$; chỉ trực tuyến $\rightarrow 0$ |
+| Kinh nghiệm | $E \ge 0$: số năm kinh nghiệm | $s = \min\!\left(\frac{E}{E_{\max}},\, 1\right)$ | $E_{\max} = 8$ | $E = 0 \rightarrow 0{,}00$; $E = 4 \rightarrow 0{,}50$; $E = 10 \rightarrow 1{,}00$ |
+| Đánh giá | $R \in [0, 5]$ (hoặc để trống): điểm trung bình | $s = \frac{R}{5}$; nếu chưa có đánh giá thì $s = 0{,}5$ | Giá trị trung tính $0{,}5$ | $R = 5 \rightarrow 1{,}00$; $R = 4{,}5 \rightarrow 0{,}90$; $R = 3 \rightarrow 0{,}60$; chưa có $\rightarrow 0{,}50$ |
+| Lịch rảnh | $L$ ($\lvert L \rvert \ge 1$): khung giờ người học; $T$: khung giờ gia sư | $s = \frac{\lvert L \cap T \rvert}{\lvert L \rvert}$ (Bước 2 bảo đảm $\lvert L \cap T \rvert \ge 1$) | Không áp dụng nếu người học không nhập $L$ | $L$ có 3 khung, giao 2 khung $\rightarrow 2/3 \approx 0{,}67$; $L$ có 7 khung, giao 6 khung $\rightarrow 6/7 \approx 0{,}86$; $L$ có 4 khung, giao 1 khung $\rightarrow 1/4 = 0{,}25$ |
 
 **Cơ sở của các tham số.** Nhóm em chọn hai tham số khởi đầu là $\delta = 0{,}5$ và $E_{\max} = 8$, sau đó khảo sát độ nhạy ở Mục 5.2.3. Các hàm điểm trong Bảng 3.6 đều giữ tính đơn điệu: học phí tăng thì điểm giảm hoặc giữ nguyên, còn kinh nghiệm, điểm đánh giá và số khung giờ trùng tăng thì điểm tăng hoặc giữ nguyên. Tính chất này được kiểm tra tự động bằng bộ ca biên ở Mục 5.1.3.
 
@@ -140,7 +141,7 @@ Quy trình lọc và xếp hạng gia sư chạy qua bốn bước tuần tự:
 
 *(Tiêu chí Đánh giá luôn xác định nhờ giá trị trung tính $0{,}5$ nên không tính vào $n$, và các tiêu chí đặt $w_i = 0$ hoặc bỏ trống đầu vào cũng không tính vào $n$; do đó với năm tiêu chí hiện tại, $n$ nhận giá trị từ $0$ đến $4$, còn mốc $n = 5$ được dự phòng khi mở rộng thêm tiêu chí mới. Khi $n = 0$, ngưỡng tối thiểu bằng $0$ và không loại hồ sơ nào vì thiếu dữ liệu.)*
 
-**Ví dụ tính điểm đầy đủ.** Giả sử người học tìm gia sư môn Toán, học Trực tiếp tại KV1, ngân sách $200.000$ VNĐ/giờ, khung giờ $L = \{\text{T2-tối}, \text{T4-tối}, \text{T7-sáng}\}$ và để mọi mức ưu tiên ở “Trung bình” ($w_i = 2$). Xét một gia sư dạy Toán, hình thức “Cả hai”, nhận dạy tại KV1, học phí $230.000$ VNĐ/giờ, $4$ năm kinh nghiệm, đánh giá $4{,}5/5$ và trùng $2$ trên $3$ khung giờ. Gia sư này qua bước lọc bắt buộc và đạt năm điểm thành phần: học phí $0{,}70$, khu vực $1{,}00$, kinh nghiệm $0{,}50$, đánh giá $0{,}90$, lịch rảnh $2/3 \approx 0{,}67$. Điểm tổng hợp là $S = (0{,}70 + 1{,}00 + 0{,}50 + 0{,}90 + 0{,}67) \div 5 \approx 0{,}75$. Nếu giữ nguyên phân số $2/3$ không làm tròn giữa chừng, $S = 113/150 \approx 0{,}753$, vẫn cho cùng thứ tự xếp hạng.
+**Ví dụ tính điểm đầy đủ.** Giả sử người học tìm gia sư môn Toán, học Trực tiếp tại một khu vực ký hiệu KV1 (nhận dạy cùng KV1), ngân sách $200.000$ VNĐ/giờ, khung giờ $L = \{\text{T2-tối}, \text{T4-tối}, \text{T7-sáng}\}$ và để mọi mức ưu tiên ở “Trung bình” ($w_i = 2$). Xét một gia sư dạy Toán, hình thức “Cả hai”, nhận dạy tại KV1, học phí $230.000$ VNĐ/giờ, $4$ năm kinh nghiệm, đánh giá $4{,}5/5$ và trùng $2$ trên $3$ khung giờ. Gia sư này qua bước lọc bắt buộc và đạt năm điểm thành phần: học phí $0{,}70$, khu vực $1{,}00$, kinh nghiệm $0{,}50$, đánh giá $0{,}90$, lịch rảnh $2/3 \approx 0{,}67$. Điểm tổng hợp là $S = (0{,}70 + 1{,}00 + 0{,}50 + 0{,}90 + 0{,}67) \div 5 \approx 0{,}75$. Nếu giữ nguyên phân số $2/3$ không làm tròn giữa chừng, $S = 113/150 \approx 0{,}753$, vẫn cho cùng thứ tự xếp hạng.
 
 ## 3.7. Kiến trúc hệ thống và luồng xử lý
 
@@ -156,7 +157,7 @@ Về mặt nghiệp vụ, luồng xử lý chính gồm tám bước tuần tự
 7. Tổng hợp điểm phù hợp $S(g)$ theo công thức Weighted Scoring (2.1), xếp hạng giảm dần (phá hòa theo mã gia sư) và trích xuất Top-$k$.
 8. Hiển thị danh sách Top-$k$ kèm điểm thành phần, mức đóng góp $C_i$ và lý do gợi ý (CN02); nếu người học điều chỉnh mức ưu tiên (CN03), hệ thống cập nhật ưu tiên và lặp lại từ bước 2.
 
-Hình 3.1 trình bày đầy đủ tám bước trên theo quy chuẩn lưu đồ ISO 5807, làm rõ năm điểm rẽ nhánh khi đầu vào sai (HTTP 422), khi không còn ứng viên qua lọc (`no_match`), khi tổng trọng số bằng $0$ (`zero_weight`), khi toàn bộ ứng viên thiếu dữ liệu và khi người học điều chỉnh lại mức ưu tiên (CN03).
+Hình 3.1 trình bày đầy đủ tám bước trên theo quy chuẩn lưu đồ ISO 5807, làm rõ năm điểm rẽ nhánh khi đầu vào sai (HTTP 422), khi không còn ứng viên qua lọc (`no_match`), khi tổng trọng số bằng $0$ (`zero_weight`), khi toàn bộ ứng viên thiếu dữ liệu và khi người học điều chỉnh lại mức ưu tiên (CN03). Cụ thể, bốn bước khái quát ở Mục 3.6 tương ứng với tám bước nghiệp vụ trong Hình 3.1 (Bước 1 Mục 3.6 ứng với các bước 1–2; Bước 2 ứng với bước 3; Bước 3 ứng với các bước 4–6; Bước 4 ứng với các bước 7–8) và năm bước điều phối API trên backend ở Phụ lục B.2.
 
 ![Hình 3.1: Sơ đồ luồng xử lý khuyến nghị](../figures/hinh-3-1-luong-xu-ly-khuyen-nghi.png)
 
