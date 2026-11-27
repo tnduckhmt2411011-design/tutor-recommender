@@ -1,6 +1,6 @@
 /**
  * Danh mục 14 kịch bản kiểm thử thực nghiệm (KB01–KB14) đồng bộ từ
- * backend/tests/scenarios/scenarios.json (Bảng 5.1 đề cương).
+ * backend/tests/scenarios/scenarios.json (Bảng 5.3 báo cáo).
  * Hỗ trợ nạp nhanh dữ liệu mẫu trên giao diện để kiểm thử luồng end-to-end và demo bảo vệ.
  */
 

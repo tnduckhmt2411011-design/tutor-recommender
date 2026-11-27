@@ -32,11 +32,15 @@ const SCHEDULE_PATTERNS = [
 ]
 
 function formatBudgetInVietnameseWords(amount) {
-  if (amount === undefined || amount === null || String(amount).trim() === '') {
+  if (amount === undefined || amount === null) {
     return ''
   }
-  const num = Number(amount)
-  if (!Number.isFinite(num) || num < 0) return ''
+  const raw = String(amount).trim()
+  if (raw === '' || !/^\d+$/.test(raw)) {
+    return ''
+  }
+  const num = Number(raw)
+  if (!Number.isSafeInteger(num) || num < 0) return ''
   if (num === 0) return '= 0 VNĐ / giờ (Miễn phí)'
 
   const digits = ['không', 'một', 'hai', 'ba', 'bốn', 'năm', 'sáu', 'bảy', 'tám', 'chín']
@@ -237,15 +241,14 @@ function SearchPage({
       return
     }
 
-    if (learningMode === 'in_person' && (!preferredDistrict || !String(preferredDistrict).trim())) {
-      setValidationError('Hình thức học Trực tiếp (In-person) bắt buộc chọn khu vực Quận/Huyện mong muốn.')
-      return
-    }
-
-    if (maxBudgetVnd !== '' && maxBudgetVnd !== undefined && maxBudgetVnd !== null) {
-      const budgetNum = Number(maxBudgetVnd)
-      if (Number.isNaN(budgetNum) || budgetNum < 0) {
-        setValidationError('Ngân sách tối đa phải là một số không âm hợp lệ.')
+    const rawBudget =
+      maxBudgetVnd === undefined || maxBudgetVnd === null
+        ? ''
+        : String(maxBudgetVnd).trim()
+    if (rawBudget !== '') {
+      const budgetNum = Number(rawBudget)
+      if (!/^\d+$/.test(rawBudget) || !Number.isSafeInteger(budgetNum) || budgetNum < 0) {
+        setValidationError('Ngân sách tối đa phải là số nguyên không âm hợp lệ (VNĐ).')
         return
       }
     }
@@ -286,11 +289,11 @@ function SearchPage({
       {/* Scenario Strip Panel */}
       <section
         className="scenario-strip-panel"
-        aria-label="Nạp nhanh 14 kịch bản thực nghiệm Bảng 5.1"
+        aria-label="Nạp nhanh 14 kịch bản thực nghiệm Bảng 5.3"
       >
         <div className="scenario-strip-header">
           <div className="strip-title-group">
-            <span className="strip-title">Kịch bản thực nghiệm (Bảng 5.1 · KB01 - KB14):</span>
+            <span className="strip-title">Kịch bản thực nghiệm (Bảng 5.3 · KB01 - KB14):</span>
             <label
               className="auto-run-toggle"
               title="Khi bật: Click kịch bản sẽ chạy và chuyển thẳng đến trang kết quả. Khi tắt: Nạp thông số vào biểu mẫu để tùy chỉnh."

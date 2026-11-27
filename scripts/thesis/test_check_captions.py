@@ -4,8 +4,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
-
 from check_captions import (
     audit_report,
     check_section_structure,
@@ -51,9 +49,9 @@ def _write_sample_repo(tmp_path: Path, *, break_table_seq: bool = False) -> Path
 def test_extract_captions_distinguishes_caption_from_reference(tmp_path: Path) -> None:
     md = (
         "Theo Bảng 1.1 và Hình 1.1 cho thấy kết quả.\n\n"
-        "**Bảng 1.1 - Bảng đầu tiên**\n\n"
+        "**Bảng 1.1: Bảng đầu tiên**\n\n"
         "| Cột |\n|---|\n| 1 |\n\n"
-        "**Hình 1.1 - Sơ đồ**\n"
+        "**Hình 1.1: Sơ đồ**\n"
     )
     tables, figures = extract_captions(md)
     assert tables == [("1.1", "Bảng đầu tiên", 3)]
@@ -105,3 +103,16 @@ def test_check_section_structure_flags_broken_muc_ref_and_single_child(tmp_path:
     codes = {i.code for i in issues}
     assert "BROKEN_SECTION_REF" in codes
     assert "SINGLE_CHILD_HEADING" in codes
+
+
+def test_audit_report_flags_citation_in_front_matter(tmp_path: Path) -> None:
+    report_dir = _write_sample_repo(tmp_path, break_table_seq=False)
+    fm_path = report_dir / "muc-luc-va-ho-so-ban-giao.md"
+    fm_path.write_text(
+        "## 5. Lời cam đoan\n\n"
+        "Tham khảo tài liệu [1] ở phần mở đầu.\n\n"
+        + fm_path.read_text(encoding="utf-8"),
+        encoding="utf-8",
+    )
+    issues = audit_report(report_dir)
+    assert "FRONT_MATTER_CITATION" in {i.code for i in issues}

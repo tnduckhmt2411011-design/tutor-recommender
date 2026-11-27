@@ -22,7 +22,7 @@ export const GOAL_PRESETS = [
   },
   {
     key: 'high_score',
-    label: 'Điểm cao / luyện thi chuyên – học sinh giỏi',
+    label: 'Điểm cao / luyện thi chuyên - học sinh giỏi',
     description: 'Kinh nghiệm và Đánh giá ở mức Cao; ba tiêu chí còn lại Trung bình.',
     priorities: {
       fee: 'medium',

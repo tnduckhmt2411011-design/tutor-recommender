@@ -1,9 +1,9 @@
 ﻿# Hệ thống khuyến nghị gia sư dựa trên phương pháp Content-Base Filtering
 
-Repository mã nguồn và tài liệu của đồ án tốt nghiệp đại học về hệ thống gợi ý gia sư đa tiêu chí.
+Repository mã nguồn và tài liệu của đồ án Khoa học máy tính 1 (CTUT) về hệ thống gợi ý gia sư đa tiêu chí.
 
 > **Đề tài đã đăng ký:** "Hệ thống khuyến nghị gia sư dựa trên phương pháp Content-Base Filtering"  
-> **Phạm vi hệ thống:** Đây là hệ thống gợi ý chuyên sâu (Recommendation Engine) kèm giao diện tương tác demo trên bộ dữ liệu mẫu nhỏ (16 hồ sơ), không phải nền tảng kết nối gia sư đầy đủ; hệ thống chưa có dữ liệu đánh giá từ người học thực tế và đang chờ ý kiến đóng góp chính thức từ Giáo viên hướng dẫn.
+> **Phạm vi hệ thống:** Đây là hệ thống gợi ý chuyên sâu (Recommendation Engine) kèm giao diện tương tác demo trên bộ dữ liệu mẫu nhỏ (16 hồ sơ), không phải nền tảng kết nối gia sư đầy đủ; hệ thống chưa có dữ liệu đánh giá từ người học thực tế và đã tích hợp phần mở rộng Phương án 1 theo góp ý của Giảng viên hướng dẫn (TS. Lê Anh Nhã Uyên) ở Mục 6.1.2.
 
 ---
 
@@ -20,7 +20,7 @@ Repository mã nguồn và tài liệu của đồ án tốt nghiệp đại h�
 - **Backend:** Python 3.12, FastAPI 0.162, Pydantic 2.14, Uvicorn 0.54
 - **Frontend:** React 19, Vite 8, JavaScript (JSX), CSS thuần (vẽ thanh xếp chồng Stacked Bar bằng HTML/CSS; hoàn toàn không sử dụng TailwindCSS hay Recharts)
 - **Lưu trữ dữ liệu:** JSON và CSV (`data/processed/tutors.json`, `data/processed/tutors.csv`)
-- **Kiểm thử & đảm bảo chất lượng:** Pytest 9.2, Pytest-cov 7.1, HTTPX 0.28, Ruff 0.17 (backend); Oxlint 1.89 (frontend)
+- **Kiểm thử & đảm bảo chất lượng:** Pytest 9.2, Pytest-cov 7.1, HTTPX 0.28, Ruff 0.17 (backend); Oxlint 1.90 (frontend)
 
 ---
 
@@ -32,11 +32,11 @@ Repository mã nguồn và tài liệu của đồ án tốt nghiệp đại h�
 | `backend/app/schemas/` | Lược đồ dữ liệu Pydantic cho hồ sơ gia sư, yêu cầu tìm kiếm và cấu trúc phản hồi gợi ý | Mục 3.5 (Bảng 3.3, 3.4), Mục 4.4 |
 | `backend/app/api/` | Endpoint FastAPI tiếp nhận yêu cầu (`POST /api/recommend`) và kiểm tra sức khỏe (`GET /health`) | Mục 4.4 |
 | `backend/tests/` | Bộ 200 bài kiểm thử tự động (unit test, ca biên toán học, API test, 14 kịch bản thực nghiệm và khảo sát độ nhạy) | Mục 5.1, Mục 5.2 |
-| `frontend/` | Giao diện người dùng React 19 + Vite (nhập nhu cầu, chọn mức ưu tiên, hiển thị Top-3, biểu đồ thanh xếp chồng, ô mục tiêu học tập US-41) | Mục 3.8, Mục 4.5 |
+| `frontend/` | Giao diện người dùng React 19 + Vite (nhập nhu cầu, chọn mức ưu tiên, hiển thị Top-3, biểu đồ thanh xếp chồng, ô mục tiêu học tập) | Mục 3.8, Mục 4.5 |
 | `data/` | Dữ liệu 16 hồ sơ gia sư mẫu (14 mô phỏng, 2 thu thập công khai có ẩn danh) dạng JSON và CSV | Mục 3.5, Phụ lục A |
 | `docs/design/` | Đặc tả thuật toán (`scoring-spec.md`), hợp đồng API (`api-contract.md`), từ điển dữ liệu, đề xuất mở rộng mục tiêu học tập | Chương 3, Chương 4 |
 | `docs/scrum/` | Tài liệu quản trị dự án Agile/Scrum qua 6 Sprint (backlog, roadmap, roles, sprint reviews) | Kế hoạch thực hiện đồ án |
-| `docs/thesis/` | Báo cáo thực nghiệm Chương 5, Chương 6 (Phụ lục A–D) và slide bảo vệ | Báo cáo đồ án |
+| `docs/thesis/` | Toàn bộ báo cáo đồ án (Phần mở đầu, Chương 1–6, Phụ lục A–D, Tài liệu tham khảo), ảnh giao diện, kịch bản demo và slide bảo vệ | Báo cáo đồ án |
 | `docs/decisions/` | Hồ sơ ghi nhận quyết định kiến trúc và công nghệ (ADR) | Thiết kế hệ thống |
 | `scripts/` | Kịch bản kiểm tra toàn vẹn dữ liệu hồ sơ gia sư (`validate_tutors.py`) | Đảm bảo chất lượng dữ liệu |
 
@@ -100,16 +100,16 @@ npm run dev
 Sau khi mở giao diện tại `http://localhost:5173`, người dùng có thể thực hiện 4 thao tác thử nghiệm chính:
 
 1. **Thao tác 1 — Nhập nhu cầu và nạp nhanh kịch bản (CN01):**
-   - Tại thanh "Nạp nhanh kịch bản kiểm thử", nhấn nút **KB01**. Hệ thống tự động điền các tham số: môn Toán, học Trực tiếp, khu vực Bình Thạnh, ngân sách tối đa 200.000 VNĐ/giờ, các mức ưu tiên ở mức Trung bình ($w=2$).
-   - Khảo sát ô lựa chọn "Mục tiêu học tập" (US-41) với 3 preset: *Mặc định*, *Luyện thi điểm cao / học chuyên*, *Đậu tốt nghiệp / lấy lại căn bản*.
-   - Nhấn nút **"Tìm gia sư phù hợp"**.
+   - Tại thanh `"Kịch bản thực nghiệm (Bảng 5.3 · KB01 - KB14):"` (có thể bỏ tích ô `"Tự động chuyển kết quả"` trước nếu muốn quan sát biểu mẫu rồi mới bấm tìm), nhấn nút **KB01**. Hệ thống tự động điền các tham số: môn Toán, học Trực tiếp, khu vực Bình Thạnh, ngân sách tối đa 200.000 VNĐ/giờ, các mức ưu tiên ở mức Trung bình ($w=2$).
+   - Khảo sát ô lựa chọn "Mục tiêu học tập" với 3 preset: *Không nêu mục tiêu*, *Điểm cao / luyện thi chuyên - học sinh giỏi*, *Đủ điểm đậu / lấy lại kiến thức căn bản*.
+   - Nhấn nút **"Tìm gia sư phù hợp →"** (nếu đã bỏ tích tự động chuyển).
 2. **Thao tác 2 — Xem kết quả gợi ý và phân rã điểm đóng góp (CN02):**
    - Màn hình kết quả hiển thị danh sách Top-3 gia sư: Hạng 1 là `GS-G01` (điểm tổng 0,938), Hạng 2 là `GS-G10` (0,745), Hạng 3 là `GS-T06` (0,625).
    - Quan sát biểu đồ thanh xếp chồng (Stacked Bar Score) hiển thị trực quan tỷ lệ đóng góp của từng tiêu chí vào điểm tổng: $\frac{w_i \cdot s_i}{\sum w_i}$.
    - Đọc phần ghi chú giải thích lý do gợi ý nổi bật bên dưới mỗi thẻ gia sư.
 3. **Thao tác 3 — Điều chỉnh mức ưu tiên trực tiếp (CN03):**
-   - Tại thanh điều khiển mức ưu tiên trên màn hình kết quả, thử thay đổi mức ưu tiên: chuyển tiêu chí Học phí và Đánh giá về mức "Bỏ qua (w = 0)", chuyển tiêu chí Kinh nghiệm lên mức "Cao (w = 3)".
-   - Quan sát danh sách gia sư được tính toán lại ngay lập tức và thứ tự xếp hạng thay đổi trực tiếp trên giao diện.
+   - Tại thanh điều khiển mức ưu tiên trên màn hình kết quả, thử thay đổi mức ưu tiên: chuyển tiêu chí Học phí và Khu vực về mức `"Bỏ qua (w = 0)"`, chuyển tiêu chí Kinh nghiệm và Đánh giá lên mức `"Cao (w = 3)"` (hoặc bấm nút nhanh `"Ưu tiên KN & Đánh giá"`).
+   - Quan sát danh sách gia sư được tính toán lại ngay lập tức và `GS-G10` vươn lên hạng 1 với điểm `0,990` trực tiếp trên giao diện.
 4. **Thao tác 4 — Kiểm thử trường hợp biên tổng trọng số bằng 0:**
    - Nhấn nút **"Thử ∑w_i = 0"** trên thanh điều khiển. Toàn bộ 5 tiêu chí được đưa về mức 0 ($w=0$).
    - Giao diện kích hoạt trạng thái biên (`zero_weight`) hiển thị cảnh báo thân thiện và hướng dẫn người học bật lại ít nhất một tiêu chí ưu tiên để tiếp tục gợi ý.
@@ -172,7 +172,7 @@ npm run build
 Dưới đây là các hình ảnh giao diện thực tế chụp trực tiếp từ hệ thống đang chạy cục bộ:
 
 ### Hình 1 — Màn hình nhập nhu cầu học tập (CN01)
-Màn hình tìm kiếm với bộ nạp nhanh 14 kịch bản kiểm thử, ô lựa chọn "Mục tiêu học tập" (US-41) và các thanh chọn mức ưu tiên:
+Màn hình tìm kiếm với bộ nạp nhanh 14 kịch bản kiểm thử, ô lựa chọn "Mục tiêu học tập" và các thanh chọn mức ưu tiên:
 ![Màn hình nhập nhu cầu học tập CN01](docs/thesis/figures/hinh-ui-01-cn01-nhap-nhu-cau.png)
 
 ### Hình 2 — Màn hình kết quả gợi ý Top-3 kịch bản KB01 (CN02)
@@ -180,7 +180,7 @@ Danh sách Top-3 gia sư kèm điểm tổng hợp và biểu đồ thanh xếp 
 ![Màn hình kết quả gợi ý Top-3 CN02](docs/thesis/figures/hinh-ui-02-cn02-ket-qua-kb01.png)
 
 ### Hình 3 — Điều chỉnh mức ưu tiên trực tiếp trên màn hình kết quả (CN03)
-Khi thay đổi mức ưu tiên các tiêu chí (ví dụ: Học phí và Đánh giá chuyển về Bỏ qua, Kinh nghiệm chuyển lên Cao), thứ tự xếp hạng và điểm số gia sư tự động cập nhật tức thì:
+Khi thay đổi mức ưu tiên các tiêu chí (ví dụ: Học phí và Khu vực chuyển về Bỏ qua $w = 0$, Kinh nghiệm và Đánh giá chuyển lên Cao $w = 3$), thứ tự xếp hạng và điểm số gia sư tự động cập nhật tức thì (`GS-G10` đạt `0,990` lên hạng 1):
 ![Điều chỉnh mức ưu tiên trực tiếp CN03](docs/thesis/figures/hinh-ui-03-cn03-dieu-chinh-uu-tien.png)
 
 ### Hình 4 — Trạng thái biên khi tổng trọng số bằng 0
@@ -198,6 +198,12 @@ Giao diện phản hồi thân thiện khi người học đưa toàn bộ các 
 - [Từ điển dữ liệu](docs/design/data-dictionary.md)
 - [Đề xuất mở rộng mô hình Cấp lớp và Mục tiêu học tập](docs/design/de-xuat-mo-rong-cap-lop-muc-tieu.md)
 - [Hướng dẫn triển khai đám mây Vercel và Render](docs/deployment/deploy-vercel-render.md)
+- [Phần mở đầu và hồ sơ bàn giao](docs/thesis/report/muc-luc-va-ho-so-ban-giao.md)
+- [Báo cáo Chương 1: Tổng quan về đề tài](docs/thesis/report/chuong-01-tong-quan.md)
+- [Báo cáo Chương 2: Cơ sở lý thuyết và công nghệ](docs/thesis/report/chuong-02-co-so-ly-thuyet-va-cong-nghe.md)
+- [Báo cáo Chương 3: Phân tích và thiết kế hệ thống](docs/thesis/report/chuong-03-phan-tich-thiet-ke.md)
+- [Báo cáo Chương 4: Xây dựng hệ thống](docs/thesis/report/chuong-04-xay-dung-he-thong.md)
 - [Báo cáo Chương 5: Kiểm thử và đánh giá](docs/thesis/report/chuong-05-thuc-nghiem-va-danh-gia.md)
 - [Báo cáo Chương 6: Kết luận, hướng phát triển và Phụ lục A–D](docs/thesis/report/chuong-06-ket-luan-va-huong-phat-trien.md)
+- [Tài liệu tham khảo](docs/thesis/report/tai-lieu-tham-khao.md)
 

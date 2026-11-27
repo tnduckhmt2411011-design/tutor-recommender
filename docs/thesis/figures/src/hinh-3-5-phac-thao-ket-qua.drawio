@@ -1,0 +1,215 @@
+<mxfile host="next-ai-draw-io" version="24.7.17">
+  <diagram id="hinh-3-5" name="Hình 3.5 - Phác thảo màn hình kết quả">
+    <mxGraphModel dx="1400" dy="1020" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Khung cửa sổ wireframe chính -->
+        <mxCell id="win_bg" value="" style="rounded=1;arcSize=4;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#234063;strokeWidth=1.8;" vertex="1" parent="1">
+          <mxGeometry x="20" y="20" width="1340" height="820" as="geometry"/>
+        </mxCell>
+        <mxCell id="win_hdr" value="" style="rounded=1;arcSize=4;whiteSpace=wrap;html=1;fillColor=#234063;strokeColor=#234063;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="20" y="20" width="1340" height="54" as="geometry"/>
+        </mxCell>
+        <mxCell id="win_hdr_mask" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#234063;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="21" y="54" width="1338" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="hdr_left" value="&lt;b&gt;Hệ thống khuyến nghị gia sư&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Times New Roman;fontSize=16;fontColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="44" y="28" width="420" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="hdr_right" value="Bước 2/2 · Kết quả gợi ý" style="text;html=1;align=right;verticalAlign=middle;fontFamily=Times New Roman;fontSize=14;fontColor=#DCEAF7;" vertex="1" parent="1">
+          <mxGeometry x="960" y="28" width="376" height="38" as="geometry"/>
+        </mxCell>
+
+        <!-- Tiêu đề cột trái & Chú giải màu (5 màu rõ ràng) -->
+        <mxCell id="title_left" value="&lt;b&gt;Top-3 gia sư phù hợp&lt;/b&gt; &lt;font style=&quot;font-size:12.5px;font-weight:normal;color:#475569&quot;&gt;(Ví dụ chuẩn công thức (2.1): mọi mức Trung bình, w_i = 2, Σw_i = 10, |L| = 4 buổi)&lt;/font&gt;" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Times New Roman;fontSize=16;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="46" y="92" width="840" height="28" as="geometry"/>
+        </mxCell>
+
+        <!-- Legend -->
+        <mxCell id="lg_box1" value="" style="rounded=1;arcSize=20;whiteSpace=wrap;html=1;fillColor=#1E3A5F;strokeColor=none;" vertex="1" parent="1"><mxGeometry x="46" y="130" width="16" height="16" as="geometry"/></mxCell>
+        <mxCell id="lg_txt1" value="Học phí" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Times New Roman;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1"><mxGeometry x="68" y="126" width="70" height="24" as="geometry"/></mxCell>
+
+        <mxCell id="lg_box2" value="" style="rounded=1;arcSize=20;whiteSpace=wrap;html=1;fillColor=#2E6F95;strokeColor=none;" vertex="1" parent="1"><mxGeometry x="150" y="130" width="16" height="16" as="geometry"/></mxCell>
+        <mxCell id="lg_txt2" value="Khu vực" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Times New Roman;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1"><mxGeometry x="172" y="126" width="76" height="24" as="geometry"/></mxCell>
+
+        <mxCell id="lg_box3" value="" style="rounded=1;arcSize=20;whiteSpace=wrap;html=1;fillColor=#3D8B6E;strokeColor=none;" vertex="1" parent="1"><mxGeometry x="260" y="130" width="16" height="16" as="geometry"/></mxCell>
+        <mxCell id="lg_txt3" value="Kinh nghiệm" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Times New Roman;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1"><mxGeometry x="282" y="126" width="96" height="24" as="geometry"/></mxCell>
+
+        <mxCell id="lg_box4" value="" style="rounded=1;arcSize=20;whiteSpace=wrap;html=1;fillColor=#C07A28;strokeColor=none;" vertex="1" parent="1"><mxGeometry x="392" y="130" width="16" height="16" as="geometry"/></mxCell>
+        <mxCell id="lg_txt4" value="Đánh giá" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Times New Roman;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1"><mxGeometry x="414" y="126" width="78" height="24" as="geometry"/></mxCell>
+
+        <mxCell id="lg_box5" value="" style="rounded=1;arcSize=20;whiteSpace=wrap;html=1;fillColor=#7C5CBF;strokeColor=none;" vertex="1" parent="1"><mxGeometry x="506" y="130" width="16" height="16" as="geometry"/></mxCell>
+        <mxCell id="lg_txt5" value="Lịch rảnh" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Times New Roman;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1"><mxGeometry x="528" y="126" width="84" height="24" as="geometry"/></mxCell>
+
+        <!-- THẺ 1: GS-01 | S = 0,88 (track 780px = 1,00 -> painted 686px = 0,88) -->
+        <mxCell id="c1_bg" value="" style="rounded=1;arcSize=6;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#94A3B8;strokeWidth=1.4;" vertex="1" parent="1">
+          <mxGeometry x="46" y="168" width="820" height="156" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1_badge" value="&lt;b&gt;Hạng 1&lt;/b&gt;" style="rounded=1;arcSize=50;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=13;fillColor=#234063;strokeColor=none;fontColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="66" y="182" width="78" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1_id" value="&lt;b&gt;GS-01&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Times New Roman;fontSize=16;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="158" y="182" width="140" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1_score" value="&lt;b&gt;S = 0,88&lt;/b&gt;" style="text;html=1;align=right;verticalAlign=middle;fontFamily=Times New Roman;fontSize=16;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="710" y="182" width="136" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1_track" value="" style="rounded=1;arcSize=15;whiteSpace=wrap;html=1;fillColor=#E2E8F0;strokeColor=#CBD5E1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="66" y="220" width="780" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1_s1" value="&lt;b&gt;0,20&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=12;fillColor=#1E3A5F;strokeColor=#FFFFFF;strokeWidth=1;fontColor=#FFFFFF;" vertex="1" parent="1"><mxGeometry x="66" y="220" width="156" height="30" as="geometry"/></mxCell>
+        <mxCell id="c1_s2" value="&lt;b&gt;0,20&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=12;fillColor=#2E6F95;strokeColor=#FFFFFF;strokeWidth=1;fontColor=#FFFFFF;" vertex="1" parent="1"><mxGeometry x="222" y="220" width="156" height="30" as="geometry"/></mxCell>
+        <mxCell id="c1_s3" value="&lt;b&gt;0,15&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=12;fillColor=#3D8B6E;strokeColor=#FFFFFF;strokeWidth=1;fontColor=#FFFFFF;" vertex="1" parent="1"><mxGeometry x="378" y="220" width="117" height="30" as="geometry"/></mxCell>
+        <mxCell id="c1_s4" value="&lt;b&gt;0,18&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=12;fillColor=#C07A28;strokeColor=#FFFFFF;strokeWidth=1;fontColor=#FFFFFF;" vertex="1" parent="1"><mxGeometry x="495" y="220" width="140" height="30" as="geometry"/></mxCell>
+        <mxCell id="c1_s5" value="&lt;b&gt;0,15&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=12;fillColor=#7C5CBF;strokeColor=#FFFFFF;strokeWidth=1;fontColor=#FFFFFF;" vertex="1" parent="1"><mxGeometry x="635" y="220" width="117" height="30" as="geometry"/></mxCell>
+        <mxCell id="c1_max" value="1,00" style="text;html=1;align=right;verticalAlign=middle;fontFamily=Times New Roman;fontSize=11;fontColor=#64748B;" vertex="1" parent="1"><mxGeometry x="796" y="220" width="44" height="30" as="geometry"/></mxCell>
+        <mxCell id="c1_reason" value="&lt;b&gt;Lý do gợi ý:&lt;/b&gt; Học phí trong ngân sách, khu vực khớp, đánh giá 4,5/5." style="text;html=1;align=left;verticalAlign=middle;fontFamily=Times New Roman;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="66" y="260" width="780" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1_sub" value="&lt;i&gt;Thành phần (Bảng 3.6): học phí 1,00 · khu vực 1,00 · đánh giá 0,90 (4,5/5) · kinh nghiệm 0,75 (6 năm) · lịch rảnh 0,75 (3/4 buổi)&lt;/i&gt;" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Times New Roman;fontSize=11.5;fontColor=#475569;" vertex="1" parent="1">
+          <mxGeometry x="66" y="288" width="780" height="22" as="geometry"/>
+        </mxCell>
+
+        <!-- THẺ 2: GS-02 | S = 0,73 (Khu vực = 0,00 -> không vẽ đoạn khu vực; painted 569px = 0,73) -->
+        <mxCell id="c2_bg" value="" style="rounded=1;arcSize=6;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#94A3B8;strokeWidth=1.4;" vertex="1" parent="1">
+          <mxGeometry x="46" y="340" width="820" height="156" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_badge" value="&lt;b&gt;Hạng 2&lt;/b&gt;" style="rounded=1;arcSize=50;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=13;fillColor=#2E4E77;strokeColor=none;fontColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="66" y="354" width="78" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_id" value="&lt;b&gt;GS-02&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Times New Roman;fontSize=16;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="158" y="354" width="140" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_score" value="&lt;b&gt;S = 0,73&lt;/b&gt;" style="text;html=1;align=right;verticalAlign=middle;fontFamily=Times New Roman;fontSize=16;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="710" y="354" width="136" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_track" value="" style="rounded=1;arcSize=15;whiteSpace=wrap;html=1;fillColor=#E2E8F0;strokeColor=#CBD5E1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="66" y="392" width="780" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_s1" value="&lt;b&gt;0,20&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=12;fillColor=#1E3A5F;strokeColor=#FFFFFF;strokeWidth=1;fontColor=#FFFFFF;" vertex="1" parent="1"><mxGeometry x="66" y="392" width="156" height="30" as="geometry"/></mxCell>
+        <mxCell id="c2_s3" value="&lt;b&gt;0,20&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=12;fillColor=#3D8B6E;strokeColor=#FFFFFF;strokeWidth=1;fontColor=#FFFFFF;" vertex="1" parent="1"><mxGeometry x="222" y="392" width="156" height="30" as="geometry"/></mxCell>
+        <mxCell id="c2_s4" value="&lt;b&gt;0,18&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=12;fillColor=#C07A28;strokeColor=#FFFFFF;strokeWidth=1;fontColor=#FFFFFF;" vertex="1" parent="1"><mxGeometry x="378" y="392" width="140" height="30" as="geometry"/></mxCell>
+        <mxCell id="c2_s5" value="&lt;b&gt;0,15&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=12;fillColor=#7C5CBF;strokeColor=#FFFFFF;strokeWidth=1;fontColor=#FFFFFF;" vertex="1" parent="1"><mxGeometry x="518" y="392" width="117" height="30" as="geometry"/></mxCell>
+        <mxCell id="c2_max" value="1,00" style="text;html=1;align=right;verticalAlign=middle;fontFamily=Times New Roman;fontSize=11;fontColor=#64748B;" vertex="1" parent="1"><mxGeometry x="796" y="392" width="44" height="30" as="geometry"/></mxCell>
+        <mxCell id="c2_reason" value="&lt;b&gt;Lý do gợi ý:&lt;/b&gt; Học phí trong ngân sách, kinh nghiệm 8 năm, đánh giá 4,5/5." style="text;html=1;align=left;verticalAlign=middle;fontFamily=Times New Roman;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="66" y="432" width="780" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2_sub" value="&lt;i&gt;Thành phần (Bảng 3.6): học phí 1,00 · kinh nghiệm 1,00 (8 năm) · đánh giá 0,90 (4,5/5) · lịch rảnh 0,75 (3/4 buổi) · khu vực 0,00&lt;/i&gt;" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Times New Roman;fontSize=11.5;fontColor=#475569;" vertex="1" parent="1">
+          <mxGeometry x="66" y="460" width="780" height="22" as="geometry"/>
+        </mxCell>
+
+        <!-- THẺ 3: GS-03 | S = 0,68 (painted 531px = 0,68) -->
+        <mxCell id="c3_bg" value="" style="rounded=1;arcSize=6;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#94A3B8;strokeWidth=1.4;" vertex="1" parent="1">
+          <mxGeometry x="46" y="512" width="820" height="156" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_badge" value="&lt;b&gt;Hạng 3&lt;/b&gt;" style="rounded=1;arcSize=50;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=13;fillColor=#3D5F8A;strokeColor=none;fontColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="66" y="526" width="78" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_id" value="&lt;b&gt;GS-03&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Times New Roman;fontSize=16;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="158" y="526" width="140" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_score" value="&lt;b&gt;S = 0,68&lt;/b&gt;" style="text;html=1;align=right;verticalAlign=middle;fontFamily=Times New Roman;fontSize=16;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="710" y="526" width="136" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_track" value="" style="rounded=1;arcSize=15;whiteSpace=wrap;html=1;fillColor=#E2E8F0;strokeColor=#CBD5E1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="66" y="564" width="780" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_s1" value="&lt;b&gt;0,12&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=12;fillColor=#1E3A5F;strokeColor=#FFFFFF;strokeWidth=1;fontColor=#FFFFFF;" vertex="1" parent="1"><mxGeometry x="66" y="564" width="94" height="30" as="geometry"/></mxCell>
+        <mxCell id="c3_s2" value="&lt;b&gt;0,20&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=12;fillColor=#2E6F95;strokeColor=#FFFFFF;strokeWidth=1;fontColor=#FFFFFF;" vertex="1" parent="1"><mxGeometry x="160" y="564" width="156" height="30" as="geometry"/></mxCell>
+        <mxCell id="c3_s3" value="&lt;b&gt;0,10&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=12;fillColor=#3D8B6E;strokeColor=#FFFFFF;strokeWidth=1;fontColor=#FFFFFF;" vertex="1" parent="1"><mxGeometry x="316" y="564" width="78" height="30" as="geometry"/></mxCell>
+        <mxCell id="c3_s4" value="&lt;b&gt;0,16&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=12;fillColor=#C07A28;strokeColor=#FFFFFF;strokeWidth=1;fontColor=#FFFFFF;" vertex="1" parent="1"><mxGeometry x="394" y="564" width="125" height="30" as="geometry"/></mxCell>
+        <mxCell id="c3_s5" value="&lt;b&gt;0,10&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=12;fillColor=#7C5CBF;strokeColor=#FFFFFF;strokeWidth=1;fontColor=#FFFFFF;" vertex="1" parent="1"><mxGeometry x="519" y="564" width="78" height="30" as="geometry"/></mxCell>
+        <mxCell id="c3_max" value="1,00" style="text;html=1;align=right;verticalAlign=middle;fontFamily=Times New Roman;fontSize=11;fontColor=#64748B;" vertex="1" parent="1"><mxGeometry x="796" y="564" width="44" height="30" as="geometry"/></mxCell>
+        <mxCell id="c3_reason" value="&lt;b&gt;Lý do gợi ý:&lt;/b&gt; Khu vực khớp, đánh giá 4,0/5, học phí vượt ngân sách 20%." style="text;html=1;align=left;verticalAlign=middle;fontFamily=Times New Roman;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="66" y="604" width="780" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3_sub" value="&lt;i&gt;Thành phần (Bảng 3.6): khu vực 1,00 · đánh giá 0,80 (4,0/5) · học phí 0,60 (vượt 20%) · kinh nghiệm 0,50 (4 năm) · lịch rảnh 0,50 (2/4 buổi)&lt;/i&gt;" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Times New Roman;fontSize=11.5;fontColor=#475569;" vertex="1" parent="1">
+          <mxGeometry x="66" y="632" width="780" height="22" as="geometry"/>
+        </mxCell>
+
+        <!-- KHUNG PHẢI: ĐIỀU CHỈNH MỨC ƯU TIÊN (CN03) -->
+        <mxCell id="rail_bg" value="" style="rounded=1;arcSize=5;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#475569;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="890" y="168" width="446" height="500" as="geometry"/>
+        </mxCell>
+        <mxCell id="rail_title" value="&lt;b&gt;Điều chỉnh mức ưu tiên (CN03)&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Times New Roman;fontSize=16;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="914" y="182" width="400" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="rail_sub" value="&lt;i&gt;Cập nhật xếp hạng ngay khi đổi, không cần nhập lại nhu cầu&lt;/i&gt;" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Times New Roman;fontSize=12;fontColor=#475569;" vertex="1" parent="1">
+          <mxGeometry x="914" y="210" width="404" height="22" as="geometry"/>
+        </mxCell>
+
+        <!-- Hàng tiêu đề 4 cột Radio (lỗi cũ bị thiếu) -->
+        <mxCell id="rh_bg" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#CBD5E1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="914" y="242" width="402" height="34" as="geometry"/>
+        </mxCell>
+        <mxCell id="rh_0" value="&lt;b&gt;Tiêu chí&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Times New Roman;fontSize=12;fontColor=#0F172A;" vertex="1" parent="1"><mxGeometry x="922" y="246" width="90" height="26" as="geometry"/></mxCell>
+        <mxCell id="rh_1" value="&lt;b&gt;Bỏ qua&lt;/b&gt;&lt;br&gt;(0)" style="text;html=1;align=center;verticalAlign=middle;fontFamily=Times New Roman;fontSize=11;fontColor=#0F172A;" vertex="1" parent="1"><mxGeometry x="1024" y="242" width="66" height="34" as="geometry"/></mxCell>
+        <mxCell id="rh_2" value="&lt;b&gt;Thấp&lt;/b&gt;&lt;br&gt;(1)" style="text;html=1;align=center;verticalAlign=middle;fontFamily=Times New Roman;fontSize=11;fontColor=#0F172A;" vertex="1" parent="1"><mxGeometry x="1096" y="242" width="66" height="34" as="geometry"/></mxCell>
+        <mxCell id="rh_3" value="&lt;b&gt;TB&lt;/b&gt;&lt;br&gt;(2)" style="text;html=1;align=center;verticalAlign=middle;fontFamily=Times New Roman;fontSize=11;fontColor=#234063;" vertex="1" parent="1"><mxGeometry x="1168" y="242" width="66" height="34" as="geometry"/></mxCell>
+        <mxCell id="rh_4" value="&lt;b&gt;Cao&lt;/b&gt;&lt;br&gt;(3)" style="text;html=1;align=center;verticalAlign=middle;fontFamily=Times New Roman;fontSize=11;fontColor=#0F172A;" vertex="1" parent="1"><mxGeometry x="1240" y="242" width="66" height="34" as="geometry"/></mxCell>
+
+        <!-- 5 Hàng tiêu chí + nút radio (tất cả chọn cột 3 = TB (2)) -->
+        <!-- Hàng 1: Học phí -->
+        <mxCell id="rr_1" value="Học phí" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Times New Roman;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1"><mxGeometry x="922" y="286" width="96" height="34" as="geometry"/></mxCell>
+        <mxCell id="r1_1" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#FFFFFF;strokeColor=#475569;strokeWidth=1.4;" vertex="1" parent="1"><mxGeometry x="1048" y="294" width="18" height="18" as="geometry"/></mxCell>
+        <mxCell id="r1_2" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#FFFFFF;strokeColor=#475569;strokeWidth=1.4;" vertex="1" parent="1"><mxGeometry x="1120" y="294" width="18" height="18" as="geometry"/></mxCell>
+        <mxCell id="r1_3o" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#FFFFFF;strokeColor=#234063;strokeWidth=2.2;" vertex="1" parent="1"><mxGeometry x="1192" y="294" width="18" height="18" as="geometry"/></mxCell>
+        <mxCell id="r1_3i" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#234063;strokeColor=none;" vertex="1" parent="1"><mxGeometry x="1196" y="298" width="10" height="10" as="geometry"/></mxCell>
+        <mxCell id="r1_4" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#FFFFFF;strokeColor=#475569;strokeWidth=1.4;" vertex="1" parent="1"><mxGeometry x="1264" y="294" width="18" height="18" as="geometry"/></mxCell>
+
+        <!-- Hàng 2: Khu vực -->
+        <mxCell id="rr_2" value="Khu vực" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Times New Roman;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1"><mxGeometry x="922" y="328" width="96" height="34" as="geometry"/></mxCell>
+        <mxCell id="r2_1" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#FFFFFF;strokeColor=#475569;strokeWidth=1.4;" vertex="1" parent="1"><mxGeometry x="1048" y="336" width="18" height="18" as="geometry"/></mxCell>
+        <mxCell id="r2_2" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#FFFFFF;strokeColor=#475569;strokeWidth=1.4;" vertex="1" parent="1"><mxGeometry x="1120" y="336" width="18" height="18" as="geometry"/></mxCell>
+        <mxCell id="r2_3o" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#FFFFFF;strokeColor=#234063;strokeWidth=2.2;" vertex="1" parent="1"><mxGeometry x="1192" y="336" width="18" height="18" as="geometry"/></mxCell>
+        <mxCell id="r2_3i" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#234063;strokeColor=none;" vertex="1" parent="1"><mxGeometry x="1196" y="340" width="10" height="10" as="geometry"/></mxCell>
+        <mxCell id="r2_4" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#FFFFFF;strokeColor=#475569;strokeWidth=1.4;" vertex="1" parent="1"><mxGeometry x="1264" y="336" width="18" height="18" as="geometry"/></mxCell>
+
+        <!-- Hàng 3: Kinh nghiệm -->
+        <mxCell id="rr_3" value="Kinh nghiệm" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Times New Roman;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1"><mxGeometry x="922" y="370" width="96" height="34" as="geometry"/></mxCell>
+        <mxCell id="r3_1" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#FFFFFF;strokeColor=#475569;strokeWidth=1.4;" vertex="1" parent="1"><mxGeometry x="1048" y="378" width="18" height="18" as="geometry"/></mxCell>
+        <mxCell id="r3_2" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#FFFFFF;strokeColor=#475569;strokeWidth=1.4;" vertex="1" parent="1"><mxGeometry x="1120" y="378" width="18" height="18" as="geometry"/></mxCell>
+        <mxCell id="r3_3o" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#FFFFFF;strokeColor=#234063;strokeWidth=2.2;" vertex="1" parent="1"><mxGeometry x="1192" y="378" width="18" height="18" as="geometry"/></mxCell>
+        <mxCell id="r3_3i" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#234063;strokeColor=none;" vertex="1" parent="1"><mxGeometry x="1196" y="382" width="10" height="10" as="geometry"/></mxCell>
+        <mxCell id="r3_4" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#FFFFFF;strokeColor=#475569;strokeWidth=1.4;" vertex="1" parent="1"><mxGeometry x="1264" y="378" width="18" height="18" as="geometry"/></mxCell>
+
+        <!-- Hàng 4: Đánh giá -->
+        <mxCell id="rr_4" value="Đánh giá" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Times New Roman;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1"><mxGeometry x="922" y="412" width="96" height="34" as="geometry"/></mxCell>
+        <mxCell id="r4_1" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#FFFFFF;strokeColor=#475569;strokeWidth=1.4;" vertex="1" parent="1"><mxGeometry x="1048" y="420" width="18" height="18" as="geometry"/></mxCell>
+        <mxCell id="r4_2" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#FFFFFF;strokeColor=#475569;strokeWidth=1.4;" vertex="1" parent="1"><mxGeometry x="1120" y="420" width="18" height="18" as="geometry"/></mxCell>
+        <mxCell id="r4_3o" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#FFFFFF;strokeColor=#234063;strokeWidth=2.2;" vertex="1" parent="1"><mxGeometry x="1192" y="420" width="18" height="18" as="geometry"/></mxCell>
+        <mxCell id="r4_3i" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#234063;strokeColor=none;" vertex="1" parent="1"><mxGeometry x="1196" y="424" width="10" height="10" as="geometry"/></mxCell>
+        <mxCell id="r4_4" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#FFFFFF;strokeColor=#475569;strokeWidth=1.4;" vertex="1" parent="1"><mxGeometry x="1264" y="420" width="18" height="18" as="geometry"/></mxCell>
+
+        <!-- Hàng 5: Lịch rảnh -->
+        <mxCell id="rr_5" value="Lịch rảnh" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Times New Roman;fontSize=13;fontColor=#0F172A;" vertex="1" parent="1"><mxGeometry x="922" y="454" width="96" height="34" as="geometry"/></mxCell>
+        <mxCell id="r5_1" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#FFFFFF;strokeColor=#475569;strokeWidth=1.4;" vertex="1" parent="1"><mxGeometry x="1048" y="462" width="18" height="18" as="geometry"/></mxCell>
+        <mxCell id="r5_2" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#FFFFFF;strokeColor=#475569;strokeWidth=1.4;" vertex="1" parent="1"><mxGeometry x="1120" y="462" width="18" height="18" as="geometry"/></mxCell>
+        <mxCell id="r5_3o" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#FFFFFF;strokeColor=#234063;strokeWidth=2.2;" vertex="1" parent="1"><mxGeometry x="1192" y="462" width="18" height="18" as="geometry"/></mxCell>
+        <mxCell id="r5_3i" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#234063;strokeColor=none;" vertex="1" parent="1"><mxGeometry x="1196" y="466" width="10" height="10" as="geometry"/></mxCell>
+        <mxCell id="r5_4" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#FFFFFF;strokeColor=#475569;strokeWidth=1.4;" vertex="1" parent="1"><mxGeometry x="1264" y="462" width="18" height="18" as="geometry"/></mxCell>
+
+        <!-- Khung giải thích quy tắc CN03 trong rail phải -->
+        <mxCell id="rail_note" value="&lt;b&gt;Quy ước tương tác &amp;amp; trọng số (Bảng 3.5):&lt;/b&gt;&lt;br&gt;&lt;br&gt;- Bốn mức &lt;i&gt;Bỏ qua / Thấp / TB / Cao&lt;/i&gt; quy đổi lần lượt thành &lt;i&gt;w_i = 0, 1, 2, 3&lt;/i&gt;.&lt;br&gt;&lt;br&gt;- Khi người học đổi mức ưu tiên, giao diện tự gửi &lt;font face=&quot;Consolas&quot; style=&quot;font-size:11px&quot;&gt;POST /api/recommend&lt;/font&gt; và cập nhật xếp hạng ngay.&lt;br&gt;&lt;br&gt;- Nếu cả 5 tiêu chí ở &lt;i&gt;Bỏ qua (0)&lt;/i&gt;: tổng trọng số bằng 0 và chuyển sang trạng thái &lt;font face=&quot;Consolas&quot; style=&quot;font-size:11px&quot;&gt;zero_weight&lt;/font&gt;." style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=10;fontFamily=Times New Roman;fontSize=12;fillColor=#FFFFFF;strokeColor=#CBD5E1;strokeWidth=1.2;fontColor=#334155;" vertex="1" parent="1">
+          <mxGeometry x="914" y="502" width="402" height="148" as="geometry"/>
+        </mxCell>
+
+        <!-- HAI KHỐI TRẠNG THÁI BIÊN Ở ĐÁY MÀN HÌNH -->
+        <mxCell id="edge_nomatch" value="&lt;b&gt;Trạng thái no_match&lt;/b&gt;&lt;br&gt;&lt;i&gt;“Không tìm thấy gia sư thỏa mãn điều kiện”&lt;/i&gt;&lt;br&gt;Hiển thị khi không còn ứng viên qua lọc điều kiện bắt buộc (biến thể 1) hoặc tất cả ứng viên đều chưa đạt ngưỡng dữ liệu tối thiểu theo Bảng 3.7 (biến thể 2)." style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;dashed=1;dashPattern=5 4;align=left;verticalAlign=middle;spacingLeft=16;spacingRight=14;fontFamily=Times New Roman;fontSize=13;fillColor=#FDF8F0;strokeColor=#9A6B2F;strokeWidth=1.5;fontColor=#8A4B08;" vertex="1" parent="1">
+          <mxGeometry x="46" y="692" width="628" height="118" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge_zero" value="&lt;b&gt;Trạng thái zero_weight&lt;/b&gt;&lt;br&gt;&lt;i&gt;“Không thể xếp hạng do tổng trọng số bằng 0”&lt;/i&gt;&lt;br&gt;Hiển thị khi tổng trọng số các tiêu chí đang áp dụng bằng 0; liệt kê các ứng viên đạt điều kiện bắt buộc (&lt;font face=&quot;Consolas&quot; style=&quot;font-size:11.5px&quot;&gt;unranked_candidates&lt;/font&gt;) và gợi ý chọn lại ít nhất một mức ưu tiên." style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;dashed=1;dashPattern=5 4;align=left;verticalAlign=middle;spacingLeft=16;spacingRight=14;fontFamily=Times New Roman;fontSize=13;fillColor=#FDF8F0;strokeColor=#9A6B2F;strokeWidth=1.5;fontColor=#8A4B08;" vertex="1" parent="1">
+          <mxGeometry x="708" y="692" width="628" height="118" as="geometry"/>
+        </mxCell>
+
+        <!-- Ghi chú đáy giống Hình 3.4 -->
+        <mxCell id="footer_note" value="&lt;i&gt;Ghi chú: số liệu trong bản phác thảo được tính đúng theo công thức (2.1) và Bảng 3.5–3.6 (w_i = 2, |L| = 4 buổi), không phải kết quả thực nghiệm (xem Chương 5); giao diện hiện thực thuộc Hình 4.2–4.4.&lt;/i&gt;" style="text;html=1;align=center;verticalAlign=middle;fontFamily=Times New Roman;fontSize=13;fontColor=#334155;" vertex="1" parent="1">
+          <mxGeometry x="20" y="854" width="1340" height="36" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

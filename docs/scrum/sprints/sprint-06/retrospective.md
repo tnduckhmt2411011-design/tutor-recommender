@@ -4,7 +4,7 @@
 # Rút kinh nghiệm Sprint 6 (Sprint 6 Retrospective)
 
 - **Ngày họp:** *[Chờ nhóm điền]*
-- **Người điều phối:** Scrum Master (Trần Nguyễn Đức)
+- **Người điều phối:** Scrum Master (Lê Thị Bích Chuyền)
 - **Thành viên tham gia:** *[Chờ nhóm điền]*
 
 ---

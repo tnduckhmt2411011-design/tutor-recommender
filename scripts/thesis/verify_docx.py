@@ -1,4 +1,4 @@
-"""Kiểm định tự động cấu trúc, định dạng, công thức, ảnh và độ toàn vẹn của tệp DOCX đầu ra."""
+"""Kiểm định tự động cấu trúc, định dạng, công thức, ảnh, Booktabs và độ toàn vẹn của tệp DOCX chuẩn báo cáo đồ án CTUT (KHMT 1)."""
 
 from __future__ import annotations
 
@@ -16,17 +16,12 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
-from build_docx import ORDER  # noqa: E402
+from build_docx import FONT_NAME, FRONT_TITLE_TEXTS, ORDER  # noqa: E402
 from check_captions import extract_captions  # noqa: E402
 
-EXPECTED_H1_PREFIXES: tuple[str, ...] = (
-    "LỜI CẢM ƠN",
-    "LỜI CAM ĐOAN LIÊM CHÍNH HỌC THUẬT",
-    "TÓM TẮT",
-    "ABSTRACT",
-    "DANH MỤC KÝ HIỆU VÀ CHỮ VIẾT TẮT",
-    "DANH MỤC BẢNG BIỂU",
-    "DANH MỤC HÌNH VẼ, SƠ ĐỒ, BIỂU ĐỒ",
+EXPECTED_FRONT_TITLES: tuple[str, ...] = FRONT_TITLE_TEXTS
+
+EXPECTED_MAIN_H1_PREFIXES: tuple[str, ...] = (
     "CHƯƠNG 1.",
     "CHƯƠNG 2.",
     "CHƯƠNG 3.",
@@ -34,10 +29,14 @@ EXPECTED_H1_PREFIXES: tuple[str, ...] = (
     "CHƯƠNG 5.",
     "CHƯƠNG 6.",
     "TÀI LIỆU THAM KHẢO",
-    "PHỤ LỤC A.",
-    "PHỤ LỤC B.",
-    "PHỤ LỤC C.",
-    "PHỤ LỤC D.",
+    "PHỤ LỤC",
+)
+
+EXPECTED_APPENDIX_H2_PREFIXES: tuple[str, ...] = (
+    "Phụ lục A.",
+    "Phụ lục B.",
+    "Phụ lục C.",
+    "Phụ lục D.",
 )
 
 FORBIDDEN_STRINGS: tuple[str, ...] = (
@@ -48,6 +47,14 @@ FORBIDDEN_STRINGS: tuple[str, ...] = (
     "TBD",
     "FIXME",
     "…",
+    "Tổng: 31 bảng",
+    "Tổng: 9 hình",
+    "XTHESISBRX",
+    "THESIS_BR",
+    "<br",
+    "Nhóm trưởng",
+    "nhóm em",
+    "Nhóm em",
 )
 
 
@@ -76,13 +83,128 @@ def _markdown_body_word_count(report_dir: Path) -> int:
 
 
 def _paragraph_text_xml(p_el: ET.Element) -> str:
-    """Trích chuỗi văn bản thuần `<w:t>` của một phần tử đoạn `<w:p>`."""
+    """Trích chuỗi văn bản thuần `<w:t>` của một phần tử đoạn `<w:p>` (bỏ `<m:t>`)."""
     w_ns = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
-    return "".join(t.text or "" for t in p_el.iter(f"{w_ns}t"))
+    m_ns = "{http://schemas.openxmlformats.org/officeDocument/2006/math}"
+    texts: list[str] = []
+
+    def _walk(node: ET.Element) -> None:
+        if node.tag.startswith(m_ns):
+            return
+        if node.tag == f"{w_ns}br":
+            texts.append("\n")
+            return
+        if node.tag == f"{w_ns}t" and node.text:
+            texts.append(node.text)
+        for child in node:
+            _walk(child)
+
+    _walk(p_el)
+    return "".join(texts)
+
+
+def _verify_booktabs_table(tbl_el: ET.Element, idx: int, w_ns: str) -> list[str]:
+    """Kiểm định một bảng dữ liệu có tuân thủ đúng quy chuẩn Booktabs hay không."""
+    errs: list[str] = []
+    tbl_pr = tbl_el.find(f"{w_ns}tblPr")
+    if tbl_pr is None:
+        return [f"Bảng #{idx} thiếu <w:tblPr>."]
+    borders = tbl_pr.find(f"{w_ns}tblBorders")
+    if borders is None:
+        return [f"Bảng #{idx} thiếu <w:tblBorders>."]
+
+    top = borders.find(f"{w_ns}top")
+    bot = borders.find(f"{w_ns}bottom")
+    inside_v = borders.find(f"{w_ns}insideV")
+    if top is None or top.attrib.get(f"{w_ns}val") != "single" or top.attrib.get(f"{w_ns}sz") != "12":
+        errs.append(f"Bảng #{idx} sai viền trên Booktabs (kỳ vọng single sz=12).")
+    if bot is None or bot.attrib.get(f"{w_ns}val") != "single" or bot.attrib.get(f"{w_ns}sz") != "12":
+        errs.append(f"Bảng #{idx} sai viền dưới Booktabs (kỳ vọng single sz=12).")
+    if inside_v is not None and inside_v.attrib.get(f"{w_ns}val") not in ("none", "nil"):
+        errs.append(f"Bảng #{idx} còn kẻ dọc insideV={inside_v.attrib.get(f'{w_ns}val')}.")
+
+    rows = tbl_el.findall(f"{w_ns}tr")
+    if rows:
+        hdr = rows[0]
+        hdr_pr = hdr.find(f"{w_ns}trPr")
+        if hdr_pr is None or hdr_pr.find(f"{w_ns}tblHeader") is None:
+            errs.append(f"Bảng #{idx} thiếu <w:tblHeader/> ở hàng tiêu đề.")
+        for cell in hdr.findall(f"{w_ns}tc"):
+            tc_pr = cell.find(f"{w_ns}tcPr")
+            shd = tc_pr.find(f"{w_ns}shd") if tc_pr is not None else None
+            if shd is not None and shd.attrib.get(f"{w_ns}fill", "auto") not in ("auto", "FFFFFF", "clear"):
+                errs.append(f"Bảng #{idx} có tô nền ở hàng tiêu đề ({shd.attrib.get(f'{w_ns}fill')}).")
+            c_bot = tc_pr.find(f"{w_ns}tcBorders/{w_ns}bottom") if tc_pr is not None else None
+            if c_bot is None or c_bot.attrib.get(f"{w_ns}val") != "single" or c_bot.attrib.get(f"{w_ns}sz") != "6":
+                errs.append(f"Bảng #{idx} thiếu gạch dưới hàng tiêu đề Booktabs (sz=6).")
+        for r_i, row in enumerate(rows):
+            r_pr = row.find(f"{w_ns}trPr")
+            if r_pr is None or r_pr.find(f"{w_ns}cantSplit") is None:
+                errs.append(f"Bảng #{idx} hàng {r_i} thiếu <w:cantSplit/>.")
+                break
+
+    m_ns = "{http://schemas.openxmlformats.org/officeDocument/2006/math}"
+    if tbl_el.findall(f".//{w_ns}tc//{m_ns}oMathPara"):
+        errs.append(f"Bảng #{idx} còn <m:oMathPara> căn giữa trong ô bảng.")
+    for p_cell in tbl_el.findall(f".//{w_ns}tc//{w_ns}p"):
+        for line in _paragraph_text_xml(p_cell).splitlines():
+            if re.search(r"\)\d+\.", line):
+                errs.append(f"Bảng #{idx} có chữ dính liền (cần <w:br/>): '{line[:80]}'.")
+                return errs
+    return errs
+
+
+def _load_style_id_map(styles_xml: ET.Element, w_ns: str) -> dict[str, str]:
+    """Ánh xạ `styleId` (có thể bị Word/WPS đổi sang số) về `w:name` chuẩn hóa."""
+    mapping: dict[str, str] = {}
+    for st in styles_xml.findall(f"{w_ns}style"):
+        sid = st.attrib.get(f"{w_ns}styleId", "")
+        nm = st.find(f"{w_ns}name")
+        raw_name = nm.attrib.get(f"{w_ns}val", sid) if nm is not None else sid
+        canon = re.sub(r"\s+", " ", raw_name.strip()).lower()
+        mapping[sid] = canon
+    return mapping
+
+
+def _load_style_bold_map(styles_xml: ET.Element, w_ns: str) -> dict[str, bool]:
+    """Ánh xạ `styleId` về trạng thái in đậm mặc định của style."""
+    mapping: dict[str, bool] = {}
+    for st in styles_xml.findall(f"{w_ns}style"):
+        sid = st.attrib.get(f"{w_ns}styleId", "")
+        b_el = st.find(f"{w_ns}rPr/{w_ns}b")
+        mapping[sid] = b_el is not None and b_el.attrib.get(f"{w_ns}val", "1").lower() not in (
+            "0",
+            "false",
+        )
+    return mapping
+
+
+def _toc_run_bold_flags(
+    p_el: ET.Element,
+    p_style_id: str,
+    style_bold_map: dict[str, bool],
+    w_ns: str,
+) -> list[bool]:
+    """Trả về danh sách trạng thái in đậm cho từng run văn bản hiển thị trong một dòng mục lục."""
+    style_bold = style_bold_map.get(p_style_id, False)
+    flags: list[bool] = []
+    for r_el in p_el.iter(f"{w_ns}r"):
+        if r_el.find(f"{w_ns}instrText") is not None:
+            continue
+        txt_parts = [t.text for t in r_el.findall(f"{w_ns}t") if t.text]
+        if not "".join(txt_parts).strip():
+            continue
+        b_el = r_el.find(f"{w_ns}rPr/{w_ns}b")
+        if b_el is not None:
+            is_b = b_el.attrib.get(f"{w_ns}val", "1").lower() not in ("0", "false")
+        else:
+            is_b = style_bold
+        flags.append(is_b)
+    return flags
 
 
 def verify_docx(docx_path: Path, repo_root: Path = REPO_ROOT) -> tuple[list[str], dict[str, object]]:
-    """Kiểm định toàn diện tệp DOCX; trả về (danh sách lỗi, thống kê kiểm định)."""
+    """Kiểm định toàn diện tệp DOCX theo chuẩn báo cáo đồ án CTUT (KHMT 1); trả về (danh sách lỗi, thống kê)."""
     issues: list[str] = []
     stats: dict[str, object] = {}
 
@@ -91,20 +213,51 @@ def verify_docx(docx_path: Path, repo_root: Path = REPO_ROOT) -> tuple[list[str]
 
     doc = docx.Document(str(docx_path))
 
-    # 1. Kiểm tra file zip, media, OMML và updateFields
+    # 1. Kiểm tra file zip, media (9 hình + khung bìa + logo CTUT = 11), OMML và updateFields
     with zipfile.ZipFile(docx_path) as zf:
-        media_files = [n for n in zf.namelist() if n.startswith("word/media/")]
+        media_files = [
+            n for n in zf.namelist() if n.startswith("word/media/") and not n.endswith("/")
+        ]
         doc_xml = ET.fromstring(zf.read("word/document.xml"))
         settings_xml = ET.fromstring(zf.read("word/settings.xml"))
+        styles_xml = ET.fromstring(zf.read("word/styles.xml"))
+        numbering_xml = (
+            ET.fromstring(zf.read("word/numbering.xml"))
+            if "word/numbering.xml" in zf.namelist()
+            else None
+        )
 
     m_ns = "{http://schemas.openxmlformats.org/officeDocument/2006/math}"
     w_ns = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
+    wp_ns = "{http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing}"
+    style_id_to_canon = _load_style_id_map(styles_xml, w_ns)
+    style_id_to_bold = _load_style_bold_map(styles_xml, w_ns)
     omath_nodes = doc_xml.findall(f".//{m_ns}oMath")
     stats["media_count"] = len(media_files)
     stats["omath_count"] = len(omath_nodes)
 
-    if len(media_files) != 9:
-        issues.append(f"Số tệp ảnh trong word/media/ là {len(media_files)} (kỳ vọng 9).")
+    if numbering_xml is not None:
+        for lvl in numbering_xml.findall(f".//{w_ns}lvl"):
+            nf = lvl.find(f"{w_ns}numFmt")
+            if nf is None or nf.attrib.get(f"{w_ns}val") != "bullet":
+                continue
+            lt = lvl.find(f"{w_ns}lvlText")
+            lt_val = lt.attrib.get(f"{w_ns}val", "") if lt is not None else ""
+            if lt_val in ("\uf0b7", "o", "\uf0a7", "•"):
+                issues.append(f"Danh sách bullet vẫn dùng ký hiệu tròn/ô '{repr(lt_val)}' trong word/numbering.xml.")
+            rf = lvl.find(f"{w_ns}rPr/{w_ns}rFonts")
+            if rf is not None:
+                for attr in ("ascii", "hAnsi"):
+                    fval = rf.attrib.get(f"{w_ns}{attr}", "")
+                    if fval in ("Symbol", "Courier New", "Wingdings"):
+                        issues.append(
+                            f"Danh sách trong word/numbering.xml vẫn dùng phông ký hiệu '{fval}'."
+                        )
+
+    if len(media_files) != 11:
+        issues.append(
+            f"Số tệp ảnh trong word/media/ là {len(media_files)} (kỳ vọng 11: 9 hình báo cáo + khung bìa + logo CTUT)."
+        )
     if len(omath_nodes) < 100:
         issues.append(f"Số công thức OMML <m:oMath> quá thấp: {len(omath_nodes)} (kỳ vọng > 100).")
 
@@ -112,7 +265,7 @@ def verify_docx(docx_path: Path, repo_root: Path = REPO_ROOT) -> tuple[list[str]
     if upd_el is None or upd_el.attrib.get(f"{w_ns}val") != "true":
         issues.append("Thiếu cờ <w:updateFields w:val='true'/> trong word/settings.xml.")
 
-    # 2. Kiểm tra 3 Section, khổ A4, lề và đánh số trang
+    # 2. Kiểm tra 3 Section, khổ A4, lề chuẩn (2.0/2.0/3.0/2.0 cm), khung bìa behindDoc và đánh số trang
     stats["sections"] = len(doc.sections)
     if len(doc.sections) != 3:
         issues.append(f"Số lượng Section là {len(doc.sections)} (kỳ vọng 3: Bìa, Mở đầu, Thân bài).")
@@ -129,13 +282,13 @@ def verify_docx(docx_path: Path, repo_root: Path = REPO_ROOT) -> tuple[list[str]
             if w_mm != 210 or h_mm != 297:
                 issues.append(f"Section {idx} sai khổ giấy A4: {w_mm}x{h_mm} mm.")
             if (
-                abs(sec.top_margin.cm - 2.5) > 0.05
+                abs(sec.top_margin.cm - 2.0) > 0.05
                 or abs(sec.bottom_margin.cm - 2.0) > 0.05
                 or abs(sec.left_margin.cm - 3.0) > 0.05
                 or abs(sec.right_margin.cm - 2.0) > 0.05
             ):
                 issues.append(
-                    f"Section {idx} sai lề chuẩn (2.5/2.0/3.0/2.0 cm): "
+                    f"Section {idx} sai lề chuẩn CTUT (2.0/2.0/3.0/2.0 cm): "
                     f"{sec.top_margin.cm:.2f}/{sec.bottom_margin.cm:.2f}/{sec.left_margin.cm:.2f}/{sec.right_margin.cm:.2f}."
                 )
             pg = sec._sectPr.find(qn("w:pgNumType"))
@@ -148,35 +301,70 @@ def verify_docx(docx_path: Path, repo_root: Path = REPO_ROOT) -> tuple[list[str]
                     f"Section {idx} đánh số trang không khớp: fmt={fmt}, start={start}, has_PAGE={has_page}."
                 )
 
-    # 3. Kiểm tra phông chữ các style chính
+        # Kiểm tra khung bìa ở header Section 0 (behindDoc="1") và không rò sang Section 1, 2
+        anchors_s0 = doc.sections[0].header._element.findall(f".//{wp_ns}anchor")
+        if not any(a.get("behindDoc") == "1" for a in anchors_s0):
+            issues.append("Section 0 thiếu ảnh khung viền trang bìa (behindDoc='1') trong header.")
+        for idx in (1, 2):
+            if doc.sections[idx].header._element.findall(f".//{wp_ns}anchor"):
+                issues.append(f"Section {idx} bị rò ảnh header từ Section 0.")
+
+    # 3. Kiểm tra phông chữ các style chính là Times New Roman (kể cả Source Code)
     for st_name in (
         "Normal",
         "Body Text",
         "First Paragraph",
         "Compact",
         "Block Text",
+        "Front Title",
+        "Front Heading 2",
         "Heading 1",
         "Heading 2",
         "Heading 3",
+        "Caption Table",
+        "Caption Figure",
+        "Source Code",
     ):
-        if st_name in doc.styles and doc.styles[st_name].font.name != "Times New Roman":
-            issues.append(f"Style '{st_name}' dùng phông '{doc.styles[st_name].font.name}' != 'Times New Roman'.")
+        if st_name in doc.styles and doc.styles[st_name].font.name != FONT_NAME:
+            issues.append(f"Style '{st_name}' dùng phông '{doc.styles[st_name].font.name}' != '{FONT_NAME}'.")
 
-    # 4. Kiểm tra thứ tự Heading 1
+    # 4. Kiểm tra thứ tự Front Title, Heading 1 và Phụ lục (Heading 2)
+    front_texts = [
+        p.text.strip()
+        for p in doc.paragraphs
+        if p.style and p.style.name == "Front Title" and p.text.strip()
+    ]
+    pos_ft = -1
+    for ft in EXPECTED_FRONT_TITLES:
+        found = next((i for i, t in enumerate(front_texts) if i > pos_ft and t == ft), None)
+        if found is None:
+            issues.append(f"Thiếu hoặc sai thứ tự Front Title '{ft}'.")
+        else:
+            pos_ft = found
+
     h1_texts = [
         p.text.strip()
         for p in doc.paragraphs
         if p.style and p.style.name == "Heading 1" and p.text.strip()
     ]
-    pos = -1
-    for prefix in EXPECTED_H1_PREFIXES:
-        found_idx = next((i for i, t in enumerate(h1_texts) if i > pos and t.startswith(prefix)), None)
-        if found_idx is None:
+    pos_h1 = -1
+    for prefix in EXPECTED_MAIN_H1_PREFIXES:
+        found = next((i for i, t in enumerate(h1_texts) if i > pos_h1 and t.startswith(prefix)), None)
+        if found is None:
             issues.append(f"Thiếu hoặc sai thứ tự Heading 1 bắt đầu bằng '{prefix}'.")
         else:
-            pos = found_idx
+            pos_h1 = found
 
-    # 5. Quét toàn bộ <w:p> qua XML nhanh để kiểm tra caption, từ cấm, dấu '$', đếm từ
+    h2_texts = [
+        p.text.strip()
+        for p in doc.paragraphs
+        if p.style and p.style.name == "Heading 2" and p.text.strip()
+    ]
+    for app_prefix in EXPECTED_APPENDIX_H2_PREFIXES:
+        if not any(t.startswith(app_prefix) for t in h2_texts):
+            issues.append(f"Thiếu Heading 2 phụ lục bắt đầu bằng '{app_prefix}'.")
+
+    # 5. Quét toàn bộ <w:p> và <w:tbl> trong body
     report_dir = repo_root / "docs" / "thesis" / "report"
     exp_tables: list[str] = []
     exp_figures: list[str] = []
@@ -187,48 +375,127 @@ def verify_docx(docx_path: Path, repo_root: Path = REPO_ROOT) -> tuple[list[str]
 
     body_el = doc_xml.find(f"{w_ns}body")
     assert body_el is not None
-    top_level_ps = set(body_el.findall(f"{w_ns}p"))
+    body_children = list(body_el)
 
+    # Kiểm tra chuẩn Booktabs cho mọi bảng dữ liệu (sau trang bìa)
+    data_table_idx = 0
+    for el in body_children:
+        if el.tag == f"{w_ns}tbl":
+            tbl_pr = el.find(f"{w_ns}tblPr")
+            tbl_ind = tbl_pr.find(f"{w_ns}tblInd") if tbl_pr is not None else None
+            if tbl_ind is not None and tbl_ind.attrib.get(f"{w_ns}w") == "1389":
+                continue  # Bảng sinh viên không viền trên bìa chính/phụ
+            data_table_idx += 1
+            issues.extend(_verify_booktabs_table(el, data_table_idx, w_ns))
+    stats["data_tables"] = data_table_idx
+
+    # Kiểm tra caption Bảng/Hình (phong cách + dấu `:`), vị trí kề bảng/ảnh, phông run, chuỗi cấm và `$`
+    # Đồng thời kiểm tra định dạng in đậm của Mục lục (chỉ cấp 1 trong MỤC LỤC in đậm; cấp 2-3 và danh mục bảng/hình thường)
     in_main = False
+    front_section = ""
+    toc_lvl1_count = 0
+    lot_toc_count = 0
+    lof_toc_count = 0
     found_tbl_caps: list[str] = []
     found_fig_caps: list[str] = []
     main_words = 0
 
+    for idx_child, el in enumerate(body_children):
+        if el.tag == f"{w_ns}p":
+            p_style_el = el.find(f"{w_ns}pPr/{w_ns}pStyle")
+            p_style_id = p_style_el.attrib.get(f"{w_ns}val", "") if p_style_el is not None else ""
+            p_style_canon = style_id_to_canon.get(p_style_id, p_style_id.lower())
+            txt = _paragraph_text_xml(el).strip()
+            if p_style_canon in ("heading 1", "heading1") and txt.startswith("CHƯƠNG 1."):
+                in_main = True
+                front_section = ""
+            elif not in_main and p_style_canon in ("front title", "fronttitle") and txt:
+                front_section = txt
+
+            if not in_main and p_style_canon in ("toc 1", "toc1", "toc 2", "toc2", "toc 3", "toc3"):
+                flags = _toc_run_bold_flags(el, p_style_id, style_id_to_bold, w_ns)
+                if flags:
+                    if front_section == "MỤC LỤC":
+                        if p_style_canon in ("toc 1", "toc1"):
+                            toc_lvl1_count += 1
+                            if not all(flags):
+                                issues.append(f"Mục cấp 1 trong MỤC LỤC chưa in đậm đầy đủ: '{txt[:60]}'.")
+                        elif any(flags):
+                            issues.append(f"Mục cấp 2/3 trong MỤC LỤC bị in đậm ngoài ý muốn: '{txt[:60]}'.")
+                    elif front_section in ("DANH MỤC BẢNG BIỂU", "DANH MỤC HÌNH ẢNH"):
+                        if front_section == "DANH MỤC BẢNG BIỂU":
+                            lot_toc_count += 1
+                        else:
+                            lof_toc_count += 1
+                        if any(flags):
+                            issues.append(f"Mục trong {front_section} bị in đậm ngoài ý muốn: '{txt[:60]}'.")
+            if in_main:
+                main_words += len(re.findall(r"\S+", txt))
+
+                if m_t := re.match(r"^Bảng\s+([A-D0-9]+\.\d+)\s*(:)\s*", txt):
+                    if p_style_canon not in ("caption table", "captiontable"):
+                        issues.append(
+                            f"Caption 'Bảng {m_t.group(1)}:' sai style ('{p_style_canon}' != 'caption table')."
+                        )
+                    found_tbl_caps.append(m_t.group(1))
+                    next_el = body_children[idx_child + 1] if idx_child + 1 < len(body_children) else None
+                    if next_el is None or next_el.tag != f"{w_ns}tbl":
+                        issues.append(f"Caption 'Bảng {m_t.group(1)}:' không đứng ngay trước bảng dữ liệu.")
+                elif m_f := re.match(r"^Hình\s+([A-D0-9]+\.\d+)\s*(:)\s*", txt):
+                    if p_style_canon not in ("caption figure", "captionfigure"):
+                        issues.append(
+                            f"Caption 'Hình {m_f.group(1)}:' sai style ('{p_style_canon}' != 'caption figure')."
+                        )
+                    found_fig_caps.append(m_f.group(1))
+                    prev_el = body_children[idx_child - 1] if idx_child > 0 else None
+                    has_img = prev_el is not None and bool(prev_el.findall(f".//{w_ns}drawing"))
+                    if not has_img:
+                        issues.append(f"Caption 'Hình {m_f.group(1)}:' không đứng ngay sau đoạn chứa ảnh.")
+        elif in_main:
+            for p_sub in el.iter(f"{w_ns}p"):
+                main_words += len(re.findall(r"\S+", _paragraph_text_xml(p_sub).strip()))
+
     for p_el in body_el.iter(f"{w_ns}p"):
         txt = _paragraph_text_xml(p_el).strip()
-        if txt.startswith("CHƯƠNG 1."):
-            in_main = True
-        if in_main:
-            main_words += len(re.findall(r"\S+", txt))
-
-        # Chỉ kiểm tra caption ở cấp đoạn trực tiếp trong body (không phải cell Danh mục)
-        is_top_level = p_el in top_level_ps
-        if in_main and is_top_level:
-            if m_t := re.match(r"^Bảng\s+([A-D0-9]+\.\d+)\s*[-–:]", txt):
-                found_tbl_caps.append(m_t.group(1))
-            if m_f := re.match(r"^Hình\s+([A-D0-9]+\.\d+)\s*[-–:]", txt):
-                found_fig_caps.append(m_f.group(1))
-
         for bad in FORBIDDEN_STRINGS:
             if bad in txt:
                 issues.append(f"Phát hiện chuỗi cấm '{bad}' trong đoạn: '{txt[:80]}'.")
 
-        # Kiểm tra '$' sót lại ngoài mã nguồn / biến $PORT
         p_style_el = p_el.find(f"{w_ns}pPr/{w_ns}pStyle")
-        p_style_val = p_style_el.attrib.get(f"{w_ns}val", "") if p_style_el is not None else ""
-        if p_style_val != "SourceCode" and "$" in txt and "$PORT" not in txt:
+        p_style_id = p_style_el.attrib.get(f"{w_ns}val", "") if p_style_el is not None else ""
+        p_style_canon = style_id_to_canon.get(p_style_id, p_style_id.lower())
+        if p_style_canon not in ("source code", "sourcecode") and "$" in txt and "$PORT" not in txt:
             issues.append(f"Phát hiện ký tự '$' có thể chưa biên dịch toán học: '{txt[:90]}'.")
 
+        # Kiểm tra mọi run ngoài <m:oMath> đều mang Times New Roman (nếu có rFonts tường minh)
+        for child in p_el:
+            if child.tag != f"{w_ns}r":
+                continue
+            rf = child.find(f"{w_ns}rPr/{w_ns}rFonts")
+            if rf is not None:
+                asc = rf.attrib.get(f"{w_ns}ascii")
+                if asc and asc != FONT_NAME:
+                    issues.append(f"Phát hiện run mang phông '{asc}' != '{FONT_NAME}' tại đoạn '{txt[:60]}'.")
+                    break
+
+    if toc_lvl1_count != 16:
+        issues.append(f"Số mục cấp 1 trong MỤC LỤC là {toc_lvl1_count} (kỳ vọng 16).")
+    if lot_toc_count != 31:
+        issues.append(f"Số mục trong DANH MỤC BẢNG BIỂU là {lot_toc_count} (kỳ vọng 31).")
+    if lof_toc_count != 9:
+        issues.append(f"Số mục trong DANH MỤC HÌNH ẢNH là {lof_toc_count} (kỳ vọng 9).")
+
+    stats["toc_level1_count"] = toc_lvl1_count
     stats["body_tables"] = len(found_tbl_caps)
     stats["body_figures"] = len(found_fig_caps)
 
     if found_tbl_caps != exp_tables:
         issues.append(
-            f"Danh sách Bảng trong DOCX ({len(found_tbl_caps)}) không khớp nguồn Markdown ({len(exp_tables)})."
+            f"Danh sách Bảng (đúng chuẩn 'Bảng X.Y:') trong DOCX ({len(found_tbl_caps)}) không khớp nguồn Markdown ({len(exp_tables)})."
         )
     if found_fig_caps != exp_figures:
         issues.append(
-            f"Danh sách Hình trong DOCX ({len(found_fig_caps)}) không khớp nguồn Markdown ({len(exp_figures)})."
+            f"Danh sách Hình (đúng chuẩn 'Hình X.Y:') trong DOCX ({len(found_fig_caps)}) không khớp nguồn Markdown ({len(exp_figures)})."
         )
 
     # 6. Đối chiếu số từ phần thân

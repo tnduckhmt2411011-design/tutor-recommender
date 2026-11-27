@@ -1,0 +1,217 @@
+<mxfile host="next-ai-draw-io" version="24.7.17">
+  <diagram id="hinh-3-1" name="Hình 3.1 - Sơ đồ luồng xử lý khuyến nghị (ISO 5807)">
+    <mxGraphModel dx="1220" dy="1520" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Nút Bắt đầu (ISO 5807 Terminator) -->
+        <mxCell id="n_start" value="&lt;b&gt;Bắt đầu&lt;/b&gt;" style="rounded=1;arcSize=50;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=13;fillColor=#234063;strokeColor=#234063;fontColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="405" y="24" width="170" height="44" as="geometry"/>
+        </mxCell>
+
+        <!-- Bước 1: Nhập nhu cầu & ưu tiên (ISO 5807 I/O Parallelogram) -->
+        <mxCell id="n_step1" value="&lt;b&gt;1.&lt;/b&gt; Nhập nhu cầu &amp;amp; mức ưu tiên (CN01)" style="shape=parallelogram;perimeter=parallelogramPerimeter;fixedSize=1;size=16;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=13;fillColor=#DCEAF7;strokeColor=#234063;strokeWidth=1.5;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="320" y="96" width="340" height="52" as="geometry"/>
+        </mxCell>
+
+        <!-- Bước 2: Kiểm tra, chuẩn hóa đầu vào (ISO 5807 Process) -->
+        <mxCell id="n_step2" value="&lt;b&gt;2.&lt;/b&gt; Kiểm tra, chuẩn hóa đầu vào (&lt;font face=&quot;Consolas&quot; style=&quot;font-size:12px&quot;&gt;SearchRequest&lt;/font&gt;)" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=13;fillColor=#F8FAFC;strokeColor=#234063;strokeWidth=1.5;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="325" y="178" width="330" height="52" as="geometry"/>
+        </mxCell>
+
+        <!-- Quyết định 1: Đầu vào hợp lệ? -->
+        <mxCell id="d1" value="&lt;b&gt;Đầu vào&lt;br&gt;hợp lệ?&lt;/b&gt;" style="rhombus;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=13;fillColor=#FFFFFF;strokeColor=#234063;strokeWidth=1.6;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="360" y="260" width="260" height="86" as="geometry"/>
+        </mxCell>
+
+        <!-- Nhánh lỗi 422 (ISO 5807 Output Parallelogram) -->
+        <mxCell id="out_422" value="&lt;b&gt;HTTP 422 Unprocessable Entity&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:11.5px;color:#57534E&quot;&gt;Thiếu môn học, ngân sách âm, sai kiểu&lt;/font&gt;" style="shape=parallelogram;perimeter=parallelogramPerimeter;fixedSize=1;size=16;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=12.5;fillColor=#FDF8F0;strokeColor=#9A6B2F;strokeWidth=1.5;fontColor=#8A4B08;" vertex="1" parent="1">
+          <mxGeometry x="725" y="271" width="340" height="64" as="geometry"/>
+        </mxCell>
+
+        <!-- Bước 3: Lọc bắt buộc (ISO 5807 Process) -->
+        <mxCell id="n_step3" value="&lt;b&gt;3.&lt;/b&gt; Đọc 16 hồ sơ &amp;amp; lọc bắt buộc (Bảng 3.2)&lt;br&gt;&lt;font style=&quot;font-size:11.5px;color:#475569&quot;&gt;Môn học, hình thức, giao khung giờ&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=13;fillColor=#F8FAFC;strokeColor=#234063;strokeWidth=1.5;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="325" y="382" width="330" height="56" as="geometry"/>
+        </mxCell>
+
+        <!-- Quyết định 2: Còn ứng viên qua lọc? -->
+        <mxCell id="d2" value="&lt;b&gt;Còn ứng viên&lt;br&gt;qua lọc bắt buộc?&lt;/b&gt;" style="rhombus;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=12.5;fillColor=#FFFFFF;strokeColor=#234063;strokeWidth=1.6;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="355" y="468" width="270" height="88" as="geometry"/>
+        </mxCell>
+
+        <!-- Nhánh no_match biến thể 1 -->
+        <mxCell id="out_nm1" value="&lt;b&gt;Trả no_match (biến thể 1)&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:11.5px;color:#57534E&quot;&gt;Không có gia sư thỏa điều kiện bắt buộc&lt;/font&gt;" style="shape=parallelogram;perimeter=parallelogramPerimeter;fixedSize=1;size=16;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=12.5;fillColor=#FDF8F0;strokeColor=#9A6B2F;strokeWidth=1.5;fontColor=#8A4B08;" vertex="1" parent="1">
+          <mxGeometry x="725" y="480" width="340" height="64" as="geometry"/>
+        </mxCell>
+
+        <!-- Bước 4: Tính trọng số hiệu dụng -->
+        <mxCell id="n_step4" value="&lt;b&gt;4.&lt;/b&gt; Tính trọng số hiệu dụng (Bảng 3.5)&lt;br&gt;&lt;font style=&quot;font-size:11.5px;color:#475569&quot;&gt;Loại tiêu chí khuyết đầu vào hoặc w_i = 0&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=13;fillColor=#F8FAFC;strokeColor=#234063;strokeWidth=1.5;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="325" y="590" width="330" height="56" as="geometry"/>
+        </mxCell>
+
+        <!-- Quyết định 3: Tổng trọng số > 0? -->
+        <mxCell id="d3" value="&lt;b&gt;Tổng trọng số&lt;br&gt;Σw_i &amp;gt; 0?&lt;/b&gt;" style="rhombus;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=13;fillColor=#FFFFFF;strokeColor=#234063;strokeWidth=1.6;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="360" y="676" width="260" height="88" as="geometry"/>
+        </mxCell>
+
+        <!-- Nhánh zero_weight (đặt bên trái ở kênh giữa, hoàn toàn phẳng không cắt cạnh!) -->
+        <mxCell id="out_zero" value="&lt;b&gt;Trả zero_weight&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:11px;color:#57534E&quot;&gt;Danh sách chưa xếp hạng&lt;br&gt;+ nhắc bật ưu tiên&lt;/font&gt;" style="shape=parallelogram;perimeter=parallelogramPerimeter;fixedSize=1;size=14;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=12;fillColor=#FDF8F0;strokeColor=#9A6B2F;strokeWidth=1.5;fontColor=#8A4B08;" vertex="1" parent="1">
+          <mxGeometry x="86" y="685" width="214" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- Bước 5: Áp ngưỡng dữ liệu tối thiểu -->
+        <mxCell id="n_step5" value="&lt;b&gt;5.&lt;/b&gt; Kiểm tra ngưỡng dữ liệu (Bảng 3.7)&lt;br&gt;&lt;font style=&quot;font-size:11.5px;color:#475569&quot;&gt;Tách hồ sơ thiếu vào insufficient_data&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=13;fillColor=#F8FAFC;strokeColor=#234063;strokeWidth=1.5;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="325" y="798" width="330" height="56" as="geometry"/>
+        </mxCell>
+
+        <!-- Quyết định 4: Còn ứng viên đủ dữ liệu? -->
+        <mxCell id="d4" value="&lt;b&gt;Còn ứng viên&lt;br&gt;đủ dữ liệu?&lt;/b&gt;" style="rhombus;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=13;fillColor=#FFFFFF;strokeColor=#234063;strokeWidth=1.6;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="360" y="884" width="260" height="86" as="geometry"/>
+        </mxCell>
+
+        <!-- Nhánh no_match biến thể 2 -->
+        <mxCell id="out_nm2" value="&lt;b&gt;Trả no_match (biến thể 2)&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:11.5px;color:#57534E&quot;&gt;Đủ lọc bắt buộc nhưng thiếu dữ liệu xếp hạng&lt;/font&gt;" style="shape=parallelogram;perimeter=parallelogramPerimeter;fixedSize=1;size=16;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=12.5;fillColor=#FDF8F0;strokeColor=#9A6B2F;strokeWidth=1.5;fontColor=#8A4B08;" vertex="1" parent="1">
+          <mxGeometry x="725" y="895" width="340" height="64" as="geometry"/>
+        </mxCell>
+
+        <!-- Bước 6: Tính điểm thành phần -->
+        <mxCell id="n_step6" value="&lt;b&gt;6.&lt;/b&gt; Tính điểm thành phần s_i (Bảng 3.6)" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=13;fillColor=#F8FAFC;strokeColor=#234063;strokeWidth=1.5;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="325" y="1002" width="330" height="48" as="geometry"/>
+        </mxCell>
+
+        <!-- Bước 7: Tổng hợp & xếp hạng -->
+        <mxCell id="n_step7" value="&lt;b&gt;7.&lt;/b&gt; Tổng hợp S(g), xếp hạng &amp;amp; lấy Top-k&lt;br&gt;&lt;font style=&quot;font-size:11.5px;color:#475569&quot;&gt;Phá hòa tất định theo mã tutor_id&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=13;fillColor=#F8FAFC;strokeColor=#234063;strokeWidth=1.5;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="325" y="1076" width="330" height="54" as="geometry"/>
+        </mxCell>
+
+        <!-- Bước 8: Hiển thị kết quả -->
+        <mxCell id="n_step8" value="&lt;b&gt;8.&lt;/b&gt; Hiển thị Top-k, đóng góp C_i &amp;amp; lý do (CN02)" style="shape=parallelogram;perimeter=parallelogramPerimeter;fixedSize=1;size=16;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=13;fillColor=#DCEAF7;strokeColor=#234063;strokeWidth=1.5;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="315" y="1156" width="350" height="52" as="geometry"/>
+        </mxCell>
+
+        <!-- Quyết định 5: Người học điều chỉnh mức ưu tiên (CN03)? -->
+        <mxCell id="d5" value="&lt;b&gt;Điều chỉnh mức&lt;br&gt;ưu tiên (CN03)?&lt;/b&gt;" style="rhombus;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=12.5;fillColor=#FFFFFF;strokeColor=#234063;strokeWidth=1.6;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="360" y="1244" width="260" height="86" as="geometry"/>
+        </mxCell>
+
+        <!-- Khối cập nhật ưu tiên trên nhánh vòng lặp CN03 -->
+        <mxCell id="n_cn03" value="&lt;b&gt;Cập nhật mức ưu tiên&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:11px;color:#475569&quot;&gt;Gửi lại yêu cầu mới&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=12;fillColor=#DCEAF7;strokeColor=#234063;strokeWidth=1.5;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="106" y="1262" width="180" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- Nút Kết thúc (ISO 5807 Terminator) -->
+        <mxCell id="n_end" value="&lt;b&gt;Kết thúc&lt;/b&gt;" style="rounded=1;arcSize=50;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=13;fillColor=#234063;strokeColor=#234063;fontColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="405" y="1370" width="170" height="44" as="geometry"/>
+        </mxCell>
+
+        <!-- Luồng mũi tên thẳng dọc trục chính -->
+        <mxCell id="e_s_1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#234063;strokeWidth=1.6;endArrow=block;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="n_start" target="n_step1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_1_2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#234063;strokeWidth=1.6;endArrow=block;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="n_step1" target="n_step2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_2_d1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#234063;strokeWidth=1.6;endArrow=block;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="n_step2" target="d1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_d1_3" value="&lt;b&gt;Có&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#234063;strokeWidth=1.6;endArrow=block;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;fontFamily=Times New Roman;fontSize=12;fontColor=#234063;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="d1" target="n_step3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_d2_4" value="&lt;b&gt;Có&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#234063;strokeWidth=1.6;endArrow=block;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;fontFamily=Times New Roman;fontSize=12;fontColor=#234063;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="d2" target="n_step4">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_4_d3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#234063;strokeWidth=1.6;endArrow=block;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="n_step4" target="d3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_3_d2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#234063;strokeWidth=1.6;endArrow=block;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="n_step3" target="d2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_d3_5" value="&lt;b&gt;Có&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#234063;strokeWidth=1.6;endArrow=block;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;fontFamily=Times New Roman;fontSize=12;fontColor=#234063;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="d3" target="n_step5">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_5_d4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#234063;strokeWidth=1.6;endArrow=block;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="n_step5" target="d4">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_d4_6" value="&lt;b&gt;Có&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#234063;strokeWidth=1.6;endArrow=block;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;fontFamily=Times New Roman;fontSize=12;fontColor=#234063;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="d4" target="n_step6">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_6_7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#234063;strokeWidth=1.6;endArrow=block;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="n_step6" target="n_step7">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_7_8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#234063;strokeWidth=1.6;endArrow=block;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="n_step7" target="n_step8">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_8_d5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#234063;strokeWidth=1.6;endArrow=block;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="n_step8" target="d5">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_d5_end" value="&lt;b&gt;Không&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#234063;strokeWidth=1.6;endArrow=block;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;fontFamily=Times New Roman;fontSize=12;fontColor=#234063;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="d5" target="n_end">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Các nhánh rẽ điều kiện 'Không' sang cột kết quả lỗi/dừng bên phải -> Kênh thu gom x=1120 -> Kết thúc -->
+        <mxCell id="e_d1_422" value="&lt;b&gt;Không&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#9A6B2F;strokeWidth=1.5;endArrow=block;endFill=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;fontFamily=Times New Roman;fontSize=12;fontColor=#8A4B08;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="d1" target="out_422">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_d2_nm1" value="&lt;b&gt;Không&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#9A6B2F;strokeWidth=1.5;endArrow=block;endFill=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;fontFamily=Times New Roman;fontSize=12;fontColor=#8A4B08;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="d2" target="out_nm1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_d4_nm2" value="&lt;b&gt;Không&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#9A6B2F;strokeWidth=1.5;endArrow=block;endFill=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;fontFamily=Times New Roman;fontSize=12;fontColor=#8A4B08;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="d4" target="out_nm2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e_422_end" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#9A6B2F;strokeWidth=1.4;endArrow=none;exitX=1;exitY=0.5;" edge="1" parent="1" source="out_422">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1120" y="303" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_nm1_end" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#9A6B2F;strokeWidth=1.4;endArrow=none;exitX=1;exitY=0.5;" edge="1" parent="1" source="out_nm1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1120" y="512" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_nm2_rail" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#9A6B2F;strokeWidth=1.4;endArrow=block;endFill=1;exitX=1;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="out_nm2" target="n_end">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1120" y="927"/>
+              <mxPoint x="1120" y="1392"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_rail_top" value="" style="endArrow=none;html=1;strokeColor=#9A6B2F;strokeWidth=1.4;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1120" y="303" as="sourcePoint"/>
+            <mxPoint x="1120" y="927" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Nhánh zero_weight bên trái đi xuống nối thẳng vào trên quyết định d5 (phẳng 100%, không cắt đường!) -->
+        <mxCell id="e_d3_zero" value="&lt;b&gt;Không&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#9A6B2F;strokeWidth=1.5;endArrow=block;endFill=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;fontFamily=Times New Roman;fontSize=12;fontColor=#8A4B08;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="d3" target="out_zero">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_zero_d5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#9A6B2F;strokeWidth=1.5;endArrow=block;endFill=1;exitX=0.5;exitY=1;" edge="1" parent="1" source="out_zero">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="490" y="1226" as="targetPoint"/>
+            <Array as="points">
+              <mxPoint x="193" y="1226"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Nhánh vòng lặp CN03 bên trái cùng quay về Bước 2 (nét liền luồng điều khiển) -->
+        <mxCell id="e_d5_cn03" value="&lt;b&gt;Có&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#234063;strokeWidth=1.6;endArrow=block;endFill=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;fontFamily=Times New Roman;fontSize=12;fontColor=#234063;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="d5" target="n_cn03">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_cn03_step2" value="&lt;b&gt;Lặp CN03&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#234063;strokeWidth=1.6;endArrow=block;endFill=1;exitX=0;exitY=0.5;entryX=0;entryY=0.5;fontFamily=Times New Roman;fontSize=12;fontColor=#234063;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="n_cn03" target="n_step2">
+          <mxGeometry x="0.05" relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="42" y="1287"/>
+              <mxPoint x="42" y="204"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

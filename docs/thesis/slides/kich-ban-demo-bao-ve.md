@@ -1,7 +1,7 @@
-# Kịch bản demo bảo vệ đồ án (US-35)
+# Kịch bản demo bảo vệ đồ án
 
 > [!NOTE]
-> **Đề xuất, nhóm xác nhận.** Kịch bản demo 4 phút, chạy trên hệ thống cục bộ. Mọi thao tác dưới đây đã có trong README mục 6; số liệu hiển thị trùng với Bảng 5.3 và Hình 4.2–4.4.
+> Kịch bản demo 4 phút, chạy trên hệ thống cục bộ. Các bước CN01–CN03 và trạng thái biên khớp với README mục 6, Bảng 5.3 và Hình 4.1–4.4 (bổ sung thêm Bước 5 kiểm chứng trạng thái `no_match` với KB05).
 
 ## 1. Mục tiêu buổi demo
 
@@ -33,7 +33,7 @@ Không demo phần quản trị, đăng nhập hay thanh toán vì đồ án kh�
 
 ### Bước 1 — Nạp kịch bản KB01 (0:00–0:40)
 
-**Thao tác:** tại thanh “Nạp nhanh kịch bản kiểm thử”, bấm **KB01**. Hệ thống điền: môn Toán, hình thức Trực tiếp, khu vực Bình Thạnh, ngân sách 200.000 đồng/giờ, cả năm mức ưu tiên ở Trung bình. Bấm **Tìm gia sư phù hợp**.
+**Thao tác:** tại thanh “Kịch bản thực nghiệm (Bảng 5.3 · KB01 - KB14)” ở phía trên màn hình, lưu ý ô `Tự động chuyển kết quả` mặc định đang tích sẵn; có thể đọc trực tiếp biểu mẫu khởi tạo mặc định (hoặc bỏ tích ô này rồi bấm **KB01** để xem lại thông số: môn Toán, hình thức Trực tiếp, khu vực Bình Thạnh, ngân sách 200.000 đồng/giờ, cả năm mức ưu tiên ở Trung bình) rồi bấm **Tìm gia sư phù hợp →**.
 
 **Nói:** “Đây là kịch bản KB01, một trong 14 kịch bản nhóm dùng để đánh giá. Nhu cầu được nạp sẵn để buổi demo không phụ thuộc vào việc gõ tay.”
 
@@ -44,14 +44,14 @@ Không demo phần quản trị, đăng nhập hay thanh toán vì đồ án kh�
 **Nói:**
 
 - “Top-3 lần lượt là GS-G01 0,938; GS-G10 0,745; GS-T06 0,625 — đúng bằng cột kỳ vọng ở Bảng 5.3.”
-- “Thanh xếp chồng chia điểm tổng thành năm phần. GS-G01 có bốn tiêu chí áp dụng, mỗi tiêu chí đóng góp 0,25; tiêu chí Lịch rảnh không áp dụng vì nhu cầu không nhập khung giờ.”
+- “Thanh xếp chồng vẽ tối đa năm đoạn theo các tiêu chí đang áp dụng. Ở KB01, GS-G01 có bốn tiêu chí áp dụng với mức đóng góp lần lượt là Học phí 0,250; Khu vực 0,250; Kinh nghiệm 0,1875 (hiển thị 0,19 trên thanh, 0,188 ở chú giải); Đánh giá 0,250 — tổng đúng bằng 0,9375 (hiển thị 0,938); tiêu chí Lịch rảnh không áp dụng vì nhu cầu không nhập khung giờ.”
 - “Dòng lý do gợi ý giải thích vì sao gia sư này đứng đầu, không chỉ đưa ra con số.”
 
-**Nếu bị hỏi vì sao GS-T06 đứng thứ ba:** hồ sơ này chưa có điểm đánh giá nên dùng giá trị trung tính 0,5 và có ghi chú “chưa có đánh giá”; học phí 400.000 đồng vượt ngân sách 200.000 nên điểm học phí bằng 0.
+**Nếu bị hỏi vì sao GS-T06 đứng thứ ba (cuộn nhẹ trang ở màn hình 1440×900 để xem thẻ #3):** hồ sơ này mang huy hiệu **Thực tế (ước tính \*)**, chưa có điểm đánh giá nên dùng giá trị trung tính 0,5 và có ghi chú “chưa có đánh giá”; học phí 400.000 đồng vượt ngân sách 200.000 nên điểm học phí bằng 0.
 
 ### Bước 3 — Đổi mức ưu tiên (1:40–2:40)
 
-**Thao tác:** trên rail CN03, đưa **Học phí** và **Khu vực** về “Bỏ qua (w = 0)”; đưa **Kinh nghiệm** và **Đánh giá** lên “Cao (w = 3)”. Danh sách tự tính lại.
+**Thao tác:** trên khung điều chỉnh CN03, bấm chọn đưa **Học phí** và **Khu vực** về “Bỏ qua (w = 0)”; đưa **Kinh nghiệm** và **Đánh giá** lên “Cao (w = 3)” (hoặc bấm nhanh nút 1 chạm **“Ưu tiên KN & Đánh giá”** để gán cùng cấu hình trọng số). Danh sách tự tính lại.
 
 **Nói:**
 
@@ -63,15 +63,15 @@ Không demo phần quản trị, đăng nhập hay thanh toán vì đồ án kh�
 
 **Thao tác:** bấm **“Thử ∑w_i = 0”**.
 
-**Nói:** “Khi cả năm tiêu chí ở mức Không quan tâm, không có cơ sở để xếp hạng. Hệ thống giữ danh sách gia sư thỏa điều kiện bắt buộc, hiện thông báo ‘Không thể xếp hạng do tổng trọng số bằng 0’ và nút khôi phục mặc định, thay vì chia cho 0.”
+**Nói:** “Khi cả năm tiêu chí ở mức Không quan tâm, không có cơ sở để xếp hạng. Phía API trả danh sách ứng viên đã đạt điều kiện bắt buộc trong trường JSON `unranked_candidates`, còn giao diện hiển thị thống kê `Hợp lệ: 5 ứng viên` ở thanh trên kèm thông báo ‘Không thể xếp hạng do tổng trọng số bằng 0’ và nút khôi phục mặc định, thay vì chia cho 0.”
 
 **Sau đó:** bấm **“Khôi phục trọng số mặc định (w = 2)”**.
 
 ### Bước 5 — Trạng thái không có ứng viên (3:10–3:40)
 
-**Thao tác:** nạp **KB05** (môn Tiếng Trung) rồi bấm tìm.
+**Thao tác:** bấm **“← Điều chỉnh điều kiện tìm kiếm (CN01)”** để quay lại màn hình nhập nhu cầu, sau đó bấm nút **KB05** (môn Tiếng Trung; nếu đã bỏ tích tự động chuyển thì bấm **Tìm gia sư phù hợp →**).
 
-**Nói:** “Bộ dữ liệu không có gia sư Tiếng Trung, nên bước lọc bắt buộc trả về rỗng. Hệ thống hiện thông báo ‘Không tìm thấy gia sư thỏa mãn điều kiện’ và gợi ý nới điều kiện, không trả danh sách rỗng không giải thích.”
+**Nói:** “Bộ dữ liệu không có gia sư Tiếng Trung, nên bước lọc bắt buộc trả về rỗng. Hệ thống hiện thông báo ‘Không tìm thấy gia sư thỏa mãn điều kiện’ kèm lý do ‘Không có gia sư thỏa điều kiện bắt buộc’ và nút quay lại màn hình tìm kiếm, không trả danh sách rỗng thiếu giải thích.”
 
 ### Bước 6 — Kết thúc (3:40–4:00)
 
@@ -104,13 +104,13 @@ Vì phương pháp này cần ma trận tương tác (ai học với ai, bao nhi
 Kỳ vọng Top-3 được ghi trước khi chạy và lưu trong `scenarios.json`, nên kết quả 14/14 xác nhận hệ thống chạy đúng thiết kế. Nó không chứng minh thiết kế là tốt nhất; muốn vậy cần người học thật, và đó là hạn chế ở Mục 5.3.
 
 **3. Vì sao chọn δ = 0,5 và E_max = 8?**
-Đây là giá trị khởi tạo do nhóm chọn, không phải quy luật sẵn có. Nhóm khảo sát độ nhạy ở Bảng 5.5–5.6: thay đổi trong dải hợp lý không làm đổi Top-3 của 14 kịch bản.
+Đây là giá trị khởi tạo do nhóm chọn, không phải quy luật sẵn có. Nhóm khảo sát độ nhạy ở Bảng 5.5–5.6: mọi mức $\delta \in [0{,}25; 1{,}00]$ và các mốc $E_{\max} \in \{5, 6, 8\}$ giữ nguyên Top-3 của 14/14 kịch bản; khi tăng $E_{\max}$ lên 10 và 12, chỉ duy nhất 1/14 kịch bản (`KB10`) đổi Top-3 (`GS-G01` rời Top-3, `GS-T06` vào ở mốc 10 và vượt `GS-G09` ở mốc 12).
 
 **4. Hồ sơ chưa có đánh giá được cho 0,5 có công bằng?**
 Đây là giải pháp tạm để không loại oan hồ sơ mới. Giao diện hiện ghi chú “chưa có đánh giá”, và ngưỡng dữ liệu tối thiểu vẫn loại các hồ sơ thiếu quá nhiều tiêu chí. Cách xử lý tốt hơn là thu thập đánh giá thật, thuộc hướng phát triển.
 
 **5. Con số 3,54 ms nghĩa là gì?**
-Là thời gian xử lý nội tại của endpoint khi gọi bằng `TestClient` trên máy cục bộ, không phải độ trễ end-to-end qua mạng. Chip 651,5 ms trên ảnh Hình 4.2 là số đo một lần tại trình duyệt khi chụp ảnh, không dùng để so sánh.
+Là thời gian xử lý nội tại của endpoint khi gọi bằng `TestClient` trên máy cục bộ, không phải độ trễ end-to-end qua mạng. Chip 651,5 ms trên ảnh Hình 4.2 đã bao gồm khoảng dừng 650 ms dành cho hiệu ứng chuyển trang trong `App.jsx` khi chuyển từ màn hình tìm kiếm sang kết quả, nên không dùng để so sánh trực tiếp với hiệu năng API.
 
 **6. Đồ án khác gì GS360?**
 GS360 là một nền tảng gia sư đầy đủ (đăng ký, đặt lịch, thanh toán, đánh giá). Đồ án chỉ làm bộ máy khuyến nghị và đối chiếu phạm vi chức năng; không kế thừa mã nguồn hay khung tính năng của GS360.
@@ -125,7 +125,7 @@ Bộ lọc hiện duyệt tuần tự trên 16 hồ sơ, chưa kiểm chứng �
 Tên đề tài giữ nguyên theo bản đã đăng ký. Khi trình bày phương pháp, báo cáo dùng thuật ngữ chuẩn “Content-Based Filtering”. Nếu hội đồng yêu cầu, nhóm sẽ điều chỉnh tên trong văn bản chính thức.
 
 **10. Vì sao mặc định Top-3?**
-Top-k là tham số, mặc định 3 để giao diện gọn; người học đổi được. Các kịch bản đánh giá cũng dùng Top-3 để so sánh nhất quán.
+API cho phép chọn tham số `top_k` là số nguyên trong đoạn $[1, 20]$ và giao diện cung cấp lựa chọn `{3, 5, 10}`, mặc định `3` để danh sách gọn (khi nạp nhanh kịch bản hệ thống đặt lại `top_k = 3`). Các kịch bản đánh giá cũng dùng Top-3 để so sánh nhất quán.
 
 ## 7. Câu không nên nói
 

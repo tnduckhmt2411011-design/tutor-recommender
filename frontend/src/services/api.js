@@ -122,7 +122,8 @@ export function buildRecommendationPayload(formValues) {
   let maxBudgetVnd = null
   const rawBudget = String(formValues.maxBudgetVnd ?? '').trim()
   if (rawBudget !== '') {
-    maxBudgetVnd = Number.parseInt(rawBudget, 10)
+    const parsedBudget = Number(rawBudget)
+    maxBudgetVnd = Number.isFinite(parsedBudget) ? parsedBudget : rawBudget
   }
 
   const timeSlots =
@@ -173,10 +174,11 @@ export async function fetchRecommendations(payload) {
   }
 
   if (!response.ok) {
-    const detail =
-      typeof data?.detail === 'string'
-        ? data.detail
-        : 'Dữ liệu đầu vào không hợp lệ (HTTP 422). Vui lòng kiểm tra lại các trường đã nhập.'
+    const fallbackMessage =
+      response.status === 422
+        ? 'Dữ liệu đầu vào không hợp lệ (HTTP 422). Vui lòng kiểm tra lại các trường đã nhập.'
+        : `Lỗi máy chủ hoặc yêu cầu không hợp lệ (HTTP ${response.status}). Vui lòng thử lại.`
+    const detail = typeof data?.detail === 'string' ? data.detail : fallbackMessage
     throw new Error(detail)
   }
 
