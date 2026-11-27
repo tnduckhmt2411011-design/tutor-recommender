@@ -6,9 +6,9 @@
 
 [3] Lê Thị Hoài Thương và Lê Nguyễn Quang Minh, “GS360 - Xây dựng website hỗ trợ tìm kiếm gia sư,” Báo cáo đồ án cơ sở, Trường Đại học Công nghệ Thông tin và Truyền thông Việt - Hàn, Đà Nẵng, tháng 11/2024. Truy cập: 16/11/2026. [Trực tuyến]. Địa chỉ: https://www.scribd.com/document/834112051/BAI-BAO-CAO-%C4%90%E1%BB%92-AN-C%C6%A0-S%E1%BB%9E-2
 
-[4] S. Ramírez, “FastAPI Documentation,” FastAPI. Accessed: Nov. 12, 2026. [Online]. Available: https://fastapi.tiangolo.com/
+[4] S. Ramírez, “FastAPI documentation.” FastAPI. Accessed: Nov. 12, 2026. [Online]. Available: https://fastapi.tiangolo.com/
 
-[5] Meta Platforms, Inc., “React Documentation,” React. Accessed: Nov. 12, 2026. [Online]. Available: https://react.dev/
+[5] Meta Platforms, Inc., “React documentation.” React. Accessed: Nov. 12, 2026. [Online]. Available: https://react.dev/
 
 [6] F. Ricci, L. Rokach, and B. Shapira, Eds., *Recommender Systems Handbook*, 3rd ed. New York, NY, USA: Springer US, 2022, doi: 10.1007/978-1-0716-2197-4.
 

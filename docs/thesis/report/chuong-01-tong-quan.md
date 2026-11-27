@@ -14,7 +14,7 @@ Qua khảo sát thực tế, người học hiện nay thường tìm gia sư qu
 - Các trung tâm gia sư truyền thống, nơi nhân viên tư vấn ghép nối thủ công dựa trên kinh nghiệm cá nhân.
 - Các nền tảng kết nối gia sư trực tuyến, thường cung cấp bộ lọc cơ bản theo môn học hoặc khu vực.
 
-Để đánh giá mức độ hỗ trợ tìm kiếm của các kênh trực tuyến, quá trình khảo sát trực tiếp ba nền tảng được tiến hành nhằm ghi nhận các tiêu chí lọc hiện có và khả năng xếp hạng tổng hợp nhiều tiêu chí. Kết quả được tổng hợp trong Bảng 1.1.
+Để đánh giá mức độ hỗ trợ tìm kiếm của các kênh trực tuyến, nhóm thực hiện khảo sát trực tiếp ba nền tảng nhằm ghi nhận các tiêu chí lọc hiện có và khả năng xếp hạng tổng hợp nhiều tiêu chí. Kết quả khảo sát được trình bày trong Bảng 1.1.
 
 **Bảng 1.1: Khảo sát chức năng tìm kiếm của một số kênh/nền tảng**
 
@@ -59,7 +59,7 @@ Ngoài ba nền tảng trên, nhóm thực hiện có tham khảo báo cáo đ�
 
 Về công nghệ, dịch vụ xử lý phía máy chủ (backend) viết bằng FastAPI trên Python 3.12. Giao diện người dùng (frontend) xây dựng bằng React (Vite). Dữ liệu gia sư mẫu lưu ở định dạng JSON và CSV.
 
-Quá trình phát triển áp dụng cách tiếp cận thiết kế đặc tả và kịch bản kiểm chứng trước khi lập trình. Quy trình bắt đầu từ việc xác định bài toán và mô hình điểm (Chương 3), rồi tạo bộ dữ liệu mẫu và kịch bản kiểm thử. Tiếp theo, hệ thống được hoàn thiện lần lượt từ module tính điểm, dịch vụ API đến giao diện minh họa. Cuối cùng là chạy thực nghiệm kiểm thử và đánh giá kết quả (Chương 4 và Chương 5). Thời gian dự kiến cho mỗi thành viên được chia theo từng hạng mục báo cáo ở Bảng 1.2, theo định mức học phần 2 tín chỉ (100 giờ/thành viên).
+Quá trình phát triển áp dụng cách tiếp cận thiết kế đặc tả và kịch bản kiểm chứng trước khi lập trình. Quy trình bắt đầu từ việc xác định bài toán và mô hình điểm (Chương 3), rồi tạo bộ dữ liệu mẫu và kịch bản kiểm thử. Tiếp theo, hệ thống được hoàn thiện lần lượt từ module tính điểm, dịch vụ API đến giao diện minh họa (Chương 4). Cuối cùng là chạy thực nghiệm kiểm thử và đánh giá kết quả (Chương 5). Thời gian dự kiến cho mỗi thành viên được chia theo từng hạng mục báo cáo ở Bảng 1.2, theo định mức học phần 2 tín chỉ (100 giờ/thành viên).
 
 **Bảng 1.2: Phân bổ thời gian thực hiện theo chương**
 

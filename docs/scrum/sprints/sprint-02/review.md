@@ -4,7 +4,7 @@
 # Sơ kết Sprint 2 (Sprint 2 Review)
 
 - **Ngày họp:** *[Chờ nhóm điền]*
-- **Người chủ trì:** Scrum Master (Trần Nguyễn Đức)
+- **Người chủ trì:** Scrum Master (Lê Thị Bích Chuyền)
 - **Thành phần tham dự:** *[Chờ nhóm điền]*
 
 ---

@@ -6,9 +6,9 @@
 
 ### 6.1.1. Đối chiếu kết quả thực hiện với bốn mục tiêu đề tài
 
-1. **Mô hình hóa mức độ phù hợp và viết module tính điểm.** Bảy đặc trưng hồ sơ được chia thành hai nhóm. Nhóm bắt buộc gồm môn học, hình thức học và khung giờ giao nhau tối thiểu. Nhóm ưu tiên có trọng số gồm học phí, khu vực, kinh nghiệm, đánh giá và lịch rảnh (Bảng 3.2). Kèm theo đó là bảng ngưỡng dữ liệu tối thiểu (Bảng 3.7) và năm hàm chuẩn hóa điểm thành phần về đoạn $[0, 1]$ (Bảng 3.6). Quy trình bốn bước nằm độc lập trong `backend/app/scoring/` (Mục 4.3, Phụ lục B) và vượt qua 132 bài test đơn vị cùng bộ ca biên ở Bảng 5.2. Điểm còn hạn chế là các tham số khởi tạo ($\delta = 0{,}5$, $E_{\max} = 8$ năm, điểm trung tính $0{,}5$) và bộ trọng số $\{0, 1, 2, 3\}$ do nhóm thực hiện đặt theo kinh nghiệm. Chúng chưa được học từ dữ liệu người dùng thật.
-2. **Xây dựng dịch vụ API khuyến nghị bằng FastAPI.** Điểm cuối `POST /api/recommend` chạy trên FastAPI và Python 3.12 (Mục 4.4), kiểm tra đầu vào bằng Pydantic (`extra="forbid"`). API trả đủ ba trạng thái HTTP 200 (`success`, `no_match` với hai biến thể, `zero_weight`) cùng mã lỗi HTTP 422 (Bảng 4.4). Bộ test tích hợp đạt 41/41 bài, với thời gian xử lý nội tại trung bình 3,54 ms (chậm nhất 7,97 ms trong 140 lượt đo chuẩn ở Mục 5.1.2). Vì backend chạy trên gói miễn phí của Render, máy chủ cần khoảng 30-40 giây khởi động lại sau thời gian nghỉ, đồng thời độ trễ mạng thực tế qua Internet chưa được đo đạc.
-3. **Xây dựng giao diện minh họa bằng React.** Giao diện web một trang (SPA) viết bằng React 19 và Vite (Hình 4.1-4.4) đáp ứng cả ba chức năng CN01-CN03. Màn hình nhập nhu cầu có thanh nạp nhanh 14 kịch bản và ô gợi ý trọng số theo mục tiêu học tập (CN01). Màn hình kết quả hiện Top-$k$ gia sư kèm thanh xếp chồng phân rã đóng góp $C_i$ và lý do gợi ý (CN02), cùng khung bấm chọn mức ưu tiên để xem thứ hạng đổi ngay lập tức (CN03). Hiện giao diện mới dùng cho tra cứu một chiều và kiểm tra tĩnh (`oxlint`), chưa có bộ test giao diện tự động hay các chức năng tài khoản, đặt lịch và đánh giá sau buổi học.
+1. **Mô hình hóa mức độ phù hợp và viết module tính điểm.** Bảy đặc trưng hồ sơ được phân thành ba nhóm theo Bảng 3.2: nhóm điều kiện bắt buộc (môn học, hình thức học và khung giờ giao nhau tối thiểu, trong đó lịch rảnh đồng thời tham gia chấm điểm ưu tiên), nhóm năm tiêu chí ưu tiên có trọng số (học phí, khu vực, kinh nghiệm, đánh giá và lịch rảnh) và nhóm tiêu chí tùy chọn khi người học đặt trọng số $w_i = 0$. Kèm theo đó là bảng ngưỡng dữ liệu tối thiểu (Bảng 3.7) và năm hàm chuẩn hóa điểm thành phần về đoạn $[0, 1]$ (Bảng 3.6). Quy trình bốn bước nằm độc lập trong `backend/app/scoring/` (Mục 4.3, Phụ lục B) và vượt qua 111 bài kiểm thử đơn vị trực tiếp cho gói `scoring/` (nằm trong 132 bài kiểm thử đơn vị và môi trường ở Bảng 5.1) cùng bộ ca biên ở Bảng 5.2. Điểm còn hạn chế là các tham số khởi tạo ($\delta = 0{,}5$, $E_{\max} = 8$ năm, điểm trung tính $0{,}5$) và bộ trọng số $\{0, 1, 2, 3\}$ do nhóm thực hiện đặt theo kinh nghiệm. Chúng chưa được học từ dữ liệu người dùng thật.
+2. **Xây dựng dịch vụ API khuyến nghị bằng FastAPI.** Điểm cuối `POST /api/recommend` chạy trên FastAPI và Python 3.12 (Mục 4.4), kiểm tra đầu vào bằng Pydantic (`extra="forbid"`). API trả đủ ba trạng thái HTTP 200 (`success`, `no_match` với hai biến thể, `zero_weight`) cùng mã lỗi HTTP 422 (Bảng 4.4). Bộ kiểm thử tích hợp đạt 41/41 bài, với thời gian xử lý nội tại trung bình 3,54 ms (chậm nhất 7,97 ms trong 140 lượt đo chuẩn ở Mục 5.1.2). Do backend chạy trên gói Render Free Tier, theo tài liệu nền tảng, máy chủ ước tính cần khoảng 30-40 giây để khởi động lại sau thời gian nghỉ; bên cạnh đó, độ trễ mạng thực tế qua Internet chưa được đo đạc định lượng.
+3. **Xây dựng giao diện minh họa bằng React.** Giao diện web một trang (SPA) viết bằng React 19 và Vite (Hình 4.1-4.4) đáp ứng cả ba chức năng CN01-CN03. Màn hình nhập nhu cầu có thanh nạp nhanh 14 kịch bản và ô gợi ý trọng số theo mục tiêu học tập (CN01). Màn hình kết quả hiện Top-$k$ gia sư kèm thanh xếp chồng phân rã đóng góp $C_i$ và lý do gợi ý (CN02), cùng khung chọn mức ưu tiên để xem thứ hạng đổi ngay lập tức (CN03). Hiện giao diện mới phục vụ tra cứu một chiều và mới được kiểm tra tĩnh bằng `oxlint`, chưa có bộ kiểm thử giao diện tự động hay các chức năng tài khoản, đặt lịch và đánh giá sau buổi học.
 4. **Đánh giá chất lượng xếp hạng trên bộ kịch bản thực nghiệm.** Bộ 14 kịch bản cố định KB01-KB14 được kiểm thử tự động trên 16 hồ sơ mẫu. Kết quả trùng khớp 14/14 (100%) so với Top-3 kỳ vọng (Bảng 5.3, Bảng 5.4), trong đó hai trường hợp chênh lệch điểm so với bảng tính tay ban đầu (KB04, KB09) và hai trường hợp đồng điểm phá hòa theo mã hồ sơ (KB02, KB12) đều đã được kiểm chứng rõ. Khi khảo sát độ nhạy theo bốn yếu tố ($\delta$, $E_{\max}$, ngân sách và bộ mức ưu tiên ở Bảng 5.5-5.8), các hàm giữ đúng tính đơn điệu và trọng số điều hướng được thứ hạng. Tuy nhiên, Top-3 kỳ vọng do nhóm thực hiện lập sẵn theo phân tích nghiệp vụ. Vì vậy kết quả 14/14 mới cho thấy mã nguồn chạy đúng với công thức, chứ chưa phản ánh mức độ hài lòng của học sinh và phụ huynh thực tế.
 
 ### 6.1.2. Kết quả mở rộng: Gợi ý mức ưu tiên theo mục tiêu học tập
@@ -52,7 +52,7 @@ Nếu tiếp tục phát triển thành đồ án tốt nghiệp, nhóm thực h
 
 ### 6.2.3. Đề xuất mở rộng mô hình theo cấp lớp và mục tiêu học tập
 
-Tiếp nối Phương án 1 ở Mục 6.1.2, việc đưa bộ ba *(Môn học, Cấp lớp, Mục tiêu học tập)* vào hẳn dữ liệu và công thức sẽ làm qua hai bước:
+Tiếp nối Phương án 1 ở Mục 6.1.2, việc đưa bộ ba *(Môn học, Cấp lớp, Mục tiêu học tập)* vào dữ liệu và công thức được thực hiện qua hai bước:
 - Bổ sung vào hồ sơ `TutorProfile` ba nhóm thông tin mới: cấp lớp nhận dạy (Tiểu học, THCS, THPT, Luyện thi đại học), trình độ (Giảng viên, Thạc sĩ, Cử nhân, Sinh viên sư phạm) và thế mạnh sư phạm. Thế mạnh này gồm luyện thi chuyên sâu, lấy lại kiến thức căn bản hoặc bồi dưỡng học sinh giỏi.
 - Khi có đủ dữ liệu thật cho các trường mới, thêm bước lọc bắt buộc theo cấp lớp. Đồng thời đưa tiêu chí thứ sáu đo độ khớp giữa mục tiêu người học với thế mạnh gia sư vào công thức Weighted Scoring (2.1).
 
@@ -67,7 +67,7 @@ Bảng 6.1 ghi lại công việc phụ trách và mức độ hoàn thành củ
 | STT | Thành viên | Mã sinh viên | Công việc phụ trách | Quỹ giờ | Mức độ hoàn thành |
 |:---:|:---|:---:|:---|---:|:---:|
 | 1 | **Lê Thị Bích Chuyền** | KHMT2411037 | **Scrum Master các Sprint 2, 4, 6 kiêm Developer:** Điều phối quy trình Scrum ở các Sprint chẵn; phát triển giao diện React (Vite), tích hợp API và kiểm thử trải nghiệm người dùng; tham gia thiết kế dữ liệu và biên soạn báo cáo. | 100 giờ | Hoàn thành |
-| 2 | **Trần Nguyễn Đức** | KHMT2411011 | **Scrum Master các Sprint 1, 3, 5 kiêm Developer:** Điều phối quy trình Scrum ở các Sprint lẻ, trao đổi chuyên môn với GVHD (TS. Lê Anh Nhã Uyên) và quản lý nhánh mã nguồn trên GitHub; phát triển lõi tính điểm backend FastAPI, thuật toán xếp hạng và bộ kiểm thử tự động. | 100 giờ | Hoàn thành |
+| 2 | **Trần Nguyễn Đức** | KHMT2411011 | **Scrum Master các Sprint 1, 3, 5 kiêm Developer:** Điều phối quy trình Scrum ở các Sprint lẻ, trao đổi chuyên môn với GVHD (TS. Lê Anh Nhã Uyên) và quản lý nhánh mã nguồn trên GitHub; phát triển lõi tính điểm backend FastAPI, thuật toán xếp hạng, bộ kiểm thử tự động và tham gia biên soạn báo cáo. | 100 giờ | Hoàn thành |
 | 3 | **Cao Khánh Ngọc** | KHMT2411025 | **Product Owner kiêm Developer:** Phụ trách yêu cầu nghiệp vụ, quản lý Product Backlog và nghiệm thu sản phẩm theo tiêu chí hoàn thành; tham gia thiết kế dữ liệu, kiểm thử kịch bản và biên soạn báo cáo. | 100 giờ | Hoàn thành |
 | | **Tổng cộng** | | **6 Sprint (3 thành viên × 100 giờ theo định mức Bảng 1.2)** | **300 giờ** | **Hoàn thành 100%** |
 
@@ -75,11 +75,11 @@ Bảng 6.1 ghi lại công việc phụ trách và mức độ hoàn thành củ
 
 ### 6.3.2. Tự đánh giá kết quả thực hiện
 
-Nhìn lại quá trình thực hiện, nhóm thực hiện tự đánh giá kết quả trên bốn mặt:
+Nhìn lại toàn bộ quá trình phát triển đồ án, nhóm thực hiện tự đánh giá kết quả trên bốn mặt:
 - **Mức độ hoàn thành:** làm đủ các phần theo mục tiêu ở Mục 1.4, gồm module tính điểm, RESTful API, giao diện hai màn hình và bản chạy trực tuyến trên Vercel, Render.
-- **Kiểm thử tự động:** đạt 200/200 bài test (độ bao phủ câu lệnh 97%, tương ứng 340/351 câu lệnh trên `backend/app/`); cả 14/14 kịch bản thực nghiệm đều khớp Top-3 kỳ vọng (Bảng 5.3).
+- **Kiểm thử tự động:** đạt 200/200 bài kiểm thử (độ bao phủ câu lệnh 97%, tương ứng 340/351 câu lệnh trên `backend/app/`); cả 14/14 kịch bản thực nghiệm đều khớp Top-3 kỳ vọng (Bảng 5.3).
 - **Toàn vẹn dữ liệu:** 16 hồ sơ mẫu trong `data/processed/tutors.json` và `data/processed/tutors.csv` qua đủ các phép kiểm tra định dạng, ẩn danh và đối chiếu từng ô (Mục 4.2.4, Phụ lục A).
-- **Điểm cần cải thiện:** phần frontend chưa có bộ test tự động trên CI, và tập 16 hồ sơ mới đủ để kiểm chứng thuật toán chứ chưa phản ánh dữ liệu thị trường lớn.
+- **Điểm cần cải thiện:** phần frontend chưa có bộ kiểm thử tự động trên CI, và tập 16 hồ sơ mới đủ để kiểm chứng thuật toán chứ chưa phản ánh dữ liệu thị trường lớn.
 
 # PHỤ LỤC
 
@@ -89,13 +89,13 @@ Nhìn lại quá trình thực hiện, nhóm thực hiện tự đánh giá kế
 
 Nhóm thực hiện khảo sát và thu thập thủ công 15 hồ sơ gia sư ban đầu từ hai trang công khai tại Việt Nam là `giasudatviet.com` và `giasudantri.vn`. Sau khi lọc trùng và rà soát địa bàn, còn 11 hồ sơ dạy ở Thành phố Hồ Chí Minh.
 
-Thực tế là cả hai trang trên đều không ghi đủ cùng lúc học phí theo giờ, lịch rảnh chi tiết trong tuần và điểm đánh giá trung bình. Để thử nghiệm thuật toán mà vẫn minh bạch và giữ kín danh tính gia sư, bộ dữ liệu mẫu được chuẩn hóa theo các quy tắc sau:
-- Giữ lại 2 hồ sơ thu thập thực tế (`GS-T06` và `GS-T07`, nhãn `public_collected` - hiển thị là “Thu thập công khai” trong Bảng A.1). Môn dạy, khu vực và số năm kinh nghiệm là số liệu thật đã xóa hết thông tin liên hệ cá nhân (dữ liệu thô không đưa vào kho mã nguồn).
+Thực tế là cả hai trang trên đều không ghi đủ cùng lúc học phí theo giờ, lịch rảnh chi tiết trong tuần và điểm đánh giá trung bình. Do đó, nếu đưa toàn bộ 11 hồ sơ vào tập dữ liệu sẽ phải ước tính hàng loạt trường còn khuyết; để thử nghiệm thuật toán một cách minh bạch và giữ kín danh tính gia sư, bộ dữ liệu mẫu được chuẩn hóa theo các quy tắc sau:
+- Chọn giữ lại 2 hồ sơ tiêu biểu có thông tin môn dạy, khu vực và số năm kinh nghiệm rõ ràng (`GS-T06` và `GS-T07`, nhãn `public_collected` - hiển thị là “Thu thập công khai” trong Bảng A.1) sau khi xóa toàn bộ thông tin liên hệ cá nhân (dữ liệu thô không đưa vào kho mã nguồn).
 - Học phí theo giờ của hai hồ sơ này được ước tính trong khoảng 130.000-400.000 VNĐ/giờ dựa theo mặt bằng giá trên `daythem.com` và nội suy theo số năm kinh nghiệm; lịch rảnh ước tính theo các ca học phổ biến. Cả hai mục ước tính đều đánh dấu `(*)` ở Bảng A.1. Điểm đánh giá trung bình để trống (`null`) và nhận giá trị trung tính $0{,}5$ khi chấm điểm.
 - 14 hồ sơ còn lại (`GS006`, `GS020`, `GS-G01` đến `GS-G12`, nhãn `simulated` - hiển thị là “Giả lập” trong Bảng A.1) là dữ liệu mô phỏng. Các hồ sơ này được tạo lập có chủ đích để thử nghiệm đầy đủ các ca biên, trường hợp `no_match`, học trực tuyến và cặp hồ sơ bằng điểm.
 - Tên môn học được chuẩn hóa thống nhất trên cả 16 hồ sơ: tiếng Anh ghi `"Anh Văn"`, riêng `"Anh Văn GT"` ở hồ sơ `GS-T07` là viết tắt của tiếng Anh giao tiếp.
 
-### A.2. Mẫu bản ghi tiêu biểu và danh sách 16 hồ sơ gia sư
+### A.2. Danh sách 16 hồ sơ gia sư mẫu và kiểm tra toàn vẹn
 
 Bảng A.1 liệt kê đủ 16 hồ sơ gia sư mẫu theo thứ tự trong tệp dữ liệu chuẩn hóa, kèm nhãn nguồn dữ liệu và dấu `(*)` cho các thông tin ước tính của `GS-T06`, `GS-T07`.
 
@@ -160,7 +160,7 @@ Bảng B.1 liệt kê các tệp mã nguồn, lớp và hàm chính trong `backe
 | 9 | `backend/app/scoring/ranker.py` | `score_and_rank()`, `_compute_single_criterion_score()`, `build_reason()`, `build_notes()` | Tổng hợp điểm Weighted Scoring $S(g) = \sum_{i \in A} (w_i \cdot s_i) / \sum_{j \in A} w_j$, sắp xếp giảm dần, xử lý đồng điểm theo `tutor_id`, trích xuất điểm đóng góp và lý do khuyến nghị. | Bước 4: Tổng hợp điểm Weighted Scoring và xếp hạng |
 | 10 | `backend/app/schemas/recommendation.py` | `RankedTutor`, `RecommendationSuccessResponse`, `NoMatchResponse`, `ZeroWeightResponse` | Định nghĩa cấu trúc phản hồi JSON cho các trạng thái `success`, `no_match` và `zero_weight`. | Định dạng cấu trúc dữ liệu phản hồi |
 | 11 | `backend/app/api/recommend.py` | Điểm cuối `recommend_tutors()`, phụ trợ `get_tutor_repository()` | Tiếp nhận yêu cầu `POST /api/recommend`, điều phối chuỗi hàm tính điểm và trả kết quả chuẩn hóa. | Điều phối toàn bộ quy trình qua dịch vụ API FastAPI |
-| 12 | `backend/app/main.py` | Ứng dụng `app`, `health_check()`, `CORSMiddleware` | Điểm khởi chạy FastAPI, cấu hình CORS, gắn kết router khuyến nghị và cung cấp điểm cuối `/health`. | Khởi tạo và phục vụ dịch vụ RESTful API (Mục 3.7.2, Mục 4.4.1) |
+| 12 | `backend/app/main.py` | Ứng dụng `app`, `health_check()` (cấu hình `CORSMiddleware`) | Điểm khởi chạy FastAPI, cấu hình CORS, gắn kết router khuyến nghị và cung cấp điểm cuối `/health`. | Khởi tạo và phục vụ dịch vụ RESTful API (Mục 3.7.2, Mục 4.4.1) |
 
 ### B.2. Hàm chấm điểm tổng hợp và kiểm tra ràng buộc
 
@@ -237,4 +237,4 @@ Bảng D.1 tổng hợp đầy đủ tham số đầu vào và Top-3 kỳ vọng
 - **Chạy toàn bộ bộ kiểm thử và đo độ bao phủ (đứng tại thư mục `backend/`):** `pytest --cov=app --cov-report=term-missing -q` cho lại kết quả 200/200 bài đạt (độ bao phủ 97%, Bảng 5.1), bộ ca biên (Bảng 5.2) và kết quả 14 kịch bản (Bảng 5.3).
 - **Đo thời gian xử lý nội tại (`TestClient`, đứng tại thư mục gốc kho mã nguồn):** `python scripts/thesis/benchmark_latency.py` chạy lại phép đo 140 lượt và 700 lượt gọi liên tiếp (Mục 5.1.2).
 
-**Ghi chú nguồn Phụ lục D:** `backend/tests/scenarios/scenarios.json`, `backend/tests/scenarios/test_scenarios.py`, `backend/tests/api/test_boundary_muc_5_1.py`, `scripts/thesis/benchmark_latency.py`.
+**Ghi chú nguồn Phụ lục D:** `backend/tests/scenarios/scenarios.json`, `backend/tests/scenarios/test_scenarios.py`, `backend/tests/api/test_boundary_muc_5_1.py`, `backend/tests/scenarios/test_sensitivity_muc_5_2.py`, `scripts/thesis/benchmark_latency.py`.

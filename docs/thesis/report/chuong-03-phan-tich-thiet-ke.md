@@ -49,7 +49,7 @@ Trong đồ án, tiêu chí tùy chọn thực ra là tiêu chí ưu tiên mà n
 
 ## 3.5. Thiết kế dữ liệu
 
-Bộ dữ liệu mẫu lưu dưới dạng tệp phẳng JSON và CSV, không có quan hệ khóa ngoại giữa nhiều bảng. Vì vậy, báo cáo không xây dựng sơ đồ thực thể - kết hợp (ERD) mà mô tả thẳng cấu trúc bản ghi của hai thực thể chính ở Bảng 3.3 và Bảng 3.4.
+Bộ dữ liệu mẫu lưu dưới dạng tệp phẳng JSON và CSV, không có quan hệ khóa ngoại giữa nhiều bảng. Vì vậy, báo cáo không xây dựng sơ đồ thực thể - kết hợp (ERD) mà mô tả trực tiếp cấu trúc bản ghi của hai thực thể chính ở Bảng 3.3 và Bảng 3.4.
 
 **Bảng 3.3: Cấu trúc bản ghi hồ sơ gia sư**
 
@@ -57,9 +57,9 @@ Bộ dữ liệu mẫu lưu dưới dạng tệp phẳng JSON và CSV, không c�
 |:---|:---|
 | `id` | Mã định danh gia sư (như `GS-T06`, `GS-G01`, `GS006`), thay cho họ tên để bảo vệ thông tin cá nhân |
 | `môn_dạy` | Một hoặc nhiều môn học gia sư đảm nhận |
-| `khu_vực` | Danh sách khu vực gia sư dạy trực tiếp; để trống nếu chỉ dạy trực tuyến |
-| `học_phí_giờ` | Đơn giá học phí theo giờ (VNĐ/giờ) |
-| `số_năm_kinh_nghiệm` | Số năm kinh nghiệm giảng dạy, dùng để tính điểm kinh nghiệm |
+| `khu_vực` | Danh sách khu vực gia sư dạy trực tiếp (có thể để trống nếu chỉ dạy trực tuyến; khi học trực tuyến, trường này không dùng để tính điểm) |
+| `học_phí_giờ` | Đơn giá học phí theo giờ (VNĐ/giờ); có thể để trống |
+| `số_năm_kinh_nghiệm` | Số năm kinh nghiệm giảng dạy (có thể để trống), dùng để tính điểm kinh nghiệm |
 | `hình_thức_dạy` | Trực tiếp / Trực tuyến / Cả hai |
 | `lịch_rảnh` | Tập khung giờ rảnh trong tuần; mỗi khung là một ô (ngày trong tuần × buổi sáng/chiều/tối) |
 | `điểm_đánh_giá_tb` | Điểm đánh giá trung bình (thang 5); có thể để trống nếu gia sư chưa có đánh giá |
@@ -110,8 +110,8 @@ Quy trình lọc và xếp hạng gia sư chạy qua bốn bước tuần tự:
 
 | Tiêu chí | Đầu vào | Công thức điểm $s_i$ | Tham số | Ví dụ |
 |:---|:---|:---|:---|:---|
-| Học phí | $P \ge 0$: học phí gia sư; $B \ge 0$: ngân sách | $s = 1$ nếu $P \le B$; nếu $P > B$: $s = 0$ khi $B = 0$, ngược lại $s = \max\!\left(0,\, 1 - \frac{P - B}{\delta \cdot B}\right)$ | $\delta = 0{,}5$ (khi $B > 0$, vượt quá $50\%$ ngân sách thì điểm về $0$) | $B = 200.000$: $P = 180.000 \rightarrow 1{,}00$; $P = 230.000 \rightarrow 0{,}70$; $P = 300.000 \rightarrow 0{,}00$ |
-| Khu vực | $K$: khu vực người học; tập khu vực của gia sư | $s = 1$ nếu $K$ thuộc khu vực dạy của gia sư; ngược lại $s = 0$ | Không áp dụng nếu học Trực tuyến hoặc không nhập $K$ | Ký hiệu giả định KV1, KV2, KV3 đại diện các quận thuộc Phụ lục A; $K = \text{KV1}$: dạy $\{\text{KV1}, \text{KV2}\} \rightarrow 1$; $\{\text{KV3}\} \rightarrow 0$; chỉ trực tuyến $\rightarrow 0$ |
+| Học phí | $P \ge 0$: học phí gia sư; $B \ge 0$: ngân sách | $s = 1$ nếu $P \le B$; nếu $P > B$: $s = 0$ khi $B = 0$, ngược lại $s = \max\!\left(0,\, 1 - \frac{P - B}{\delta \cdot B}\right)$ | $\delta = 0{,}5$ (khi $B > 0$, vượt từ $50\%$ ngân sách trở lên thì điểm bằng $0$) | $B = 200.000$: $P = 180.000 \rightarrow 1{,}00$; $P = 230.000 \rightarrow 0{,}70$; $P = 300.000 \rightarrow 0{,}00$ |
+| Khu vực | $K$: khu vực người học; tập khu vực của gia sư | $s = 1$ nếu $K$ thuộc khu vực dạy của gia sư; ngược lại $s = 0$ | Không áp dụng nếu học Trực tuyến hoặc không nhập $K$ | Ký hiệu giả định KV1, KV2, KV3 đại diện các quận thuộc Phụ lục A; $K = \text{KV1}$: dạy $\{\text{KV1}, \text{KV2}\} \rightarrow 1$; $\{\text{KV3}\} \rightarrow 0$; khu vực để trống $\rightarrow 0$ |
 | Kinh nghiệm | $E \ge 0$: số năm kinh nghiệm | $s = \min\!\left(\frac{E}{E_{\max}},\, 1\right)$ | $E_{\max} = 8$ | $E = 0 \rightarrow 0{,}00$; $E = 4 \rightarrow 0{,}50$; $E = 10 \rightarrow 1{,}00$ |
 | Đánh giá | $R \in [0, 5]$ (hoặc để trống): điểm trung bình | $s = \frac{R}{5}$; nếu chưa có đánh giá thì $s = 0{,}5$ | Giá trị trung tính $0{,}5$ | $R = 5 \rightarrow 1{,}00$; $R = 4{,}5 \rightarrow 0{,}90$; $R = 3 \rightarrow 0{,}60$; chưa có $\rightarrow 0{,}50$ |
 | Lịch rảnh | $L$ ($\lvert L \rvert \ge 1$): khung giờ người học; $T$: khung giờ gia sư | $s = \frac{\lvert L \cap T \rvert}{\lvert L \rvert}$ (Bước 2 bảo đảm $\lvert L \cap T \rvert \ge 1$) | Không áp dụng nếu người học không nhập $L$ | $L$ có 3 khung, giao 2 khung $\rightarrow 2/3 \approx 0{,}67$; $L$ có 7 khung, giao 6 khung $\rightarrow 6/7 \approx 0{,}86$; $L$ có 4 khung, giao 1 khung $\rightarrow 1/4 = 0{,}25$ |
@@ -141,7 +141,7 @@ Quy trình lọc và xếp hạng gia sư chạy qua bốn bước tuần tự:
 
 *(Tiêu chí Đánh giá luôn xác định nhờ giá trị trung tính $0{,}5$ nên không tính vào $n$, và các tiêu chí đặt $w_i = 0$ hoặc bỏ trống đầu vào cũng không tính vào $n$; do đó với năm tiêu chí hiện tại, $n$ nhận giá trị từ $0$ đến $4$, còn mốc $n = 5$ được dự phòng khi mở rộng thêm tiêu chí mới. Khi $n = 0$, ngưỡng tối thiểu bằng $0$ và không loại hồ sơ nào vì thiếu dữ liệu.)*
 
-**Ví dụ tính điểm đầy đủ.** Giả sử người học tìm gia sư môn Toán, học Trực tiếp tại một khu vực ký hiệu KV1 (nhận dạy cùng KV1), ngân sách $200.000$ VNĐ/giờ, khung giờ $L = \{\text{T2-tối}, \text{T4-tối}, \text{T7-sáng}\}$ và để mọi mức ưu tiên ở “Trung bình” ($w_i = 2$). Xét một gia sư dạy Toán, hình thức “Cả hai”, nhận dạy tại KV1, học phí $230.000$ VNĐ/giờ, $4$ năm kinh nghiệm, đánh giá $4{,}5/5$ và trùng $2$ trên $3$ khung giờ. Gia sư này qua bước lọc bắt buộc và đạt năm điểm thành phần: học phí $0{,}70$, khu vực $1{,}00$, kinh nghiệm $0{,}50$, đánh giá $0{,}90$, lịch rảnh $2/3 \approx 0{,}67$. Điểm tổng hợp là $S = (0{,}70 + 1{,}00 + 0{,}50 + 0{,}90 + 0{,}67) \div 5 \approx 0{,}75$. Nếu giữ nguyên phân số $2/3$ không làm tròn giữa chừng, $S = 113/150 \approx 0{,}753$, vẫn cho cùng thứ tự xếp hạng.
+**Ví dụ tính điểm đầy đủ.** Giả sử người học tìm gia sư môn Toán, học Trực tiếp tại một khu vực ký hiệu KV1, ngân sách $200.000$ VNĐ/giờ, khung giờ $L = \{\text{T2-tối}, \text{T4-tối}, \text{T7-sáng}\}$ và để mọi mức ưu tiên ở “Trung bình” ($w_i = 2$). Xét một gia sư dạy Toán, hình thức “Cả hai”, nhận dạy tại KV1, học phí $230.000$ VNĐ/giờ, $4$ năm kinh nghiệm, đánh giá $4{,}5/5$ và trùng $2$ trên $3$ khung giờ. Gia sư này qua bước lọc bắt buộc và đạt năm điểm thành phần: học phí $0{,}70$, khu vực $1{,}00$, kinh nghiệm $0{,}50$, đánh giá $0{,}90$, lịch rảnh $2/3 \approx 0{,}67$. Điểm tổng hợp là $S = (0{,}70 + 1{,}00 + 0{,}50 + 0{,}90 + 0{,}67) \div 5 \approx 0{,}75$. Nếu giữ nguyên phân số $2/3$ không làm tròn giữa chừng, $S = 113/150 \approx 0{,}753$, chênh lệch $0{,}0007$ so với cách làm tròn trung gian ở trên; khi cài đặt, hệ thống giữ nguyên số thực chưa làm tròn (Mục 4.3.1).
 
 ## 3.7. Kiến trúc hệ thống và luồng xử lý
 
@@ -174,7 +174,7 @@ Hệ thống được tổ chức theo kiến trúc ba lớp tách biệt (Hình
 
 **Hình 3.2: Kiến trúc hệ thống ba lớp**
 
-Vì hệ thống chỉ xoay quanh một luồng tìm kiếm và xếp hạng duy nhất, kiến trúc không tách theo mô hình BCE (*Boundary-Control-Entity*) mà mô tả thẳng tương tác giữa các lớp qua sơ đồ trình tự ở Hình 3.3.
+Vì hệ thống chỉ xoay quanh một luồng tìm kiếm và xếp hạng duy nhất, tài liệu thiết kế không phân rã theo mô hình BCE (*Boundary-Control-Entity*) mà mô tả trực tiếp tương tác giữa các lớp qua sơ đồ trình tự ở Hình 3.3.
 
 ![Hình 3.3: Sơ đồ trình tự xử lý yêu cầu khuyến nghị](../figures/hinh-3-3-so-do-trinh-tu.png)
 

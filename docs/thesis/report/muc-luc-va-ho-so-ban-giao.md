@@ -6,7 +6,7 @@
 ## 1. Căn cứ và phạm vi
 
 - **Quy chuẩn áp dụng:** Cấu trúc, bố cục, trang bìa khung hoa văn kèm logo CTUT, hệ thống phông chữ `Times New Roman`, bảng chuẩn Booktabs và quy ước đánh số trang thống nhất theo mẫu báo cáo Đồ án/Bài tập lớn chuẩn của Khoa Công nghệ Thông tin, Trường Đại học Kỹ thuật - Công nghệ Cần Thơ.
-- **Nguồn nội dung:** `chuong-01`-`chuong-06` trong cùng thư mục, `tai-lieu-tham-khao.md`, các bảng/hình trong `docs/thesis/figures/`.
+- **Nguồn nội dung:** `chuong-01` đến `chuong-06` trong cùng thư mục, `tai-lieu-tham-khao.md`, các bảng/hình trong `docs/thesis/figures/`.
 - **Tên đề tài dùng thống nhất:** “Hệ thống khuyến nghị gia sư dựa trên phương pháp Content-Base Filtering”.
 - **Đánh số trang:** Bìa chính và bìa phụ không đánh số trang; phần mở đầu (`LỜI CẢM ƠN` đến `DANH MỤC HÌNH ẢNH`) dùng số La Mã thường (`i, ii, iii, ...`) ở giữa chân trang; từ `CHƯƠNG 1` đến hết `PHỤ LỤC` dùng số Ả Rập (`1, 2, 3, ...`) ở giữa chân trang.
 
@@ -84,8 +84,8 @@ Chúng em là ba thành viên thực hiện đề tài, lớp Khoa học máy t�
 
 1. Nội dung báo cáo là kết quả làm việc của cả nhóm. Mọi tài liệu tham khảo đều được trích dẫn theo chuẩn IEEE và liệt kê trong mục Tài liệu tham khảo.
 2. Số liệu thực nghiệm trong Chương 5 được lấy trực tiếp từ bộ kiểm thử tự động và từ phản hồi của dịch vụ API khuyến nghị, chạy trên bộ dữ liệu mẫu 16 hồ sơ. Các số liệu ước tính trong dữ liệu mẫu đều được đánh dấu và giải thích.
-3. Bộ dữ liệu mẫu tách riêng nhóm hồ sơ thu thập công khai và nhóm hồ sơ giả lập. Hai hồ sơ thu thập công khai là GS-T06 và GS-T07 có học phí và lịch rảnh là số ước tính, được đánh dấu hoa thị (*), còn điểm đánh giá để trống. Chương 4, Chương 5 và Phụ lục A có giải thích thêm.
-4. Báo cáo không sao chép nội dung từ công trình khác. Chúng em chỉ tham khảo đồ án GS360 [3] để đối chiếu phạm vi chức năng bài toán, không sử dụng lại mã nguồn hay giao diện của đồ án này.
+3. Bộ dữ liệu mẫu tách riêng nhóm hồ sơ thu thập công khai và nhóm hồ sơ giả lập. Hai hồ sơ thu thập công khai là GS-T06 và GS-T07 có học phí và lịch rảnh được ước tính, được đánh dấu hoa thị (*), còn điểm đánh giá để trống. Chương 4, Chương 5 và Phụ lục A có giải thích thêm.
+4. Báo cáo không sao chép nội dung từ công trình khác. Chúng em chỉ tham khảo đồ án GS360 (đối chiếu phạm vi chức năng tại Mục 1.3.2), không sử dụng lại mã nguồn hay giao diện của đồ án này.
 5. Chúng em chịu trách nhiệm trước giảng viên hướng dẫn và hội đồng đánh giá về tính trung thực của nội dung báo cáo.
 
 ## 6. Tóm tắt
@@ -96,11 +96,11 @@ Khi số hồ sơ gia sư tăng lên, người học phải cân nhắc cùng l�
 
 Phần dịch vụ API được cài đặt bằng FastAPI (Python 3.12) và phần giao diện minh họa bằng React. Hệ thống chạy trên bộ dữ liệu mẫu gồm 16 hồ sơ gia sư và 14 kịch bản đánh giá cố định. Kết quả cho thấy 200/200 bài kiểm thử tự động đạt, độ bao phủ câu lệnh trên khối mã nghiệp vụ là 97%. Cả 14/14 kịch bản đều trả về danh sách Top-3 khớp với kỳ vọng, và thời gian xử lý trung bình phía máy chủ là 3,54 ms. Khi khảo sát độ nhạy, thứ hạng ổn định nếu thay đổi hệ số dung sai học phí và mốc kinh nghiệm bão hòa trong dải hợp lý. Thứ hạng chỉ đổi rõ khi đổi bộ mức ưu tiên, điều này đúng với thiết kế vì trọng số là đầu vào do người học tự điều khiển.
 
-Hạn chế chính là bộ dữ liệu mẫu còn nhỏ, chưa có dữ liệu tương tác lịch sử, và chưa tiến hành đánh giá trên người học thực tế ngoài nhóm. Hướng phát triển tiếp theo là mở rộng dữ liệu, thu thập phản hồi sau khuyến nghị, và thêm tiêu chí cấp lớp cùng mục tiêu học tập vào mô hình tính điểm.
+Hạn chế chính là bộ dữ liệu mẫu còn nhỏ, chưa có dữ liệu tương tác lịch sử, và chưa tiến hành đánh giá trên người học thực tế bên ngoài nhóm thực hiện. Hướng phát triển tiếp theo là mở rộng dữ liệu, thu thập phản hồi sau khuyến nghị, và thêm tiêu chí cấp lớp cùng mục tiêu học tập vào mô hình tính điểm.
 
 ### 6.2. Abstract (English)
 
-Choosing a tutor means weighing subject, district, fee, teaching mode and available time slots at the same time. These criteria often conflict, so filtering on each one separately does not give a sensible shortlist. This project builds a tutor recommendation engine using content-based filtering on structured profile attributes. The system first applies the mandatory conditions: subject, teaching mode and overlapping time slots. It then checks a minimum-data threshold. After that, it scores five preference criteria (fee, district, experience, rating and availability) and combines them with weighted scoring. Each criterion takes one of four priority levels, mapped to integer weights from 0 to 3, so learners can adjust the ranking without setting percentages themselves.
+Choosing a tutor means weighing subject, district, fee, teaching mode, and available time slots at the same time. These criteria often conflict, so filtering on each one separately does not give a sensible shortlist. This project builds a tutor recommendation engine using content-based filtering on structured profile attributes. The system first applies the mandatory conditions: subject, teaching mode, and overlapping time slots. It then checks a minimum-data threshold. After that, it scores five preference criteria (fee, district, experience, rating, and availability) and combines them with weighted scoring. Each criterion takes one of four priority levels, mapped to integer weights from 0 to 3, so learners can adjust the ranking without setting percentages themselves.
 
 We implemented the API service with FastAPI (Python 3.12) and a demo interface with React. We evaluated the system on a sample dataset of 16 tutor profiles and 14 fixed scenarios. All 200 automated tests pass, with 97% statement coverage of the business modules. All 14 scenarios return the expected top-3 ranking, and the mean server-side processing time is 3.54 ms. In the sensitivity study, rankings stay stable when the fee tolerance and the experience saturation threshold vary within a reasonable range. They change clearly only when the priority preset changes, which fits the design, since the weights are set by the learner.
 
@@ -170,16 +170,16 @@ Mục lục được tạo tự động trong `.docx` từ kiểu `Front Title` 
 
 | Chữ viết tắt | Nghĩa | Xuất hiện đầu |
 | :--- | :--- | :--- |
-| API | Application Programming Interface - giao diện lập trình ứng dụng | Mục 1.4 |
+| API | Application Programming Interface - giao diện lập trình ứng dụng | Lời cam đoan; Mục 1.4 |
 | ASGI | Asynchronous Server Gateway Interface - chuẩn máy chủ bất đồng bộ cho Python | Bảng 4.1 (Mục 4.1) |
 | BCE | Boundary-Control-Entity - mô hình kiến trúc Biên - Điều khiển - Thực thể | Mục 3.7.2 |
 | CI | Continuous Integration - tích hợp và kiểm thử tự động liên tục | Mục 4.7 |
 | CN01-CN03 | Ba chức năng chính: nhập nhu cầu, xem gợi ý, điều chỉnh mức ưu tiên | Bảng 3.1 (Mục 3.2) |
 | CORS | Cross-Origin Resource Sharing - cơ chế chia sẻ tài nguyên khác nguồn (trong `CORSMiddleware`) | Hình 3.2 (Mục 3.7.2); Mục 4.4.1 |
-| CSS | Cascading Style Sheets - ngôn ngữ định kiểu trình bày giao diện web | Mục 4.5 |
+| CSS | Cascading Style Sheets - ngôn ngữ định kiểu trình bày giao diện web | Bảng 4.1 (Mục 4.1) |
 | CSV | Comma-Separated Values - định dạng tệp văn bản phân tách bằng dấu phẩy | Mục 1.5 |
 | ERD | Entity-Relationship Diagram - sơ đồ thực thể - kết hợp | Mục 3.5 |
-| GS | Tiền tố mã hồ sơ gia sư trong bộ dữ liệu mẫu (như `GS-T06`, `GS-G01`, `GS006`) | Bảng 3.3 (Mục 3.5) |
+| GS | Tiền tố mã hồ sơ gia sư trong bộ dữ liệu mẫu (như `GS-T06`, `GS-G01`, `GS006`) | Lời cam đoan; Bảng 3.3 (Mục 3.5) |
 | GVHD | Giảng viên hướng dẫn | Trang bìa |
 | HTML | HyperText Markup Language - ngôn ngữ đánh dấu siêu văn bản | Mục 4.5 |
 | HTTP | Hypertext Transfer Protocol - giao thức truyền tải siêu văn bản | Mục 3.7.1 |
@@ -191,9 +191,10 @@ Mục lục được tạo tự động trong `.docx` từ kiểu `Front Title` 
 | LTR | Learning-to-Rank - nhóm thuật toán học máy học xếp hạng | Mục 6.2.2 |
 | OpenAPI | Đặc tả giao diện lập trình ứng dụng RESTful chuẩn hóa (hiển thị qua Swagger UI) | Mục 2.4; Mục 4.1 |
 | PA1 | Phương án 1 - ánh xạ mục tiêu học tập sang bộ mức ưu tiên khởi tạo | Mục 6.1.2 |
-| QĐ-A-QĐ-E | Năm quyết định triển khai xử lý tình huống biên của mô-đun tính điểm | Mục 4.3.1 |
-| RESTful | Kiến trúc dịch vụ web theo phong cách Representational State Transfer | Mục 4.4 |
+| QĐ-A đến QĐ-E | Năm quyết định triển khai xử lý tình huống biên của module tính điểm | Mục 4.3.1 |
+| RESTful | Kiến trúc dịch vụ web theo phong cách Representational State Transfer | Mục 6.3.2; Phụ lục B |
 | SPA | Single Page Application - ứng dụng web một trang | Bảng 4.1 (Mục 4.1) |
+| SV | Sinh viên | Bảng 1.2 (Mục 1.5) |
 | TDD | Test-Driven Development - phương pháp phát triển hướng kiểm thử | Mục 5.1.1 |
 | Top-$k$ | Danh sách $k$ gia sư có điểm phù hợp cao nhất sau khi xếp hạng | Mục 1.3.2 |
 | TQ1-TQ5 | Năm truy vấn bổ sung dùng trong thực nghiệm mở rộng Phương án 1 | Mục 6.1.2 |
@@ -215,7 +216,7 @@ Mục lục được tạo tự động trong `.docx` từ kiểu `Front Title` 
 | $K$ | Khu vực dạy học mong muốn của người học | Bảng 3.6 (Mục 3.6) |
 | $k$ | Số lượng gia sư tối đa trả về trong danh sách kết quả Top-$k$ (mặc định $k = 3$, miền $[1, 20]$) | Mục 1.3.2; Bảng 3.4 |
 | $L$ | Tập khung giờ rảnh do người học yêu cầu | Bảng 3.6 (Mục 3.6) |
-| $n$ | Số tiêu chí ưu tiên có hiệu lực ($w_i > 0$) trong một truy vấn, không tính Đánh giá | Mục 3.6; Bảng 3.7 |
+| $n$ | Số tiêu chí ưu tiên có hiệu lực ($w_i > 0$ và có đủ đầu vào áp dụng được) trong một truy vấn, không tính Đánh giá | Mục 3.6; Bảng 3.7 |
 | $P$ | Học phí theo giờ trong hồ sơ gia sư (VNĐ) | Bảng 3.6 (Mục 3.6) |
 | $R$ | Điểm đánh giá trung bình của gia sư theo thang $5$ | Bảng 3.6 (Mục 3.6) |
 | $S(g)$ | Điểm phù hợp tổng hợp của gia sư $g$, thuộc đoạn $[0, 1]$ | Công thức (2.1) (Mục 2.3) |

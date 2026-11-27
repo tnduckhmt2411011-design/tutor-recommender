@@ -4,7 +4,7 @@
 
 ### 5.1.1. Tổng quan bộ kiểm thử tự động
 
-Mã nguồn được phát triển theo hướng kiểm thử (*Test-Driven Development - TDD*). Mọi số liệu thực nghiệm trong chương này đều lấy trực tiếp từ bộ test tự động (`pytest`) và chuỗi hàm tính điểm chạy trên Python 3.12 (Windows). Phép đo thực hiện trên 16 hồ sơ gia sư mẫu cùng 14 kịch bản đánh giá KB01-KB14. Bộ dữ liệu gồm 14 hồ sơ mô phỏng (`simulated`) và 2 hồ sơ thu thập công khai (`public_collected` là `GS-T06`, `GS-T07`, có học phí và lịch rảnh ước tính, điểm đánh giá nhận giá trị trung tính $0{,}5$). Tổng cộng có 200 bài kiểm thử tự động kiểm tra từ bước lọc bắt buộc, chuẩn hóa điểm, tổng hợp trọng số đến API (Bảng 5.1):
+Mã nguồn được phát triển theo hướng kiểm thử (*Test-Driven Development - TDD*). Mọi số liệu thực nghiệm trong chương này đều lấy trực tiếp từ bộ kiểm thử tự động (`pytest`) và chuỗi hàm tính điểm chạy trên Python 3.12 (Windows). Phép đo thực hiện trên 16 hồ sơ gia sư mẫu cùng 14 kịch bản đánh giá KB01-KB14. Bộ dữ liệu gồm 14 hồ sơ mô phỏng (`simulated`) và 2 hồ sơ thu thập công khai (`public_collected` là `GS-T06`, `GS-T07`, có học phí và lịch rảnh ước tính, điểm đánh giá nhận giá trị trung tính $0{,}5$). Tổng cộng có 200 bài kiểm thử tự động kiểm tra từ bước lọc bắt buộc, chuẩn hóa điểm, tổng hợp trọng số đến API (Bảng 5.1):
 
 - **Kiểm thử đơn vị (132 bài):** gồm 129 bài kiểm thử logic trong `backend/tests/unit/` và 3 bài kiểm tra môi trường trong `backend/tests/test_environment.py`:
   - Năm hàm tính điểm thành phần ở Bảng 3.6 (`test_criteria.py`: 47 bài).
@@ -17,7 +17,7 @@ Mã nguồn được phát triển theo hướng kiểm thử (*Test-Driven Deve
 - **Kiểm thử kịch bản và độ nhạy (27 bài trong `backend/tests/scenarios/`):** gồm 17 bài kiểm thử hồi quy cho 14 kịch bản KB01-KB14 (`test_scenarios.py`) và 10 bài khảo sát độ nhạy (`test_sensitivity_muc_5_2.py`).
 - **Kiểm thử tích hợp API và ca biên (41 bài trong `backend/tests/api/`):** gồm 35 bài thử giao tiếp HTTP qua `TestClient` (`test_recommend_api.py`) và 6 bài thử ca biên, tính đơn điệu cùng thao tác đổi mức ưu tiên CN03 (`test_boundary_muc_5_1.py`).
 
-Cả 200/200 bài test đều đạt (0 lỗi, 0 bỏ qua) và chạy hết trong 1,18 giây. Khi chạy lệnh `pytest --cov=app` tại thư mục `backend/`, tổng độ bao phủ đạt 97% trên toàn bộ khối mã nghiệp vụ `backend/app/` (340/351 câu lệnh, còn 11 câu lệnh chưa phủ). Mọi mô-đun xử lý chính như định tuyến API, cấu hình, đọc hồ sơ, lọc bắt buộc, tính trọng số, năm hàm điểm và mô hình Pydantic đều phủ đủ 100%. 11 câu lệnh còn lại nằm ở các nhánh kiểm tra phòng vệ bên trong `eligibility.py` (1 câu lệnh) và `ranker.py` (10 câu lệnh), vốn đã được tầng xác thực dữ liệu chặn trước khi vào API.
+Cả 200/200 bài kiểm thử đều đạt (0 lỗi, 0 bỏ qua) và chạy hết trong 1,18 giây. Khi chạy lệnh `pytest --cov=app` tại thư mục `backend/`, tổng độ bao phủ đạt 97% trên toàn bộ khối mã nghiệp vụ `backend/app/` (340/351 câu lệnh, còn 11 câu lệnh chưa phủ). Mọi module xử lý chính như định tuyến API, cấu hình, đọc hồ sơ, lọc bắt buộc, tính trọng số, năm hàm điểm và mô hình Pydantic đều phủ đủ 100%. 11 câu lệnh chưa được bao phủ nằm trong `eligibility.py` (1 câu lệnh) và `ranker.py` (10 câu lệnh): gồm 4 câu lệnh xử lý hồ sơ khuyết trường tùy chọn (học phí, khu vực hoặc số năm kinh nghiệm để trống, vốn được mô hình `TutorProfile` cho phép theo Mục 3.6 nhưng chưa được kích hoạt trong bộ kiểm thử hiện tại) và 7 câu lệnh kiểm tra phòng vệ (1 ở `eligibility.py`, 6 ở `ranker.py`) đã được các bước xác thực hoặc tính trọng số trước đó bảo đảm.
 
 **Bảng 5.1: Phân bổ bộ kiểm thử tự động theo nhóm**
 
@@ -36,14 +36,14 @@ Cả 200/200 bài test đều đạt (0 lỗi, 0 bỏ qua) và chạy hết tron
 
 1. **Cấu trúc JSON trả về:** dữ liệu gồm `status`, `total_candidates`, `qualified_candidates`, `insufficient_data_candidates` và mảng `results[]`. Mỗi phần tử trong `results[]` có đủ `rank`, `tutor_id`, `total_score`, `criteria_scores` (điểm thành phần 5 tiêu chí), `contributions` (mức đóng góp $C_i$), `reason` (lý do khuyến nghị) và `notes` (ghi chú dữ liệu).
 2. **Thứ tự xếp hạng và xử lý đồng điểm:** kết quả sắp giảm dần theo `total_score`. Nếu bằng điểm nhau, hệ thống xếp tăng dần theo mã `tutor_id` để thứ tự luôn cố định qua mỗi lần chạy.
-3. **Đủ các trạng thái phản hồi:** bộ test kiểm tra cả ba trạng thái trả về mã HTTP 200 (`success`, `no_match` cho hai trường hợp không có người qua lọc hoặc thiếu dữ liệu, và `zero_weight` khi $\sum w_i = 0$ kèm `unranked_candidates`). Ngoài ra còn có mã lỗi HTTP 422 (`422 Unprocessable Entity`) khi đầu vào sai ràng buộc Pydantic. Các tình huống đặc biệt được giải thích thêm ở Mục 5.1.4.
-4. **Tốc độ xử lý nội tại:** kịch bản đo `scripts/thesis/benchmark_latency.py` được thực thi trên 14 kịch bản KB01-KB14 với 140 lượt gọi API liên tiếp (10 lượt/kịch bản) qua `TestClient`. Thời gian xử lý trung bình là 3,54 ms và chậm nhất là 7,97 ms (sau lượt khởi tạo đầu). Khi tăng lên 700 lượt gọi liên tiếp, thời gian trung bình là 3,72 ms và chậm nhất là 26,64 ms. Mức này dư sức đáp ứng ngưỡng dưới 1.000 ms khi người học chỉnh mức ưu tiên trực tiếp trên giao diện (CN03).
+3. **Đủ các trạng thái phản hồi:** bộ kiểm thử xác minh cả ba trạng thái trả về mã HTTP 200 (`success`, `no_match` cho hai trường hợp không có người qua lọc hoặc thiếu dữ liệu, và `zero_weight` khi $\sum w_i = 0$ kèm `unranked_candidates`). Ngoài ra còn có mã lỗi HTTP 422 (`422 Unprocessable Entity`) khi đầu vào sai ràng buộc Pydantic. Các tình huống đặc biệt được giải thích thêm ở Mục 5.1.4.
+4. **Tốc độ xử lý nội tại:** kịch bản đo `scripts/thesis/benchmark_latency.py` được thực thi trên 14 kịch bản KB01-KB14 với 140 lượt gọi API liên tiếp (10 lượt/kịch bản) qua `TestClient`. Thời gian xử lý trung bình là 3,54 ms và chậm nhất là 7,97 ms (sau lượt khởi tạo đầu). Khi tăng lên 700 lượt gọi liên tiếp, thời gian trung bình là 3,72 ms và chậm nhất là 26,64 ms. Mức này đáp ứng tốt với biên độ an toàn lớn so với ngưỡng dưới 1.000 ms khi người học chỉnh mức ưu tiên trực tiếp trên giao diện (CN03).
 
 Cần nói rõ là phép đo trên chạy trực tiếp trong bộ nhớ qua `TestClient`, nên chưa tính độ trễ truyền qua mạng. Trên các lần chạy cục bộ thực tế trên Windows (Python 3.12), giá trị trung bình có thể dao động nhẹ quanh `2,1-3,6 ms` tùy tải CPU tại thời điểm đo; cả hai đều phản ánh tốc độ xử lý thuần túy của thuật toán và tầng FastAPI, thấp hơn ngưỡng 1.000 ms khoảng hai bậc độ lớn.
 
 ### 5.1.3. Kiểm thử ca biên của hàm điểm và tính đơn điệu
 
-Để kiểm tra năm hàm chấm điểm thành phần (Bảng 3.6) có chạy đúng ở các điểm biên và giữ tính đơn điệu khi chỉnh trọng số (CN03) hay không, hệ thống được bổ sung bộ test biên tự động cho từng tiêu chí. Kết quả được tổng hợp ở Bảng 5.2.
+Để kiểm tra năm hàm chấm điểm thành phần (Bảng 3.6) có chạy đúng ở các điểm biên và giữ tính đơn điệu khi chỉnh trọng số (CN03) hay không, bộ kiểm thử ca biên tự động được xây dựng cho từng tiêu chí. Kết quả được tổng hợp ở Bảng 5.2.
 
 **Bảng 5.2: Kết quả kiểm thử ca biên của các hàm điểm và tính đơn điệu**
 
@@ -123,7 +123,7 @@ Bảng 5.4 gom 14 kịch bản thành năm nhóm đặc trưng để dễ nhìn 
 | Đủ $\ge 3$ ứng viên, điểm khớp hoàn toàn (đến 3 chữ số thập phân) | KB01, KB03, KB10, KB13 | 4 | 4/4 (100%) | $\le 0{,}0005$ | Khớp cả thứ tự lẫn giá trị điểm hiển thị |
 | Đủ $\ge 3$ ứng viên, có đồng điểm tuyệt đối trong Top-3 | KB02, KB12 | 2 | 2/2 (100%) | $\le 0{,}00025$ | `GS-G11` và `GS-G12` đồng điểm ($0{,}88125$ ở KB02; $0{,}63125$ ở KB12), xử lý đồng điểm theo mã `tutor_id` |
 | Môn hoặc điều kiện hiếm, chỉ có 1-2 ứng viên qua lọc | KB06, KB07, KB08, KB11, KB14 | 5 | 5/5 (100%) | $\le 0{,}00025$ | Khớp toàn bộ ứng viên qua lọc ($1/1$ hoặc $2/2$) |
-| Có chênh lệch giữa điểm hệ thống tính và điểm tính tay ban đầu nhưng bảo toàn thứ tự | KB04, KB09 | 2 | 2/2 (100%) | $0{,}07125$ (KB04); $0{,}0005$ (KB09) | KB04: tính tay bỏ sót $s_{\text{availability}}$; KB09: khác quy tắc làm tròn tại biên $0{,}9275$ |
+| Có chênh lệch giữa điểm hệ thống tính và điểm tính tay ban đầu nhưng bảo toàn thứ tự | KB04, KB09 | 2 | 2/2 (100%) | $0{,}07125$ (KB04); $0{,}0005$ (KB09) | KB04: tính tay bỏ sót $s_{\text{availability}}$; KB09: sai khác biểu diễn số thực IEEE 754 tại biên $0{,}9275$ |
 | Không có ứng viên thỏa điều kiện bắt buộc (`no_match`) | KB05 | 1 | 1/1 (100%) | Không áp dụng | Trả về `status = "no_match"`, `results = []` (khớp quy ước `0/0`) |
 | **Tổng hợp toàn bộ tập kịch bản** | **KB01-KB14** | **14** | **14/14 (100%)** | **$0{,}07125$** | **Bảo toàn 100% tập hợp và thứ tự Top-3 kỳ vọng** |
 
@@ -139,7 +139,7 @@ Nhìn chung, hệ thống trả về Top-3 khớp 14/14 kịch bản (100%), kh�
    - Sở dĩ bảng tính tay ban đầu ra thấp hơn ($0{,}848$ và $0{,}715$) là vì lúc tính tay nhóm thực hiện chỉ cộng 3 tiêu chí (chia cho 6) mà bỏ sót tiêu chí lịch rảnh. Do cả hai gia sư đều được $s_{\text{availability}} = 1{,}0$, việc tính đủ 4 tiêu chí chỉ làm điểm cả hai tăng lên chứ thứ tự `GS006 > GS020` vẫn giữ nguyên.
 2. **Kịch bản KB09 (lệch ở chữ số làm tròn theo chuẩn IEEE 754):**
    - Ứng viên `GS-G08` có $s_{\text{fee}} = 1{,}0$, $s_{\text{district}} = 1{,}0$, $s_{\text{experience}} = 6/8 = 0{,}75$ và $s_{\text{rating}} = 4{,}8/5 = 0{,}96$. Chia cho 4 tiêu chí thì tổng điểm đúng toán học là $(1{,}0 + 1{,}0 + 0{,}75 + 0{,}96)/4 = 3{,}71/4 = 0{,}9275$.
-   - Tính tay theo kiểu thập phân thì $0{,}9275$ làm tròn lên thành $0{,}928$. Nhưng Python lưu số thực theo chuẩn nhị phân IEEE 754, trong đó $0{,}9275$ bị xấp xỉ thành `0.927499999999999991118...` (hơi nhỏ hơn $0{,}9275$). Do đó khi làm tròn 3 chữ số để hiển thị, kết quả ra $0{,}927$. Vì hàm xếp hạng dùng giá trị số thực gốc chưa làm tròn (quy ước QĐ-E) nên vị trí hạng 1 của `GS-G08` không bị ảnh hưởng.
+   - Tính tay theo kiểu thập phân thì $0{,}9275$ làm tròn lên thành $0{,}928$. Tuy nhiên, cả Python ở tầng máy chủ lẫn JavaScript ở tầng giao diện đều lưu số thực dấu phẩy động theo chuẩn nhị phân IEEE 754 (binary64), trong đó kết quả phép chia $3{,}71/4$ được biểu diễn thành `0.927499999999999991118...` (nhỏ hơn $0{,}9275$ ở mức sai số máy). Do đó khi làm tròn 3 chữ số thập phân để hiển thị (cả bằng định dạng Python lẫn `toFixed(3)` của JavaScript), kết quả hiển thị là $0{,}927$. Vì hàm xếp hạng dùng giá trị số thực gốc chưa làm tròn (quy ước QĐ-E) nên vị trí hạng 1 của `GS-G08` không bị ảnh hưởng.
 3. **Kịch bản KB02 và KB12 (tách hạng khi bằng điểm):**
    - Ở KB02, `GS-G11` và `GS-G12` có các điểm thành phần giống hệt nhau nên tổng điểm bằng nhau ($7{,}05/8 = 0{,}88125$). Hệ thống xếp theo mã gia sư tăng dần nên `GS-G11` đứng hạng 1 và `GS-G12` đứng hạng 2.
    - Tương tự ở KB12, hai gia sư này cùng đạt $5{,}05/8 = 0{,}63125$ ở hạng 2-3, và `GS-G11` tiếp tục đứng trước `GS-G12`.
@@ -158,12 +158,12 @@ Vì vậy, nhóm thực hiện giữ nguyên công thức điểm (Bảng 3.6), 
 
 | $\delta$ | Số KB đổi Top-3 | KB đổi | Số KB trùng Top-3 baseline ($x/m$) |
 |:---:|:---:|:---:|:---:|
-| 0,25 | 0 | - | 14/14 |
-| 0,30 | 0 | - | 14/14 |
-| 0,50 (baseline) | 0 | - | 14/14 |
-| 0,70 | 0 | - | 14/14 |
-| 0,75 | 0 | - | 14/14 |
-| 1,00 | 0 | - | 14/14 |
+| 0,25 | 0 | Không có | 14/14 |
+| 0,30 | 0 | Không có | 14/14 |
+| 0,50 (baseline) | 0 | Không có | 14/14 |
+| 0,70 | 0 | Không có | 14/14 |
+| 0,75 | 0 | Không có | 14/14 |
+| 1,00 | 0 | Không có | 14/14 |
 
 Ở Bảng 5.5, cả 6 mức $\delta \in [0{,}25; 1{,}00]$ đều cho 0/14 kịch bản đổi Top-3. Lý do khá dễ thấy: gia sư có học phí nằm trong ngân sách luôn giữ $s_{\text{fee}} = 1$, còn gia sư vượt ngân sách thì khi tăng $\delta$ điểm học phí có nhích lên nhưng vẫn thấp hơn người không vượt. Trên tập 16 hồ sơ mẫu, mức thay đổi đó chưa đủ làm đảo thứ tự Top-3.
 
@@ -171,32 +171,32 @@ Vì vậy, nhóm thực hiện giữ nguyên công thức điểm (Bảng 3.6), 
 
 | $E_{\max}$ | Số KB đổi Top-3 | KB đổi | Top-3 của KB10 | Số KB trùng Top-3 baseline ($x/m$) |
 |:---:|:---:|:---:|:---|:---:|
-| 5 | 0 | - | `GS-G10 > GS-G01 > GS-G09` | 14/14 |
-| 6 | 0 | - | `GS-G10 > GS-G01 > GS-G09` | 14/14 |
-| 8 (baseline) | 0 | - | `GS-G10 > GS-G01 > GS-G09` | 14/14 |
+| 5 | 0 | Không có | `GS-G10 > GS-G01 > GS-G09` | 14/14 |
+| 6 | 0 | Không có | `GS-G10 > GS-G01 > GS-G09` | 14/14 |
+| 8 (baseline) | 0 | Không có | `GS-G10 > GS-G01 > GS-G09` | 14/14 |
 | 10 | 1 | KB10 | `GS-G10 > GS-G09 > GS-T06` | 13/14 |
 | 12 | 1 | KB10 | `GS-G10 > GS-T06 > GS-G09` | 13/14 |
 
-Khi thay đổi $E_{\max}$ (Bảng 5.6), chỉ có kịch bản KB10 đổi Top-3 ở mốc $E_{\max} = 10$ và $E_{\max} = 12$. Quá trình tính toán lại chi tiết giúp xác định nguyên nhân như sau:
+Khi thay đổi $E_{\max}$ (Bảng 5.6), chỉ có kịch bản KB10 đổi Top-3 ở mốc $E_{\max} = 10$ và $E_{\max} = 12$. Phân tích phép tính chi tiết làm rõ nguyên nhân như sau:
 - Truy vấn KB10 tìm môn Toán ở Quận 7, không nhập ngân sách và lịch rảnh. Hệ thống chỉ dùng 3 tiêu chí là Khu vực ($w = 2$), Kinh nghiệm ($w = 3$, mức Cao) và Đánh giá ($w = 2$), tổng trọng số bằng 7.
-- **Vì sao `GS-G01` rời khỏi Top-3:** ở mốc gốc $E_{\max} = 8$, `GS-G01` ($E = 6$ năm, dạy Bình Thạnh nên $s_{\text{district}} = 0$, đánh giá $5{,}0/5$) được $(2 \times 0 + 3 \times 6/8 + 2 \times 1{,}0)/7 = 4{,}25/7 \approx 0{,}6071$, đứng hạng 2. Khi tăng $E_{\max}$ lên $10$ và $12$, điểm kinh nghiệm của `GS-G01` tụt xuống $6/10 = 0{,}60$ và $6/12 = 0{,}50$. Tổng điểm giảm còn $3{,}8/7 \approx 0{,}5429$ rồi $3{,}5/7 = 0{,}5000$ (hạng 4). Vị trí trong Top-3 lúc này thuộc về `GS-T06` ($E = 20$ năm, luôn chạm trần $s_{\text{experience}} = 1{,}0$).
-- **Vì sao `GS-G09` và `GS-T06` đổi chỗ từ $E_{\max} = 10$ sang $12$:** tại $E_{\max} = 10$, `GS-G09` ($E = 2$ năm, đúng Quận 7, đánh giá $3{,}5/5$) đạt $(2 \times 1 + 3 \times 2/10 + 2 \times 0{,}7)/7 = 4/7$. Đúng lúc này `GS-T06` cũng đạt $(2 \times 0 + 3 \times 1 + 2 \times 0{,}5)/7 = 4/7$ (hai số thực bằng nhau tuyệt đối `0.5714285714285714`). Nhờ quy tắc xếp theo mã gia sư (`"GS-G09" < "GS-T06"`), `GS-G09` đứng hạng 2 còn `GS-T06` hạng 3. Sang $E_{\max} = 12$, điểm của `GS-G09` tụt xuống $(2 \times 1 + 3 \times 2/12 + 2 \times 0{,}7)/7 = 3{,}9/7 \approx 0{,}5571$. Trong khi đó `GS-T06` vẫn giữ $4/7 \approx 0{,}5714$ nên vượt lên hạng 2, tạo thành thứ tự `GS-G10 > GS-T06 > GS-G09`.
+- **Vì sao `GS-G01` rời khỏi Top-3:** ở mốc gốc $E_{\max} = 8$, `GS-G01` ($E = 6$ năm, dạy Bình Thạnh nên $s_{\text{district}} = 0$, đánh giá $5{,}0/5$) được $(2 \times 0 + 3 \times 6/8 + 2 \times 1{,}0)/7 = 4{,}25/7 \approx 0{,}6071$, đứng hạng 2. Khi tăng $E_{\max}$ lên $10$ và $12$, điểm kinh nghiệm của `GS-G01` giảm xuống $6/10 = 0{,}60$ và $6/12 = 0{,}50$. Tổng điểm giảm còn $3{,}8/7 \approx 0{,}5429$ rồi $3{,}5/7 = 0{,}5000$ (hạng 4). Vị trí trong Top-3 lúc này thuộc về `GS-T06` ($E = 20$ năm, luôn chạm trần $s_{\text{experience}} = 1{,}0$).
+- **Vì sao `GS-G09` và `GS-T06` đổi chỗ từ $E_{\max} = 10$ sang $12$:** tại $E_{\max} = 10$, `GS-G09` ($E = 2$ năm, đúng Quận 7, đánh giá $3{,}5/5$) đạt $(2 \times 1 + 3 \times 2/10 + 2 \times 0{,}7)/7 = 4/7$. Đúng lúc này `GS-T06` cũng đạt $(2 \times 0 + 3 \times 1 + 2 \times 0{,}5)/7 = 4/7$ (hai số thực bằng nhau tuyệt đối `0.5714285714285714`). Nhờ quy tắc xếp theo mã gia sư (`"GS-G09" < "GS-T06"`), `GS-G09` đứng hạng 2 còn `GS-T06` hạng 3. Sang $E_{\max} = 12$, điểm của `GS-G09` giảm xuống $(2 \times 1 + 3 \times 2/12 + 2 \times 0{,}7)/7 = 3{,}9/7 \approx 0{,}5571$. Trong khi đó `GS-T06` vẫn giữ $4/7 \approx 0{,}5714$ nên vượt lên hạng 2, tạo thành thứ tự `GS-G10 > GS-T06 > GS-G09`.
 
 **Bảng 5.7: Độ nhạy của Top-3 theo mức biến động ngân sách**
 
 | Mức ngân sách | Số KB áp dụng | Số KB đổi Top-3 | KB đổi | Số KB áp dụng trùng Top-3 baseline ($x/m$) |
 |:---:|:---:|:---:|:---:|:---:|
-| −20% | 11 | 0 | - | 11/11 |
-| −10% | 11 | 0 | - | 11/11 |
-| −5% | 11 | 0 | - | 11/11 |
-| 0% (baseline) | 11 | 0 | - | 11/11 |
-| +5% | 11 | 0 | - | 11/11 |
-| +10% | 11 | 0 | - | 11/11 |
-| +20% | 11 | 0 | - | 11/11 |
+| −20% | 11 | 0 | Không có | 11/11 |
+| −10% | 11 | 0 | Không có | 11/11 |
+| −5% | 11 | 0 | Không có | 11/11 |
+| 0% (baseline) | 11 | 0 | Không có | 11/11 |
+| +5% | 11 | 0 | Không có | 11/11 |
+| +10% | 11 | 0 | Không có | 11/11 |
+| +20% | 11 | 0 | Không có | 11/11 |
 
 *(Ba kịch bản KB05, KB10 và KB14 không thiết lập ngân sách nên phép biến thiên ngân sách áp dụng trên 11 kịch bản còn lại.)*
 
-Trong 11 kịch bản có nhập ngân sách (Bảng 5.7), không kịch bản nào đổi Top-3 khi thay đổi ngân sách trong khoảng từ −20% đến +20%. Bộ test tự động cũng xác nhận hàm điểm giữ đúng tính đơn điệu: $S(g)$ không giảm khi $\delta$ hoặc ngân sách $B$ tăng, và không tăng khi $E_{\max}$ tăng. Tính đơn điệu là hệ quả trực tiếp của công thức, còn việc Top-3 ít biến động khi đổi $\delta$ và ngân sách là do phân bố của 16 hồ sơ mẫu hiện tại.
+Trong 11 kịch bản có nhập ngân sách (Bảng 5.7), không kịch bản nào đổi Top-3 khi thay đổi ngân sách trong khoảng từ −20% đến +20%. Bộ kiểm thử tự động cũng xác nhận hàm điểm giữ đúng tính đơn điệu: $S(g)$ không giảm khi $\delta$ hoặc ngân sách $B$ tăng, và không tăng khi $E_{\max}$ tăng. Tính đơn điệu là hệ quả trực tiếp của công thức, còn việc Top-3 ít biến động khi đổi $\delta$ và ngân sách là do phân bố của 16 hồ sơ mẫu hiện tại.
 
 ### 5.2.4. Ảnh hưởng của các bộ mức ưu tiên
 
@@ -212,8 +212,8 @@ Tiếp theo, bốn bộ mức ưu tiên khác nhau được lần lượt áp d�
 | Ưu tiên Kinh nghiệm & Đánh giá (`experience` & `rating` Cao, còn lại Thấp) | 1 | KB10 | `GS-G10 > GS-G01 > GS-T06` thay cho `GS-G10 > GS-G01 > GS-G09`: `GS-T06` vào Top-3 thay cho `GS-G09` (trùng 2/3) |
 
 Từ Bảng 5.8, có thể rút ra ba nhận xét chính:
-- Ở KB01, khi bật bộ Ưu tiên Khu vực, gia sư `GS-G10` không dạy ở Bình Thạnh ($s_{\text{district}} = 0$) nên rớt khỏi Top-3. Hai gia sư dạy tại Bình Thạnh là `GS-T06` và `GS-G02` ($s_{\text{district}} = 1$) lên hạng 2 và hạng 3. Điều này cho thấy trọng số ưu tiên điều chỉnh thứ hạng đúng như người học mong muốn.
-- Ở KB10 (mặc định đặt Kinh nghiệm mức Cao, $w = 3$), khi chuyển sang bộ Mặc định hoặc Ưu tiên Học phí (mà KB10 lại không nhập ngân sách), trọng số Kinh nghiệm giảm xuống ngang Khu vực. Nhờ vậy `GS-G09` (khớp Quận 7) vượt `GS-G01` để lên hạng 2. Ngược lại, khi dùng bộ Ưu tiên Kinh nghiệm & Đánh giá, `GS-T06` (20 năm kinh nghiệm) vượt `GS-G09` (2 năm kinh nghiệm) để lọt vào Top-3.
+- Ở KB01, khi bật bộ Ưu tiên Khu vực, gia sư `GS-G10` không dạy ở Bình Thạnh ($s_{\text{district}} = 0$) nên rời khỏi Top-3. Hai gia sư dạy tại Bình Thạnh là `GS-T06` và `GS-G02` ($s_{\text{district}} = 1$) lên hạng 2 và hạng 3. Điều này cho thấy trọng số ưu tiên điều chỉnh thứ hạng đúng như người học mong muốn.
+- Ở KB10 (mặc định đặt Kinh nghiệm mức Cao, $w = 3$), khi chuyển sang bộ Mặc định hoặc Ưu tiên Học phí (mà KB10 lại không nhập ngân sách), trọng số Kinh nghiệm giảm xuống ngang Khu vực. Nhờ vậy `GS-G09` (khớp Quận 7) vượt `GS-G01` để lên hạng 2. Ngược lại, khi dùng bộ Ưu tiên Kinh nghiệm & Đánh giá, `GS-T06` (20 năm kinh nghiệm) vượt `GS-G09` (2 năm kinh nghiệm) để tiến vào Top-3.
 - Cả bốn lần thử đều giữ nguyên hạng 1 ở KB01 (`GS-G01`) và KB10 (`GS-G10`), vì hai gia sư này nổi trội hơn hẳn ở nhiều tiêu chí cùng lúc. Đồng thời cần phân biệt bốn bộ cấu hình trong Bảng 5.8 (giữ toàn bộ tiêu chí ngoài trọng tâm ở mức Thấp $w = 1$) với các nút gợi ý nhanh trên màn hình kết quả CN03 (nút *Ưu tiên KN & Đánh giá* đặt các tiêu chí còn lại về Bỏ qua $w = 0$ như ở Hình 4.3, còn nút *Ưu tiên Học phí* đặt Kinh nghiệm và Đánh giá về $w = 0$ nhưng vẫn giữ Khu vực và Lịch ở mức Thấp $w = 1$).
 
 ### 5.2.5. Khả năng giải thích của kết quả gợi ý
@@ -245,9 +245,9 @@ Nhìn vào kết quả này, người học biết ngay ba điều:
 Bên cạnh các kết quả đạt được, nhóm thực hiện nhận thấy hệ thống vẫn còn sáu hạn chế:
 
 1. **Bộ dữ liệu mẫu còn ít:** mới có 16 hồ sơ (14 hồ sơ giả lập `simulated` và 2 hồ sơ lấy từ nguồn công khai `public_collected` là `GS-T06`, `GS-T07`). Ở hai hồ sơ công khai, học phí và lịch rảnh phải ước tính theo mặt bằng khảo sát (đánh dấu `(*)` ở Phụ lục A), còn điểm đánh giá để trống nên nhận mức trung tính $0{,}5$.
-2. **Kịch bản thử nghiệm do nhóm thực hiện tự lập:** 14 kịch bản KB01-KB14 và Top-3 kỳ vọng được xây dựng dựa trên phân tích bài toán để kiểm tra thuật toán, chưa phải dữ liệu thu từ lựa chọn thật của phụ huynh hay học sinh. Vì vậy tỷ lệ khớp 14/14 cho thấy mã nguồn chạy đúng với công thức ở Chương 3, chưa đo được mức độ hài lòng của người dùng ngoài đời.
-3. **Tham số công thức đặt thủ công:** các mốc $\delta = 0{,}5$, $E_{\max} = 8$ năm, điểm trung tính $0{,}5$ và bộ trọng số $\{0, 1, 2, 3\}$ do nhóm thực hiện tự lựa chọn ban đầu, chưa được học từ dữ liệu tương tác thực tế.
-4. **Chưa thử nghiệm với người dùng ngoài nhóm:** đề tài chưa tổ chức khảo sát học sinh hay phụ huynh bên ngoài để xem họ có đồng ý với gợi ý của hệ thống hay không.
+2. **Kịch bản thử nghiệm do nhóm thực hiện tự lập:** 14 kịch bản KB01-KB14 và Top-3 kỳ vọng được xây dựng dựa trên phân tích bài toán để kiểm tra thuật toán, chưa phải dữ liệu thu từ lựa chọn thật của phụ huynh hay học sinh. Vì vậy tỷ lệ khớp 14/14 cho thấy mã nguồn chạy đúng với công thức ở Chương 3, chưa đo được mức độ hài lòng của người dùng thực tế.
+3. **Tham số công thức đặt thủ công:** các mốc $\delta = 0{,}5$, $E_{\max} = 8$ năm, điểm trung tính $0{,}5$ và bộ trọng số $\{0, 1, 2, 3\}$ được lựa chọn thủ công ở giai đoạn đầu, chưa được học từ dữ liệu tương tác thực tế.
+4. **Chưa thử nghiệm với người dùng ngoài nhóm:** hệ thống chưa được khảo sát đánh giá với học sinh và phụ huynh bên ngoài để kiểm chứng mức độ đồng thuận với kết quả gợi ý.
 5. **So khớp khu vực và môn học còn đơn giản:** khu vực chỉ so khớp đúng tên quận/huyện quy ước, chưa tính khoảng cách đường đi hay các quận giáp ranh. Mỗi lần tìm cũng chỉ chọn được một môn học.
 6. **Chưa đo độ trễ mạng thật qua Internet:** con số trung bình 3,54 ms ở Mục 5.1.2 đo nội bộ qua `TestClient`. Độ trễ thật khi người dùng gọi từ trình duyệt trên Vercel sang máy chủ Render (bao gồm thời gian khởi động lại *cold start* ước tính theo tài liệu Render Free Tier khoảng 30-40 giây sau 15 phút nghỉ) chưa được đo thành số liệu định lượng cụ thể.
 

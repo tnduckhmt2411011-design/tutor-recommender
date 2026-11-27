@@ -21,14 +21,14 @@
 **Trên slide**
 
 - **Đơn vị:** Trường Đại học Kỹ thuật - Công nghệ Cần Thơ — Khoa Công nghệ Thông tin.
-- **Học phần:** Báo cáo Đồ án môn Khoa học máy tính 1.
+- **Học phần:** Báo cáo Đồ án Khoa học máy tính 1.
 - **Đề tài:** HỆ THỐNG KHUYẾN NGHỊ GIA SƯ DỰA TRÊN PHƯƠNG PHÁP CONTENT-BASE FILTERING.
 - **GVHD:** TS. Lê Anh Nhã Uyên.
-- **Nhóm thực hiện:** Cao Khánh Ngọc (`KHMT2411025`), Trần Nguyễn Đức (`KHMT2411011`), Lê Thị Bích Chuyền (`KHMT2411037`) — Lớp KHMT 2024 (Cần Thơ, tháng 11/2026).
+- **Nhóm thực hiện:** Lê Thị Bích Chuyền (`KHMT2411037`), Trần Nguyễn Đức (`KHMT2411011`), Cao Khánh Ngọc (`KHMT2411025`) — Lớp KHMT 2024 (Cần Thơ, 22 tháng 11 năm 2026).
 
 **Lời thoại**
 
-“Kính thưa quý thầy cô trong Hội đồng. Nhóm em gồm ba thành viên đến từ lớp Khoa học máy tính 2024, hôm nay xin trình bày đồ án môn Khoa học máy tính 1 với đề tài *Hệ thống khuyến nghị gia sư dựa trên phương pháp Content-Base Filtering*, dưới sự hướng dẫn của cô TS. Lê Anh Nhã Uyên. Em là Cao Khánh Ngọc, xin đại diện nhóm bắt đầu phần trình bày.”
+“Kính thưa quý thầy cô trong Hội đồng. Nhóm em gồm ba thành viên đến từ lớp Khoa học máy tính 2024, hôm nay xin trình bày đồ án Khoa học máy tính 1 với đề tài *Hệ thống khuyến nghị gia sư dựa trên phương pháp Content-Base Filtering*, dưới sự hướng dẫn của cô TS. Lê Anh Nhã Uyên. Em là Cao Khánh Ngọc, xin đại diện nhóm bắt đầu phần trình bày.”
 
 **Hình/bảng minh họa:** Logo CTUT (`logo_ctut.png`) và ảnh minh họa Editorial/Bauhaus bên phải (`cover_right_illustration.png`).
 
@@ -625,7 +625,7 @@
 - **Lộ trình:** 1. Tổng quan → 2. Lý thuyết & CN → 3. Phân tích & TK → 4. Xây dựng HT → 5. Kiểm thử & ĐG → `[6. Kết luận]`.
 - **Nội dung trọng tâm:**
   - Mở rộng GVHD (`19` truy vấn) & Vercel/Render.
-  - Tổng kết 4 mục tiêu & 6 Sprint (`Mục 6.1.1 & Bảng 6.1`).
+  - Tổng kết 4 mục tiêu & 6 Sprint (`Mục 6.1.1 & Quỹ 300 giờ — Bảng 1.2`).
   - 4 hạn chế kỹ thuật & 3 hướng phát triển.
 - **Câu hỏi dẫn dắt:** *Đồ án đã đạt những gì so với cam kết ban đầu và đâu là giới hạn cần nâng cấp ở giai đoạn sau?*
 
@@ -658,14 +658,14 @@
 
 - **4 mục tiêu hoàn thành (Mục 6.1.1):**
   - Scoring thuần túy: 5 module độc lập, toàn bộ `backend/app/` phủ `97%`.
-  - API REST chuẩn hóa: `200/200` bài TDD đạt (`1,18s`), TestClient TB `3,54 ms`.
+  - API REST chuẩn hóa: `41/41` bài kiểm thử API đạt (trong tổng `200/200` bài toàn hệ thống, `1,18s`), TestClient TB `3,54 ms`.
   - React 19 SPA trực tuyến: Live Vercel & Render, đủ `CN01–03` kèm `requestSeq`.
   - Thực nghiệm & mở rộng: `14/14` KB khớp Top-3, độ nhạy 4 yếu tố & PA1 `19` truy vấn.
 - **Quỹ thời gian Scrum 6 Sprint:** Đúng `300 giờ` nhóm (`3 SV × 100h`), đồng bộ báo cáo và mã nguồn.
 
 **Lời thoại**
 
-“Đối chiếu lại bốn mục tiêu đăng ký ở Chương 1, nhóm đã hoàn thành trọn vẹn từ lõi tính điểm thuần Python (cùng toàn bộ tầng ứng dụng backend/app bao phủ 97% câu lệnh), 200 bài test đạt 100%, ứng dụng React chạy live trên Vercel và Render cho tới thực nghiệm 14 kịch bản chuẩn và mở rộng 19 truy vấn, với tổng thời lượng Scrum 6 Sprint đúng 300 giờ nhóm.”
+“Đối chiếu lại bốn mục tiêu đăng ký ở Chương 1, nhóm đã hoàn thành trọn vẹn từ lõi tính điểm thuần Python (cùng toàn bộ tầng ứng dụng backend/app bao phủ 97% câu lệnh), 41 trên 41 bài kiểm thử tích hợp API đạt (trong tổng 200 bài kiểm thử toàn hệ thống đạt 100%), ứng dụng React chạy live trên Vercel và Render cho tới thực nghiệm 14 kịch bản chuẩn và mở rộng 19 truy vấn, với tổng thời lượng Scrum 6 Sprint đúng 300 giờ nhóm.”
 
 **Hình/bảng minh họa:** Lưới 4 thẻ thành tựu & thanh tổng kết Scrum 300 giờ (Mục 6.1).
 

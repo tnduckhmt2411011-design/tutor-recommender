@@ -21,7 +21,7 @@ Từ Bảng 2.1, có thể thấy Content-Based Filtering là phương pháp ph�
 
 Với phương pháp lọc dựa trên nội dung (*Content-Based Filtering*), hệ thống mô tả mỗi đối tượng bằng một tập đặc trưng rồi so khớp với nhu cầu của người dùng. Đối tượng nào khớp hơn thì xếp trên [2]. Trong đồ án này, mỗi gia sư được mô tả qua bảy đặc trưng: môn dạy, khu vực, học phí theo giờ, số năm kinh nghiệm, hình thức dạy, lịch rảnh và điểm đánh giá trung bình. Về phía người học, hệ thống không suy đoán sở thích từ lịch sử cũ mà lấy trực tiếp nhu cầu vừa nhập lúc tìm kiếm.
 
-Bảy đặc trưng trên có kiểu dữ liệu rất khác nhau. Môn học và khu vực so khớp theo tập hợp, còn hình thức dạy là biến phân loại. Trong dữ liệu hệ thống, học phí (VNĐ/giờ) là số nguyên không âm được đánh giá qua ngưỡng ngân sách mềm, trong khi kinh nghiệm là số thực có cận trên và điểm đánh giá nằm trong khoảng chuẩn hóa $[0, 5]$ (cho phép khuyết dữ liệu với gia sư mới). Riêng lịch rảnh tính theo tỷ lệ giao giữa hai tập khung giờ. Vì các thuộc tính không cùng bản chất như vậy, hệ thống không gom tất cả thành một vector để tính độ tương đồng cosine (*cosine similarity*). Cách tính cosine thường hợp với dữ liệu văn bản tự do hơn.
+Bảy đặc trưng trên có kiểu dữ liệu rất khác nhau. Môn học và khu vực so khớp theo tập hợp, còn hình thức dạy là biến phân loại. Trong dữ liệu hệ thống, học phí (VNĐ/giờ) là số nguyên không âm được đánh giá qua ngưỡng ngân sách mềm, trong khi kinh nghiệm là số thực không âm (bão hòa ở cận trên khi chấm điểm) và điểm đánh giá nằm trên thang điểm $[0, 5]$ (cho phép khuyết dữ liệu với gia sư mới). Riêng lịch rảnh tính theo tỷ lệ giao giữa hai tập khung giờ. Vì các thuộc tính không cùng bản chất như vậy, hệ thống không gom tất cả thành một vector để tính độ tương đồng cosine (*cosine similarity*). Cách tính cosine thường hợp với dữ liệu văn bản tự do hơn.
 
 Xét theo phân loại của Adomavicius và Tuzhilin [2], hướng tiếp cận của đề tài thuộc nhánh Content-Based Filtering (tên đề tài đăng ký ghi là “Content-Base Filtering”). Toàn bộ gợi ý chỉ dựa trên việc so sánh hồ sơ gia sư với yêu cầu hiện tại của người học, không dùng lịch sử tương tác giữa nhiều người dùng. Quy trình xử lý gồm hai bước: lọc các điều kiện bắt buộc trước, sau đó chấm điểm từng tiêu chí về đoạn $[0, 1]$ rồi cộng có trọng số (*Weighted Scoring*).
 
@@ -37,7 +37,7 @@ Bảng 2.2 đưa ra một ví dụ nhỏ với ba gia sư giả định để th
 
 **Bảng 2.2: Ví dụ minh họa ảnh hưởng của mức ưu tiên đến thứ hạng**
 
-| Gia sư | Điểm học phí | Điểm khu vực | Điểm đánh giá | Tổng điểm - Bộ 1 | Hạng (Bộ 1) | Tổng điểm - Bộ 2 | Hạng (Bộ 2) |
+| Gia sư | Điểm học phí | Điểm khu vực | Điểm đánh giá | Tổng điểm (Bộ 1) | Hạng (Bộ 1) | Tổng điểm (Bộ 2) | Hạng (Bộ 2) |
 |:---|---:|---:|---:|---:|:---:|---:|:---:|
 | A | 1,00 | 0,00 | 0,80 | 0,76 | 1 | 0,36 | 3 |
 | B | 0,60 | 1,00 | 0,90 | 0,74 | 2 | 0,90 | 1 |
@@ -45,7 +45,7 @@ Bảng 2.2 đưa ra một ví dụ nhỏ với ba gia sư giả định để th
 
 *(Ví dụ số minh họa 3 tiêu chí cho công thức (2.1) với Bộ 1 tỷ lệ 3:1:1 và Bộ 2 tỷ lệ 1:3:1, trước khi mở rộng sang mô hình đầy đủ 5 tiêu chí ở Chương 3.)*
 
-Trong Bảng 2.2, bộ 1 ưu tiên học phí với tỷ lệ học phí : khu vực : đánh giá là $3 : 1 : 1$, còn bộ 2 ưu tiên khu vực với tỷ lệ $1 : 3 : 1$. Chẳng hạn với gia sư A ở bộ 1, tổng điểm là $S = (3 \times 1{,}00 + 1 \times 0{,}00 + 1 \times 0{,}80) \div 5 = 0{,}76$. Gia sư A xếp nhất khi người học ưu tiên học phí, nhưng tụt xuống hạng ba khi người học ưu tiên khu vực. Như vậy, trọng số thể hiện ý muốn chủ quan của người tìm gia sư chứ không phải hằng số cố định [1]. Không có một bộ trọng số nào là tốt nhất cho tất cả mọi người, nên bộ mặc định của hệ thống chỉ dùng làm mức khởi đầu.
+Trong Bảng 2.2, bộ 1 ưu tiên học phí với tỷ lệ học phí : khu vực : đánh giá là $3 : 1 : 1$, còn bộ 2 ưu tiên khu vực với tỷ lệ $1 : 3 : 1$. Chẳng hạn với gia sư A ở bộ 1, tổng điểm là $S = (3 \times 1{,}00 + 1 \times 0{,}00 + 1 \times 0{,}80) \div 5 = 0{,}76$. Gia sư A xếp nhất khi người học ưu tiên học phí, nhưng giảm xuống hạng ba khi người học ưu tiên khu vực. Như vậy, trọng số thể hiện ý muốn chủ quan của người tìm gia sư chứ không phải hằng số cố định [1]. Không có một bộ trọng số nào là tốt nhất cho tất cả mọi người, nên bộ mặc định của hệ thống chỉ dùng làm mức khởi đầu.
 
 ## 2.4. Công nghệ sử dụng
 

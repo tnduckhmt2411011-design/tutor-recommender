@@ -1,6 +1,6 @@
 ﻿# Hệ thống khuyến nghị gia sư dựa trên phương pháp Content-Base Filtering
 
-Repository mã nguồn và tài liệu của đồ án môn Khoa học máy tính 1 (CTUT) về hệ thống gợi ý gia sư đa tiêu chí.
+Repository mã nguồn và tài liệu của đồ án Khoa học máy tính 1 (CTUT) về hệ thống gợi ý gia sư đa tiêu chí.
 
 > **Đề tài đã đăng ký:** "Hệ thống khuyến nghị gia sư dựa trên phương pháp Content-Base Filtering"  
 > **Phạm vi hệ thống:** Đây là hệ thống gợi ý chuyên sâu (Recommendation Engine) kèm giao diện tương tác demo trên bộ dữ liệu mẫu nhỏ (16 hồ sơ), không phải nền tảng kết nối gia sư đầy đủ; hệ thống chưa có dữ liệu đánh giá từ người học thực tế và đã tích hợp phần mở rộng Phương án 1 theo góp ý của Giảng viên hướng dẫn (TS. Lê Anh Nhã Uyên) ở Mục 6.1.2.
@@ -199,7 +199,10 @@ Giao diện phản hồi thân thiện khi người học đưa toàn bộ các 
 - [Đề xuất mở rộng mô hình Cấp lớp và Mục tiêu học tập](docs/design/de-xuat-mo-rong-cap-lop-muc-tieu.md)
 - [Hướng dẫn triển khai đám mây Vercel và Render](docs/deployment/deploy-vercel-render.md)
 - [Phần mở đầu và hồ sơ bàn giao](docs/thesis/report/muc-luc-va-ho-so-ban-giao.md)
-- [Báo cáo Chương 1–4](docs/thesis/report/chuong-01-tong-quan.md)
+- [Báo cáo Chương 1: Tổng quan về đề tài](docs/thesis/report/chuong-01-tong-quan.md)
+- [Báo cáo Chương 2: Cơ sở lý thuyết và công nghệ](docs/thesis/report/chuong-02-co-so-ly-thuyet-va-cong-nghe.md)
+- [Báo cáo Chương 3: Phân tích và thiết kế hệ thống](docs/thesis/report/chuong-03-phan-tich-thiet-ke.md)
+- [Báo cáo Chương 4: Xây dựng hệ thống](docs/thesis/report/chuong-04-xay-dung-he-thong.md)
 - [Báo cáo Chương 5: Kiểm thử và đánh giá](docs/thesis/report/chuong-05-thuc-nghiem-va-danh-gia.md)
 - [Báo cáo Chương 6: Kết luận, hướng phát triển và Phụ lục A–D](docs/thesis/report/chuong-06-ket-luan-va-huong-phat-trien.md)
 - [Tài liệu tham khảo](docs/thesis/report/tai-lieu-tham-khao.md)

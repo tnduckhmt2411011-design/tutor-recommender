@@ -339,9 +339,31 @@ def audit_report(report_dir: Path) -> list[AuditIssue]:
 
     fm_path = report_dir / "muc-luc-va-ho-so-ban-giao.md"
     if fm_path.exists():
-        fm_tables, fm_figures = extract_front_matter_lists(
-            fm_path.read_text(encoding="utf-8")
-        )
+        fm_text = fm_path.read_text(encoding="utf-8")
+        in_prose_fm = False
+        in_fm_code = False
+        for line_no, raw_line in enumerate(fm_text.splitlines(), start=1):
+            stripped = raw_line.strip()
+            if stripped.startswith("```"):
+                in_fm_code = not in_fm_code
+                continue
+            if in_fm_code:
+                continue
+            if re.match(r"^##\s+", stripped) or re.match(r"^#\s+", stripped):
+                sec_match = re.match(r"^##\s+(\d+)\.", stripped)
+                in_prose_fm = bool(sec_match and sec_match.group(1) in {"4", "5", "6"})
+                continue
+            if in_prose_fm:
+                for cid in extract_citations(raw_line):
+                    issues.append(
+                        AuditIssue(
+                            "FRONT_MATTER_CITATION",
+                            f"{fm_path.name}:{line_no}",
+                            f"Trích dẫn [{cid}] xuất hiện ở phần mở đầu trước thân bài, phá vỡ thứ tự IEEE.",
+                        )
+                    )
+
+        fm_tables, fm_figures = extract_front_matter_lists(fm_text)
         body_table_pairs = [(tid, title) for tid, title, _, _ in all_tables]
         body_figure_pairs = [(fid, title) for fid, title, _, _ in all_figures]
 
