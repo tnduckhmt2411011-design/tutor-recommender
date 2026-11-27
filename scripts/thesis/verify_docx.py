@@ -53,6 +53,8 @@ FORBIDDEN_STRINGS: tuple[str, ...] = (
     "THESIS_BR",
     "<br",
     "Nhóm trưởng",
+    "nhóm em",
+    "Nhóm em",
 )
 
 

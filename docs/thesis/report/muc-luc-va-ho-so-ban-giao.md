@@ -1,12 +1,12 @@
 # PHẦN MỞ ĐẦU VÀ HỒ SƠ BÀN GIAO
 
 > [!NOTE]
-> Tài liệu này chứa nội dung các trang bìa, phần mở đầu (đánh số La Mã `i–xiii`) và hồ sơ bàn giao của báo cáo đồ án. Khi xuất sang Word (`.docx`) bằng `scripts/thesis/build_docx.py`, phần Mục lục, Danh mục bảng biểu và Danh mục hình ảnh được sinh kèm trường động `TOC` và `PAGEREF` dạng chấm dẫn.
+> Tài liệu này chứa nội dung các trang bìa, phần mở đầu (đánh số La Mã `i-xiii`) và hồ sơ bàn giao của báo cáo đồ án. Khi xuất sang Word (`.docx`) bằng `scripts/thesis/build_docx.py`, phần Mục lục, Danh mục bảng biểu và Danh mục hình ảnh được sinh kèm trường động `TOC` và `PAGEREF` dạng chấm dẫn.
 
 ## 1. Căn cứ và phạm vi
 
 - **Quy chuẩn áp dụng:** Cấu trúc, bố cục, trang bìa khung hoa văn kèm logo CTUT, hệ thống phông chữ `Times New Roman`, bảng chuẩn Booktabs và quy ước đánh số trang thống nhất theo mẫu báo cáo Đồ án/Bài tập lớn chuẩn của Khoa Công nghệ Thông tin, Trường Đại học Kỹ thuật - Công nghệ Cần Thơ.
-- **Nguồn nội dung:** `chuong-01`–`chuong-06` trong cùng thư mục, `tai-lieu-tham-khao.md`, các bảng/hình trong `docs/thesis/figures/`.
+- **Nguồn nội dung:** `chuong-01`-`chuong-06` trong cùng thư mục, `tai-lieu-tham-khao.md`, các bảng/hình trong `docs/thesis/figures/`.
 - **Tên đề tài dùng thống nhất:** “Hệ thống khuyến nghị gia sư dựa trên phương pháp Content-Base Filtering”.
 - **Đánh số trang:** Bìa chính và bìa phụ không đánh số trang; phần mở đầu (`LỜI CẢM ƠN` đến `DANH MỤC HÌNH ẢNH`) dùng số La Mã thường (`i, ii, iii, ...`) ở giữa chân trang; từ `CHƯƠNG 1` đến hết `PHỤ LỤC` dùng số Ả Rập (`1, 2, 3, ...`) ở giữa chân trang.
 
@@ -20,7 +20,7 @@
 | 4 | Lời cam đoan | Đã chuẩn hóa (Mục 5) | Kiểu `Front Title`, trang `ii` |
 | 5 | Tóm tắt tiếng Việt | Đã chuẩn hóa (Mục 6.1) | Kiểu `Front Title`, gói gọn 1 trang `iii` |
 | 6 | Abstract tiếng Anh | Đã chuẩn hóa (Mục 6.2) | Kiểu `Front Title`, gói gọn 1 trang `iv` |
-| 7 | Mục lục | Tự động (Mục 7) | Kiểu `Front Title`, danh mục chấm dẫn (`TOC` + `PAGEREF`) cấp 1–3 và `Front Title` |
+| 7 | Mục lục | Tự động (Mục 7) | Kiểu `Front Title`, danh mục chấm dẫn (`TOC` + `PAGEREF`) cấp 1-3 và `Front Title` |
 | 8 | Danh mục ký hiệu và chữ viết tắt | Đã chuẩn hóa (Mục 8) | Chia 2 tiểu mục `1. Chữ viết tắt` và `2. Ký hiệu toán học`, bảng Booktabs 3 cột |
 | 9 | Danh mục bảng biểu | Tự động (Mục 9) | 31 bảng (`Bảng X.Y: Tên bảng`), dòng chấm dẫn kèm `PAGEREF` |
 | 10 | Danh mục hình ảnh | Tự động (Mục 10) | 9 hình (`Hình X.Y: Tên hình`), dòng chấm dẫn kèm `PAGEREF` |
@@ -36,7 +36,7 @@
 *(Chèn logo chính thức của Trường Đại học Kỹ thuật - Công nghệ Cần Thơ `docs/thesis/figures/logo_ctut.png`, căn giữa trang, bề rộng `3,0 cm`.)*
 
 > **BÁO CÁO ĐỒ ÁN**
-> **MÔN KHOA HỌC MÁY TÍNH 1**
+> **KHOA HỌC MÁY TÍNH 1**
 
 > **ĐỀ TÀI:**
 > **HỆ THỐNG KHUYẾN NGHỊ GIA SƯ**
@@ -45,17 +45,17 @@
 > **GVHD:** TS. Lê Anh Nhã Uyên
 >
 > **Sinh viên thực hiện:**
-> Lê Thị Bích Chuyền — KHMT2411037
-> Trần Nguyễn Đức — KHMT2411011
-> Cao Khánh Ngọc — KHMT2411025
+> Lê Thị Bích Chuyền - KHMT2411037
+> Trần Nguyễn Đức - KHMT2411011
+> Cao Khánh Ngọc - KHMT2411025
 >
 > **Lớp:** Khoa học máy tính 2024
 
-> Cần Thơ, tháng 11 năm 2026
+> Cần Thơ, 22 tháng 11 năm 2026
 
 ### 3.2. Trang bìa phụ
 
-> **BÁO CÁO ĐỒ ÁN - MÔN KHOA HỌC MÁY TÍNH 1**
+> **BÁO CÁO ĐỒ ÁN KHOA HỌC MÁY TÍNH 1**
 > **HỆ THỐNG KHUYẾN NGHỊ GIA SƯ**
 > **DỰA TRÊN PHƯƠNG PHÁP CONTENT-BASE FILTERING**
 >
@@ -64,15 +64,15 @@
 > **GVHD:** TS. Lê Anh Nhã Uyên
 >
 > **Sinh viên thực hiện:**
-> Lê Thị Bích Chuyền — KHMT2411037
-> Trần Nguyễn Đức — KHMT2411011
-> Cao Khánh Ngọc — KHMT2411025
+> Lê Thị Bích Chuyền - KHMT2411037
+> Trần Nguyễn Đức - KHMT2411011
+> Cao Khánh Ngọc - KHMT2411025
 >
-> Cần Thơ, tháng 11 năm 2026
+> Cần Thơ, 22 tháng 11 năm 2026
 
 ## 4. Lời cảm ơn
 
-Chúng em xin gửi lời cảm ơn đến TS. Lê Anh Nhã Uyên, giảng viên hướng dẫn đồ án môn Khoa học máy tính 1. Cô đã tận tình định hướng cho chúng em trong suốt quá trình làm đề tài. Nhờ các buổi trao đổi với cô, chúng em xác định được phạm vi đề tài là một bộ máy khuyến nghị có thể giải thích được. Cô cũng yêu cầu chúng em kiểm chứng bằng số liệu thực nghiệm thay vì mô tả cảm tính. Những góp ý của cô về cách đặt tiêu chí, kiểm thử ca biên và trình bày kết quả được thể hiện trong Chương 3 và Chương 5.
+Chúng em xin gửi lời cảm ơn đến TS. Lê Anh Nhã Uyên, giảng viên hướng dẫn đồ án Khoa học máy tính 1. Cô đã tận tình định hướng cho chúng em trong suốt quá trình làm đề tài. Nhờ các buổi trao đổi với cô, chúng em xác định được phạm vi đề tài là một bộ máy khuyến nghị có thể giải thích được. Cô cũng yêu cầu chúng em kiểm chứng bằng số liệu thực nghiệm thay vì mô tả cảm tính. Những góp ý của cô về cách đặt tiêu chí, kiểm thử ca biên và trình bày kết quả được thể hiện trong Chương 3 và Chương 5.
 
 Chúng em cũng xin cảm ơn quý thầy cô Khoa Công nghệ Thông tin, Trường Đại học Kỹ thuật - Công nghệ Cần Thơ đã tạo điều kiện về tài liệu và môi trường học tập. Cảm ơn gia đình, bạn bè đã động viên, và cảm ơn các thành viên trong nhóm đã phối hợp để hoàn thành các hạng mục đúng tiến độ.
 
@@ -87,10 +87,6 @@ Chúng em là ba thành viên thực hiện đề tài, lớp Khoa học máy t�
 3. Bộ dữ liệu mẫu tách riêng nhóm hồ sơ thu thập công khai và nhóm hồ sơ giả lập. Hai hồ sơ thu thập công khai là GS-T06 và GS-T07 có học phí và lịch rảnh là số ước tính, được đánh dấu hoa thị (*), còn điểm đánh giá để trống. Chương 4, Chương 5 và Phụ lục A có giải thích thêm.
 4. Báo cáo không sao chép nội dung từ công trình khác. Chúng em chỉ tham khảo đồ án GS360 [3] để đối chiếu phạm vi chức năng bài toán, không sử dụng lại mã nguồn hay giao diện của đồ án này.
 5. Chúng em chịu trách nhiệm trước giảng viên hướng dẫn và hội đồng đánh giá về tính trung thực của nội dung báo cáo.
-
-*Cần Thơ, tháng 11 năm 2026*
-
-**Nhóm sinh viên thực hiện:** Lê Thị Bích Chuyền — Trần Nguyễn Đức — Cao Khánh Ngọc
 
 ## 6. Tóm tắt
 
@@ -174,36 +170,36 @@ Mục lục được tạo tự động trong `.docx` từ kiểu `Front Title` 
 
 | Chữ viết tắt | Nghĩa | Xuất hiện đầu |
 | :--- | :--- | :--- |
-| API | Application Programming Interface — giao diện lập trình ứng dụng | Mục 1.4 |
-| ASGI | Asynchronous Server Gateway Interface — chuẩn máy chủ bất đồng bộ cho Python | Bảng 4.1 (Mục 4.1) |
-| BCE | Boundary-Control-Entity — mô hình kiến trúc Biên – Điều khiển – Thực thể | Mục 3.7.2 |
-| CI | Continuous Integration — tích hợp và kiểm thử tự động liên tục | Mục 4.7 |
-| CN01–CN03 | Ba chức năng chính: nhập nhu cầu, xem gợi ý, điều chỉnh mức ưu tiên | Bảng 3.1 (Mục 3.2) |
-| CORS | Cross-Origin Resource Sharing — cơ chế chia sẻ tài nguyên khác nguồn (trong `CORSMiddleware`) | Hình 3.2 (Mục 3.7.2); Mục 4.4.1 |
-| CSS | Cascading Style Sheets — ngôn ngữ định kiểu trình bày giao diện web | Mục 4.5 |
-| CSV | Comma-Separated Values — định dạng tệp văn bản phân tách bằng dấu phẩy | Mục 1.5 |
-| ERD | Entity-Relationship Diagram — sơ đồ thực thể – kết hợp | Mục 3.5 |
+| API | Application Programming Interface - giao diện lập trình ứng dụng | Mục 1.4 |
+| ASGI | Asynchronous Server Gateway Interface - chuẩn máy chủ bất đồng bộ cho Python | Bảng 4.1 (Mục 4.1) |
+| BCE | Boundary-Control-Entity - mô hình kiến trúc Biên - Điều khiển - Thực thể | Mục 3.7.2 |
+| CI | Continuous Integration - tích hợp và kiểm thử tự động liên tục | Mục 4.7 |
+| CN01-CN03 | Ba chức năng chính: nhập nhu cầu, xem gợi ý, điều chỉnh mức ưu tiên | Bảng 3.1 (Mục 3.2) |
+| CORS | Cross-Origin Resource Sharing - cơ chế chia sẻ tài nguyên khác nguồn (trong `CORSMiddleware`) | Hình 3.2 (Mục 3.7.2); Mục 4.4.1 |
+| CSS | Cascading Style Sheets - ngôn ngữ định kiểu trình bày giao diện web | Mục 4.5 |
+| CSV | Comma-Separated Values - định dạng tệp văn bản phân tách bằng dấu phẩy | Mục 1.5 |
+| ERD | Entity-Relationship Diagram - sơ đồ thực thể - kết hợp | Mục 3.5 |
 | GS | Tiền tố mã hồ sơ gia sư trong bộ dữ liệu mẫu (như `GS-T06`, `GS-G01`, `GS006`) | Bảng 3.3 (Mục 3.5) |
 | GVHD | Giảng viên hướng dẫn | Trang bìa |
-| HTML | HyperText Markup Language — ngôn ngữ đánh dấu siêu văn bản | Mục 4.5 |
-| HTTP | Hypertext Transfer Protocol — giao thức truyền tải siêu văn bản | Mục 3.7.1 |
-| IEEE | Institute of Electrical and Electronics Engineers — Viện Kỹ sư Điện và Điện tử (chuẩn trích dẫn tài liệu và chuẩn số thực dấu phẩy động IEEE 754) | Lời cam đoan; Mục 4.3.1 |
-| ISO | International Organization for Standardization — Tổ chức Tiêu chuẩn hóa Quốc tế (quy chuẩn lưu đồ ISO 5807) | Mục 3.7.1; Phụ lục C |
-| JSON | JavaScript Object Notation — định dạng trao đổi dữ liệu có cấu trúc | Mục 1.5 |
-| KB01–KB14 | Mã định danh 14 kịch bản kiểm thử thực nghiệm cố định | Mục 3.5 (KB05); Mục 4.2.3 |
+| HTML | HyperText Markup Language - ngôn ngữ đánh dấu siêu văn bản | Mục 4.5 |
+| HTTP | Hypertext Transfer Protocol - giao thức truyền tải siêu văn bản | Mục 3.7.1 |
+| IEEE | Institute of Electrical and Electronics Engineers - Viện Kỹ sư Điện và Điện tử (chuẩn trích dẫn tài liệu và chuẩn số thực dấu phẩy động IEEE 754) | Lời cam đoan; Mục 4.3.1 |
+| ISO | International Organization for Standardization - Tổ chức Tiêu chuẩn hóa Quốc tế (quy chuẩn lưu đồ ISO 5807) | Mục 3.7.1; Phụ lục C |
+| JSON | JavaScript Object Notation - định dạng trao đổi dữ liệu có cấu trúc | Mục 1.5 |
+| KB01-KB14 | Mã định danh 14 kịch bản kiểm thử thực nghiệm cố định | Mục 3.5 (KB05); Mục 4.2.3 |
 | KV | Khu vực (ký hiệu các khu vực giả định KV1, KV2, KV3 trong ví dụ minh họa) | Bảng 3.6 (Mục 3.6) |
-| LTR | Learning-to-Rank — nhóm thuật toán học máy học xếp hạng | Mục 6.2.2 |
+| LTR | Learning-to-Rank - nhóm thuật toán học máy học xếp hạng | Mục 6.2.2 |
 | OpenAPI | Đặc tả giao diện lập trình ứng dụng RESTful chuẩn hóa (hiển thị qua Swagger UI) | Mục 2.4; Mục 4.1 |
-| PA1 | Phương án 1 — ánh xạ mục tiêu học tập sang bộ mức ưu tiên khởi tạo | Mục 6.1.2 |
-| QĐ-A–QĐ-E | Năm quyết định triển khai xử lý tình huống biên của mô-đun tính điểm | Mục 4.3.1 |
+| PA1 | Phương án 1 - ánh xạ mục tiêu học tập sang bộ mức ưu tiên khởi tạo | Mục 6.1.2 |
+| QĐ-A-QĐ-E | Năm quyết định triển khai xử lý tình huống biên của mô-đun tính điểm | Mục 4.3.1 |
 | RESTful | Kiến trúc dịch vụ web theo phong cách Representational State Transfer | Mục 4.4 |
-| SPA | Single Page Application — ứng dụng web một trang | Bảng 4.1 (Mục 4.1) |
-| TDD | Test-Driven Development — phương pháp phát triển hướng kiểm thử | Mục 5.1.1 |
+| SPA | Single Page Application - ứng dụng web một trang | Bảng 4.1 (Mục 4.1) |
+| TDD | Test-Driven Development - phương pháp phát triển hướng kiểm thử | Mục 5.1.1 |
 | Top-$k$ | Danh sách $k$ gia sư có điểm phù hợp cao nhất sau khi xếp hạng | Mục 1.3.2 |
-| TQ1–TQ5 | Năm truy vấn bổ sung dùng trong thực nghiệm mở rộng Phương án 1 | Mục 6.1.2 |
-| UI | User Interface — giao diện người dùng (trong Swagger UI) | Mục 2.4 |
-| UML | Unified Modeling Language — ngôn ngữ mô hình hóa thống nhất (sơ đồ trình tự UML 2.5) | Phụ lục C |
-| URL | Uniform Resource Locator — địa chỉ định vị tài nguyên thống nhất | Mục 1.2 |
+| TQ1-TQ5 | Năm truy vấn bổ sung dùng trong thực nghiệm mở rộng Phương án 1 | Mục 6.1.2 |
+| UI | User Interface - giao diện người dùng (trong Swagger UI) | Mục 2.4 |
+| UML | Unified Modeling Language - ngôn ngữ mô hình hóa thống nhất (sơ đồ trình tự UML 2.5) | Phụ lục C |
+| URL | Uniform Resource Locator - địa chỉ định vị tài nguyên thống nhất | Mục 1.2 |
 | VNĐ | Việt Nam đồng | Mục 2.2 |
 
 ### 8.2. Ký hiệu toán học
@@ -248,7 +244,7 @@ Mục lục được tạo tự động trong `.docx` từ kiểu `Front Title` 
 | Bảng 4.2: | Ánh xạ trường dữ liệu thiết kế sang định danh trong mã nguồn | … |
 | Bảng 4.3: | Tệp, hàm/lớp chính và bước quy trình tương ứng (Mục 3.6) | … |
 | Bảng 4.4: | Các trạng thái phản hồi của `POST /api/recommend` | … |
-| Bảng 4.5: | Thành phần giao diện và chức năng theo CN01–CN03 | … |
+| Bảng 4.5: | Thành phần giao diện và chức năng theo CN01-CN03 | … |
 | Bảng 4.6: | Các tình huống lỗi và nơi xử lý | … |
 | Bảng 5.1: | Phân bổ bộ kiểm thử tự động theo nhóm | … |
 | Bảng 5.2: | Kết quả kiểm thử ca biên của các hàm điểm và tính đơn điệu | … |
@@ -290,8 +286,8 @@ Mục lục được tạo tự động trong `.docx` từ kiểu `Front Title` 
 | `chuong-03-phan-tich-thiet-ke.md` | Chương 3 | Hoàn thành (5 hình đã chèn) |
 | `chuong-04-xay-dung-he-thong.md` | Chương 4 | Hoàn thành (4 ảnh giao diện) |
 | `chuong-05-thuc-nghiem-va-danh-gia.md` | Chương 5 | Hoàn thành (9 bảng) |
-| `chuong-06-ket-luan-va-huong-phat-trien.md` | Chương 6 và Phụ lục A–D | Hoàn thành |
-| `tai-lieu-tham-khao.md` | 7 tài liệu theo chuẩn IEEE | Hoàn thành (đã kiểm chứng DOI/URL gồm 7 nguồn trích dẫn tuần tự [1]–[7]) |
+| `chuong-06-ket-luan-va-huong-phat-trien.md` | Chương 6 và Phụ lục A-D | Hoàn thành |
+| `tai-lieu-tham-khao.md` | 7 tài liệu theo chuẩn IEEE | Hoàn thành (đã kiểm chứng DOI/URL gồm 7 nguồn trích dẫn tuần tự [1]-[7]) |
 | `muc-luc-va-ho-so-ban-giao.md` | Phần mở đầu theo chuẩn báo cáo đồ án CTUT (KHMT 1) + danh mục bàn giao | Hoàn thành |
 | `docs/thesis/figures/*.png` | 9 hình của báo cáo + `khung_trang_bia.png` + `logo_ctut.png` (kèm 4 tệp nguồn `docs/thesis/figures/src/*.drawio`) | Đủ 11 tệp ảnh |
 | `docs/thesis/outline/dac-ta-hinh-3-1-3-5.md` | Đặc tả 5 hình Chương 3 (tài liệu làm việc) | Lưu nội bộ |
@@ -307,6 +303,6 @@ Mục lục được tạo tự động trong `.docx` từ kiểu `Front Title` 
 
 ### 11.3. Ghi chú còn treo
 
-- Mục 6.1.1 trình bày phần đối chiếu với 4 mục tiêu đề tài bằng danh sách đánh số `1–4` theo quy chuẩn báo cáo đồ án CTUT (không dùng bảng không đánh số, giữ nguyên 31 bảng được cấp số `Bảng X.Y:`).
+- Mục 6.1.1 trình bày phần đối chiếu với 4 mục tiêu đề tài bằng danh sách đánh số `1-4` theo quy chuẩn báo cáo đồ án CTUT (không dùng bảng không đánh số, giữ nguyên 31 bảng được cấp số `Bảng X.Y:`).
 - Nhãn `public_collected` của `GS-T06`, `GS-T07` được giữ nguyên; phần học phí và lịch rảnh ước tính đã ghi chú ở Chương 4, Chương 5 và Phụ lục A.
 - Bản Abstract tiếng Anh giữ dấu chấm thập phân (`3.54 ms`) theo quy ước tiếng Anh; thân bài tiếng Việt dùng dấu phẩy (`3,54 ms`).

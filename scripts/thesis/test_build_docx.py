@@ -467,6 +467,8 @@ def test_verify_docx_rejects_smashed_table_text_and_nhom_truong() -> None:
     assert "XTHESISBRX" in verify_docx_mod.FORBIDDEN_STRINGS
     assert "THESIS_BR" in verify_docx_mod.FORBIDDEN_STRINGS
     assert "Nhóm trưởng" in verify_docx_mod.FORBIDDEN_STRINGS
+    assert "nhóm em" in verify_docx_mod.FORBIDDEN_STRINGS
+    assert "Nhóm em" in verify_docx_mod.FORBIDDEN_STRINGS
 
     w_ns = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
     bad_tbl = ET.fromstring(
@@ -513,3 +515,21 @@ def test_smart_col_widths_splits_tokens_at_word_br(tmp_path: Path) -> None:
     w_br = build_docx._compute_smart_col_widths(d_br.tables[0], build_docx.PRINTABLE_WIDTH_TWIPS)
     w_sp = build_docx._compute_smart_col_widths(d_sp.tables[0], build_docx.PRINTABLE_WIDTH_TWIPS)
     assert w_br == w_sp
+
+
+def test_split_student_rows_accepts_hyphen_and_em_dash() -> None:
+    rows, next_idx = build_docx._split_student_rows(
+        [
+            "Lê Thị Bích Chuyền - KHMT2411037",
+            "Trần Nguyễn Đức — KHMT2411011",
+            "Cao Khánh Ngọc - KHMT2411025",
+            "**Lớp:** Khoa học máy tính 2024",
+        ],
+        0,
+    )
+    assert next_idx == 3
+    assert rows == [
+        ("Lê Thị Bích Chuyền", "KHMT2411037"),
+        ("Trần Nguyễn Đức", "KHMT2411011"),
+        ("Cao Khánh Ngọc", "KHMT2411025"),
+    ]

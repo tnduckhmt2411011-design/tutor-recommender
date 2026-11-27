@@ -101,7 +101,7 @@ Sau khi mở giao diện tại `http://localhost:5173`, người dùng có thể
 
 1. **Thao tác 1 — Nhập nhu cầu và nạp nhanh kịch bản (CN01):**
    - Tại thanh `"Kịch bản thực nghiệm (Bảng 5.3 · KB01 - KB14):"` (có thể bỏ tích ô `"Tự động chuyển kết quả"` trước nếu muốn quan sát biểu mẫu rồi mới bấm tìm), nhấn nút **KB01**. Hệ thống tự động điền các tham số: môn Toán, học Trực tiếp, khu vực Bình Thạnh, ngân sách tối đa 200.000 VNĐ/giờ, các mức ưu tiên ở mức Trung bình ($w=2$).
-   - Khảo sát ô lựa chọn "Mục tiêu học tập" với 3 preset: *Không nêu mục tiêu*, *Điểm cao / luyện thi chuyên – học sinh giỏi*, *Đủ điểm đậu / lấy lại kiến thức căn bản*.
+   - Khảo sát ô lựa chọn "Mục tiêu học tập" với 3 preset: *Không nêu mục tiêu*, *Điểm cao / luyện thi chuyên - học sinh giỏi*, *Đủ điểm đậu / lấy lại kiến thức căn bản*.
    - Nhấn nút **"Tìm gia sư phù hợp →"** (nếu đã bỏ tích tự động chuyển).
 2. **Thao tác 2 — Xem kết quả gợi ý và phân rã điểm đóng góp (CN02):**
    - Màn hình kết quả hiển thị danh sách Top-3 gia sư: Hạng 1 là `GS-G01` (điểm tổng 0,938), Hạng 2 là `GS-G10` (0,745), Hạng 3 là `GS-T06` (0,625).

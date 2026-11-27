@@ -675,7 +675,7 @@ def verify_extra_report_claims(repo_root: Path) -> list[ClaimRow]:
     goal_presets_js = (repo_root / "frontend" / "src" / "data" / "goalPresets.js").read_text(encoding="utf-8")
     expected_labels = [
         "Không nêu mục tiêu",
-        "Điểm cao / luyện thi chuyên – học sinh giỏi",
+        "Điểm cao / luyện thi chuyên - học sinh giỏi",
         "Đủ điểm đậu / lấy lại kiến thức căn bản",
     ]
     labels_in_code = all(lbl in goal_presets_js for lbl in expected_labels)

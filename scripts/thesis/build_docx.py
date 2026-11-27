@@ -889,8 +889,8 @@ def _add_cover_student_table_before(
 
 
 def _split_student_rows(lines: list[str], start_idx: int) -> tuple[list[tuple[str, str]], int]:
-    """Đọc các dòng `Họ tên — MSSV` liên tiếp bắt đầu tại start_idx."""
-    pat = re.compile(r"^(.*?)\s+—\s+([A-Z0-9]+)\s*$")
+    """Đọc các dòng `Họ tên - MSSV` (hoặc `—`) liên tiếp bắt đầu tại start_idx."""
+    pat = re.compile(r"^(.*?)\s+[—-]\s+([A-Z0-9]+)\s*$")
     rows: list[tuple[str, str]] = []
     pos = start_idx
     while pos < len(lines):

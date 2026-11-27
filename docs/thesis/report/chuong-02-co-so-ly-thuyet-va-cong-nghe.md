@@ -13,17 +13,17 @@ Hệ thống khuyến nghị (*recommender system*) ước lượng mức độ 
 | Độ phức tạp triển khai | Thấp: so khớp đặc trưng hồ sơ với nhu cầu | Trung bình đến cao: cần ma trận tương tác và mô hình học từ dữ liệu | Cao: phải kết hợp và cân bằng hai mô hình con |
 | Mức độ phù hợp khi mới vận hành | Phù hợp: không cần dữ liệu tích lũy | Không phù hợp: chưa có dữ liệu tương tác | Chỉ phù hợp một phần |
 
-*(Tổng hợp của nhóm từ [2].)*
+*(Tổng hợp từ [2].)*
 
 Từ Bảng 2.1, có thể thấy Content-Based Filtering là phương pháp phù hợp nhất đối với một hệ thống mới chưa có lịch sử tương tác. Cách làm của bài toán tìm gia sư khá giống bài toán ghép nối hồ sơ: hệ thống lấy yêu cầu của người học, đem so với các thuộc tính mô tả gia sư để chọn ra những người phù hợp nhất.
 
 ## 2.2. Phương pháp Content-Based Filtering trên đặc trưng hồ sơ có cấu trúc
 
-Với phương pháp lọc dựa trên nội dung (*Content-Based Filtering*), hệ thống mô tả mỗi đối tượng bằng một tập đặc trưng rồi so khớp với nhu cầu của người dùng. Đối tượng nào khớp hơn thì xếp trên [2]. Trong đồ án này, nhóm em mô tả mỗi gia sư qua bảy đặc trưng: môn dạy, khu vực, học phí theo giờ, số năm kinh nghiệm, hình thức dạy, lịch rảnh và điểm đánh giá trung bình. Về phía người học, hệ thống không suy đoán sở thích từ lịch sử cũ mà lấy trực tiếp nhu cầu vừa nhập lúc tìm kiếm.
+Với phương pháp lọc dựa trên nội dung (*Content-Based Filtering*), hệ thống mô tả mỗi đối tượng bằng một tập đặc trưng rồi so khớp với nhu cầu của người dùng. Đối tượng nào khớp hơn thì xếp trên [2]. Trong đồ án này, mỗi gia sư được mô tả qua bảy đặc trưng: môn dạy, khu vực, học phí theo giờ, số năm kinh nghiệm, hình thức dạy, lịch rảnh và điểm đánh giá trung bình. Về phía người học, hệ thống không suy đoán sở thích từ lịch sử cũ mà lấy trực tiếp nhu cầu vừa nhập lúc tìm kiếm.
 
-Bảy đặc trưng trên có kiểu dữ liệu rất khác nhau. Môn học và khu vực so khớp theo tập hợp, còn hình thức dạy là biến phân loại. Trong dữ liệu hệ thống, học phí (VNĐ/giờ) là số nguyên không âm được đánh giá qua ngưỡng ngân sách mềm, trong khi kinh nghiệm là số thực có cận trên và điểm đánh giá nằm trong khoảng chuẩn hóa $[0, 5]$ (cho phép khuyết dữ liệu với gia sư mới). Riêng lịch rảnh tính theo tỷ lệ giao giữa hai tập khung giờ. Vì các thuộc tính không cùng bản chất như vậy, nhóm em không gom tất cả thành một vector để tính độ tương đồng cosine (*cosine similarity*). Cách tính cosine thường hợp với dữ liệu văn bản tự do hơn.
+Bảy đặc trưng trên có kiểu dữ liệu rất khác nhau. Môn học và khu vực so khớp theo tập hợp, còn hình thức dạy là biến phân loại. Trong dữ liệu hệ thống, học phí (VNĐ/giờ) là số nguyên không âm được đánh giá qua ngưỡng ngân sách mềm, trong khi kinh nghiệm là số thực có cận trên và điểm đánh giá nằm trong khoảng chuẩn hóa $[0, 5]$ (cho phép khuyết dữ liệu với gia sư mới). Riêng lịch rảnh tính theo tỷ lệ giao giữa hai tập khung giờ. Vì các thuộc tính không cùng bản chất như vậy, hệ thống không gom tất cả thành một vector để tính độ tương đồng cosine (*cosine similarity*). Cách tính cosine thường hợp với dữ liệu văn bản tự do hơn.
 
-Xét theo phân loại của Adomavicius và Tuzhilin [2], cách làm của nhóm em thuộc nhánh Content-Based Filtering (tên đề tài đăng ký ghi là “Content-Base Filtering”). Toàn bộ gợi ý chỉ dựa trên việc so sánh hồ sơ gia sư với yêu cầu hiện tại của người học, không dùng lịch sử tương tác giữa nhiều người dùng. Nhóm em triển khai theo hai bước: lọc các điều kiện bắt buộc trước, sau đó chấm điểm từng tiêu chí về đoạn $[0, 1]$ rồi cộng có trọng số (*Weighted Scoring*).
+Xét theo phân loại của Adomavicius và Tuzhilin [2], hướng tiếp cận của đề tài thuộc nhánh Content-Based Filtering (tên đề tài đăng ký ghi là “Content-Base Filtering”). Toàn bộ gợi ý chỉ dựa trên việc so sánh hồ sơ gia sư với yêu cầu hiện tại của người học, không dùng lịch sử tương tác giữa nhiều người dùng. Quy trình xử lý gồm hai bước: lọc các điều kiện bắt buộc trước, sau đó chấm điểm từng tiêu chí về đoạn $[0, 1]$ rồi cộng có trọng số (*Weighted Scoring*).
 
 ## 2.3. Lọc theo điều kiện bắt buộc và Weighted Scoring
 
@@ -37,7 +37,7 @@ Bảng 2.2 đưa ra một ví dụ nhỏ với ba gia sư giả định để th
 
 **Bảng 2.2: Ví dụ minh họa ảnh hưởng của mức ưu tiên đến thứ hạng**
 
-| Gia sư | Điểm học phí | Điểm khu vực | Điểm đánh giá | Tổng điểm – Bộ 1 | Hạng (Bộ 1) | Tổng điểm – Bộ 2 | Hạng (Bộ 2) |
+| Gia sư | Điểm học phí | Điểm khu vực | Điểm đánh giá | Tổng điểm - Bộ 1 | Hạng (Bộ 1) | Tổng điểm - Bộ 2 | Hạng (Bộ 2) |
 |:---|---:|---:|---:|---:|:---:|---:|:---:|
 | A | 1,00 | 0,00 | 0,80 | 0,76 | 1 | 0,36 | 3 |
 | B | 0,60 | 1,00 | 0,90 | 0,74 | 2 | 0,90 | 1 |
@@ -49,4 +49,4 @@ Trong Bảng 2.2, bộ 1 ưu tiên học phí với tỷ lệ học phí : khu v
 
 ## 2.4. Công nghệ sử dụng
 
-Để đưa mô hình vào chạy thử, nhóm em chọn các công cụ gọn nhẹ và dễ kiểm thử. Phía máy chủ (backend) viết bằng Python với khung FastAPI [4] kết hợp Pydantic v2. FastAPI và Pydantic v2 hỗ trợ kiểm tra kiểu dữ liệu đầu vào chặt chẽ và tự tạo trang Swagger UI (OpenAPI), giúp thử nhanh từng endpoint mà không cần chờ giao diện. Phía người dùng (frontend) viết bằng thư viện React [5] và công cụ đóng gói Vite, gồm màn hình nhập nhu cầu và màn hình xem kết quả có thanh chỉnh mức ưu tiên trực tiếp. Dữ liệu gia sư mẫu được lưu bằng tệp JSON và CSV để dễ đọc, dễ đối chiếu và gọn nhẹ khi thử nghiệm.
+Để đưa mô hình vào vận hành thử nghiệm, nhóm thực hiện lựa chọn các công cụ gọn nhẹ và thuận tiện cho việc kiểm thử. Phía máy chủ (backend) viết bằng Python với khung FastAPI [4] kết hợp Pydantic v2. FastAPI và Pydantic v2 hỗ trợ kiểm tra kiểu dữ liệu đầu vào chặt chẽ và tự tạo trang Swagger UI (OpenAPI), giúp thử nhanh từng endpoint mà không cần chờ giao diện. Phía người dùng (frontend) viết bằng thư viện React [5] và công cụ đóng gói Vite, gồm màn hình nhập nhu cầu và màn hình xem kết quả có thanh chỉnh mức ưu tiên trực tiếp. Dữ liệu gia sư mẫu được lưu bằng tệp JSON và CSV để dễ đọc, dễ đối chiếu và gọn nhẹ khi thử nghiệm.

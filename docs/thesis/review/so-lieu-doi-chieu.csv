@@ -65,11 +65,11 @@ SL-CH2-B22,"chuong-02:47,53","0,76",0.76,công thức Bảng 2.2,KHỚP
 SL-CH3-EX36,chuong-03:154,"113/150 ≈ 0,753",0.753333 (113/150=0.753333),ví dụ Mục 3.6,KHỚP
 SL-CH4-FIG43,chuong-04:255,"GS-G10 hạng 1, điểm 0,990","GS-G10 (0.990), qualified=5",run_sensitivity_pipeline Hình 4.3,KHỚP
 SL-CH4-APPCSS,chuong-04:213,2.089 dòng,2089 dòng,frontend/src/App.css,KHỚP
-SL-CH6-PRESETS,"chuong-06:30,210",khớp goalPresets.js,"code=['Không nêu mục tiêu', 'Điểm cao / luyện thi chuyên – học sinh giỏi', 'Đủ điểm đậu / lấy lại kiến thức căn bản']",frontend/src/data/goalPresets.js,KHỚP
+SL-CH6-PRESETS,"chuong-06:30,210",khớp goalPresets.js,"code=['Không nêu mục tiêu', 'Điểm cao / luyện thi chuyên - học sinh giỏi', 'Đủ điểm đậu / lấy lại kiến thức căn bản']",frontend/src/data/goalPresets.js,KHỚP
 SL-CH6-5PARAMS,chuong-06:21,4 yếu tố,"4 yếu tố (Bảng 5.5–5.8: delta, E_max, ngân sách, bộ ưu tiên)",chuong-05 Bảng 5.5–5.8,KHỚP
 SL-CH6-19Q,chuong-06:32,19 truy vấn; 2/5 TQ đổi hạng 2–3; 0 đổi hạng 1; tổng 3/19,"total=19, diff_total=3, diff_tq=2/5, diff_r1=0",score_and_rank trên 14 KB + TQ1–TQ5,KHỚP
 SL-CH5-TESTS-PERFILE,chuong-05:16-18,12 tệp = 200 bài,"collected=200, diffs={}",pytest --collect-only -q,KHỚP
 SL-CH5-COV,"chuong-05:20,29","340/351 câu lệnh (97%), 11 chưa phủ, 200 passed",TOTAL                             351     11    97%,pytest --cov=app,KHỚP
 SL-CH5-UNIT-COV,chuong-05:26,Bảng 5.1 hàng Unit Tests ghi '84% (294/351 câu lệnh khi chạy riêng)',TOTAL                             351     57    84%,pytest tests/unit tests/test_environment.py --cov=app,KHỚP
 SL-CH5-ZERO-KB01,chuong-05:72,5 ứng viên trong unranked_candidates,"5 (['GS-T06', 'GS-G01', 'GS-G02', 'GS-G09', 'GS-G10'])",filter_mandatory KB01,KHỚP
-SL-CH5-LATENCY,chuong-05:44-48,"Phiên đo chuẩn: 140 lượt TB 3,54 ms (max 7,97 ms); 700 lượt TB 3,72 ms (max 26,64 ms); SLA < 1.000 ms",140 lượt TB 2.19 ms (max 3.26 ms); 700 lượt TB 2.18 ms (max 18.95 ms); SLA=PASS,scripts/thesis/benchmark_latency.py (TestClient in-process),KHỚP
+SL-CH5-LATENCY,chuong-05:44-48,"Phiên đo chuẩn: 140 lượt TB 3,54 ms (max 7,97 ms); 700 lượt TB 3,72 ms (max 26,64 ms); SLA < 1.000 ms",140 lượt TB 2.18 ms (max 5.38 ms); 700 lượt TB 2.15 ms (max 15.71 ms); SLA=PASS,scripts/thesis/benchmark_latency.py (TestClient in-process),KHỚP

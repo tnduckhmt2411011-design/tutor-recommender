@@ -11,8 +11,8 @@ Tài liệu định nghĩa vai trò, trách nhiệm và nguyên tắc phối h�
 
 | Thành viên | Mã sinh viên | Vai trò Scrum chính | Trách nhiệm trọng tâm |
 |:---|:---:|:---|:---|
-| **Cao Khánh Ngọc** | KHMT2411025 | **Product Owner (PO)**<br/>*Kiêm Developer* | - Đại diện yêu cầu đề tài, làm việc trực tiếp với Giảng viên hướng dẫn (TS. Lê Anh Nhã Uyên).<br/>- Quản lý và làm mịn Product Backlog, ưu tiên hóa các User Stories.<br/>- Nghiệm thu sản phẩm cuối mỗi Sprint dựa trên Definition of Done.<br/>- Tham gia phát triển phần tài liệu, thiết kế dữ liệu và kiểm thử hệ thống. |
-| **Trần Nguyễn Đức** | KHMT2411011 | **Scrum Master (SM)**<br/>*(Sprint 1, 3, 5)*<br/>*Kiêm Developer* | - Điều phối các nghi thức Scrum trong các sprint lẻ (Planning, Daily, Review, Retro).<br/>- Tháo gỡ các trở ngại kỹ thuật và theo dõi tiến độ nhánh làm việc trên GitHub.<br/>- Trực tiếp phát triển lõi chấm điểm backend FastAPI, thuật toán xếp hạng và kiểm thử tự động. |
+| **Cao Khánh Ngọc** | KHMT2411025 | **Product Owner (PO)**<br/>*Kiêm Developer* | - Đại diện yêu cầu đề tài.<br/>- Quản lý và làm mịn Product Backlog, ưu tiên hóa các User Stories.<br/>- Nghiệm thu sản phẩm cuối mỗi Sprint dựa trên Definition of Done.<br/>- Tham gia phát triển phần tài liệu, thiết kế dữ liệu và kiểm thử hệ thống. |
+| **Trần Nguyễn Đức** | KHMT2411011 | **Scrum Master (SM)**<br/>*(Sprint 1, 3, 5)*<br/>*Kiêm Developer* | - Điều phối các nghi thức Scrum trong các sprint lẻ (Planning, Daily, Review, Retro).<br/>- Trao đổi chuyên môn trực tiếp với Giảng viên hướng dẫn (TS. Lê Anh Nhã Uyên).<br/>- Tháo gỡ các trở ngại kỹ thuật và theo dõi tiến độ nhánh làm việc trên GitHub.<br/>- Trực tiếp phát triển lõi chấm điểm backend FastAPI, thuật toán xếp hạng và kiểm thử tự động. |
 | **Lê Thị Bích Chuyền** | KHMT2411037 | **Scrum Master (SM)**<br/>*(Sprint 2, 4, 6)*<br/>*Kiêm Developer* | - Điều phối các nghi thức Scrum trong các sprint chẵn (Planning, Daily, Review, Retro).<br/>- Đảm bảo tuân thủ thỏa thuận làm việc và cập nhật tài liệu sprint.<br/>- Trực tiếp phát triển giao diện ReactJS Vite, kết nối API và kiểm thử trải nghiệm người dùng. |
 
 ---

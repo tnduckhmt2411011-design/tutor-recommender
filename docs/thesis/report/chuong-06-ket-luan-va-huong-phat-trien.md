@@ -2,30 +2,30 @@
 
 ## 6.1. Kết quả đạt được
 
-Đến nay, nhóm em đã làm xong các phần chính của đề tài “Hệ thống khuyến nghị gia sư dựa trên phương pháp Content-Base Filtering”. Cụ thể gồm có mô hình điểm, module tính điểm, dịch vụ API, giao diện minh họa và bộ kiểm thử tự động. Dưới đây là kết quả đối chiếu với bốn mục tiêu đã đặt ra ở Mục 1.4.
+Đến nay, đồ án đã hoàn thành các thành phần chính của đề tài “Hệ thống khuyến nghị gia sư dựa trên phương pháp Content-Base Filtering”. Cụ thể gồm có mô hình điểm, module tính điểm, dịch vụ API, giao diện minh họa và bộ kiểm thử tự động. Dưới đây là kết quả đối chiếu với bốn mục tiêu đã đặt ra ở Mục 1.4.
 
 ### 6.1.1. Đối chiếu kết quả thực hiện với bốn mục tiêu đề tài
 
-1. **Mô hình hóa mức độ phù hợp và viết module tính điểm.** Nhóm em chia bảy đặc trưng hồ sơ thành hai nhóm. Nhóm bắt buộc gồm môn học, hình thức học và khung giờ giao nhau tối thiểu. Nhóm ưu tiên có trọng số gồm học phí, khu vực, kinh nghiệm, đánh giá và lịch rảnh (Bảng 3.2). Kèm theo đó là bảng ngưỡng dữ liệu tối thiểu (Bảng 3.7) và năm hàm chuẩn hóa điểm thành phần về đoạn $[0, 1]$ (Bảng 3.6). Quy trình bốn bước nằm độc lập trong `backend/app/scoring/` (Mục 4.3, Phụ lục B) và vượt qua 132 bài test đơn vị cùng bộ ca biên ở Bảng 5.2. Điểm còn hạn chế là các tham số khởi tạo ($\delta = 0{,}5$, $E_{\max} = 8$ năm, điểm trung tính $0{,}5$) và bộ trọng số $\{0, 1, 2, 3\}$ do nhóm em đặt theo kinh nghiệm. Chúng chưa được học từ dữ liệu người dùng thật.
-2. **Xây dựng dịch vụ API khuyến nghị bằng FastAPI.** Điểm cuối `POST /api/recommend` chạy trên FastAPI và Python 3.12 (Mục 4.4), kiểm tra đầu vào bằng Pydantic (`extra="forbid"`). API trả đủ ba trạng thái HTTP 200 (`success`, `no_match` với hai biến thể, `zero_weight`) cùng mã lỗi HTTP 422 (Bảng 4.4). Bộ test tích hợp đạt 41/41 bài, với thời gian xử lý nội tại trung bình 3,54 ms (chậm nhất 7,97 ms trong 140 lượt đo chuẩn ở Mục 5.1.2). Vì backend chạy trên gói miễn phí của Render, máy chủ cần khoảng 30–40 giây khởi động lại sau thời gian nghỉ, và nhóm em chưa đo độ trễ mạng thật qua Internet.
-3. **Xây dựng giao diện minh họa bằng React.** Giao diện web một trang (SPA) viết bằng React 19 và Vite (Hình 4.1–4.4) đáp ứng cả ba chức năng CN01–CN03. Màn hình nhập nhu cầu có thanh nạp nhanh 14 kịch bản và ô gợi ý trọng số theo mục tiêu học tập (CN01). Màn hình kết quả hiện Top-$k$ gia sư kèm thanh xếp chồng phân rã đóng góp $C_i$ và lý do gợi ý (CN02), cùng khung bấm chọn mức ưu tiên để xem thứ hạng đổi ngay lập tức (CN03). Hiện giao diện mới dùng cho tra cứu một chiều và kiểm tra tĩnh (`oxlint`), chưa có bộ test giao diện tự động hay các chức năng tài khoản, đặt lịch và đánh giá sau buổi học.
-4. **Đánh giá chất lượng xếp hạng trên bộ kịch bản thực nghiệm.** Nhóm em kiểm thử tự động 14 kịch bản cố định KB01–KB14 trên 16 hồ sơ mẫu. Kết quả trùng khớp 14/14 (100%) so với Top-3 kỳ vọng (Bảng 5.3, Bảng 5.4), trong đó hai trường hợp chênh lệch điểm so với bảng tính tay ban đầu (KB04, KB09) và hai trường hợp đồng điểm phá hòa theo mã hồ sơ (KB02, KB12) đều đã được kiểm chứng rõ. Khi khảo sát độ nhạy theo bốn yếu tố ($\delta$, $E_{\max}$, ngân sách và bộ mức ưu tiên ở Bảng 5.5–5.8), các hàm giữ đúng tính đơn điệu và trọng số điều hướng được thứ hạng. Tuy nhiên, Top-3 kỳ vọng là do nhóm em lập sẵn theo phân tích nghiệp vụ. Vì vậy kết quả 14/14 mới cho thấy mã nguồn chạy đúng với công thức, chứ chưa phản ánh mức độ hài lòng của học sinh và phụ huynh thực tế.
+1. **Mô hình hóa mức độ phù hợp và viết module tính điểm.** Bảy đặc trưng hồ sơ được chia thành hai nhóm. Nhóm bắt buộc gồm môn học, hình thức học và khung giờ giao nhau tối thiểu. Nhóm ưu tiên có trọng số gồm học phí, khu vực, kinh nghiệm, đánh giá và lịch rảnh (Bảng 3.2). Kèm theo đó là bảng ngưỡng dữ liệu tối thiểu (Bảng 3.7) và năm hàm chuẩn hóa điểm thành phần về đoạn $[0, 1]$ (Bảng 3.6). Quy trình bốn bước nằm độc lập trong `backend/app/scoring/` (Mục 4.3, Phụ lục B) và vượt qua 132 bài test đơn vị cùng bộ ca biên ở Bảng 5.2. Điểm còn hạn chế là các tham số khởi tạo ($\delta = 0{,}5$, $E_{\max} = 8$ năm, điểm trung tính $0{,}5$) và bộ trọng số $\{0, 1, 2, 3\}$ do nhóm thực hiện đặt theo kinh nghiệm. Chúng chưa được học từ dữ liệu người dùng thật.
+2. **Xây dựng dịch vụ API khuyến nghị bằng FastAPI.** Điểm cuối `POST /api/recommend` chạy trên FastAPI và Python 3.12 (Mục 4.4), kiểm tra đầu vào bằng Pydantic (`extra="forbid"`). API trả đủ ba trạng thái HTTP 200 (`success`, `no_match` với hai biến thể, `zero_weight`) cùng mã lỗi HTTP 422 (Bảng 4.4). Bộ test tích hợp đạt 41/41 bài, với thời gian xử lý nội tại trung bình 3,54 ms (chậm nhất 7,97 ms trong 140 lượt đo chuẩn ở Mục 5.1.2). Vì backend chạy trên gói miễn phí của Render, máy chủ cần khoảng 30-40 giây khởi động lại sau thời gian nghỉ, đồng thời độ trễ mạng thực tế qua Internet chưa được đo đạc.
+3. **Xây dựng giao diện minh họa bằng React.** Giao diện web một trang (SPA) viết bằng React 19 và Vite (Hình 4.1-4.4) đáp ứng cả ba chức năng CN01-CN03. Màn hình nhập nhu cầu có thanh nạp nhanh 14 kịch bản và ô gợi ý trọng số theo mục tiêu học tập (CN01). Màn hình kết quả hiện Top-$k$ gia sư kèm thanh xếp chồng phân rã đóng góp $C_i$ và lý do gợi ý (CN02), cùng khung bấm chọn mức ưu tiên để xem thứ hạng đổi ngay lập tức (CN03). Hiện giao diện mới dùng cho tra cứu một chiều và kiểm tra tĩnh (`oxlint`), chưa có bộ test giao diện tự động hay các chức năng tài khoản, đặt lịch và đánh giá sau buổi học.
+4. **Đánh giá chất lượng xếp hạng trên bộ kịch bản thực nghiệm.** Bộ 14 kịch bản cố định KB01-KB14 được kiểm thử tự động trên 16 hồ sơ mẫu. Kết quả trùng khớp 14/14 (100%) so với Top-3 kỳ vọng (Bảng 5.3, Bảng 5.4), trong đó hai trường hợp chênh lệch điểm so với bảng tính tay ban đầu (KB04, KB09) và hai trường hợp đồng điểm phá hòa theo mã hồ sơ (KB02, KB12) đều đã được kiểm chứng rõ. Khi khảo sát độ nhạy theo bốn yếu tố ($\delta$, $E_{\max}$, ngân sách và bộ mức ưu tiên ở Bảng 5.5-5.8), các hàm giữ đúng tính đơn điệu và trọng số điều hướng được thứ hạng. Tuy nhiên, Top-3 kỳ vọng do nhóm thực hiện lập sẵn theo phân tích nghiệp vụ. Vì vậy kết quả 14/14 mới cho thấy mã nguồn chạy đúng với công thức, chứ chưa phản ánh mức độ hài lòng của học sinh và phụ huynh thực tế.
 
 ### 6.1.2. Kết quả mở rộng: Gợi ý mức ưu tiên theo mục tiêu học tập
 
-Trong lúc làm đồ án, giảng viên hướng dẫn (TS. Lê Anh Nhã Uyên) góp ý nên mở rộng mô hình nhu cầu theo bộ ba *(Môn học, Cấp lớp, Mục tiêu học tập)* thay vì chỉ chọn tên môn học. Nhóm em khảo sát hai phương án và đã cài ngay Phương án 1:
+Trong lúc làm đồ án, giảng viên hướng dẫn (TS. Lê Anh Nhã Uyên) góp ý nên mở rộng mô hình nhu cầu theo bộ ba *(Môn học, Cấp lớp, Mục tiêu học tập)* thay vì chỉ chọn tên môn học. Hai phương án mở rộng đã được khảo sát và Phương án 1 được cài đặt ngay:
 
-- **Phương án 1 (PA1 — Ánh xạ mục tiêu học tập sang bộ mức ưu tiên khởi tạo – đã cài đặt).** Ở màn hình nhập nhu cầu (Hình 4.1), nhóm em thêm ô “Mục tiêu học tập (gợi ý mức ưu tiên)”. Ô này có ba lựa chọn mẫu (*preset*):
+- **Phương án 1 (PA1 - Ánh xạ mục tiêu học tập sang bộ mức ưu tiên khởi tạo - đã cài đặt).** Ở màn hình nhập nhu cầu (Hình 4.1), hệ thống bổ sung ô “Mục tiêu học tập (gợi ý mức ưu tiên)”. Ô này có ba lựa chọn mẫu (*preset*):
   1. *Không nêu mục tiêu:* giữ cả năm tiêu chí ở mức Trung bình ($w_i = 2$).
-  2. *Điểm cao / luyện thi chuyên – học sinh giỏi:* nâng Kinh nghiệm và Đánh giá lên mức Cao ($w_i = 3$), ba tiêu chí còn lại giữ Trung bình ($w_i = 2$).
+  2. *Điểm cao / luyện thi chuyên - học sinh giỏi:* nâng Kinh nghiệm và Đánh giá lên mức Cao ($w_i = 3$), ba tiêu chí còn lại giữ Trung bình ($w_i = 2$).
   3. *Đủ điểm đậu / lấy lại kiến thức căn bản:* nâng Học phí lên mức Cao ($w_i = 3$), bốn tiêu chí còn lại giữ Trung bình ($w_i = 2$).
 
-  Sau khi chọn một gợi ý, người học vẫn chỉnh tay từng tiêu chí được; lúc đó ô mục tiêu tự chuyển sang “Tùy chỉnh”. Nhóm em thử ba bộ cấu hình trên 19 truy vấn, gồm 14 kịch bản KB01–KB14 và 5 truy vấn bổ sung TQ1–TQ5 (TQ1: Toán, trực tiếp Bình Thạnh, ngân sách 250.000 VNĐ; TQ2: Toán, trực tiếp Gò Vấp, 150.000 VNĐ; TQ3: Toán, trực tuyến, 300.000 VNĐ, lịch T2-tối & T4-tối; TQ4: Lý, trực tiếp Thủ Đức, 180.000 VNĐ; TQ5: Hóa, trực tiếp Quận 10, 220.000 VNĐ, lịch T7-sáng). Kết quả cho thấy 3/19 trường hợp đổi thứ hạng ở vị trí 2–3 (gồm KB10 và 2/5 truy vấn bổ sung TQ1, TQ2), còn hạng 1 không đổi (0/19). Về phương pháp luận, cần lưu ý rằng kịch bản KB10 nguyên bản đặt tiêu chí Kinh nghiệm ở mức Cao ($w = 3$), nên việc áp preset *Không nêu mục tiêu* (cả 5 tiêu chí $w_i = 2$) sẽ ghi đè mức ưu tiên gốc của kịch bản này; ngoài ra, ba bộ trọng số PA1 đều là cấu hình khởi tạo theo phán đoán nghiệp vụ của nhóm, chưa phải trọng số học từ dữ liệu tương tác.
-- **Phương án 2 (Đưa Cấp lớp và độ hợp mục tiêu vào hàm điểm – để mở rộng sau).** Hồ sơ gia sư hiện tại (`TutorProfile`, Bảng 3.3) chỉ có 9 thuộc tính cơ bản. Hệ thống chưa có dữ liệu thật về cấp lớp nhận dạy, bằng cấp hay thế mạnh giảng dạy. Vì vậy nhóm em để Phương án 2 sang hướng phát triển tiếp theo ở Mục 6.2.3.
+  Sau khi chọn một gợi ý, người học vẫn chỉnh tay từng tiêu chí được; lúc đó ô mục tiêu tự chuyển sang “Tùy chỉnh”. Ba bộ cấu hình được thử nghiệm trên 19 truy vấn, gồm 14 kịch bản KB01-KB14 và 5 truy vấn bổ sung TQ1-TQ5 (TQ1: Toán, trực tiếp Bình Thạnh, ngân sách 250.000 VNĐ; TQ2: Toán, trực tiếp Gò Vấp, 150.000 VNĐ; TQ3: Toán, trực tuyến, 300.000 VNĐ, lịch T2-tối & T4-tối; TQ4: Lý, trực tiếp Thủ Đức, 180.000 VNĐ; TQ5: Hóa, trực tiếp Quận 10, 220.000 VNĐ, lịch T7-sáng). Kết quả cho thấy 3/19 trường hợp đổi thứ hạng ở vị trí 2-3 (gồm KB10 và 2/5 truy vấn bổ sung TQ1, TQ2), còn hạng 1 không đổi (0/19). Về phương pháp luận, cần lưu ý rằng kịch bản KB10 nguyên bản đặt tiêu chí Kinh nghiệm ở mức Cao ($w = 3$), nên việc áp preset *Không nêu mục tiêu* (cả 5 tiêu chí $w_i = 2$) sẽ ghi đè mức ưu tiên gốc của kịch bản này; ngoài ra, ba bộ trọng số PA1 đều là cấu hình khởi tạo theo phán đoán nghiệp vụ của nhóm thực hiện, chưa phải trọng số học từ dữ liệu tương tác.
+- **Phương án 2 (Đưa Cấp lớp và độ hợp mục tiêu vào hàm điểm - để mở rộng sau).** Hồ sơ gia sư hiện tại (`TutorProfile`, Bảng 3.3) chỉ có 9 thuộc tính cơ bản. Hệ thống chưa có dữ liệu thật về cấp lớp nhận dạy, bằng cấp hay thế mạnh giảng dạy. Vì vậy, Phương án 2 được đề xuất cho hướng phát triển tiếp theo ở Mục 6.2.3.
 
 ### 6.1.3. Môi trường triển khai thực tế
 
-Nhóm em đã đưa hệ thống lên mạng để truy cập và thử trực tiếp (Mục 4.6.3):
+Hệ thống đã được triển khai trực tuyến để truy cập và thử nghiệm trực tiếp (Mục 4.6.3):
 - **Giao diện người dùng (Frontend):** chạy trên Vercel tại `https://tutor-recommender.vercel.app`.
 - **Dịch vụ khuyến nghị (Backend API):** chạy trên Render tại `https://tutor-recommender-api.onrender.com`, kèm Swagger UI tại `https://tutor-recommender-api.onrender.com/docs` và đường dẫn `/health`.
 - **Kho mã nguồn (GitHub):** `https://github.com/tnduckhmt2411011-design/tutor-recommender`.
@@ -36,18 +36,18 @@ Khi hoàn thành báo cáo này, cả giao diện lẫn API đều chạy bình 
 
 ### 6.2.1. Tóm tắt các hạn chế kỹ thuật
 
-Từ sáu hạn chế đã phân tích ở Mục 5.3, nhóm em gom lại thành bốn nhóm chính:
-1. Bộ dữ liệu mẫu còn nhỏ (16 hồ sơ, trong đó 2 hồ sơ công khai phải ước tính học phí và lịch rảnh) và 14 kịch bản do nhóm em tự dựng.
+Từ sáu hạn chế đã phân tích ở Mục 5.3, các vấn đề tồn tại được tổng hợp thành bốn nhóm chính:
+1. Bộ dữ liệu mẫu còn nhỏ (16 hồ sơ, trong đó 2 hồ sơ công khai phải ước tính học phí và lịch rảnh) và 14 kịch bản do nhóm thực hiện tự xây dựng.
 2. Các tham số $\delta = 0{,}5$, $E_{\max} = 8$, điểm trung tính $0{,}5$ cùng thang trọng số $\{0, 1, 2, 3\}$ đều đặt tay ban đầu.
 3. Hệ thống chưa có dữ liệu tương tác lịch sử và chưa khảo sát người học thật bên ngoài.
 4. Khu vực mới so khớp đúng tên quận/huyện quy ước, mỗi lần tìm một môn, và chưa đo độ trễ mạng thật qua Internet.
 
 ### 6.2.2. Hướng phát triển
 
-Nếu tiếp tục phát triển thành đồ án tốt nghiệp, nhóm em dự kiến làm theo ba hướng sau:
+Nếu tiếp tục phát triển thành đồ án tốt nghiệp, nhóm thực hiện dự kiến mở rộng theo ba hướng sau:
 
 1. **Ghép vào nền tảng quản lý gia sư hoàn chỉnh:** nối bộ máy khuyến nghị với cơ sở dữ liệu quan hệ để quản lý tài khoản người học và xác minh gia sư. Hệ thống cũng cần thêm các bước đăng ký học thử, đặt lịch dạy và nhận đánh giá thật sau khóa học.
-2. **Nâng cấp lên mô hình khuyến nghị lai (*Hybrid Recommender System*):** khi đã tích lũy đủ lịch sử tìm kiếm và chọn gia sư, có thể tạo ma trận tương tác người dùng – gia sư (*User-Item Interaction Matrix*). Kết hợp lọc cộng tác (*Collaborative Filtering*) với lọc theo đặc trưng hồ sơ hiện tại sẽ vừa gợi ý được cho gia sư mới (*cold-start*), vừa tận dụng được xu hướng lựa chọn từ cộng đồng người học [2], [6].
+2. **Nâng cấp lên mô hình khuyến nghị lai (*Hybrid Recommender System*):** khi đã tích lũy đủ lịch sử tìm kiếm và chọn gia sư, có thể tạo ma trận tương tác người dùng - gia sư (*User-Item Interaction Matrix*). Kết hợp lọc cộng tác (*Collaborative Filtering*) với lọc theo đặc trưng hồ sơ hiện tại sẽ vừa gợi ý được cho gia sư mới (*cold-start*), vừa tận dụng được xu hướng lựa chọn từ cộng đồng người học [2], [6].
 3. **Học trọng số tự động bằng Learning-to-Rank (LTR):** thay các tham số và bảng trọng số đặt tay bằng mô hình học máy có giám sát [7]. Mô hình này tự chỉnh trọng số dựa trên phản hồi ngầm (lượt xem, lưu hồ sơ) và phản hồi trực tiếp (đánh giá sau buổi học).
 
 ### 6.2.3. Đề xuất mở rộng mô hình theo cấp lớp và mục tiêu học tập
@@ -67,15 +67,15 @@ Bảng 6.1 ghi lại công việc phụ trách và mức độ hoàn thành củ
 | STT | Thành viên | Mã sinh viên | Công việc phụ trách | Quỹ giờ | Mức độ hoàn thành |
 |:---:|:---|:---:|:---|---:|:---:|
 | 1 | **Lê Thị Bích Chuyền** | KHMT2411037 | **Scrum Master các Sprint 2, 4, 6 kiêm Developer:** Điều phối quy trình Scrum ở các Sprint chẵn; phát triển giao diện React (Vite), tích hợp API và kiểm thử trải nghiệm người dùng; tham gia thiết kế dữ liệu và biên soạn báo cáo. | 100 giờ | Hoàn thành |
-| 2 | **Trần Nguyễn Đức** | KHMT2411011 | **Scrum Master các Sprint 1, 3, 5 kiêm Developer:** Điều phối quy trình Scrum ở các Sprint lẻ và quản lý nhánh mã nguồn trên GitHub; phát triển lõi tính điểm backend FastAPI, thuật toán xếp hạng và bộ kiểm thử tự động. | 100 giờ | Hoàn thành |
-| 3 | **Cao Khánh Ngọc** | KHMT2411025 | **Product Owner kiêm Developer:** Phụ trách yêu cầu nghiệp vụ và trao đổi chuyên môn với GVHD (TS. Lê Anh Nhã Uyên), quản lý Product Backlog, nghiệm thu sản phẩm theo tiêu chí hoàn thành; tham gia thiết kế dữ liệu, kiểm thử kịch bản và biên soạn báo cáo. | 100 giờ | Hoàn thành |
+| 2 | **Trần Nguyễn Đức** | KHMT2411011 | **Scrum Master các Sprint 1, 3, 5 kiêm Developer:** Điều phối quy trình Scrum ở các Sprint lẻ, trao đổi chuyên môn với GVHD (TS. Lê Anh Nhã Uyên) và quản lý nhánh mã nguồn trên GitHub; phát triển lõi tính điểm backend FastAPI, thuật toán xếp hạng và bộ kiểm thử tự động. | 100 giờ | Hoàn thành |
+| 3 | **Cao Khánh Ngọc** | KHMT2411025 | **Product Owner kiêm Developer:** Phụ trách yêu cầu nghiệp vụ, quản lý Product Backlog và nghiệm thu sản phẩm theo tiêu chí hoàn thành; tham gia thiết kế dữ liệu, kiểm thử kịch bản và biên soạn báo cáo. | 100 giờ | Hoàn thành |
 | | **Tổng cộng** | | **6 Sprint (3 thành viên × 100 giờ theo định mức Bảng 1.2)** | **300 giờ** | **Hoàn thành 100%** |
 
 *(Phân công nhiệm vụ và mức độ hoàn thành do các thành viên trong nhóm thống nhất tự đánh giá qua 6 Sprint thực hiện đồ án.)*
 
 ### 6.3.2. Tự đánh giá kết quả thực hiện
 
-Nhìn lại quá trình thực hiện, nhóm em tự đánh giá kết quả trên bốn mặt:
+Nhìn lại quá trình thực hiện, nhóm thực hiện tự đánh giá kết quả trên bốn mặt:
 - **Mức độ hoàn thành:** làm đủ các phần theo mục tiêu ở Mục 1.4, gồm module tính điểm, RESTful API, giao diện hai màn hình và bản chạy trực tuyến trên Vercel, Render.
 - **Kiểm thử tự động:** đạt 200/200 bài test (độ bao phủ câu lệnh 97%, tương ứng 340/351 câu lệnh trên `backend/app/`); cả 14/14 kịch bản thực nghiệm đều khớp Top-3 kỳ vọng (Bảng 5.3).
 - **Toàn vẹn dữ liệu:** 16 hồ sơ mẫu trong `data/processed/tutors.json` và `data/processed/tutors.csv` qua đủ các phép kiểm tra định dạng, ẩn danh và đối chiếu từng ô (Mục 4.2.4, Phụ lục A).
@@ -87,12 +87,12 @@ Nhìn lại quá trình thực hiện, nhóm em tự đánh giá kết quả tr�
 
 ### A.1. Cấu trúc tệp và quy trình xử lý dữ liệu gia sư
 
-Nhóm em khảo sát và thu thập thủ công 15 hồ sơ gia sư ban đầu từ hai trang công khai tại Việt Nam là `giasudatviet.com` và `giasudantri.vn`. Sau khi lọc trùng và rà soát địa bàn, còn 11 hồ sơ dạy ở Thành phố Hồ Chí Minh.
+Nhóm thực hiện khảo sát và thu thập thủ công 15 hồ sơ gia sư ban đầu từ hai trang công khai tại Việt Nam là `giasudatviet.com` và `giasudantri.vn`. Sau khi lọc trùng và rà soát địa bàn, còn 11 hồ sơ dạy ở Thành phố Hồ Chí Minh.
 
-Thực tế là cả hai trang trên đều không ghi đủ cùng lúc học phí theo giờ, lịch rảnh chi tiết trong tuần và điểm đánh giá trung bình. Để thử nghiệm thuật toán mà vẫn minh bạch và giữ kín danh tính gia sư, nhóm em chuẩn hóa bộ dữ liệu mẫu như sau:
-- Nhóm em giữ lại 2 hồ sơ thu thập thực tế (`GS-T06` và `GS-T07`, nhãn `public_collected` – hiển thị là “Thu thập công khai” trong Bảng A.1). Môn dạy, khu vực và số năm kinh nghiệm là số liệu thật đã xóa hết thông tin liên hệ cá nhân (dữ liệu thô không đưa vào kho mã nguồn).
-- Học phí theo giờ của hai hồ sơ này được ước tính trong khoảng 130.000–400.000 VNĐ/giờ dựa theo mặt bằng giá trên `daythem.com` và nội suy theo số năm kinh nghiệm; lịch rảnh ước tính theo các ca học phổ biến. Cả hai mục ước tính đều đánh dấu `(*)` ở Bảng A.1. Điểm đánh giá trung bình để trống (`null`) và nhận giá trị trung tính $0{,}5$ khi chấm điểm.
-- 14 hồ sơ còn lại (`GS006`, `GS020`, `GS-G01` đến `GS-G12`, nhãn `simulated` – hiển thị là “Giả lập” trong Bảng A.1) là dữ liệu mô phỏng. Nhóm em tạo sẵn chúng để thử đủ các ca biên, trường hợp `no_match`, học trực tuyến và cặp hồ sơ bằng điểm.
+Thực tế là cả hai trang trên đều không ghi đủ cùng lúc học phí theo giờ, lịch rảnh chi tiết trong tuần và điểm đánh giá trung bình. Để thử nghiệm thuật toán mà vẫn minh bạch và giữ kín danh tính gia sư, bộ dữ liệu mẫu được chuẩn hóa theo các quy tắc sau:
+- Giữ lại 2 hồ sơ thu thập thực tế (`GS-T06` và `GS-T07`, nhãn `public_collected` - hiển thị là “Thu thập công khai” trong Bảng A.1). Môn dạy, khu vực và số năm kinh nghiệm là số liệu thật đã xóa hết thông tin liên hệ cá nhân (dữ liệu thô không đưa vào kho mã nguồn).
+- Học phí theo giờ của hai hồ sơ này được ước tính trong khoảng 130.000-400.000 VNĐ/giờ dựa theo mặt bằng giá trên `daythem.com` và nội suy theo số năm kinh nghiệm; lịch rảnh ước tính theo các ca học phổ biến. Cả hai mục ước tính đều đánh dấu `(*)` ở Bảng A.1. Điểm đánh giá trung bình để trống (`null`) và nhận giá trị trung tính $0{,}5$ khi chấm điểm.
+- 14 hồ sơ còn lại (`GS006`, `GS020`, `GS-G01` đến `GS-G12`, nhãn `simulated` - hiển thị là “Giả lập” trong Bảng A.1) là dữ liệu mô phỏng. Các hồ sơ này được tạo lập có chủ đích để thử nghiệm đầy đủ các ca biên, trường hợp `no_match`, học trực tuyến và cặp hồ sơ bằng điểm.
 - Tên môn học được chuẩn hóa thống nhất trên cả 16 hồ sơ: tiếng Anh ghi `"Anh Văn"`, riêng `"Anh Văn GT"` ở hồ sơ `GS-T07` là viết tắt của tiếng Anh giao tiếp.
 
 ### A.2. Mẫu bản ghi tiêu biểu và danh sách 16 hồ sơ gia sư
@@ -122,7 +122,7 @@ Bảng A.1 liệt kê đủ 16 hồ sơ gia sư mẫu theo thứ tự trong tệ
 
 *(Trong Bảng A.1, “Số năm KN” là số năm kinh nghiệm giảng dạy, “Đánh giá TB” là điểm đánh giá trung bình trên thang 5, “Anh Văn GT” là tiếng Anh giao tiếp; dấu `(*)` chỉ học phí và lịch rảnh ước tính của `GS-T06` và `GS-T07`. Điểm đánh giá để trống nhận giá trị trung tính $0{,}5$.)*
 
-**Danh mục khu vực quy ước và kiểm tra toàn vẹn dữ liệu.** Danh mục quận/huyện trong `data/processed/tutors.json` khớp hoàn toàn với biến `DISTRICT_OPTIONS` trên giao diện (`frontend/src/services/api.js`). Nhóm em giữ tách Quận 2, Quận 9 và Thủ Đức theo địa giới quen thuộc tại Thành phố Hồ Chí Minh để phục vụ kịch bản KB02, KB03 và KB07. Danh sách 16 khu vực gồm: Bình Chánh, Bình Thạnh, Gò Vấp, Nhà Bè, Phú Nhuận, Quận 1, Quận 2, Quận 3, Quận 7, Quận 8, Quận 9, Quận 10, Quận 11, Tân Bình, Tân Phú, Thủ Đức.
+**Danh mục khu vực quy ước và kiểm tra toàn vẹn dữ liệu.** Danh mục quận/huyện trong `data/processed/tutors.json` khớp hoàn toàn với biến `DISTRICT_OPTIONS` trên giao diện (`frontend/src/services/api.js`). Bộ dữ liệu giữ tách riêng Quận 2, Quận 9 và Thủ Đức theo địa giới quen thuộc tại Thành phố Hồ Chí Minh để phục vụ kịch bản KB02, KB03 và KB07. Danh sách 16 khu vực gồm: Bình Chánh, Bình Thạnh, Gò Vấp, Nhà Bè, Phú Nhuận, Quận 1, Quận 2, Quận 3, Quận 7, Quận 8, Quận 9, Quận 10, Quận 11, Tân Bình, Tân Phú, Thủ Đức.
 
 Lệnh kiểm tra toàn vẹn bộ dữ liệu:
 
@@ -195,10 +195,10 @@ Chín sơ đồ và ảnh chụp giao diện chính thức trong báo cáo đư�
 
 ### C.2. Đối chiếu giữa bản phác thảo thiết kế và giao diện hiện thực
 
-Bốn ảnh chụp giao diện ở Chương 4 (Hình 4.1–4.4) đi từ hai bản phác thảo Hình 3.4 và Hình 3.5, có thêm ba tiện ích phục vụ minh họa và kiểm tra:
-1. **Thanh nạp nhanh 14 kịch bản (Hình 4.1):** giúp nạp nhanh đầu vào của KB01–KB14 (Bảng 5.3) để thử trực tiếp trên trình duyệt.
+Bốn ảnh chụp giao diện ở Chương 4 (Hình 4.1-4.4) đi từ hai bản phác thảo Hình 3.4 và Hình 3.5, có thêm ba tiện ích phục vụ minh họa và kiểm tra:
+1. **Thanh nạp nhanh 14 kịch bản (Hình 4.1):** giúp nạp nhanh đầu vào của KB01-KB14 (Bảng 5.3) để thử trực tiếp trên trình duyệt.
 2. **Ô chọn mục tiêu học tập (Hình 4.1):** gợi ý sẵn bộ 5 mức ưu tiên theo Phương án 1 (Mục 6.1.2).
-3. **Hiển thị biến động hạng và trạng thái biên (Hình 4.2–4.4):** hiện số lượng ứng viên qua từng bước lọc (“Kho: 16 hồ sơ → Hợp lệ: 5 ứng viên → Top-3: 3 gợi ý”). Khi người học chỉnh mức ưu tiên (CN03), thẻ gia sư hiện huy hiệu tăng/giảm hạng, còn trường hợp $\sum w_i = 0$ sẽ chuyển sang màn hình cảnh báo trạng thái biên.
+3. **Hiển thị biến động hạng và trạng thái biên (Hình 4.2-4.4):** hiện số lượng ứng viên qua từng bước lọc (“Kho: 16 hồ sơ → Hợp lệ: 5 ứng viên → Top-3: 3 gợi ý”). Khi người học chỉnh mức ưu tiên (CN03), thẻ gia sư hiện huy hiệu tăng/giảm hạng, còn trường hợp $\sum w_i = 0$ sẽ chuyển sang màn hình cảnh báo trạng thái biên.
 
 Ngoài giao diện React, backend còn mở sẵn trang Swagger UI tại `/docs` để gửi thử trực tiếp `POST /api/recommend`.
 
@@ -208,7 +208,7 @@ Ngoài giao diện React, backend còn mở sẵn trang Swagger UI tại `/docs`
 
 ### D.1. Danh mục 14 kịch bản kiểm thử thực nghiệm
 
-Bảng D.1 tổng hợp đầy đủ tham số đầu vào và Top-3 kỳ vọng của 14 kịch bản KB01–KB14, lấy từ `backend/tests/scenarios/scenarios.json`.
+Bảng D.1 tổng hợp đầy đủ tham số đầu vào và Top-3 kỳ vọng của 14 kịch bản KB01-KB14, lấy từ `backend/tests/scenarios/scenarios.json`.
 
 **Bảng D.1: Yêu cầu đầy đủ của 14 kịch bản thực nghiệm**
 
@@ -229,7 +229,7 @@ Bảng D.1 tổng hợp đầy đủ tham số đầu vào và Top-3 kỳ vọng
 | KB13 | Toán | Bất kỳ (`any`) | Không nhập | 150.000 | Không nhập | Mặc định (đều $w = 2$) | GS-G10, GS-G01, GS-T06 |
 | KB14 | Anh Văn | Trực tuyến | Không nhập | Không nhập | Không nhập | Mặc định (đều $w = 2$) | GS-G03 |
 
-*(Các cột “Khu vực”, “Ngân sách (VNĐ/giờ)” và “Khung giờ” ghi “Không nhập” khi người học bỏ trống tiêu chí tùy chọn tương ứng; mức ưu tiên mặc định của cả 5 tiêu chí là Trung bình ($w_i = 2$). Danh sách Top-3 kỳ vọng có ít hơn 3 mã gia sư ở các kịch bản chỉ có 0–2 hồ sơ thỏa mãn điều kiện lọc bắt buộc.)*
+*(Các cột “Khu vực”, “Ngân sách (VNĐ/giờ)” và “Khung giờ” ghi “Không nhập” khi người học bỏ trống tiêu chí tùy chọn tương ứng; mức ưu tiên mặc định của cả 5 tiêu chí là Trung bình ($w_i = 2$). Danh sách Top-3 kỳ vọng có ít hơn 3 mã gia sư ở các kịch bản chỉ có 0-2 hồ sơ thỏa mãn điều kiện lọc bắt buộc.)*
 
 ### D.2. Quy trình tái lập kiểm thử và đo thời gian phản hồi
 
